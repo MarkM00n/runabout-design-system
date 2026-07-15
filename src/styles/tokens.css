@@ -1,0 +1,41 @@
+/**
+ * Design tokens sourced from Figma (file: Design System, JpFA7KtVlSOrM9fIYYgOsn).
+ * `@theme` both declares these as CSS custom properties and registers them with
+ * Tailwind v4 so utilities are generated automatically (bg-action-primary,
+ * rounded-2xl, text-h6, etc.). Raw source values also live in tokens.json.
+ */
+@theme {
+  --color-action-primary: #f8ebda;
+  --color-action-primary-hover: #df8e10;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-highlight: #df8e10;
+  --color-action-highlight-hover: #c07b0e;
+
+  --color-border-default: #f8ebda;
+  --color-border-focus: #df8e10;
+
+  --color-text-primary: #2f2c28;
+  --color-text-inverse: #f8ebda;
+
+  --color-surface-primary: #f7e7d2;
+
+  /* px, not rem: the host app sets root font-size to 18px (see index.css),
+     which would otherwise scale every rem-based Tailwind utility 1.125x off
+     its nominal value. Design tokens must stay pixel-exact regardless of the
+     host's font-size choice. */
+  --spacing-01: 8px;
+  --spacing-02: 16px;
+  --spacing-03: 24px;
+
+  /* Overrides Tailwind's default rounded-xl (12px) / rounded-2xl (16px) scale
+     to match the extracted radius tokens (16px / 24px). */
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  --font-tt-norms: 'TT Norms Pro Trial', system-ui, sans-serif;
+
+  --text-label: 13px;
+  --text-label--line-height: 1.4;
+  --text-h6: 18px;
+  --text-h6--line-height: 1.3;
+}
