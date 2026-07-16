@@ -15,6 +15,12 @@ Storybook. Design source: Figma file *Design System*
 (Plugin API), not the REST-based `get_metadata` tool — see
 [Sourcing Figma data](#sourcing-figma-data) below.
 
+Pipeline: Figma → Component Generation → **design-sync Validation** →
+**Documentation Generation** → Storybook → Prototype. `npm run design-sync`
+covers the two bolded stages in one command — see
+[§5 Documentation](#5-documentation) below, and
+`scripts/design-sync.js` for the implementation.
+
 ---
 
 ## 1. Token compliance
@@ -148,6 +154,50 @@ found by rendering the component and measuring it, not by reading the JSX.
   a layout can still look visually wrong (this is exactly how the Card
   CTA-width bug was caught: the computed styles for color/radius/height were
   all already correct, and the bug was only visible in the screenshot).
+
+## 5. Documentation
+
+Documentation is a pipeline output, not an afterthought bolted on after a
+component ships — every component gets a consistent Storybook docs
+experience automatically, driven by one shared page template
+(`src/design-docs/DocsPage.tsx`, registered globally via
+`.storybook/preview.tsx`'s `parameters.docs.page`) rather than hand-authored
+per component.
+
+- **Every component gets a co-located `ComponentName.docs.ts`** exporting a
+  `ComponentDocMeta` (see `src/design-docs/types.ts`): description, usage
+  guidelines, do/don't, variants, states, accessibility notes, and a short
+  code example. This is the one thing that *is* hand-authored — prose needs
+  human judgment, which is deliberately the one thing `design-sync` won't
+  auto-generate.
+- **`design-sync` auto-generates a starter `ComponentName.docs.ts` when one
+  is missing**, deriving `variants` from the component's exported
+  `FooVariant`/`FooSize` union type and `states` from which Tailwind state
+  variants (`hover:`, `focus-visible:`, `disabled:`) actually appear in the
+  source. Prose fields are left as clearly-marked `TODO` placeholders —
+  those fail the *quality* check (WARN, not FAIL, since the structure is
+  present) until a human replaces them, but don't block the file from
+  existing.
+- **"Design Tokens Used" is never hand-maintained.** `design-sync` scans the
+  component's source against the registered token names in `tokens.css` and
+  writes the result into `ComponentName.validation.json`, which the docs
+  page imports directly — the same "don't hand-maintain what can be
+  verified against source" posture as §1's token-compliance rule.
+- **`ComponentName.validation.json` is a generated, committed artifact.**
+  It's regenerated on every `design-sync` run (including in CI before the
+  Storybook build) and holds the pass/fail per check category plus a
+  `lastValidated` date — this is what powers the "Validation Status" and
+  DesignOps metadata block on each docs page. Don't hand-edit it.
+- **A stub with `TODO` markers is not "documented."** `design-sync`'s
+  documentation check parses the actual `docs.ts` object (not just "does
+  the file exist") and treats unresolved `TODO` content as incomplete.
+  Passing documentation coverage means real prose, not a scaffold.
+- **Autodocs stays wired globally, not per component.** The whole point of
+  the shared `DocsPage` template is that a new component gets the full
+  section layout for free by exporting the right shape — if a future
+  component needs a *different* docs layout, that's a signal to extend the
+  shared template with a conditional section, not to fork a bespoke MDX
+  file for that one component.
 
 ## Sourcing Figma data
 

@@ -24,7 +24,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build-storybook
+      # design-sync validates every component (token compliance, a11y,
+      # Storybook coverage, documentation coverage), generates any missing
+      # documentation, and builds Storybook as its own regenerate-docs step
+      # — so this single command both gates the deploy on validation passing
+      # and produces storybook-static/. A bare `build-storybook` would skip
+      # that gate entirely.
+      - run: npm run design-sync
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

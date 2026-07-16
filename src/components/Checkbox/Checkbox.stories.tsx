@@ -2,12 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 import { Checkbox } from './Checkbox';
+import { docs } from './Checkbox.docs';
+import validation from './Checkbox.validation.json';
 
 const meta = {
   title: 'Components/Checkbox',
   component: Checkbox,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {

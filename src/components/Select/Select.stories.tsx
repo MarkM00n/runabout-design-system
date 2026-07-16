@@ -1,12 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Select } from './Select';
+import { docs } from './Select.docs';
+import validation from './Select.validation.json';
 
 const meta = {
   title: 'Components/Select',
   component: Select,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {

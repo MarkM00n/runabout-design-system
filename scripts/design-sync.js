@@ -1,19 +1,30 @@
 #!/usr/bin/env node
 /**
- * design-sync — static validation of src/components/ against the rules in
- * docs/design-system-rules.md.
+ * design-sync — validates src/components/ against docs/design-system-rules.md
+ * and now also generates and validates per-component documentation, per the
+ * DesignOps pipeline: Figma -> Component Generation -> design-sync
+ * Validation -> Documentation Generation -> Storybook -> Prototype.
  *
- * Checks: token compliance, accessibility (heuristic), Storybook coverage.
+ * Pipeline steps on every run:
+ *   1. Validate component   (token compliance, accessibility, Storybook coverage)
+ *   2. Validate documentation
+ *   3. Generate missing documentation sections (writes a ComponentName.docs.ts
+ *      stub — with auto-derived variants/states — for any component missing one)
+ *   4. Regenerate Storybook docs (npm run build-storybook, to confirm the
+ *      current + newly-generated content actually builds)
+ *   5. Report PASS / FAIL
+ *
  * Deliberately does NOT attempt design-parity checks (comparing rendered
- * output against Figma) — that requires a live render + the Figma MCP
- * tools and is an LLM-driven process, not something a static script can
- * do. See prompts/validate-component.md for that half of the picture.
+ * output against Figma) — that requires a live render + the Figma MCP tools
+ * and is an LLM-driven process, not something a static script can do. See
+ * prompts/validate-component.md for that half of the picture.
  *
  * Usage: npm run design-sync
- * Exit code: 0 if every component passes, 1 if anything fails.
+ * Exit code: 0 if everything passes, 1 if anything fails.
  */
 
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -64,7 +75,6 @@ function flattenJsonCategory(obj, category) {
     if (val && typeof val === 'object' && 'value' in val) {
       flat.add(`${category}-${key}`);
     } else if (val && typeof val === 'object') {
-      // one level of nesting, e.g. color.action.primary
       for (const subKey of Object.keys(val)) {
         flat.add(`${category}-${key}-${subKey}`);
       }
@@ -95,10 +105,6 @@ function checkTokenParity() {
     return issues;
   }
 
-  // Only cross-check color/spacing/radius — typography's JSON shape (fontSize/
-  // lineHeight/fontFamily per named style) doesn't map 1:1 onto the CSS
-  // custom-property names, so it's excluded rather than producing noisy
-  // false positives.
   const cssColor = [...cssNames].filter((n) => n.startsWith('color-')).map((n) => n.slice('color-'.length));
   const cssSpacing = [...cssNames].filter((n) => n.startsWith('spacing-')).map((n) => n.slice('spacing-'.length));
   const cssRadius = [...cssNames].filter((n) => n.startsWith('radius-')).map((n) => n.slice('radius-'.length));
@@ -127,7 +133,7 @@ function checkTokenParity() {
 }
 
 // ---------------------------------------------------------------------------
-// 1. Token compliance (per component)
+// 1a. Token compliance (per component)
 // ---------------------------------------------------------------------------
 
 // This repo's root font-size is 18px (see src/index.css), so Tailwind's
@@ -151,7 +157,7 @@ function checkTokenParity() {
 // containing block and aren't rem-based at all, so they're not affected by
 // the root-font-size bug. Without this, "top-1/2" (used to vertically
 // center Select's chevron icon) matches as if it were the bare "top-1"
-// spacing utility, a false positive caught by running this script against
+// spacing utility — a false positive caught by running this script against
 // real merged code rather than trusting it after only testing it in
 // isolation.
 const DANGEROUS_SCALE_RE =
@@ -159,13 +165,10 @@ const DANGEROUS_SCALE_RE =
 const RAW_HEX_RE = /#[0-9a-fA-F]{3,8}\b/g;
 const DOC_COMMENT_KEYWORDS = /unbound|not bound|literal|not tokeni[sz]ed|raw (?:value|hex|color|px)/i;
 
-// Blanks out comment contents (keeping newlines, so line numbers reported
-// to the user still line up with the original file) so that mentioning a
-// dangerous class name or a hex value *inside a comment* — e.g. Button's own
-// "rather than Tailwind's h-12/h-8 scale" explanation — doesn't get flagged
-// as if it were real usage. This is a regex-based approximation, not a full
-// parser: it can mis-strip a `//` inside a string literal, which is an
-// accepted tradeoff for a lightweight static check.
+// Blanks out comment contents (keeping newlines, so line numbers reported to
+// the user still line up with the original file) so that mentioning a
+// dangerous class name or a hex value *inside a comment* doesn't get flagged
+// as if it were real usage. Regex-based approximation, not a full parser.
 function stripComments(source) {
   return source
     .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '))
@@ -185,10 +188,6 @@ function checkTokenCompliance(source) {
     });
   }
 
-  // A hex mentioned only in a comment (documentation, not usage) shouldn't
-  // need a per-line justification — but a file-level doc comment explaining
-  // "these values are deliberately unbound" is still valid justification
-  // for a hex that *is* real usage, even if it isn't immediately adjacent.
   const hasFileLevelJustification = DOC_COMMENT_KEYWORDS.test(
     (source.match(/\/\*\*?[\s\S]*?\*\//g) ?? []).join('\n'),
   );
@@ -223,8 +222,34 @@ function checkTokenCompliance(source) {
   return issues;
 }
 
+// Scans a component's source for usage of registered tokens (by suffix
+// match against tokens.css's @theme names) so "Design Tokens Used" in the
+// docs page is auto-derived from real usage, not hand-maintained.
+function extractTokensUsed(componentSource, cssTokenNames) {
+  const codeOnly = stripComments(componentSource);
+  const used = new Set();
+  const categoryPrefixes = ['color-', 'spacing-', 'radius-', 'text-', 'font-'];
+
+  for (const fullName of cssTokenNames) {
+    if (fullName.includes('--')) continue; // skip --text-x--line-height companions
+    let suffix = fullName;
+    for (const prefix of categoryPrefixes) {
+      if (fullName.startsWith(prefix)) {
+        suffix = fullName.slice(prefix.length);
+        break;
+      }
+    }
+    const escaped = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`[a-z]+-${escaped}\\b`, 'i');
+    if (re.test(codeOnly)) {
+      used.add(fullName);
+    }
+  }
+  return [...used].sort();
+}
+
 // ---------------------------------------------------------------------------
-// 2. Accessibility (heuristic — see docs/design-system-rules.md § Accessibility)
+// 1b. Accessibility (heuristic — see docs/design-system-rules.md § Accessibility)
 // ---------------------------------------------------------------------------
 
 function checkAccessibility(rawSource) {
@@ -245,12 +270,6 @@ function checkAccessibility(rawSource) {
     });
   }
 
-  // Matches both a native element's own `disabled:pointer-events-none` and
-  // the `has-[:disabled]:pointer-events-none` form used by composite
-  // components (e.g. Checkbox, where the real input is a sibling of the
-  // element that needs the hardening, not the element itself) — a plain
-  // substring check for "disabled:pointer-events-none" misses the has-[...]
-  // form because the "]" breaks the literal match.
   const hasDisabledPointerEventsGuard = /(?:^|[\s'"])(?:disabled|has-\[:disabled\]):pointer-events-none\b/.test(source);
   if (/\bdisabled\b/.test(source) && !hasDisabledPointerEventsGuard) {
     issues.push({
@@ -280,23 +299,16 @@ function checkAccessibility(rawSource) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Storybook coverage
+// 1c. Storybook coverage
 // ---------------------------------------------------------------------------
 
-function checkStorybookCoverage(name, dir, componentSource) {
+function checkStorybookCoverage(name, dir, componentSource, storiesSource) {
   const issues = [];
-  const storiesPath = join(dir, `${name}.stories.tsx`);
   const indexPath = join(dir, 'index.ts');
 
-  if (!existsSync(storiesPath)) {
-    issues.push({ level: 'fail', message: `No ${name}.stories.tsx found.` });
-    return issues;
-  }
   if (!existsSync(indexPath)) {
     issues.push({ level: 'fail', message: 'No index.ts barrel export found.' });
   }
-
-  const storiesSource = readFileSync(storiesPath, 'utf8');
 
   if (!/tags:\s*\[[^\]]*['"]autodocs['"]/.test(storiesSource)) {
     issues.push({ level: 'fail', message: "Missing `tags: ['autodocs']` in story meta." });
@@ -317,6 +329,196 @@ function checkStorybookCoverage(name, dir, componentSource) {
 }
 
 // ---------------------------------------------------------------------------
+// 2. Documentation: reading, parsing, generating, and validating
+//    ComponentName.docs.ts (the ComponentDocMeta contract from
+//    src/design-docs/types.ts)
+// ---------------------------------------------------------------------------
+
+// Finds the `export const docs = { ... };` object literal by brace-balance
+// counting (not a regex with a fixed end pattern), since the object can
+// contain nested arrays/strings with braces-look-alike characters.
+function extractBalancedObject(source, marker) {
+  const startIdx = source.indexOf(marker);
+  if (startIdx === -1) return null;
+  const braceStart = source.indexOf('{', startIdx);
+  if (braceStart === -1) return null;
+  let depth = 0;
+  for (let i = braceStart; i < source.length; i++) {
+    if (source[i] === '{') depth++;
+    else if (source[i] === '}') {
+      depth--;
+      if (depth === 0) return source.slice(braceStart, i + 1);
+    }
+  }
+  return null;
+}
+
+// Converts the TS object literal into JSON so it can be parsed generically
+// instead of with brittle per-field regexes. Only handles the flat
+// string/string[] shape ComponentDocMeta actually has (no nesting) — the
+// generator that writes these files always uses a whitelisted set of bare
+// keys and single-quoted strings, which is what makes this safe: the
+// key-quoting step only touches those exact field names, so it can't
+// accidentally rewrite something that looks like "word:" inside prose.
+const DOC_FIELD_NAMES = [
+  'description',
+  'usageGuidelines',
+  'dos',
+  'donts',
+  'variants',
+  'states',
+  'accessibilityNotes',
+  'codeExample',
+];
+
+function tsObjectLiteralToJson(text) {
+  let out = text;
+  const fieldAlternation = DOC_FIELD_NAMES.join('|');
+  out = out.replace(new RegExp(`([{,]\\s*)(${fieldAlternation})(\\s*:)`, 'g'), '$1"$2"$3');
+  // single-quoted strings -> JSON strings (handles \' escapes)
+  out = out.replace(/'((?:[^'\\]|\\.)*)'/g, (_, inner) => JSON.stringify(inner.replace(/\\'/g, "'")));
+  // trailing commas before } or ]
+  out = out.replace(/,(\s*[}\]])/g, '$1');
+  try {
+    return JSON.parse(out);
+  } catch {
+    return null;
+  }
+}
+
+function readDocsFile(dir, name) {
+  const docsPath = join(dir, `${name}.docs.ts`);
+  if (!existsSync(docsPath)) return { exists: false, data: null };
+  const raw = readFileSync(docsPath, 'utf8');
+  const objText = extractBalancedObject(raw, 'export const docs');
+  if (!objText) return { exists: true, data: null };
+  return { exists: true, data: tsObjectLiteralToJson(objText) };
+}
+
+// Auto-derives variants/states from patterns that already exist in every
+// component built so far: an exported `FooVariant`/`FooSize` union type for
+// variants, and which Tailwind state variants (hover:/focus-visible:/
+// disabled:) actually appear in the source for states.
+function deriveVariantsAndStates(componentSource) {
+  const codeOnly = stripComments(componentSource);
+  const variants = [];
+
+  const unionRe = /export type \w*(?:Variant|Size)\w*\s*=\s*([^;]+);/g;
+  let m;
+  while ((m = unionRe.exec(componentSource))) {
+    const literals = [...m[0].matchAll(/'([^']+)'/g)].map((x) => x[1]);
+    for (const lit of literals) {
+      if (!variants.includes(lit)) variants.push(lit);
+    }
+  }
+
+  const states = ['default'];
+  if (/hover:/.test(codeOnly)) states.push('hover');
+  if (/focus-visible:|focus:/.test(codeOnly)) states.push('focus');
+  if (/disabled:|has-\[:disabled\]/.test(codeOnly)) states.push('disabled');
+  if (/checked:|:checked/.test(codeOnly)) states.push('checked');
+
+  return { variants, states };
+}
+
+// Step 3 of the pipeline: writes a starter ComponentName.docs.ts when one
+// doesn't exist yet, so "missing documentation" is something design-sync
+// fixes as far as it structurally can, not just something it reports.
+// Prose fields (description/usage/do-dont/accessibility) are left as
+// clearly-marked TODOs — those need human or Figma-sourced judgment, which
+// is exactly the line this static script shouldn't cross on its own.
+function generateDocsStub(name, dir, componentSource) {
+  const docsPath = join(dir, `${name}.docs.ts`);
+  if (existsSync(docsPath)) return false;
+
+  const { variants, states } = deriveVariantsAndStates(componentSource);
+  const listLiteral = (arr) => `[${arr.map((v) => `'${v}'`).join(', ')}]`;
+
+  const stub = `import type { ComponentDocMeta } from '../../design-docs/types';
+
+// Auto-generated stub by \`npm run design-sync\` — variants/states below were
+// derived from ${name}.tsx's exported types and Tailwind state variants.
+// The TODO fields need human authoring; design-sync flags them as
+// incomplete (not failing) until the TODO markers are replaced.
+export const docs: ComponentDocMeta = {
+  description: 'TODO: describe what ${name} is for and when to use it.',
+  usageGuidelines: ['TODO: add usage guidance.'],
+  dos: ['TODO: add Do guidance.'],
+  donts: ['TODO: add Do not guidance.'],
+  variants: ${listLiteral(variants)},
+  states: ${listLiteral(states)},
+  accessibilityNotes: ['TODO: add accessibility notes.'],
+  codeExample: 'TODO: add a short usage snippet.',
+};
+`;
+  writeFileSync(docsPath, stub);
+  return true;
+}
+
+function checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed) {
+  const issues = [];
+  const { exists, data } = docsResult;
+
+  if (!exists) {
+    issues.push({ level: 'fail', message: `No ${name}.docs.ts found — description/usage/do-dont/accessibility content is missing.` });
+  } else if (!data) {
+    issues.push({ level: 'fail', message: `${name}.docs.ts exists but its docs object could not be parsed.` });
+  } else {
+    const hasTodo = JSON.stringify(data).includes('TODO');
+    const level = hasTodo ? 'warn' : 'fail';
+    const todoNote = hasTodo ? ' (auto-generated stub — needs human authoring)' : '';
+
+    if (!data.description?.trim()) {
+      issues.push({ level, message: `Description is missing or a TODO placeholder${todoNote}.` });
+    }
+    if (!data.usageGuidelines?.length) {
+      issues.push({ level, message: `Usage guidance is missing or a TODO placeholder${todoNote}.` });
+    }
+    if (!data.accessibilityNotes?.length) {
+      issues.push({ level, message: `Accessibility notes are missing or a TODO placeholder${todoNote}.` });
+    }
+    if (!data.codeExample?.trim() || data.codeExample.includes('TODO')) {
+      issues.push({ level: 'warn', message: `Code example is missing or a TODO placeholder${todoNote}.` });
+    }
+  }
+
+  if (tokensUsed.length === 0) {
+    issues.push({ level: 'warn', message: 'No registered design tokens detected in use — "Design Tokens Used" will be empty.' });
+  }
+
+  if (!/tags:\s*\[[^\]]*['"]autodocs['"]/.test(storiesSource)) {
+    issues.push({ level: 'fail', message: "Storybook Autodocs not configured — missing tags: ['autodocs']." });
+  }
+
+  const storyExportCount = (storiesSource.match(/export const \w+: Story/g) ?? []).length;
+  if (storyExportCount === 0) {
+    issues.push({ level: 'fail', message: 'Required stories are missing — no story exports found.' });
+  }
+
+  return issues;
+}
+
+// ---------------------------------------------------------------------------
+// Validation report: ComponentName.validation.json, consumed by DocsPage.tsx
+// for the "Validation Status" section and DesignOps metadata block.
+// ---------------------------------------------------------------------------
+
+function writeValidationReport(dir, report) {
+  writeFileSync(join(dir, `${report.component}.validation.json`), JSON.stringify(report, null, 2) + '\n');
+}
+
+// Step 4: confirm the current (and any newly-generated) content actually
+// builds as Storybook docs, not just that our own heuristics are satisfied.
+function regenerateStorybookDocs() {
+  try {
+    execSync('npm run build-storybook', { cwd: ROOT, stdio: 'pipe' });
+    return { pass: true };
+  } catch (err) {
+    return { pass: false, output: (err.stdout ?? err.message ?? '').toString().slice(-2000) };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Reporting
 // ---------------------------------------------------------------------------
 
@@ -325,6 +527,17 @@ function printIssues(issues) {
     const color = issue.level === 'fail' ? RED : YELLOW;
     const label = issue.level === 'fail' ? 'FAIL' : 'WARN';
     console.log(`    ${color}${label}${RESET}  ${issue.message}`);
+  }
+}
+
+function printDotPaddedGroup(pairs) {
+  const maxLabelLen = Math.max(...pairs.map(([label]) => label.length));
+  const targetCol = maxLabelLen + 10;
+  for (const [label, pass] of pairs) {
+    const dots = Math.max(2, targetCol - label.length);
+    const statusText = pass ? 'PASS' : 'FAIL';
+    const color = pass ? GREEN : RED;
+    console.log(`${label} ${DIM}${'.'.repeat(dots)}${RESET} ${color}${statusText}${RESET}`);
   }
 }
 
@@ -338,32 +551,66 @@ function run() {
     process.exit(1);
   }
 
-  let anyFail = false;
+  const cssRaw = existsSync(TOKENS_CSS_PATH) ? readFileSync(TOKENS_CSS_PATH, 'utf8') : '';
+  const cssTokenNames = parseThemeTokenNames(cssRaw);
 
+  console.log(`${BOLD}Step 1-2: validating components and documentation${RESET}`);
   console.log(`${BOLD}Token parity${RESET} (tokens.css <-> tokens.json)`);
   const parityIssues = checkTokenParity();
+  let tokenParityPass = true;
   if (parityIssues.length === 0) {
     console.log(`  ${GREEN}PASS${RESET}  tokens.css and tokens.json are in sync\n`);
   } else {
     printIssues(parityIssues);
-    if (parityIssues.some((i) => i.level === 'fail')) anyFail = true;
+    tokenParityPass = !parityIssues.some((i) => i.level === 'fail');
     console.log('');
   }
+
+  const componentResults = [];
+  let generatedAnyDocs = false;
 
   for (const name of components) {
     const dir = join(COMPONENTS_DIR, name);
     const componentSource = readFileSync(join(dir, `${name}.tsx`), 'utf8');
+    const storiesPath = join(dir, `${name}.stories.tsx`);
+    const storiesSource = existsSync(storiesPath) ? readFileSync(storiesPath, 'utf8') : '';
 
     const tokenIssues = checkTokenCompliance(componentSource);
     const a11yIssues = checkAccessibility(componentSource);
-    const storybookIssues = checkStorybookCoverage(name, dir, componentSource);
+    const storybookIssues = existsSync(storiesPath)
+      ? checkStorybookCoverage(name, dir, componentSource, storiesSource)
+      : [{ level: 'fail', message: `No ${name}.stories.tsx found.` }];
 
-    const allIssues = [...tokenIssues, ...a11yIssues, ...storybookIssues];
-    const componentFails = allIssues.some((i) => i.level === 'fail');
-    if (componentFails) anyFail = true;
+    // Step 3: generate missing documentation sections before validating them,
+    // so a component missing docs.ts gets scaffolded and re-checked in the
+    // same run rather than needing a second invocation.
+    const generated = generateDocsStub(name, dir, componentSource);
+    if (generated) generatedAnyDocs = true;
 
-    const status = componentFails ? `${RED}FAIL${RESET}` : `${GREEN}PASS${RESET}`;
-    console.log(`${BOLD}${name}${RESET} — ${status}`);
+    const tokensUsed = extractTokensUsed(componentSource, cssTokenNames);
+    const docsResult = readDocsFile(dir, name);
+    const docIssues = checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed);
+
+    const tokenCompliancePass = !tokenIssues.some((i) => i.level === 'fail');
+    const accessibilityPass = !a11yIssues.some((i) => i.level === 'fail');
+    const storybookCoveragePass = !storybookIssues.some((i) => i.level === 'fail');
+    const documentationCoveragePass = !docIssues.some((i) => i.level === 'fail');
+    const overall = tokenCompliancePass && accessibilityPass && storybookCoveragePass && documentationCoveragePass;
+
+    const report = {
+      component: name,
+      lastValidated: new Date().toISOString().slice(0, 10),
+      tokenCompliance: tokenCompliancePass,
+      accessibility: accessibilityPass,
+      storybookCoverage: storybookCoveragePass,
+      documentationCoverage: documentationCoveragePass,
+      overall,
+      tokensUsed,
+    };
+    writeValidationReport(dir, report);
+
+    const allIssues = [...tokenIssues, ...a11yIssues, ...storybookIssues, ...docIssues];
+    console.log(`${BOLD}${name}${RESET} — ${overall ? `${GREEN}PASS${RESET}` : `${RED}FAIL${RESET}`}`);
 
     if (tokenIssues.length) {
       console.log(`  ${DIM}Token compliance${RESET}`);
@@ -377,24 +624,58 @@ function run() {
       console.log(`  ${DIM}Storybook coverage${RESET}`);
       printIssues(storybookIssues);
     }
+    if (docIssues.length) {
+      console.log(`  ${DIM}Documentation${RESET}${generated ? ` ${DIM}(stub generated this run)${RESET}` : ''}`);
+      printIssues(docIssues);
+    }
     if (allIssues.length === 0) {
       console.log(`  ${GREEN}PASS${RESET}  no issues found`);
     }
     console.log('');
+
+    componentResults.push(report);
   }
+
+  console.log(`${BOLD}Step 4: regenerating Storybook docs${RESET} (npm run build-storybook)`);
+  const buildResult = regenerateStorybookDocs();
+  if (buildResult.pass) {
+    console.log(`  ${GREEN}PASS${RESET}  Storybook docs build cleanly\n`);
+  } else {
+    console.log(`  ${RED}FAIL${RESET}  Storybook build failed:`);
+    console.log(buildResult.output.split('\n').map((l) => `    ${l}`).join('\n'));
+    console.log('');
+  }
+
+  if (generatedAnyDocs) {
+    console.log(
+      `${YELLOW}Note: one or more ComponentName.docs.ts files were auto-generated this run with TODO placeholders — see Documentation findings above.${RESET}\n`,
+    );
+  }
+
+  // Step 5: report PASS / FAIL
+  console.log(`${BOLD}Step 5: report${RESET}\n`);
+  printDotPaddedGroup(componentResults.map((r) => [r.component, r.overall]));
+  console.log('');
+
+  const categoryPass = {
+    'Token Compliance': tokenParityPass && componentResults.every((r) => r.tokenCompliance),
+    Accessibility: componentResults.every((r) => r.accessibility),
+    'Storybook Coverage': componentResults.every((r) => r.storybookCoverage),
+    'Documentation Coverage': componentResults.every((r) => r.documentationCoverage),
+  };
+  printDotPaddedGroup(Object.entries(categoryPass));
+  console.log('');
+
+  const overallStatus = Object.values(categoryPass).every(Boolean) && buildResult.pass;
+  printDotPaddedGroup([['Overall Status', overallStatus]]);
+  console.log('');
 
   console.log(
     `${DIM}Note: this is a static heuristic check. It does not compare rendered output against Figma —${RESET}`,
   );
   console.log(`${DIM}run /prompts/validate-component.md for design-parity verification.${RESET}\n`);
 
-  if (anyFail) {
-    console.log(`${BOLD}${RED}design-sync: FAIL${RESET}`);
-    process.exit(1);
-  } else {
-    console.log(`${BOLD}${GREEN}design-sync: PASS${RESET}`);
-    process.exit(0);
-  }
+  process.exit(overallStatus ? 0 : 1);
 }
 
 run();

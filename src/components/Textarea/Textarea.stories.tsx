@@ -1,12 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Textarea } from './Textarea';
+import { docs } from './Textarea.docs';
+import validation from './Textarea.validation.json';
 
 const meta = {
   title: 'Components/Textarea',
   component: Textarea,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {

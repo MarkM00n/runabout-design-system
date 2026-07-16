@@ -49,6 +49,15 @@ just make the specific symptom go away.
    - *Storybook coverage*: add the missing story, barrel export, autodocs
      tag, or backdrop decorator — matching the pattern of existing stories
      in the same component's file rather than inventing a new structure.
+   - *Documentation*: if `ComponentName.docs.ts` is entirely missing, run
+     `npm run design-sync` first to get the auto-generated stub (with
+     `variants`/`states` already derived) rather than writing the
+     boilerplate by hand. Then replace every `TODO` with real content —
+     this is the one category design-sync deliberately won't fix for you,
+     since prose needs human or Figma-sourced judgment. If
+     `parameters.designSystem`/`designSystemValidation` aren't wired into
+     the story meta, add both imports — without them the shared `DocsPage`
+     template has nothing to render.
    - *Design parity*: this is almost always a token-compliance fix in
      disguise (wrong token, wrong px, wrong arbitrary value) — trace it back
      to the actual cause rather than overriding the rendered output with a

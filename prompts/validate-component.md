@@ -70,7 +70,26 @@ render the actual component, and measure the actual computed output.
   fine on the default canvas" without checking, since pale-on-white
   illegibility is easy to miss in a quick glance.
 
-## 5. Design parity (skip if no Figma source was found in §1)
+## 5. Documentation
+
+- Confirm `{{COMPONENT}}.docs.ts` exists and its `docs` export parses (a
+  `ComponentDocMeta` matching `src/design-docs/types.ts`).
+- Confirm `description`, `usageGuidelines`, and `accessibilityNotes` are
+  present and contain no `TODO` markers — a `design-sync`-generated stub
+  that hasn't been filled in yet does not count as documented.
+- Confirm `variants`/`states` accurately reflect the component (not just
+  whatever `design-sync` auto-derived — check them against what the
+  component actually supports).
+- Confirm `codeExample` is a real, runnable-looking snippet, not a
+  placeholder.
+- Confirm `{{COMPONENT}}.stories.tsx`'s meta wires `parameters.designSystem`
+  (the docs import) and `parameters.designSystemValidation` (the generated
+  `{{COMPONENT}}.validation.json` import) — without both, the shared
+  `DocsPage` template has nothing to render for this component.
+- Confirm `npm run design-sync` reports `documentationCoverage: true` for
+  this component (or explain exactly which check is failing and why).
+
+## 6. Design parity (skip if no Figma source was found in §1)
 
 Start a Storybook dev server if one isn't already running, and use
 Playwright (or the Chrome extension if connected) to load each story's
@@ -87,8 +106,9 @@ rendered output. For each size/state variant:
 
 ## Output
 
-Report findings grouped by the four section headers above (Token
-compliance / Accessibility / Storybook coverage / Design parity). For each
+Report findings grouped by the five section headers above (Token
+compliance / Accessibility / Storybook coverage / Documentation / Design
+parity). For each
 finding: state whether it passes or fails, and if it fails, state the
 specific value/line/behavior that's wrong and what the correct value should
 be (not just "doesn't match Figma" — the actual numbers). If everything

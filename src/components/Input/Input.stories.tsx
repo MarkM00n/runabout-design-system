@@ -1,12 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Input } from './Input';
+import { docs } from './Input.docs';
+import validation from './Input.validation.json';
 
 const meta = {
   title: 'Components/Input',
   component: Input,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {

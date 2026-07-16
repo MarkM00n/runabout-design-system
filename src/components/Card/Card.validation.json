@@ -1,0 +1,18 @@
+{
+  "component": "Card",
+  "lastValidated": "2026-07-16",
+  "tokenCompliance": true,
+  "accessibility": true,
+  "storybookCoverage": true,
+  "documentationCoverage": true,
+  "overall": true,
+  "tokensUsed": [
+    "color-sand-400",
+    "color-surface-feature",
+    "font-recoleta",
+    "font-tt-norms",
+    "spacing-01",
+    "text-h3",
+    "text-paragraph-small"
+  ]
+}
