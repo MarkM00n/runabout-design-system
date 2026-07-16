@@ -44,7 +44,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         htmlFor={generatedId}
         className={clsx(
           'inline-flex items-center cursor-pointer select-none',
-          'has-[:disabled]:cursor-not-allowed',
+          'has-[:disabled]:cursor-not-allowed has-[:disabled]:pointer-events-none',
           gapStyles[size],
           className,
         )}

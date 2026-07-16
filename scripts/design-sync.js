@@ -145,8 +145,17 @@ function checkTokenParity() {
 // Tailwind's border-radius scale is named (rounded-xl, rounded-full), not
 // numeric, so it's intentionally not in this list — there's no bare-number
 // rounded-N utility to fall into this trap.
+//
+// The trailing (?!\/) excludes Tailwind's fraction-based positioning
+// utilities (top-1/2, w-1/3, etc.) — those compute as percentages of the
+// containing block and aren't rem-based at all, so they're not affected by
+// the root-font-size bug. Without this, "top-1/2" (used to vertically
+// center Select's chevron icon) matches as if it were the bare "top-1"
+// spacing utility, a false positive caught by running this script against
+// real merged code rather than trusting it after only testing it in
+// isolation.
 const DANGEROUS_SCALE_RE =
-  /\b(?:h|w|gap|p|px|py|pt|pr|pb|pl|m|mx|my|mt|mr|mb|ml|top|right|bottom|left|inset)-([1-9]\d*)\b/g;
+  /\b(?:h|w|gap|p|px|py|pt|pr|pb|pl|m|mx|my|mt|mr|mb|ml|top|right|bottom|left|inset)-([1-9]\d*)\b(?!\/)/g;
 const RAW_HEX_RE = /#[0-9a-fA-F]{3,8}\b/g;
 const DOC_COMMENT_KEYWORDS = /unbound|not bound|literal|not tokeni[sz]ed|raw (?:value|hex|color|px)/i;
 
@@ -236,10 +245,17 @@ function checkAccessibility(rawSource) {
     });
   }
 
-  if (/\bdisabled\b/.test(source) && !/disabled:pointer-events-none/.test(source)) {
+  // Matches both a native element's own `disabled:pointer-events-none` and
+  // the `has-[:disabled]:pointer-events-none` form used by composite
+  // components (e.g. Checkbox, where the real input is a sibling of the
+  // element that needs the hardening, not the element itself) — a plain
+  // substring check for "disabled:pointer-events-none" misses the has-[...]
+  // form because the "]" breaks the literal match.
+  const hasDisabledPointerEventsGuard = /(?:^|[\s'"])(?:disabled|has-\[:disabled\]):pointer-events-none\b/.test(source);
+  if (/\bdisabled\b/.test(source) && !hasDisabledPointerEventsGuard) {
     issues.push({
       level: 'warn',
-      message: 'Component references `disabled` but no `disabled:pointer-events-none` found — hover states may visually leak through on a disabled control.',
+      message: 'Component references `disabled` but no `disabled:pointer-events-none` (or `has-[:disabled]:pointer-events-none`) found — hover states may visually leak through on a disabled control.',
     });
   }
 
