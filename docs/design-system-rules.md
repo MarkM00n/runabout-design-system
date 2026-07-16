@@ -18,8 +18,8 @@ Storybook. Design source: Figma file *Design System*
 Pipeline: Figma → Component Generation → **design-sync Validation** →
 **Documentation Generation** → Storybook → Prototype. `npm run design-sync`
 covers the two bolded stages in one command — see
-[§5 Documentation](#5-documentation) below, and
-`scripts/design-sync.js` for the implementation.
+[§5 Documentation](#5-documentation) and [§6 Foundations](#6-foundations)
+below, and `scripts/design-sync.js` for the implementation.
 
 ---
 
@@ -198,6 +198,38 @@ per component.
   component needs a *different* docs layout, that's a signal to extend the
   shared template with a conditional section, not to fork a bespoke MDX
   file for that one component.
+
+## 6. Foundations
+
+Foundation pages (`src/design-docs/foundations/*.mdx`, one per category:
+Colours, Typography, Spacing, Radius, Shadows, Motion) document the token
+scale itself, separately from any one component. `design-sync` generates
+`src/design-docs/foundations-data.generated.json` on every run — the pages
+render that, they don't hand-list token values.
+
+- **Read from `tokens.css`/`tokens.json`, never re-derive values by another
+  path.** A Foundation page's numbers must trace back to the same two files
+  every component check already treats as the source of truth.
+- **"Used By" is computed, not asserted.** It's built by scanning every
+  component's source for real usage (the same suffix-match rule
+  `extractTokensUsed` already uses, inverted into a token → components map)
+  — never hand-typed, so it can't silently drift from reality.
+- **An empty category is a valid, honest state — not something to fill with
+  invented values.** Shadows has zero tokens: the Figma file has no effect
+  styles (confirmed via `getLocalEffectStylesAsync`) and no component uses
+  `box-shadow`. The page says so plainly rather than fabricating a shadow
+  scale that doesn't exist anywhere in this system.
+- **A token can be real and still show zero *named* consumers.** Motion's
+  `duration-standard`/`ease-standard` aren't Figma-sourced (no motion
+  variables exist in the file) — they formalize a value already used
+  identically via Tailwind's literal `duration-150 ease-out` in five
+  components. That literal usage is tracked as a distinct "not yet
+  migrated" consumer, not reported as orphaned — collapsing the two would
+  either hide a real gap or falsely flag a token that's demonstrably in use.
+- **"No orphaned tokens" is a WARN, not an instant FAIL, pending human
+  review.** A token with zero consumers (named or literal) might mean dead
+  weight to remove, or a token extracted ahead of the component that will
+  use it — the check surfaces it, it doesn't assume which.
 
 ## Sourcing Figma data
 

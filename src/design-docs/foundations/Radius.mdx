@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FoundationPage, FoundationSection } from '../FoundationPage';
+import foundationsData from '../foundations-data.generated.json';
+
+<Meta title="Foundations/Radius" />
+
+<FoundationPage
+  title="Radius"
+  description="Corner radius scale, overriding Tailwind's default rounded-sm/xl/2xl values to match the values extracted from Figma."
+>
+  <FoundationSection category="radius" tokens={foundationsData.radius} />
+</FoundationPage>

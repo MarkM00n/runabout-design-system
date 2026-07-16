@@ -22,9 +22,18 @@ const preview: Preview = {
     // Registering this globally is what makes the design-system docs layout
     // (Description/Usage/Do-Don't/Variants/States/Tokens/A11y/Validation
     // Status/Controls/Code Example) automatic for every autodocs-tagged
-    // component — see src/design-docs/DocsPage.tsx and types.ts.
+    // component — see src/design-docs/DocsPage.tsx and types.ts. This
+    // doesn't affect the Foundations/*.mdx pages, which are standalone docs
+    // entries (a bare <Meta title="..." /> with no attached component),
+    // not synthesized autodocs pages.
     docs: {
       page: DocsPage,
+    },
+
+    options: {
+      storySort: {
+        order: ['Foundations', ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion'], 'Components'],
+      },
     },
   },
 };

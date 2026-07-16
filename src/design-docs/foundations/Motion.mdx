@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FoundationPage, FoundationSection } from '../FoundationPage';
+import foundationsData from '../foundations-data.generated.json';
+
+<Meta title="Foundations/Motion" />
+
+<FoundationPage
+  title="Motion"
+  description="Timing standards for transitions. Not Figma-sourced — the source file has no motion variables at all. This formalizes a value already used identically across five components (transition-colors duration-150 ease-out) rather than inventing a new one. Hover the preview to see it animate."
+>
+  <FoundationSection category="motion" tokens={foundationsData.motion} />
+</FoundationPage>

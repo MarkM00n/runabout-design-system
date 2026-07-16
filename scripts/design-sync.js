@@ -108,10 +108,13 @@ function checkTokenParity() {
   const cssColor = [...cssNames].filter((n) => n.startsWith('color-')).map((n) => n.slice('color-'.length));
   const cssSpacing = [...cssNames].filter((n) => n.startsWith('spacing-')).map((n) => n.slice('spacing-'.length));
   const cssRadius = [...cssNames].filter((n) => n.startsWith('radius-')).map((n) => n.slice('radius-'.length));
+  const cssDuration = [...cssNames].filter((n) => n.startsWith('duration-')).map((n) => n.slice('duration-'.length));
+  const cssEasing = [...cssNames].filter((n) => n.startsWith('ease-')).map((n) => n.slice('ease-'.length));
 
   const jsonColor = flattenJsonCategory(json, 'color');
   const jsonSpacing = new Set(Object.keys(json.spacing ?? {}));
   const jsonRadius = new Set(Object.keys(json.radius ?? {}));
+  const jsonMotion = new Set(Object.keys(json.motion ?? {}));
 
   for (const name of cssColor) {
     if (!jsonColor.has(`color-${name}`)) {
@@ -126,6 +129,16 @@ function checkTokenParity() {
   for (const name of cssRadius) {
     if (!jsonRadius.has(name)) {
       issues.push({ level: 'warn', message: `Radius token "--radius-${name}" is in tokens.css but has no matching entry in tokens.json.` });
+    }
+  }
+  for (const name of cssDuration) {
+    if (!jsonMotion.has(name)) {
+      issues.push({ level: 'warn', message: `Motion token "--duration-${name}" is in tokens.css but has no matching entry in tokens.json.motion.` });
+    }
+  }
+  for (const name of cssEasing) {
+    if (!jsonMotion.has(name)) {
+      issues.push({ level: 'warn', message: `Motion token "--ease-${name}" is in tokens.css but has no matching entry in tokens.json.motion.` });
     }
   }
 
@@ -519,6 +532,229 @@ function regenerateStorybookDocs() {
 }
 
 // ---------------------------------------------------------------------------
+// 3. Design Foundations: reads tokens.css/tokens.json as the single source of
+// truth (never re-derives values by other means), generates the data every
+// Foundation Storybook page renders from, and cross-references which
+// components actually consume each token.
+// ---------------------------------------------------------------------------
+
+const FOUNDATIONS_DATA_PATH = join(ROOT, 'src', 'design-docs', 'foundations-data.generated.json');
+const FOUNDATIONS_MDX_DIR = join(ROOT, 'src', 'design-docs', 'foundations');
+const REQUIRED_FOUNDATION_PAGES = ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion'];
+
+// Associates each `--token: value;` declaration in the @theme block with
+// whatever comment immediately precedes it. A comment stays "pending" and
+// applies to every subsequent token until a blank line resets it or a new
+// comment replaces it — matching how tokens.css's own multi-token comment
+// blocks are written (e.g. one comment covering all 4 spacing tokens).
+function extractCssTokenComments(cssRaw) {
+  const themeStart = cssRaw.indexOf('@theme');
+  if (themeStart === -1) return {};
+  const braceStart = cssRaw.indexOf('{', themeStart);
+  let depth = 0;
+  let braceEnd = -1;
+  for (let i = braceStart; i < cssRaw.length; i++) {
+    if (cssRaw[i] === '{') depth++;
+    else if (cssRaw[i] === '}') {
+      depth--;
+      if (depth === 0) {
+        braceEnd = i;
+        break;
+      }
+    }
+  }
+  const body = cssRaw.slice(braceStart + 1, braceEnd === -1 ? undefined : braceEnd);
+
+  const comments = {};
+  let pending = null;
+  let inBlock = false;
+  let buffer = [];
+
+  for (const rawLine of body.split('\n')) {
+    const line = rawLine.trim();
+    if (line === '') {
+      pending = null;
+      continue;
+    }
+    if (inBlock) {
+      buffer.push(line);
+      if (line.includes('*/')) {
+        inBlock = false;
+        pending = buffer.join(' ').replace(/\/\*+|\*+\//g, '').replace(/\s+/g, ' ').trim();
+        buffer = [];
+      }
+      continue;
+    }
+    if (line.startsWith('/*')) {
+      if (line.includes('*/')) {
+        pending = line.replace(/\/\*+|\*+\//g, '').trim();
+      } else {
+        inBlock = true;
+        buffer = [line];
+      }
+      continue;
+    }
+    const tokenMatch = line.match(/^--([a-z0-9-]+)\s*:/i);
+    if (tokenMatch && pending) {
+      comments[tokenMatch[1]] = pending;
+    }
+  }
+  return comments;
+}
+
+function genericUsageFor(category, group) {
+  const defaults = {
+    color: `Color token${group ? ` in the "${group}" group` : ''}.`,
+    spacing: 'Spacing scale value used for padding and gap.',
+    radius: 'Corner radius scale value.',
+    typography: 'Type style (font size, line height, family).',
+    motion: 'Motion timing standard.',
+  };
+  return defaults[category] ?? 'Design token.';
+}
+
+// Which components reference a token, by the same suffix-match rule as
+// extractTokensUsed — inverted (token -> components, not component ->
+// tokens) so the Foundation pages can cross-reference consumers.
+function findConsumers(cssName, componentSources) {
+  const categoryPrefixes = ['color-', 'spacing-', 'radius-', 'text-', 'font-'];
+  let suffix = cssName;
+  for (const prefix of categoryPrefixes) {
+    if (cssName.startsWith(prefix)) {
+      suffix = cssName.slice(prefix.length);
+      break;
+    }
+  }
+  const escaped = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`[a-z]+-${escaped}\\b`, 'i');
+  return componentSources.filter(({ source }) => re.test(stripComments(source))).map(({ name }) => name);
+}
+
+// Motion's named tokens (duration-standard/ease-standard) aren't referenced
+// by name in any component yet — they formalize a value already used
+// identically via Tailwind's own literal duration-150/ease-out (see
+// tokens.css). That literal usage is a real consumer, just not yet migrated
+// to the named token — tracked separately so it isn't reported orphaned.
+function findLiteralMotionConsumers(componentSources) {
+  return componentSources
+    .filter(({ source }) => /duration-150\b/.test(source) && /ease-out\b/.test(source))
+    .map(({ name }) => name);
+}
+
+function buildFoundationData(cssRaw, tokensJson, componentSources) {
+  const cssComments = extractCssTokenComments(cssRaw);
+  const data = { color: [], typography: [], spacing: [], radius: [], motion: [], shadow: [] };
+
+  for (const [group, entries] of Object.entries(tokensJson.color ?? {})) {
+    for (const [key, entry] of Object.entries(entries)) {
+      const cssName = `color-${group}-${key}`;
+      data.color.push({
+        name: `--${cssName}`,
+        value: entry.value,
+        usage: entry.note || cssComments[cssName] || genericUsageFor('color', group),
+        consumedBy: findConsumers(cssName, componentSources),
+      });
+    }
+  }
+
+  for (const [key, entry] of Object.entries(tokensJson.spacing ?? {})) {
+    const cssName = `spacing-${key}`;
+    data.spacing.push({
+      name: `--${cssName}`,
+      value: entry.value,
+      usage: cssComments[cssName] || genericUsageFor('spacing'),
+      consumedBy: findConsumers(cssName, componentSources),
+    });
+  }
+
+  for (const [key, entry] of Object.entries(tokensJson.radius ?? {})) {
+    const cssName = `radius-${key}`;
+    data.radius.push({
+      name: `--${cssName}`,
+      value: entry.value,
+      usage: cssComments[cssName] || genericUsageFor('radius'),
+      consumedBy: findConsumers(cssName, componentSources),
+    });
+  }
+
+  for (const [key, entry] of Object.entries(tokensJson.typography ?? {})) {
+    const cssName = `text-${key}`;
+    data.typography.push({
+      name: `--${cssName}`,
+      value: `${entry.fontSize} / ${entry.lineHeight} / ${entry.fontFamily}`,
+      fontFamily: entry.fontFamily,
+      fontSize: entry.fontSize,
+      lineHeight: entry.lineHeight,
+      usage: cssComments[cssName] || genericUsageFor('typography'),
+      consumedBy: findConsumers(cssName, componentSources),
+    });
+  }
+
+  for (const [key, entry] of Object.entries(tokensJson.motion ?? {})) {
+    const namedConsumers = [
+      ...new Set([...findConsumers(`duration-${key}`, componentSources), ...findConsumers(`ease-${key}`, componentSources)]),
+    ];
+    const literalConsumers = findLiteralMotionConsumers(componentSources).filter((n) => !namedConsumers.includes(n));
+    data.motion.push({
+      name: `--duration-${key} / --ease-${key}`,
+      value: `${entry.duration} / ${entry.easing}`,
+      duration: entry.duration,
+      easing: entry.easing,
+      usage: entry.note || genericUsageFor('motion'),
+      consumedBy: namedConsumers,
+      literalConsumers,
+    });
+  }
+
+  data.shadowNote = tokensJson.shadow?.note ?? 'No shadow tokens are currently defined.';
+
+  return data;
+}
+
+function writeFoundationData(data) {
+  writeFileSync(FOUNDATIONS_DATA_PATH, JSON.stringify(data, null, 2) + '\n');
+}
+
+// The 4 required Foundation checks: token documented, token rendered in
+// Storybook, token referenced correctly (tokens.css<->tokens.json parity,
+// already computed separately and passed in), no orphaned tokens.
+function checkFoundationCoverage(foundationData, tokenParityPass) {
+  const issues = [];
+  const allTokens = [
+    ...foundationData.color,
+    ...foundationData.typography,
+    ...foundationData.spacing,
+    ...foundationData.radius,
+    ...foundationData.motion,
+  ];
+
+  for (const token of allTokens) {
+    if (!token.usage?.trim()) {
+      issues.push({ level: 'fail', message: `Token ${token.name} has no usage documentation.` });
+    }
+  }
+
+  for (const page of REQUIRED_FOUNDATION_PAGES) {
+    if (!existsSync(join(FOUNDATIONS_MDX_DIR, `${page}.mdx`))) {
+      issues.push({ level: 'fail', message: `Missing Foundation page: src/design-docs/foundations/${page}.mdx.` });
+    }
+  }
+
+  if (!tokenParityPass) {
+    issues.push({ level: 'fail', message: 'tokens.css and tokens.json are out of sync — see Token parity above.' });
+  }
+
+  for (const token of allTokens) {
+    const hasConsumer = (token.consumedBy?.length ?? 0) > 0 || (token.literalConsumers?.length ?? 0) > 0;
+    if (!hasConsumer) {
+      issues.push({ level: 'warn', message: `Token ${token.name} is not referenced by any component (orphaned).` });
+    }
+  }
+
+  return issues;
+}
+
+// ---------------------------------------------------------------------------
 // Reporting
 // ---------------------------------------------------------------------------
 
@@ -567,11 +803,13 @@ function run() {
   }
 
   const componentResults = [];
+  const componentSources = [];
   let generatedAnyDocs = false;
 
   for (const name of components) {
     const dir = join(COMPONENTS_DIR, name);
     const componentSource = readFileSync(join(dir, `${name}.tsx`), 'utf8');
+    componentSources.push({ name, source: componentSource });
     const storiesPath = join(dir, `${name}.stories.tsx`);
     const storiesSource = existsSync(storiesPath) ? readFileSync(storiesPath, 'utf8') : '';
 
@@ -636,6 +874,20 @@ function run() {
     componentResults.push(report);
   }
 
+  console.log(`${BOLD}Foundations${RESET} (Colours, Typography, Spacing, Radius, Shadows, Motion)`);
+  const tokensJson = JSON.parse(readFileSync(TOKENS_JSON_PATH, 'utf8'));
+  const foundationData = buildFoundationData(cssRaw, tokensJson, componentSources);
+  writeFoundationData(foundationData);
+  const foundationIssues = checkFoundationCoverage(foundationData, tokenParityPass);
+  const foundationCoveragePass = !foundationIssues.some((i) => i.level === 'fail');
+  console.log(`${BOLD}Foundation Coverage${RESET} — ${foundationCoveragePass ? `${GREEN}PASS${RESET}` : `${RED}FAIL${RESET}`}`);
+  if (foundationIssues.length) {
+    printIssues(foundationIssues);
+  } else {
+    console.log(`  ${GREEN}PASS${RESET}  no issues found`);
+  }
+  console.log('');
+
   console.log(`${BOLD}Step 4: regenerating Storybook docs${RESET} (npm run build-storybook)`);
   const buildResult = regenerateStorybookDocs();
   if (buildResult.pass) {
@@ -662,6 +914,7 @@ function run() {
     Accessibility: componentResults.every((r) => r.accessibility),
     'Storybook Coverage': componentResults.every((r) => r.storybookCoverage),
     'Documentation Coverage': componentResults.every((r) => r.documentationCoverage),
+    'Foundation Coverage': foundationCoveragePass,
   };
   printDotPaddedGroup(Object.entries(categoryPass));
   console.log('');

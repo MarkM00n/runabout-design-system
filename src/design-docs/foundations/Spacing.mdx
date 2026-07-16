@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FoundationPage, FoundationSection } from '../FoundationPage';
+import foundationsData from '../foundations-data.generated.json';
+
+<Meta title="Foundations/Spacing" />
+
+<FoundationPage
+  title="Spacing"
+  description="The spacing scale used for padding and gap across components. Values are deliberately zero-padded (00/01/02/03) so they never collide with Tailwind's own default numeric scale."
+>
+  <FoundationSection category="spacing" tokens={foundationsData.spacing} />
+</FoundationPage>
