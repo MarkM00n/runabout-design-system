@@ -1,0 +1,29 @@
+{
+  "component": "Button",
+  "lastValidated": "2026-07-16",
+  "tokenCompliance": true,
+  "accessibility": true,
+  "storybookCoverage": true,
+  "documentationCoverage": true,
+  "overall": true,
+  "tokensUsed": [
+    "color-action-highlight",
+    "color-action-highlight-hover",
+    "color-action-primary",
+    "color-action-primary-hover",
+    "color-action-secondary-hover",
+    "color-border-default",
+    "color-border-focus",
+    "color-surface-primary",
+    "color-text-inverse",
+    "color-text-primary",
+    "font-tt-norms",
+    "radius-2xl",
+    "radius-xl",
+    "spacing-01",
+    "spacing-02",
+    "spacing-03",
+    "text-h6",
+    "text-label"
+  ]
+}

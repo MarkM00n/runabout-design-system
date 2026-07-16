@@ -1,0 +1,25 @@
+{
+  "component": "Input",
+  "lastValidated": "2026-07-16",
+  "tokenCompliance": true,
+  "accessibility": true,
+  "storybookCoverage": true,
+  "documentationCoverage": true,
+  "overall": true,
+  "tokensUsed": [
+    "color-border-default",
+    "color-border-focus",
+    "color-border-subtle",
+    "color-state-disabled",
+    "color-state-hover",
+    "color-surface-primary",
+    "color-text-muted",
+    "color-text-primary",
+    "font-tt-norms",
+    "radius-2xl",
+    "spacing-02",
+    "spacing-03",
+    "text-h6",
+    "text-paragraph-small"
+  ]
+}

@@ -2,12 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 import { Card } from './Card';
+import { docs } from './Card.docs';
+import validation from './Card.validation.json';
 
 const meta = {
   title: 'Components/Card',
   component: Card,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   args: { onCtaClick: fn() },

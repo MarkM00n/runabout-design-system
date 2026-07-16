@@ -2,12 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 import { Button } from './Button';
+import { docs } from './Button.docs';
+import validation from './Button.validation.json';
 
 const meta = {
   title: 'Components/Button',
   component: Button,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {

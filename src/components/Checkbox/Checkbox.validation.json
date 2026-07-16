@@ -1,0 +1,26 @@
+{
+  "component": "Checkbox",
+  "lastValidated": "2026-07-16",
+  "tokenCompliance": true,
+  "accessibility": true,
+  "storybookCoverage": true,
+  "documentationCoverage": true,
+  "overall": true,
+  "tokensUsed": [
+    "color-border-default",
+    "color-border-focus",
+    "color-border-subtle",
+    "color-state-disabled",
+    "color-state-hover",
+    "color-surface-primary",
+    "color-text-highlight",
+    "color-text-inverse",
+    "color-text-muted",
+    "font-tt-norms",
+    "radius-sm",
+    "spacing-00",
+    "spacing-01",
+    "text-h6",
+    "text-paragraph-small"
+  ]
+}

@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite'
 
 import '../src/index.css'
+import { DocsPage } from '../src/design-docs/DocsPage'
 
 const preview: Preview = {
   parameters: {
@@ -16,7 +17,15 @@ const preview: Preview = {
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
       test: 'todo'
-    }
+    },
+
+    // Registering this globally is what makes the design-system docs layout
+    // (Description/Usage/Do-Don't/Variants/States/Tokens/A11y/Validation
+    // Status/Controls/Code Example) automatic for every autodocs-tagged
+    // component — see src/design-docs/DocsPage.tsx and types.ts.
+    docs: {
+      page: DocsPage,
+    },
   },
 };
 
