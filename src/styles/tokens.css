@@ -9,6 +9,11 @@
   --color-action-primary: #f8ebda;
   /* Button primary variant's fill on hover. */
   --color-action-primary-hover: #df8e10;
+  /* Button secondary variant's fill in its default state (transparent).
+     Not yet wired to a component via this token name — Secondary uses a
+     literal bg-transparent — included for completeness of the Figma
+     semantic layer. */
+  --color-action-secondary: rgba(255, 255, 255, 0);
   /* Button secondary variant's fill on hover — a white overlay at 10%
      opacity, not a solid color, so it reads correctly over any background. */
   --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
@@ -28,10 +33,14 @@
   --color-border-focus: #df8e10;
   /* Hover-state border color for every Input-family control. */
   --color-border-subtle: #f6e3cb;
+  /* Aliases Olive/50 in Figma. Not yet used by any built component. */
+  --color-border-strong: #3d4a2e;
 
   /* Default body text color; also the typed-value color for Input-family
      controls when focused (see Input's placeholder-vs-value reconstruction). */
   --color-text-primary: #2f2c28;
+  /* Aliases Olive/100 in Figma. Not yet used by any built component. */
+  --color-text-secondary: #5d6440;
   /* Text/border color for content meant to sit on a dark or colored surface
      (Button secondary variant, Checkbox's label) — assumes a dark backdrop,
      see Checkbox's Storybook decorator for why. */
@@ -46,20 +55,123 @@
 
   /* Default background fill for every Input-family control. */
   --color-surface-primary: #f7e7d2;
+  /* Aliases Olive/50 in Figma. Not yet used by any built component. */
+  --color-surface-secondary: #3d4a2e;
+  /* Aliases Sand/900 in Figma. Not yet used by any built component. */
+  --color-surface-tertiary: #fefbf8;
+  /* Aliases Grey/100 in Figma. Not yet used by any built component. */
+  --color-surface-inverse: #2f2c28;
   /* Bound to Card's background in Figma; distinct token from surface-primary
      even though unrelated in value. */
   --color-surface-feature: #c4582a;
+  /* Aliases Olive/25 in Figma. Not yet used by any built component. */
+  --color-surface-emphasis: #2a2d1e;
+  /* Aliases Grey/50 in Figma — for modal/overlay backdrops. Not yet used
+     by any built component (no Modal built yet). */
+  --color-surface-scrim: #1d1b19;
 
   /* Background fill for Input-family controls on hover. */
   --color-state-hover: #f6e3cb;
   /* Border color for Input-family controls in the disabled state. */
   --color-state-disabled: #8b8a88;
+  /* Aliases Amber/100 in Figma. Not yet used by any built component —
+     border-focus is what components currently reference for focus styling. */
+  --color-state-focus: #df8e10;
+  /* Not aliased to a primitive in Figma — a standalone value. Not yet used
+     by any built component. */
+  --color-state-success: #16a34a;
+  /* Not aliased to a primitive in Figma — a standalone value. Not yet used
+     by any built component. */
+  --color-state-error: #dc2626;
 
+  /* Full primitive-tier palette ramps (Figma's "Primitives" variable
+     collection, 71 variables total). These sit underneath the semantic
+     tokens above — some semantic tokens alias directly into these ramps
+     (documented in the comments above), most of the ramp is not consumed
+     by any built component yet. sand-400 is the one primitive with an
+     existing, real consumer (Card). */
+  --color-sand-100: #f3dbbc;
+  --color-sand-200: #f4dfc3;
+  --color-sand-300: #f6e3cb;
   /* Primitive-tier palette token — Card's title/date/description text binds
      directly to this rather than a semantic text-* token in Figma. Kept
      distinct rather than aliased to surface-primary/text-inverse even though
      the values currently match, since the Figma binding is what it is. */
   --color-sand-400: #f7e7d2;
+  --color-sand-500: #f8ebda;
+  --color-sand-600: #faefe1;
+  --color-sand-700: #fbf3e9;
+  --color-sand-800: #fcf7f0;
+  --color-sand-900: #fefbf8;
+
+  --color-terracotta-100: #c4582a;
+  --color-terracotta-200: #cb6c43;
+  --color-terracotta-300: #d2805c;
+  --color-terracotta-400: #d99375;
+  --color-terracotta-500: #e0a78f;
+  --color-terracotta-600: #e7bba8;
+  --color-terracotta-700: #eecfc1;
+  --color-terracotta-800: #f5e2da;
+  --color-terracotta-900: #fcf6f3;
+
+  --color-rose-100: #da6c6e;
+  --color-rose-200: #de7c7e;
+  --color-rose-300: #e28d8e;
+  --color-rose-400: #e69d9e;
+  --color-rose-500: #eaadae;
+  --color-rose-600: #efbebf;
+  --color-rose-700: #f3cecf;
+  --color-rose-800: #f7dedf;
+  --color-rose-900: #fbefef;
+
+  --color-burgundy-100: #341012;
+  --color-burgundy-150: #4d0707;
+  --color-burgundy-200: #4b2b2c;
+  --color-burgundy-300: #614547;
+  --color-burgundy-400: #786061;
+  --color-burgundy-500: #8e7a7b;
+  --color-burgundy-600: #a59596;
+  --color-burgundy-700: #bbafb0;
+  --color-burgundy-800: #d2caca;
+  --color-burgundy-900: #e8e4e5;
+
+  --color-amber-50: #c07b0e;
+  --color-amber-100: #df8e10;
+  --color-amber-200: #e39b2b;
+  --color-amber-300: #e6a745;
+  --color-amber-400: #eab460;
+  --color-amber-500: #edc07a;
+  --color-amber-600: #f1cd95;
+  --color-amber-700: #f4d9af;
+  --color-amber-800: #f8e6ca;
+  --color-amber-900: #fbf2e4;
+
+  --color-olive-25: #2a2d1e;
+  --color-olive-50: #3d4a2e;
+  --color-olive-100: #5d6440;
+  --color-olive-200: #6f7555;
+  --color-olive-300: #81866a;
+  --color-olive-400: #939880;
+  --color-olive-500: #a5a995;
+  --color-olive-600: #b7baaa;
+  --color-olive-700: #c9cbbf;
+  --color-olive-800: #dbddd5;
+  --color-olive-900: #edeeea;
+
+  --color-grey-50: #1d1b19;
+  --color-grey-100: #2f2c28;
+  --color-grey-200: #464340;
+  --color-grey-300: #5d5b58;
+  --color-grey-400: #747270;
+  --color-grey-500: #8b8a88;
+  --color-grey-600: #a3a19f;
+  --color-grey-700: #bab9b7;
+  --color-grey-800: #d1d0cf;
+  --color-grey-900: #e8e8e7;
+  --color-grey-1000: #ffffff;
+
+  --color-cream-100: #f9ecd2;
+  --color-cream-200: #ebe9e3;
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off
@@ -69,12 +181,25 @@
   --spacing-01: 8px;
   --spacing-02: 16px;
   --spacing-03: 24px;
+  --spacing-04: 32px;
+  --spacing-05: 40px;
+  --spacing-06: 48px;
+  --spacing-07: 64px;
+  --spacing-08: 80px;
+  --spacing-09: 96px;
+  --spacing-10: 128px;
 
-  /* Overrides Tailwind's default rounded-sm (2px) / rounded-xl (12px) /
-     rounded-2xl (16px) scale to match the extracted radius tokens. */
+  /* Overrides Tailwind's default rounded-none/xs/sm/md/lg/xl/2xl/full scale
+     to match the full extracted radius ramp (Figma's "Corner Radius"
+     collection, 8 steps). */
+  --radius-none: 0px;
+  --radius-xs: 2px;
   --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
+  --radius-full: 9999px;
 
   --font-tt-norms: 'TT Norms Pro Trial', system-ui, sans-serif;
   --font-recoleta: 'Recoleta', Georgia, serif;

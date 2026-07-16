@@ -242,26 +242,56 @@ function checkTokenCompliance(source) {
   return issues;
 }
 
+// Real Tailwind utility prefixes that can carry a value from each token
+// category, used to bound extractTokensUsed's suffix match. Without this, a
+// bare `[a-z]+-<suffix>` match false-positives on any unrelated class that
+// happens to end the same way — e.g. token radius-none's suffix "none"
+// matching inside "pointer-events-none"/"outline-none"/"select-none", none
+// of which have anything to do with border-radius. Caught via the live
+// Radius foundation page showing radius-none as "used by" five components
+// that don't use rounded-none anywhere.
+const TOKEN_UTILITY_PREFIXES = {
+  'color-': ['bg', 'text', 'border', 'ring-offset', 'ring', 'outline', 'fill', 'stroke', 'divide', 'decoration', 'caret', 'accent', 'from', 'via', 'to', 'placeholder', 'shadow'],
+  'spacing-': ['px', 'py', 'pt', 'pb', 'pl', 'pr', 'p', 'mx', 'my', 'mt', 'mb', 'ml', 'mr', 'm', 'gap-x', 'gap-y', 'gap', 'space-x', 'space-y', 'inset-x', 'inset-y', 'inset', 'top', 'right', 'bottom', 'left', 'min-w', 'min-h', 'max-w', 'max-h', 'w', 'h', 'size'],
+  'radius-': ['rounded-tl', 'rounded-tr', 'rounded-bl', 'rounded-br', 'rounded-ss', 'rounded-se', 'rounded-es', 'rounded-ee', 'rounded-t', 'rounded-b', 'rounded-l', 'rounded-r', 'rounded-s', 'rounded-e', 'rounded'],
+  'text-': ['text', 'leading'],
+  'font-': ['font'],
+};
+
+const CATEGORY_PREFIXES = ['color-', 'spacing-', 'radius-', 'text-', 'font-'];
+
+// Single source of truth for "does this component's source reference this
+// registered token", shared by extractTokensUsed (component -> tokens) and
+// findConsumers (token -> components) so both stay in sync by construction.
+function tokenUsedInSource(cssName, componentSource) {
+  let suffix = cssName;
+  let allowedPrefixes = null;
+  for (const prefix of CATEGORY_PREFIXES) {
+    if (cssName.startsWith(prefix)) {
+      suffix = cssName.slice(prefix.length);
+      allowedPrefixes = TOKEN_UTILITY_PREFIXES[prefix];
+      break;
+    }
+  }
+  const escaped = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // (?!-[a-z]) blocks a shorter token's suffix from matching as a false
+  // prefix of a longer, distinct class — e.g. color-action-secondary
+  // matching inside "bg-action-secondary-hover".
+  const prefixPattern = allowedPrefixes
+    ? `(?:${allowedPrefixes.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`
+    : '[a-z]+';
+  const re = new RegExp(`${prefixPattern}-${escaped}\\b(?!-[a-z])`, 'i');
+  return re.test(stripComments(componentSource));
+}
+
 // Scans a component's source for usage of registered tokens (by suffix
 // match against tokens.css's @theme names) so "Design Tokens Used" in the
 // docs page is auto-derived from real usage, not hand-maintained.
 function extractTokensUsed(componentSource, cssTokenNames) {
-  const codeOnly = stripComments(componentSource);
   const used = new Set();
-  const categoryPrefixes = ['color-', 'spacing-', 'radius-', 'text-', 'font-'];
-
   for (const fullName of cssTokenNames) {
     if (fullName.includes('--')) continue; // skip --text-x--line-height companions
-    let suffix = fullName;
-    for (const prefix of categoryPrefixes) {
-      if (fullName.startsWith(prefix)) {
-        suffix = fullName.slice(prefix.length);
-        break;
-      }
-    }
-    const escaped = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`[a-z]+-${escaped}\\b`, 'i');
-    if (re.test(codeOnly)) {
+    if (tokenUsedInSource(fullName, componentSource)) {
       used.add(fullName);
     }
   }
@@ -633,6 +663,37 @@ function genericUsageFor(category, group) {
   return defaults[category] ?? 'Design token.';
 }
 
+// Figma's "Primitives" collection (71 raw palette colors) vs. "Semantic"
+// collection (26 purpose-named tokens, several of which alias directly into
+// these ramps) — two different tiers with two different documentation
+// needs. A primitive's correct, complete "usage" description is its
+// position in the ramp; nothing more specific is meaningful to say about
+// "Sand, step 700" the way there is for a purpose-named token like
+// action-primary. Distinguishing tier is what lets the "No undocumented
+// tokens" check treat a primitive's ramp-position description as real
+// documentation rather than flagging all 71 as needing individual notes.
+const PRIMITIVE_COLOR_FAMILIES = new Set([
+  'sand',
+  'terracotta',
+  'rose',
+  'burgundy',
+  'amber',
+  'olive',
+  'grey',
+  'cream',
+]);
+
+function isPrimitiveColorGroup(group) {
+  return PRIMITIVE_COLOR_FAMILIES.has(group);
+}
+
+function rampPositionUsage(group, key, allKeysInGroup) {
+  const familyLabel = group[0].toUpperCase() + group.slice(1);
+  const sorted = [...allKeysInGroup].sort((a, b) => Number(a) - Number(b));
+  const position = sorted.indexOf(key) + 1;
+  return `${familyLabel} palette — step ${key} (${position} of ${sorted.length} in the ramp).`;
+}
+
 // Human-facing "type" label shown in the Foundation table's Token Type
 // column — distinct from the internal `category` key used for routing to
 // the right preview renderer.
@@ -649,17 +710,7 @@ const TOKEN_TYPE_LABELS = {
 // extractTokensUsed — inverted (token -> components, not component ->
 // tokens) so the Foundation pages can cross-reference consumers.
 function findConsumers(cssName, componentSources) {
-  const categoryPrefixes = ['color-', 'spacing-', 'radius-', 'text-', 'font-'];
-  let suffix = cssName;
-  for (const prefix of categoryPrefixes) {
-    if (cssName.startsWith(prefix)) {
-      suffix = cssName.slice(prefix.length);
-      break;
-    }
-  }
-  const escaped = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(`[a-z]+-${escaped}\\b`, 'i');
-  return componentSources.filter(({ source }) => re.test(stripComments(source))).map(({ name }) => name);
+  return componentSources.filter(({ source }) => tokenUsedInSource(cssName, source)).map(({ name }) => name);
 }
 
 // Motion's named tokens (duration-standard/ease-standard) aren't referenced
@@ -678,16 +729,25 @@ function buildFoundationData(cssRaw, tokensJson, componentSources) {
   const data = { color: [], typography: [], spacing: [], radius: [], motion: [], breakpoint: [], shadow: [] };
 
   for (const [group, entries] of Object.entries(tokensJson.color ?? {})) {
+    const isPrimitive = isPrimitiveColorGroup(group);
+    const groupKeys = Object.keys(entries);
     for (const [key, entry] of Object.entries(entries)) {
       const cssName = `color-${group}-${key}`;
       const specificNote = entry.note || cssComments[cssName];
+      const fallbackUsage = isPrimitive
+        ? rampPositionUsage(group, key, groupKeys)
+        : genericUsageFor('color', group);
       data.color.push({
         type: TOKEN_TYPE_LABELS.color,
+        tier: isPrimitive ? 'primitive' : 'semantic',
         name: `--${cssName}`,
         tokenPath: `color.${group}.${key}`,
         value: entry.value,
-        usage: specificNote || genericUsageFor('color', group),
-        documented: Boolean(specificNote),
+        usage: specificNote || fallbackUsage,
+        // A primitive's ramp-position fallback IS its complete, correct
+        // documentation — there's nothing more specific to say. Only
+        // semantic tokens get nudged toward writing a real note.
+        documented: Boolean(specificNote) || isPrimitive,
         consumedBy: findConsumers(cssName, componentSources),
       });
     }
