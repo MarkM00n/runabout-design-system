@@ -202,14 +202,22 @@ per component.
 ## 6. Foundations
 
 Foundation pages (`src/design-docs/foundations/*.mdx`, one per category:
-Colours, Typography, Spacing, Radius, Shadows, Motion) document the token
-scale itself, separately from any one component. `design-sync` generates
-`src/design-docs/foundations-data.generated.json` on every run — the pages
-render that, they don't hand-list token values.
+Colours, Typography, Spacing, Radius, Shadows, Motion, Breakpoints) document
+the token scale itself, separately from any one component. `design-sync`
+generates `src/design-docs/foundations-data.generated.json` on every run —
+the pages render that, they don't hand-list token values.
 
 - **Read from `tokens.css`/`tokens.json`, never re-derive values by another
   path.** A Foundation page's numbers must trace back to the same two files
   every component check already treats as the source of truth.
+- **A category gets its `.mdx` page from the shared template, not by hand.**
+  `generateFoundationPageStub()` writes any missing required page (see
+  `REQUIRED_FOUNDATION_PAGES`/`FOUNDATION_PAGE_CATEGORY` in
+  `scripts/design-sync.js`) from one template — Breakpoints was never
+  hand-authored, it was generated the first time `design-sync` ran with it
+  in the required list. Adding an 8th category means adding one line to
+  that list and one branch in `buildFoundationData`, not writing a new MDX
+  file.
 - **"Used By" is computed, not asserted.** It's built by scanning every
   component's source for real usage (the same suffix-match rule
   `extractTokensUsed` already uses, inverted into a token → components map)
@@ -217,19 +225,25 @@ render that, they don't hand-list token values.
 - **An empty category is a valid, honest state — not something to fill with
   invented values.** Shadows has zero tokens: the Figma file has no effect
   styles (confirmed via `getLocalEffectStylesAsync`) and no component uses
-  `box-shadow`. The page says so plainly rather than fabricating a shadow
-  scale that doesn't exist anywhere in this system.
+  `box-shadow`. Breakpoints has exactly one, for the same reason applied to
+  a different category: no Figma breakpoint variables exist, and only one
+  breakpoint value (`1024px`) is used anywhere in this codebase — that gets
+  formalized as a real token; a full `sm`/`md`/`lg`/`xl` scale does not get
+  invented just because Tailwind ships one by default. Pages say so plainly
+  rather than fabricating scale that doesn't exist anywhere in this system.
 - **A token can be real and still show zero *named* consumers.** Motion's
-  `duration-standard`/`ease-standard` aren't Figma-sourced (no motion
-  variables exist in the file) — they formalize a value already used
-  identically via Tailwind's literal `duration-150 ease-out` in five
-  components. That literal usage is tracked as a distinct "not yet
-  migrated" consumer, not reported as orphaned — collapsing the two would
-  either hide a real gap or falsely flag a token that's demonstrably in use.
-- **"No orphaned tokens" is a WARN, not an instant FAIL, pending human
-  review.** A token with zero consumers (named or literal) might mean dead
-  weight to remove, or a token extracted ahead of the component that will
-  use it — the check surfaces it, it doesn't assume which.
+  `duration-standard`/`ease-standard` aren't Figma-sourced — they formalize
+  a value already used identically via Tailwind's literal
+  `duration-150 ease-out` in five components. That literal usage is tracked
+  as a distinct "not yet migrated" consumer on the token's row, not hidden
+  and not conflated with the named-token usage count.
+- **"Documented" means a specific note, not just a non-empty string.** Every
+  token always renders *something* in its Description column — a per-token
+  comment in `tokens.css` if one exists, otherwise a generic per-category
+  fallback ("Color token in the 'action' group."). Only the specific case
+  counts as `documented: true`; the Foundation Coverage check's "No
+  undocumented tokens" flags the generic-fallback case as a WARN nudge to
+  write a real one, not a FAIL — a token is never silently blank.
 
 ## Sourcing Figma data
 

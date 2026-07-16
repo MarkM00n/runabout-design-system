@@ -110,11 +110,13 @@ function checkTokenParity() {
   const cssRadius = [...cssNames].filter((n) => n.startsWith('radius-')).map((n) => n.slice('radius-'.length));
   const cssDuration = [...cssNames].filter((n) => n.startsWith('duration-')).map((n) => n.slice('duration-'.length));
   const cssEasing = [...cssNames].filter((n) => n.startsWith('ease-')).map((n) => n.slice('ease-'.length));
+  const cssBreakpoint = [...cssNames].filter((n) => n.startsWith('breakpoint-')).map((n) => n.slice('breakpoint-'.length));
 
   const jsonColor = flattenJsonCategory(json, 'color');
   const jsonSpacing = new Set(Object.keys(json.spacing ?? {}));
   const jsonRadius = new Set(Object.keys(json.radius ?? {}));
   const jsonMotion = new Set(Object.keys(json.motion ?? {}));
+  const jsonBreakpoint = new Set(Object.keys(json.breakpoint ?? {}));
 
   for (const name of cssColor) {
     if (!jsonColor.has(`color-${name}`)) {
@@ -139,6 +141,11 @@ function checkTokenParity() {
   for (const name of cssEasing) {
     if (!jsonMotion.has(name)) {
       issues.push({ level: 'warn', message: `Motion token "--ease-${name}" is in tokens.css but has no matching entry in tokens.json.motion.` });
+    }
+  }
+  for (const name of cssBreakpoint) {
+    if (!jsonBreakpoint.has(name)) {
+      issues.push({ level: 'warn', message: `Breakpoint token "--breakpoint-${name}" is in tokens.css but has no matching entry in tokens.json.breakpoint.` });
     }
   }
 
@@ -540,7 +547,19 @@ function regenerateStorybookDocs() {
 
 const FOUNDATIONS_DATA_PATH = join(ROOT, 'src', 'design-docs', 'foundations-data.generated.json');
 const FOUNDATIONS_MDX_DIR = join(ROOT, 'src', 'design-docs', 'foundations');
-const REQUIRED_FOUNDATION_PAGES = ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion'];
+const REQUIRED_FOUNDATION_PAGES = ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Breakpoints'];
+// Maps a required page name to the foundationData category key it renders —
+// needed because "Colours" (UK spelling, matches the page title) isn't the
+// same string as "color" (the internal/tokens.json category key).
+const FOUNDATION_PAGE_CATEGORY = {
+  Colours: 'color',
+  Typography: 'typography',
+  Spacing: 'spacing',
+  Radius: 'radius',
+  Shadows: 'shadow',
+  Motion: 'motion',
+  Breakpoints: 'breakpoint',
+};
 
 // Associates each `--token: value;` declaration in the @theme block with
 // whatever comment immediately precedes it. A comment stays "pending" and
@@ -609,9 +628,22 @@ function genericUsageFor(category, group) {
     radius: 'Corner radius scale value.',
     typography: 'Type style (font size, line height, family).',
     motion: 'Motion timing standard.',
+    breakpoint: 'Responsive breakpoint value.',
   };
   return defaults[category] ?? 'Design token.';
 }
+
+// Human-facing "type" label shown in the Foundation table's Token Type
+// column — distinct from the internal `category` key used for routing to
+// the right preview renderer.
+const TOKEN_TYPE_LABELS = {
+  color: 'Color',
+  spacing: 'Spacing',
+  radius: 'Radius',
+  typography: 'Typography',
+  motion: 'Motion',
+  breakpoint: 'Breakpoint',
+};
 
 // Which components reference a token, by the same suffix-match rule as
 // extractTokensUsed — inverted (token -> components, not component ->
@@ -643,15 +675,19 @@ function findLiteralMotionConsumers(componentSources) {
 
 function buildFoundationData(cssRaw, tokensJson, componentSources) {
   const cssComments = extractCssTokenComments(cssRaw);
-  const data = { color: [], typography: [], spacing: [], radius: [], motion: [], shadow: [] };
+  const data = { color: [], typography: [], spacing: [], radius: [], motion: [], breakpoint: [], shadow: [] };
 
   for (const [group, entries] of Object.entries(tokensJson.color ?? {})) {
     for (const [key, entry] of Object.entries(entries)) {
       const cssName = `color-${group}-${key}`;
+      const specificNote = entry.note || cssComments[cssName];
       data.color.push({
+        type: TOKEN_TYPE_LABELS.color,
         name: `--${cssName}`,
+        tokenPath: `color.${group}.${key}`,
         value: entry.value,
-        usage: entry.note || cssComments[cssName] || genericUsageFor('color', group),
+        usage: specificNote || genericUsageFor('color', group),
+        documented: Boolean(specificNote),
         consumedBy: findConsumers(cssName, componentSources),
       });
     }
@@ -659,33 +695,47 @@ function buildFoundationData(cssRaw, tokensJson, componentSources) {
 
   for (const [key, entry] of Object.entries(tokensJson.spacing ?? {})) {
     const cssName = `spacing-${key}`;
+    const specificNote = cssComments[cssName];
     data.spacing.push({
+      type: TOKEN_TYPE_LABELS.spacing,
       name: `--${cssName}`,
+      tokenPath: `spacing.${key}`,
       value: entry.value,
-      usage: cssComments[cssName] || genericUsageFor('spacing'),
+      usage: specificNote || genericUsageFor('spacing'),
+      documented: Boolean(specificNote),
       consumedBy: findConsumers(cssName, componentSources),
     });
   }
 
   for (const [key, entry] of Object.entries(tokensJson.radius ?? {})) {
     const cssName = `radius-${key}`;
+    const specificNote = cssComments[cssName];
     data.radius.push({
+      type: TOKEN_TYPE_LABELS.radius,
       name: `--${cssName}`,
+      tokenPath: `radius.${key}`,
       value: entry.value,
-      usage: cssComments[cssName] || genericUsageFor('radius'),
+      usage: specificNote || genericUsageFor('radius'),
+      documented: Boolean(specificNote),
       consumedBy: findConsumers(cssName, componentSources),
     });
   }
 
   for (const [key, entry] of Object.entries(tokensJson.typography ?? {})) {
     const cssName = `text-${key}`;
+    const specificNote = cssComments[cssName];
     data.typography.push({
+      type: TOKEN_TYPE_LABELS.typography,
       name: `--${cssName}`,
+      tokenPath: `typography.${key}`,
       value: `${entry.fontSize} / ${entry.lineHeight} / ${entry.fontFamily}`,
       fontFamily: entry.fontFamily,
       fontSize: entry.fontSize,
       lineHeight: entry.lineHeight,
-      usage: cssComments[cssName] || genericUsageFor('typography'),
+      fontWeight: entry.fontWeight,
+      letterSpacing: entry.letterSpacing,
+      usage: specificNote || genericUsageFor('typography'),
+      documented: Boolean(specificNote),
       consumedBy: findConsumers(cssName, componentSources),
     });
   }
@@ -696,13 +746,33 @@ function buildFoundationData(cssRaw, tokensJson, componentSources) {
     ];
     const literalConsumers = findLiteralMotionConsumers(componentSources).filter((n) => !namedConsumers.includes(n));
     data.motion.push({
+      type: TOKEN_TYPE_LABELS.motion,
       name: `--duration-${key} / --ease-${key}`,
+      tokenPath: `motion.${key}`,
       value: `${entry.duration} / ${entry.easing}`,
       duration: entry.duration,
       easing: entry.easing,
       usage: entry.note || genericUsageFor('motion'),
+      documented: Boolean(entry.note),
       consumedBy: namedConsumers,
       literalConsumers,
+    });
+  }
+
+  for (const [key, entry] of Object.entries(tokensJson.breakpoint ?? {})) {
+    const cssName = `breakpoint-${key}`;
+    const specificNote = entry.note || cssComments[cssName];
+    data.breakpoint.push({
+      type: TOKEN_TYPE_LABELS.breakpoint,
+      name: `--${cssName}`,
+      tokenPath: `breakpoint.${key}`,
+      value: entry.value,
+      usage: specificNote || genericUsageFor('breakpoint'),
+      documented: Boolean(specificNote),
+      // Breakpoints use Tailwind's responsive-variant naming (`tablet:`),
+      // not the [a-z]+-<suffix> utility-class pattern findConsumers matches
+      // against, and no component uses one yet regardless — see the note.
+      consumedBy: [],
     });
   }
 
@@ -715,43 +785,110 @@ function writeFoundationData(data) {
   writeFileSync(FOUNDATIONS_DATA_PATH, JSON.stringify(data, null, 2) + '\n');
 }
 
-// The 4 required Foundation checks: token documented, token rendered in
-// Storybook, token referenced correctly (tokens.css<->tokens.json parity,
-// already computed separately and passed in), no orphaned tokens.
-function checkFoundationCoverage(foundationData, tokenParityPass) {
-  const issues = [];
+// Reusable template for a Foundation page: the file only needs to exist and
+// point at a category — every future token category (an 8th, a 9th) gets
+// its Storybook page from this same generator rather than a hand-authored
+// MDX file, which is what makes new categories "generated automatically"
+// per docs/design-system-rules.md §6. Mirrors generateDocsStub's pattern
+// for component docs. The structure here matches the six pages already
+// hand-written for Colours/Typography/Spacing/Radius/Shadows/Motion
+// exactly, rather than introducing an unproven MDX pattern (e.g. inline
+// comments) into an auto-generated file.
+function generateFoundationPageStub(pageName, category) {
+  const mdxPath = join(FOUNDATIONS_MDX_DIR, `${pageName}.mdx`);
+  if (existsSync(mdxPath)) return false;
+
+  const emptyStateProp = category === 'shadow' ? ' emptyStateNote={foundationsData.shadowNote}' : '';
+  const stub = `import { Meta } from '@storybook/addon-docs/blocks';
+import { FoundationPage, FoundationSection } from '../FoundationPage';
+import foundationsData from '../foundations-data.generated.json';
+
+<Meta title="Foundations/${pageName}" />
+
+<FoundationPage
+  title="${pageName}"
+  description="Auto-generated by npm run design-sync from src/styles/tokens.css and src/tokens/tokens.json. Editing this page directly won't stick — add a specific per-token comment in tokens.css instead."
+>
+  <FoundationSection category="${category}" tokens={foundationsData.${category}}${emptyStateProp} />
+</FoundationPage>
+`;
+  writeFileSync(mdxPath, stub);
+  return true;
+}
+
+// The 4 required Foundation checks, reported as their own labeled groups:
+// Token exists, Token rendered in Storybook, Foundation page generated,
+// No undocumented tokens.
+function checkFoundationCoverage(foundationData, tokenParityPass, generatedAnyFoundationPage) {
+  const groups = {
+    'Token exists': [],
+    'Token rendered in Storybook': [],
+    'Foundation page generated': [],
+    'No undocumented tokens': [],
+  };
+
   const allTokens = [
     ...foundationData.color,
     ...foundationData.typography,
     ...foundationData.spacing,
     ...foundationData.radius,
     ...foundationData.motion,
+    ...foundationData.breakpoint,
   ];
 
+  // Token exists: tokens.json (source of truth) and tokens.css (@theme,
+  // what Storybook/Tailwind actually consume) agree — reuses the parity
+  // check already run against tokens.css<->tokens.json, extended to cover
+  // motion/breakpoint alongside color/spacing/radius.
+  if (!tokenParityPass) {
+    groups['Token exists'].push({
+      level: 'fail',
+      message: 'tokens.css and tokens.json are out of sync — a token in one is missing from the other (see Token parity above).',
+    });
+  }
+
+  // Token rendered in Storybook: every generated record has a real,
+  // non-empty value — catches a token that made it into the data file with
+  // nothing to actually display.
   for (const token of allTokens) {
-    if (!token.usage?.trim()) {
-      issues.push({ level: 'fail', message: `Token ${token.name} has no usage documentation.` });
+    if (!token.value || !String(token.value).trim()) {
+      groups['Token rendered in Storybook'].push({ level: 'fail', message: `Token ${token.tokenPath} has no renderable value.` });
     }
   }
 
+  // Foundation page generated: all 7 required .mdx pages exist. Since
+  // design-sync now auto-generates any that are missing (step 3, mirroring
+  // component docs generation), this should only ever fail if generation
+  // itself failed.
   for (const page of REQUIRED_FOUNDATION_PAGES) {
     if (!existsSync(join(FOUNDATIONS_MDX_DIR, `${page}.mdx`))) {
-      issues.push({ level: 'fail', message: `Missing Foundation page: src/design-docs/foundations/${page}.mdx.` });
+      groups['Foundation page generated'].push({ level: 'fail', message: `Missing Foundation page: src/design-docs/foundations/${page}.mdx.` });
     }
   }
-
-  if (!tokenParityPass) {
-    issues.push({ level: 'fail', message: 'tokens.css and tokens.json are out of sync — see Token parity above.' });
+  if (generatedAnyFoundationPage) {
+    groups['Foundation page generated'].push({
+      level: 'warn',
+      message: 'One or more Foundation pages were auto-generated this run from the shared template.',
+    });
   }
 
+  // No undocumented tokens: every token has at least a generic category
+  // description (structurally, always true — the data generator never
+  // leaves usage empty) — WARN when it's only that generic fallback rather
+  // than a specific, hand-written note, so "documented" means real content,
+  // not just a non-empty string.
   for (const token of allTokens) {
-    const hasConsumer = (token.consumedBy?.length ?? 0) > 0 || (token.literalConsumers?.length ?? 0) > 0;
-    if (!hasConsumer) {
-      issues.push({ level: 'warn', message: `Token ${token.name} is not referenced by any component (orphaned).` });
+    if (!token.usage?.trim()) {
+      groups['No undocumented tokens'].push({ level: 'fail', message: `Token ${token.tokenPath} has no usage documentation at all.` });
+    } else if (!token.documented) {
+      groups['No undocumented tokens'].push({
+        level: 'warn',
+        message: `Token ${token.tokenPath} only has a generic category description — add a specific usage note in tokens.css.`,
+      });
     }
   }
 
-  return issues;
+  return groups;
 }
 
 // ---------------------------------------------------------------------------
@@ -874,17 +1011,32 @@ function run() {
     componentResults.push(report);
   }
 
-  console.log(`${BOLD}Foundations${RESET} (Colours, Typography, Spacing, Radius, Shadows, Motion)`);
+  console.log(`${BOLD}Foundations${RESET} (${REQUIRED_FOUNDATION_PAGES.join(', ')})`);
   const tokensJson = JSON.parse(readFileSync(TOKENS_JSON_PATH, 'utf8'));
   const foundationData = buildFoundationData(cssRaw, tokensJson, componentSources);
   writeFoundationData(foundationData);
-  const foundationIssues = checkFoundationCoverage(foundationData, tokenParityPass);
-  const foundationCoveragePass = !foundationIssues.some((i) => i.level === 'fail');
+
+  // Generate any missing Foundation page from the shared template before
+  // validating — same "generate then re-check in the same run" pattern as
+  // component docs.
+  let generatedAnyFoundationPage = false;
+  for (const page of REQUIRED_FOUNDATION_PAGES) {
+    const generated = generateFoundationPageStub(page, FOUNDATION_PAGE_CATEGORY[page]);
+    if (generated) {
+      generatedAnyFoundationPage = true;
+      console.log(`  ${DIM}Generated src/design-docs/foundations/${page}.mdx from the shared template${RESET}`);
+    }
+  }
+
+  const foundationGroups = checkFoundationCoverage(foundationData, tokenParityPass, generatedAnyFoundationPage);
+  const foundationCoveragePass = Object.values(foundationGroups).every(
+    (issues) => !issues.some((i) => i.level === 'fail'),
+  );
   console.log(`${BOLD}Foundation Coverage${RESET} — ${foundationCoveragePass ? `${GREEN}PASS${RESET}` : `${RED}FAIL${RESET}`}`);
-  if (foundationIssues.length) {
-    printIssues(foundationIssues);
-  } else {
-    console.log(`  ${GREEN}PASS${RESET}  no issues found`);
+  for (const [checkName, issues] of Object.entries(foundationGroups)) {
+    const checkPass = !issues.some((i) => i.level === 'fail');
+    console.log(`  ${checkPass ? `${GREEN}✓${RESET}` : `${RED}✗${RESET}`} ${checkName}`);
+    if (issues.length) printIssues(issues);
   }
   console.log('');
 

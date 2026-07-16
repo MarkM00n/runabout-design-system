@@ -5,30 +5,54 @@
  * rounded-2xl, text-h6, etc.). Raw source values also live in tokens.json.
  */
 @theme {
+  /* Button primary variant's fill (default/disabled state). */
   --color-action-primary: #f8ebda;
+  /* Button primary variant's fill on hover. */
   --color-action-primary-hover: #df8e10;
+  /* Button secondary variant's fill on hover — a white overlay at 10%
+     opacity, not a solid color, so it reads correctly over any background. */
   --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  /* Button accent variant's fill (default/disabled state); also Button
+     link variant's default text color. */
   --color-action-highlight: #df8e10;
+  /* Button accent variant's fill on hover; also Button link variant's
+     hover text color. */
   --color-action-highlight-hover: #c07b0e;
 
+  /* Button secondary variant's resting border; also the resting border for
+     every Input-family control (Input/Select/Textarea/Checkbox). */
   --color-border-default: #f8ebda;
+  /* Focus-ring border for Button primary/secondary/link and every
+     Input-family control. Button accent's focus ring uses border-default
+     instead — a real, literal Figma difference, not an inconsistency. */
   --color-border-focus: #df8e10;
+  /* Hover-state border color for every Input-family control. */
   --color-border-subtle: #f6e3cb;
 
+  /* Default body text color; also the typed-value color for Input-family
+     controls when focused (see Input's placeholder-vs-value reconstruction). */
   --color-text-primary: #2f2c28;
+  /* Text/border color for content meant to sit on a dark or colored surface
+     (Button secondary variant, Checkbox's label) — assumes a dark backdrop,
+     see Checkbox's Storybook decorator for why. */
   --color-text-inverse: #f8ebda;
+  /* Placeholder text color for Input-family controls; also Checkbox's
+     disabled-state checkmark/label color. */
   --color-text-muted: #8b8a88;
   /* Checkbox's checkmark glyph binds to this rather than border-focus/
      action-highlight — same value, distinct token, kept separate per the
      established convention. */
   --color-text-highlight: #df8e10;
 
+  /* Default background fill for every Input-family control. */
   --color-surface-primary: #f7e7d2;
   /* Bound to Card's background in Figma; distinct token from surface-primary
      even though unrelated in value. */
   --color-surface-feature: #c4582a;
 
+  /* Background fill for Input-family controls on hover. */
   --color-state-hover: #f6e3cb;
+  /* Border color for Input-family controls in the disabled state. */
   --color-state-disabled: #8b8a88;
 
   /* Primitive-tier palette token — Card's title/date/description text binds
@@ -55,12 +79,19 @@
   --font-tt-norms: 'TT Norms Pro Trial', system-ui, sans-serif;
   --font-recoleta: 'Recoleta', Georgia, serif;
 
+  /* Button small-size label text style. */
   --text-label: 13px;
   --text-label--line-height: 1.4;
+  /* Button large-size label text; also the large-size value/label text for
+     every Input-family control (Input/Select/Textarea/Checkbox). */
   --text-h6: 18px;
   --text-h6--line-height: 1.3;
+  /* Card's date/time/description text; also the small-size value/label
+     text for every Input-family control. */
   --text-paragraph-small: 15px;
   --text-paragraph-small--line-height: 1.6;
+  /* Card's title text style — the only place the Recoleta display face
+     is used. */
   --text-h3: 36px;
   --text-h3--line-height: 1.15;
 
@@ -77,4 +108,13 @@
   */
   --duration-standard: 150ms;
   --ease-standard: ease-out;
+
+  /* Not Figma-sourced (no breakpoint variables exist in the file) and not
+     yet used by any of the 6 built components (none are responsive).
+     Formalizes the one breakpoint value already used repeatedly across the
+     pre-existing app shell (src/index.css, src/App.css). Registered under
+     Tailwind v4's --breakpoint-* namespace, which generates a `tablet:`
+     responsive variant. Tailwind's own default scale (sm/md/lg/xl/2xl) is
+     available but not customized or formally adopted by this system. */
+  --breakpoint-tablet: 1024px;
 }
