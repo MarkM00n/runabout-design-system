@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { FoundationPage, FoundationSection } from '../FoundationPage';
+import foundationsData from '../foundations-data.generated.json';
+
+<Meta title="Foundations/Typography" />
+
+<FoundationPage
+  title="Typography"
+  description="Named type styles (font size, line height, family) from tokens.css/tokens.json, with a live rendered sample per style."
+>
+  <FoundationSection category="typography" tokens={foundationsData.typography} />
+</FoundationPage>

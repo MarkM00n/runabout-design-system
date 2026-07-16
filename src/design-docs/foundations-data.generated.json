@@ -1,0 +1,312 @@
+{
+  "color": [
+    {
+      "name": "--color-action-primary",
+      "value": "#f8ebda",
+      "usage": "Color token in the \"action\" group.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--color-action-primary-hover",
+      "value": "#df8e10",
+      "usage": "Color token in the \"action\" group.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--color-action-secondary-hover",
+      "value": "rgba(255, 255, 255, 0.1)",
+      "usage": "Color token in the \"action\" group.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--color-action-highlight",
+      "value": "#df8e10",
+      "usage": "Color token in the \"action\" group.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--color-action-highlight-hover",
+      "value": "#c07b0e",
+      "usage": "Color token in the \"action\" group.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--color-border-default",
+      "value": "#f8ebda",
+      "usage": "Color token in the \"border\" group.",
+      "consumedBy": [
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-border-focus",
+      "value": "#df8e10",
+      "usage": "Color token in the \"border\" group.",
+      "consumedBy": [
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-border-subtle",
+      "value": "#f6e3cb",
+      "usage": "Color token in the \"border\" group.",
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-text-primary",
+      "value": "#2f2c28",
+      "usage": "Color token in the \"text\" group.",
+      "consumedBy": [
+        "Button",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-text-inverse",
+      "value": "#f8ebda",
+      "usage": "Color token in the \"text\" group.",
+      "consumedBy": [
+        "Button",
+        "Checkbox"
+      ]
+    },
+    {
+      "name": "--color-text-muted",
+      "value": "#8b8a88",
+      "usage": "Color token in the \"text\" group.",
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-text-highlight",
+      "value": "#df8e10",
+      "usage": "Checkbox's checkmark glyph; same value as action-highlight/border-focus, kept as a distinct token.",
+      "consumedBy": [
+        "Checkbox"
+      ]
+    },
+    {
+      "name": "--color-surface-primary",
+      "value": "#f7e7d2",
+      "usage": "Color token in the \"surface\" group.",
+      "consumedBy": [
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-surface-feature",
+      "value": "#c4582a",
+      "usage": "Bound to Card's background in Figma; distinct token from surface-primary even though unrelated in value.",
+      "consumedBy": [
+        "Card"
+      ]
+    },
+    {
+      "name": "--color-state-hover",
+      "value": "#f6e3cb",
+      "usage": "Color token in the \"state\" group.",
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-state-disabled",
+      "value": "#8b8a88",
+      "usage": "Color token in the \"state\" group.",
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--color-sand-400",
+      "value": "#f7e7d2",
+      "usage": "Primitive palette token; Card binds to this directly rather than a semantic text/surface token.",
+      "consumedBy": [
+        "Card"
+      ]
+    }
+  ],
+  "typography": [
+    {
+      "name": "--text-label",
+      "value": "13px / 1.4 / TT Norms Pro Trial",
+      "fontFamily": "TT Norms Pro Trial",
+      "fontSize": "13px",
+      "lineHeight": 1.4,
+      "usage": "Type style (font size, line height, family).",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--text-h6",
+      "value": "18px / 1.3 / TT Norms Pro Trial",
+      "fontFamily": "TT Norms Pro Trial",
+      "fontSize": "18px",
+      "lineHeight": 1.3,
+      "usage": "Type style (font size, line height, family).",
+      "consumedBy": [
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--text-paragraph-small",
+      "value": "15px / 1.6 / TT Norms Pro Trial",
+      "fontFamily": "TT Norms Pro Trial",
+      "fontSize": "15px",
+      "lineHeight": 1.6,
+      "usage": "Type style (font size, line height, family).",
+      "consumedBy": [
+        "Card",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--text-h3",
+      "value": "36px / 1.15 / Recoleta",
+      "fontFamily": "Recoleta",
+      "fontSize": "36px",
+      "lineHeight": 1.15,
+      "usage": "Type style (font size, line height, family).",
+      "consumedBy": [
+        "Card"
+      ]
+    }
+  ],
+  "spacing": [
+    {
+      "name": "--spacing-00",
+      "value": "4px",
+      "usage": "px, not rem: the host app sets root font-size to 18px (see index.css), which would otherwise scale every rem-based Tailwind utility 1.125x off its nominal value. Design tokens must stay pixel-exact regardless of the host's font-size choice.",
+      "consumedBy": [
+        "Checkbox"
+      ]
+    },
+    {
+      "name": "--spacing-01",
+      "value": "8px",
+      "usage": "px, not rem: the host app sets root font-size to 18px (see index.css), which would otherwise scale every rem-based Tailwind utility 1.125x off its nominal value. Design tokens must stay pixel-exact regardless of the host's font-size choice.",
+      "consumedBy": [
+        "Button",
+        "Card",
+        "Checkbox"
+      ]
+    },
+    {
+      "name": "--spacing-02",
+      "value": "16px",
+      "usage": "px, not rem: the host app sets root font-size to 18px (see index.css), which would otherwise scale every rem-based Tailwind utility 1.125x off its nominal value. Design tokens must stay pixel-exact regardless of the host's font-size choice.",
+      "consumedBy": [
+        "Button",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    },
+    {
+      "name": "--spacing-03",
+      "value": "24px",
+      "usage": "px, not rem: the host app sets root font-size to 18px (see index.css), which would otherwise scale every rem-based Tailwind utility 1.125x off its nominal value. Design tokens must stay pixel-exact regardless of the host's font-size choice.",
+      "consumedBy": [
+        "Button",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    }
+  ],
+  "radius": [
+    {
+      "name": "--radius-sm",
+      "value": "4px",
+      "usage": "Overrides Tailwind's default rounded-sm (2px) / rounded-xl (12px) / rounded-2xl (16px) scale to match the extracted radius tokens.",
+      "consumedBy": [
+        "Checkbox"
+      ]
+    },
+    {
+      "name": "--radius-xl",
+      "value": "16px",
+      "usage": "Overrides Tailwind's default rounded-sm (2px) / rounded-xl (12px) / rounded-2xl (16px) scale to match the extracted radius tokens.",
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "name": "--radius-2xl",
+      "value": "24px",
+      "usage": "Overrides Tailwind's default rounded-sm (2px) / rounded-xl (12px) / rounded-2xl (16px) scale to match the extracted radius tokens.",
+      "consumedBy": [
+        "Button",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    }
+  ],
+  "motion": [
+    {
+      "name": "--duration-standard / --ease-standard",
+      "value": "150ms / ease-out",
+      "duration": "150ms",
+      "easing": "ease-out",
+      "usage": "Not Figma-sourced (the file has no motion variables). Formalizes the identical transition-colors duration-150 ease-out already used in Button/Input/Select/Textarea/Checkbox.",
+      "consumedBy": [],
+      "literalConsumers": [
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
+    }
+  ],
+  "shadow": [],
+  "shadowNote": "No shadow tokens are defined. The Figma source file has zero effect styles, and no component in this system currently uses box-shadow. This is an accurate empty state, not an omission — see the Shadows foundation page."
+}

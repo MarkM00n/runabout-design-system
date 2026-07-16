@@ -63,4 +63,18 @@
   --text-paragraph-small--line-height: 1.6;
   --text-h3: 36px;
   --text-h3--line-height: 1.15;
+
+  /* Not Figma-sourced — the Figma file has no motion/duration/easing
+     variables at all (confirmed via getLocalVariablesAsync). Formalizes a
+     de facto value already used identically in Button, Input, Select,
+     Textarea, and Checkbox (transition-colors duration-150 ease-out) into
+     a real, named token rather than leaving it as five copies of the same
+     magic numbers. Existing components still reference the literal
+     Tailwind values (duration-150/ease-out) — they have not been migrated
+     to duration-standard/ease-standard, since that's a zero-visual-diff
+     refactor out of scope here. Foundation cross-referencing treats that
+     literal usage as equivalent, not orphaned.
+  */
+  --duration-standard: 150ms;
+  --ease-standard: ease-out;
 }
