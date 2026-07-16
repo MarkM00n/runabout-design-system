@@ -244,6 +244,27 @@ the pages render that, they don't hand-list token values.
   counts as `documented: true`; the Foundation Coverage check's "No
   undocumented tokens" flags the generic-fallback case as a WARN nudge to
   write a real one, not a FAIL — a token is never silently blank.
+- **Color tokens split into two tiers, mirroring Figma's own two variable
+  collections.** "Semantic" tokens (`action`, `border`, `text`, `surface`,
+  `state` — Figma's *Semantic* collection) are purpose-named and get the
+  full detailed table, same as every other category. "Primitive" tokens
+  (`sand`, `terracotta`, `rose`, `burgundy`, `amber`, `olive`, `grey`,
+  `cream` — Figma's *Primitives* collection, 71 raw palette steps) render as
+  a compact swatch grid grouped by family instead (`PrimitivePaletteGrid` in
+  `FoundationPage.tsx`) — 71 individual table rows would be unusable, and a
+  raw palette step doesn't carry the kind of purpose-specific usage note a
+  semantic token does. `isPrimitiveColorGroup()` in `design-sync.js` is what
+  decides which tier a color group belongs to.
+- **A primitive's ramp position counts as real documentation, not a
+  generic fallback.** Writing 71 individual "this is step 3 of 9" comments
+  by hand would be pure busywork — a primitive's position in its ramp *is*
+  its complete, honest description. `rampPositionUsage()` generates that
+  string automatically ("Sand palette — step 400 (4 of 9 in the ramp).") and
+  it's treated as `documented: true`, exempting primitives from the
+  otherwise-correct "no undocumented tokens" WARN that semantic tokens still
+  get nudged by. Only a handful of primitives that a semantic token
+  explicitly aliases into (e.g. `sand-400`, consumed directly by `Card`)
+  carry a real per-token comment on top of that fallback.
 
 ## Sourcing Figma data
 

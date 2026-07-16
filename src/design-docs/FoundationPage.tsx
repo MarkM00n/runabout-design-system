@@ -5,6 +5,7 @@ export type TokenCategory = 'color' | 'typography' | 'spacing' | 'radius' | 'mot
 
 export interface FoundationTokenRow {
   type: string;
+  tier?: 'primitive' | 'semantic';
   name: string;
   tokenPath: string;
   value: string;
@@ -148,32 +149,7 @@ function ConsumedByCell({ token }: { token: FoundationTokenRow }) {
   );
 }
 
-export function FoundationSection({
-  category,
-  tokens,
-  emptyStateNote,
-}: {
-  category: TokenCategory;
-  tokens: FoundationTokenRow[];
-  emptyStateNote?: string;
-}) {
-  if (tokens.length === 0) {
-    return (
-      <div
-        style={{
-          marginTop: 16,
-          padding: 20,
-          border: '1px dashed #d0d3d8',
-          borderRadius: 8,
-          color: '#7b8290',
-          fontStyle: 'italic',
-        }}
-      >
-        {emptyStateNote ?? 'No tokens defined in this category yet.'}
-      </div>
-    );
-  }
-
+function DetailedTokenTable({ category, tokens }: { category: TokenCategory; tokens: FoundationTokenRow[] }) {
   return (
     <div style={{ overflowX: 'auto', marginTop: 16 }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -214,6 +190,105 @@ export function FoundationSection({
       </table>
     </div>
   );
+}
+
+// 71 individual table rows would be unusable — primitives render as compact
+// swatch strips grouped by palette family instead, each swatch carrying its
+// step/hex/tokenPath/usage in a native title tooltip rather than a table row.
+function PrimitivePaletteGrid({ tokens }: { tokens: FoundationTokenRow[] }) {
+  const families = new Map<string, FoundationTokenRow[]>();
+  for (const token of tokens) {
+    const family = token.tokenPath.split('.')[1] ?? 'unknown';
+    if (!families.has(family)) families.set(family, []);
+    families.get(family)!.push(token);
+  }
+
+  return (
+    <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {[...families.entries()].map(([family, swatches]) => (
+        <div key={family}>
+          <div style={{ fontSize: 12, fontFamily: 'monospace', color: '#7b8290', marginBottom: 6, textTransform: 'capitalize' }}>
+            {family}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {swatches.map((token) => {
+              const step = token.tokenPath.split('.')[2];
+              return (
+                <div
+                  key={token.name}
+                  title={`${token.tokenPath} — ${token.value}\n${token.usage}`}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 56 }}
+                >
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 6,
+                      border: '1px solid #e3e5e8',
+                      background: token.value,
+                    }}
+                  />
+                  <span style={{ fontSize: 10, fontFamily: 'monospace', color: '#a0a5ac', marginTop: 4 }}>{step}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      <p style={{ fontSize: 12, color: '#a0a5ac', fontStyle: 'italic', marginTop: 4 }}>
+        Hover a swatch for its token path, hex value, and ramp position. Most primitives are not directly consumed by
+        a component — several semantic tokens above alias into these ramps instead (see each one's Description).
+      </p>
+    </div>
+  );
+}
+
+export function FoundationSection({
+  category,
+  tokens,
+  emptyStateNote,
+}: {
+  category: TokenCategory;
+  tokens: FoundationTokenRow[];
+  emptyStateNote?: string;
+}) {
+  if (tokens.length === 0) {
+    return (
+      <div
+        style={{
+          marginTop: 16,
+          padding: 20,
+          border: '1px dashed #d0d3d8',
+          borderRadius: 8,
+          color: '#7b8290',
+          fontStyle: 'italic',
+        }}
+      >
+        {emptyStateNote ?? 'No tokens defined in this category yet.'}
+      </div>
+    );
+  }
+
+  if (category === 'color') {
+    const semanticTokens = tokens.filter((t) => t.tier !== 'primitive');
+    const primitiveTokens = tokens.filter((t) => t.tier === 'primitive');
+    return (
+      <>
+        {semanticTokens.length > 0 && <DetailedTokenTable category={category} tokens={semanticTokens} />}
+        {primitiveTokens.length > 0 && (
+          <div style={{ marginTop: 32 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Primitives</h3>
+            <p style={{ fontSize: 13, color: '#7b8290', marginBottom: 0 }}>
+              The raw palette ramps underneath the semantic tokens above (Figma's "Primitives" variable collection).
+            </p>
+            <PrimitivePaletteGrid tokens={primitiveTokens} />
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return <DetailedTokenTable category={category} tokens={tokens} />;
 }
 
 export function FoundationPage({
