@@ -1,184 +1,179 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
+/* Breaks out of index.css's centered #root column (1126px, bordered) so the
+   dashboard can run full-width on a projector — scoped to this component
+   only, index.css itself stays untouched since Storybook also depends on it. */
+.dashboard {
+  width: 100vw;
   position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  min-height: 100svh;
+  box-sizing: border-box;
+  text-align: left;
+  background: var(--color-surface-tertiary);
+  color: var(--color-text-primary);
+  font-family: var(--font-tt-norms);
+  padding: var(--spacing-06) var(--spacing-07);
+}
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-03);
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: var(--spacing-04);
+  margin-bottom: var(--spacing-06);
+}
 
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
+.dashboard-title {
+  font-family: var(--font-recoleta);
+  font-size: 32px;
+  line-height: 1.15;
+  margin: 0 0 var(--spacing-00);
+  color: var(--color-text-primary);
+}
 
-  .framework,
-  .vite {
-    position: absolute;
-  }
+.dashboard-subtitle {
+  font-size: var(--text-paragraph-small);
+  color: var(--color-text-muted);
+  margin: 0;
+}
 
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
+.dashboard-links {
+  display: flex;
+  gap: var(--spacing-04);
+}
 
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
+.dashboard-links a {
+  color: var(--color-action-highlight);
+  font-size: var(--text-h6);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.dashboard-links a:hover,
+.dashboard-links a:focus-visible {
+  border-bottom-color: var(--color-action-highlight);
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-04);
+  margin-bottom: var(--spacing-07);
+}
+
+@media (max-width: 900px) {
+  .dashboard-metrics {
+    grid-template-columns: 1fr;
   }
 }
 
-#center {
+.metric-tile {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-04);
+  background: var(--color-grey-1000);
+}
+
+/* Arbitrary display size — no token in this system was built for a
+   metric-tile headline number, so this stays a literal value rather than
+   forcing a fit onto text-h3 (36px, sized for Card's title, not this). */
+.metric-number {
+  font-size: 72px;
+  line-height: 1;
+  font-weight: 700;
+  font-family: var(--font-recoleta);
+  color: var(--color-text-primary);
+}
+
+.metric-label {
+  margin-top: var(--spacing-02);
+  font-size: var(--text-h6);
+  color: var(--color-text-primary);
+}
+
+.metric-label-primary {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.metric-caption {
+  margin-top: var(--spacing-01);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.metric-tile-note {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  justify-content: center;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+.dashboard-section {
+  margin-bottom: var(--spacing-07);
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.section-title {
+  font-size: var(--text-h6);
+  font-weight: 700;
+  margin: 0 0 var(--spacing-02);
+  color: var(--color-text-primary);
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+.section-caption {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: var(--spacing-02) 0 0;
+  max-width: 900px;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.table-scroll {
+  overflow-x: auto;
 }
 
-.ticks {
-  position: relative;
+.dashboard-table {
   width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-paragraph-small);
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.dashboard-table th {
+  text-align: left;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-default);
+  padding: var(--spacing-01) var(--spacing-02);
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.dashboard-table td {
+  padding: var(--spacing-02);
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: middle;
+}
+
+.cell-component {
+  font-weight: 700;
+}
+
+.cell-links a {
+  color: var(--color-action-highlight);
+  text-decoration: none;
+}
+
+.cell-links a:hover,
+.cell-links a:focus-visible {
+  text-decoration: underline;
+}
+
+.cell-warn,
+.cell-warn-badge {
+  color: var(--color-amber-100);
+  font-weight: 700;
 }
