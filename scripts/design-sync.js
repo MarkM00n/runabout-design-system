@@ -44,7 +44,7 @@ const BOLD = '\x1b[1m';
 // Discovery
 // ---------------------------------------------------------------------------
 
-function discoverComponents() {
+export function discoverComponents() {
   if (!existsSync(COMPONENTS_DIR)) return [];
   return readdirSync(COMPONENTS_DIR, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -59,7 +59,7 @@ function discoverComponents() {
 // "New tokens go in both files, kept in sync").
 // ---------------------------------------------------------------------------
 
-function parseThemeTokenNames(css) {
+export function parseThemeTokenNames(css) {
   const names = new Set();
   const re = /--([a-z0-9-]+)\s*:/gi;
   let match;
@@ -195,7 +195,7 @@ function stripComments(source) {
     .replace(/\/\/[^\n]*/g, (m) => m.replace(/[^\n]/g, ' '));
 }
 
-function checkTokenCompliance(source) {
+export function checkTokenCompliance(source) {
   const issues = [];
   const codeOnly = stripComments(source);
 
@@ -287,7 +287,7 @@ function tokenUsedInSource(cssName, componentSource) {
 // Scans a component's source for usage of registered tokens (by suffix
 // match against tokens.css's @theme names) so "Design Tokens Used" in the
 // docs page is auto-derived from real usage, not hand-maintained.
-function extractTokensUsed(componentSource, cssTokenNames) {
+export function extractTokensUsed(componentSource, cssTokenNames) {
   const used = new Set();
   for (const fullName of cssTokenNames) {
     if (fullName.includes('--')) continue; // skip --text-x--line-height companions
@@ -302,7 +302,7 @@ function extractTokensUsed(componentSource, cssTokenNames) {
 // 1b. Accessibility (heuristic — see docs/design-system-rules.md § Accessibility)
 // ---------------------------------------------------------------------------
 
-function checkAccessibility(rawSource) {
+export function checkAccessibility(rawSource) {
   const issues = [];
   const source = stripComments(rawSource);
 
@@ -352,7 +352,7 @@ function checkAccessibility(rawSource) {
 // 1c. Storybook coverage
 // ---------------------------------------------------------------------------
 
-function checkStorybookCoverage(name, dir, componentSource, storiesSource) {
+export function checkStorybookCoverage(name, dir, componentSource, storiesSource) {
   const issues = [];
   const indexPath = join(dir, 'index.ts');
 
@@ -436,7 +436,7 @@ function tsObjectLiteralToJson(text) {
   }
 }
 
-function readDocsFile(dir, name) {
+export function readDocsFile(dir, name) {
   const docsPath = join(dir, `${name}.docs.ts`);
   if (!existsSync(docsPath)) return { exists: false, data: null };
   const raw = readFileSync(docsPath, 'utf8');
@@ -505,7 +505,7 @@ export const docs: ComponentDocMeta = {
   return true;
 }
 
-function checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed) {
+export function checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed) {
   const issues = [];
   const { exists, data } = docsResult;
 
@@ -1143,4 +1143,10 @@ function run() {
   process.exit(overallStatus ? 0 : 1);
 }
 
-run();
+// Only auto-run the full CLI (including the slow build-storybook step and
+// writing validation.json/foundations data) when this file is executed
+// directly — not when another script imports its check functions (see
+// scripts/generate-dashboard-data.js), which must stay read-only.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run();
+}

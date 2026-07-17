@@ -1,0 +1,175 @@
+{
+  "generatedAt": "2026-07-17T23:29:44.219Z",
+  "methodologyNotes": {
+    "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
+    "firstTimePassRate": "Omitted: no historical validation run log exists. ComponentName.validation.json is overwritten in place on every design-sync run, and for all 6 components here that file did not exist until PR #5 (the Documentation Generation stage) — added after every component was already merged. There is no recoverable record of what a first design-sync run against these components would have found.",
+    "errorsByCheckType": "Reflects the design-sync checks run live when this file was generated, not a historical/cumulative count — design-sync overwrites its results each run and doesn't keep a log of past findings."
+  },
+  "totals": {
+    "totalComponents": 6,
+    "averageCycleTimeSeconds": 31316,
+    "averageCycleTimeLabel": "8h 42m"
+  },
+  "validationSummary": {
+    "tokenCompliance": {
+      "fail": 0,
+      "warn": 2
+    },
+    "accessibility": {
+      "fail": 0,
+      "warn": 0
+    },
+    "storybookCoverage": {
+      "fail": 0,
+      "warn": 0
+    },
+    "documentationCoverage": {
+      "fail": 0,
+      "warn": 0
+    }
+  },
+  "components": [
+    {
+      "name": "Button",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
+      "pr": {
+        "number": 1,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/1"
+      },
+      "firstCommitAt": "2026-07-15T16:05:40+10:00",
+      "mergedAt": "2026-07-16T08:53:43+10:00",
+      "cycleTimeSeconds": 60483
+    },
+    {
+      "name": "Card",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 2,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-card--docs",
+      "pr": {
+        "number": 1,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/1"
+      },
+      "firstCommitAt": "2026-07-15T16:05:40+10:00",
+      "mergedAt": "2026-07-16T08:53:43+10:00",
+      "cycleTimeSeconds": 60483
+    },
+    {
+      "name": "Checkbox",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-checkbox--docs",
+      "pr": {
+        "number": 2,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/2"
+      },
+      "firstCommitAt": "2026-07-16T12:24:51+10:00",
+      "mergedAt": "2026-07-16T13:00:40+10:00",
+      "cycleTimeSeconds": 2149
+    },
+    {
+      "name": "Input",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-input--docs",
+      "pr": {
+        "number": 1,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/1"
+      },
+      "firstCommitAt": "2026-07-15T16:05:40+10:00",
+      "mergedAt": "2026-07-16T08:53:43+10:00",
+      "cycleTimeSeconds": 60483
+    },
+    {
+      "name": "Select",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-select--docs",
+      "pr": {
+        "number": 2,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/2"
+      },
+      "firstCommitAt": "2026-07-16T12:24:51+10:00",
+      "mergedAt": "2026-07-16T13:00:40+10:00",
+      "cycleTimeSeconds": 2149
+    },
+    {
+      "name": "Textarea",
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
+      },
+      "overall": true,
+      "lastValidated": "2026-07-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-textarea--docs",
+      "pr": {
+        "number": 2,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/2"
+      },
+      "firstCommitAt": "2026-07-16T12:24:51+10:00",
+      "mergedAt": "2026-07-16T13:00:40+10:00",
+      "cycleTimeSeconds": 2149
+    }
+  ],
+  "links": {
+    "githubRepoUrl": "https://github.com/MarkM00n/runabout-design-system",
+    "storybookBaseUrl": "https://markm00n.github.io/runabout-design-system/"
+  }
+}
