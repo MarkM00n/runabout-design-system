@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T23:29:44.219Z",
+  "generatedAt": "2026-07-17T23:49:26.798Z",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists. ComponentName.validation.json is overwritten in place on every design-sync run, and for all 6 components here that file did not exist until PR #5 (the Documentation Generation stage) — added after every component was already merged. There is no recoverable record of what a first design-sync run against these components would have found.",
