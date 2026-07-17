@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -19,6 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # dashboard-data.generated.json is derived from full merge/commit
+          # history (git log --merges, --follow), not just the tip commit —
+          # a shallow clone would silently make every cycle-time number null.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -31,6 +36,23 @@ jobs:
       # and produces storybook-static/. A bare `build-storybook` would skip
       # that gate entirely.
       - run: npm run design-sync
+      - name: Regenerate dashboard data
+        run: npm run dashboard-data
+      - name: Commit dashboard data if changed
+        run: |
+          if git diff --quiet -- src/design-docs/dashboard-data.generated.json; then
+            echo "dashboard-data.generated.json unchanged — nothing to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add src/design-docs/dashboard-data.generated.json
+            # GITHUB_TOKEN-authored pushes don't trigger further workflow
+            # runs (GitHub's built-in loop guard), but [skip ci] is kept as
+            # a second line of defense in case the push credential ever
+            # changes to a PAT.
+            git commit -m "chore: regenerate dashboard data [skip ci]"
+            git push origin HEAD:main
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
