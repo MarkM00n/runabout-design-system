@@ -1,21 +1,39 @@
+import { Fragment, useState } from 'react';
 import dashboardData from './design-docs/dashboard-data.generated.json';
 import './App.css';
 
-interface ComponentWarnings {
-  tokenCompliance: number;
-  accessibility: number;
-  storybookCoverage: number;
-  documentationCoverage: number;
+interface ValidationIssue {
+  level: 'fail' | 'warn';
+  checkType: string;
+  file: string;
+  line: number | null;
+  message: string;
+  fix: string | null;
+}
+
+interface ResolvedIssue {
+  checkType: string;
+  file: string;
+  line: number | null;
+  message: string;
+  fix: string | null;
+  resolvedAt: string;
+}
+
+interface CheckResult {
+  pass: boolean;
+  fail: number;
+  warn: number;
+  open: ValidationIssue[];
 }
 
 interface ComponentRow {
   name: string;
-  tokenCompliance: boolean;
-  accessibility: boolean;
-  storybookCoverage: boolean;
-  documentationCoverage: boolean;
-  warnings: ComponentWarnings;
   overall: boolean;
+  checks: Record<string, CheckResult>;
+  openCount: number;
+  fixedCount: number;
+  history: ResolvedIssue[];
   lastValidated: string | null;
   storybookUrl: string;
   pr: { number: number; url: string } | null;
@@ -29,10 +47,11 @@ interface CheckTally {
 
 interface DashboardData {
   generatedAt: string;
+  validationReportGeneratedAt: string;
   methodologyNotes: {
     cycleTime: string;
     firstTimePassRate: string;
-    errorsByCheckType: string;
+    caughtAndFixed: string;
   };
   totals: {
     totalComponents: number;
@@ -79,8 +98,62 @@ function formatGeneratedAt(iso: string) {
   }).format(new Date(iso));
 }
 
+function IssueDetailTable({ rows, mode }: { rows: (ValidationIssue | ResolvedIssue)[]; mode: 'open' | 'history' }) {
+  if (rows.length === 0) {
+    return <p className="issue-empty">None.</p>;
+  }
+  return (
+    <table className="issue-table">
+      <thead>
+        <tr>
+          <th>Check type</th>
+          <th>What failed</th>
+          <th>Where</th>
+          <th>{mode === 'open' ? 'Suggested fix' : 'Fixed'}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((issue, i) => (
+          <tr key={i}>
+            <td>{CHECK_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</td>
+            <td>{issue.message}</td>
+            <td className="issue-where">
+              {issue.file}
+              {issue.line ? `:${issue.line}` : ''}
+            </td>
+            <td>
+              {mode === 'open' ? issue.fix ?? '—' : `Resolved ${(issue as ResolvedIssue).resolvedAt}`}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function ComponentRowDetail({ component }: { component: ComponentRow }) {
+  const openIssues = Object.values(component.checks).flatMap((c) => c.open);
+  return (
+    <tr className="detail-row">
+      <td colSpan={7}>
+        <div className="detail-panel">
+          <div className="detail-block">
+            <h3 className="detail-title">Open issues ({openIssues.length})</h3>
+            <IssueDetailTable rows={openIssues} mode="open" />
+          </div>
+          <div className="detail-block">
+            <h3 className="detail-title">Caught &amp; fixed history ({component.history.length})</h3>
+            <IssueDetailTable rows={component.history} mode="history" />
+          </div>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
 function App() {
   const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
     <div className="dashboard">
@@ -142,59 +215,70 @@ function App() {
             })}
           </tbody>
         </table>
-        <p className="section-caption">{data.methodologyNotes.errorsByCheckType}</p>
+        <p className="section-caption">
+          Read straight from <code>src/design-docs/validation-report.generated.json</code> — the same file
+          Storybook badges and PR comments read, generated {formatGeneratedAt(data.validationReportGeneratedAt)}.
+          No surface here recomputes these numbers itself.
+        </p>
       </section>
 
       <section className="dashboard-section" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
+        <p className="section-caption">{data.methodologyNotes.caughtAndFixed} Click a row to see its issues.</p>
         <div className="table-scroll">
           <table className="dashboard-table">
             <thead>
               <tr>
                 <th>Component</th>
-                <th>Token</th>
-                <th>A11y</th>
-                <th>Docs</th>
-                <th>Storybook</th>
+                <th>Overall</th>
+                <th>Caught &amp; fixed</th>
+                <th>Open</th>
                 <th>Links</th>
                 <th>Last validated</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {data.components.map((c) => (
-                <tr key={c.name}>
-                  <td className="cell-component">{c.name}</td>
-                  <td>
-                    <StatusMark pass={c.tokenCompliance} />
-                    {c.warnings.tokenCompliance > 0 && (
-                      <span className="cell-warn-badge"> ⚠ {c.warnings.tokenCompliance}</span>
-                    )}
-                  </td>
-                  <td>
-                    <StatusMark pass={c.accessibility} />
-                  </td>
-                  <td>
-                    <StatusMark pass={c.documentationCoverage} />
-                  </td>
-                  <td>
-                    <StatusMark pass={c.storybookCoverage} />
-                  </td>
-                  <td className="cell-links">
-                    <a href={c.storybookUrl} target="_blank" rel="noreferrer">
-                      Story
-                    </a>
-                    {c.pr && (
-                      <>
-                        {' · '}
-                        <a href={c.pr.url} target="_blank" rel="noreferrer">
-                          PR #{c.pr.number}
+              {data.components.map((c) => {
+                const isExpanded = expanded === c.name;
+                return (
+                  <Fragment key={c.name}>
+                    <tr
+                      className="component-row"
+                      onClick={() => setExpanded(isExpanded ? null : c.name)}
+                      aria-expanded={isExpanded}
+                    >
+                      <td className="cell-component">{c.name}</td>
+                      <td>
+                        <StatusMark pass={c.overall} />
+                      </td>
+                      <td>{c.fixedCount}</td>
+                      <td className={c.openCount > 0 ? 'cell-warn' : ''}>{c.openCount}</td>
+                      <td className="cell-links">
+                        <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
+                          Story
                         </a>
-                      </>
-                    )}
-                  </td>
-                  <td>{c.lastValidated ?? '—'}</td>
-                </tr>
-              ))}
+                        {c.pr && (
+                          <>
+                            {' · '}
+                            <a
+                              href={c.pr.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              PR #{c.pr.number}
+                            </a>
+                          </>
+                        )}
+                      </td>
+                      <td>{c.lastValidated ?? '—'}</td>
+                      <td className="cell-expand-toggle">{isExpanded ? '▾' : '▸'}</td>
+                    </tr>
+                    {isExpanded && <ComponentRowDetail component={c} />}
+                  </Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>

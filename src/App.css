@@ -177,3 +177,74 @@
   color: var(--color-amber-100);
   font-weight: 700;
 }
+
+.component-row {
+  cursor: pointer;
+}
+
+.component-row:hover {
+  background: var(--color-state-hover);
+}
+
+.cell-expand-toggle {
+  color: var(--color-text-muted);
+  text-align: right;
+  width: var(--spacing-04);
+}
+
+.detail-row td {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.detail-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-05);
+  padding: var(--spacing-03) var(--spacing-02) var(--spacing-04);
+  background: var(--color-cream-200);
+}
+
+.detail-block {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+
+.detail-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-01);
+}
+
+.issue-empty {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.issue-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--color-grey-1000);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.issue-table th {
+  text-align: left;
+  padding: var(--spacing-01);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.issue-table td {
+  padding: var(--spacing-01);
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: top;
+}
+
+.issue-where {
+  font-family: monospace;
+  white-space: nowrap;
+}

@@ -58,6 +58,46 @@ function Pill({ label, tone }: { label: string; tone: 'neutral' | 'pass' | 'fail
   );
 }
 
+const CHECK_LABELS: Record<string, string> = {
+  tokenCompliance: 'Token Compliance',
+  accessibility: 'Accessibility',
+  storybookCoverage: 'Storybook Coverage',
+  documentationCoverage: 'Documentation Coverage',
+};
+
+function IssueTable({ rows, mode }: { rows: Array<{ label: string; row: Record<string, unknown> }>; mode: 'open' | 'history' }) {
+  if (rows.length === 0) return null;
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, marginTop: 8 }}>
+      <thead>
+        <tr>
+          <th style={{ textAlign: 'left', padding: '4px 8px', borderBottom: '1px solid #e3e5e8' }}>Check</th>
+          <th style={{ textAlign: 'left', padding: '4px 8px', borderBottom: '1px solid #e3e5e8' }}>What</th>
+          <th style={{ textAlign: 'left', padding: '4px 8px', borderBottom: '1px solid #e3e5e8' }}>Where</th>
+          <th style={{ textAlign: 'left', padding: '4px 8px', borderBottom: '1px solid #e3e5e8' }}>
+            {mode === 'open' ? 'Suggested fix' : 'Fixed'}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ label, row }, i) => (
+          <tr key={i}>
+            <td style={{ padding: '4px 8px', borderBottom: '1px solid #f0f0f0' }}>{label}</td>
+            <td style={{ padding: '4px 8px', borderBottom: '1px solid #f0f0f0' }}>{String(row.message)}</td>
+            <td style={{ padding: '4px 8px', borderBottom: '1px solid #f0f0f0', fontFamily: 'monospace' }}>
+              {String(row.file)}
+              {row.line ? `:${row.line}` : ''}
+            </td>
+            <td style={{ padding: '4px 8px', borderBottom: '1px solid #f0f0f0' }}>
+              {mode === 'open' ? String(row.fix ?? '—') : `Resolved ${String(row.resolvedAt)}`}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 function ValidationStatusSection({ validation }: { validation?: ComponentValidationReport }) {
   if (!validation) {
     return (
@@ -69,12 +109,17 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
     );
   }
 
-  const checks: Array<[string, boolean]> = [
-    ['Token Compliance', validation.tokenCompliance],
-    ['Accessibility', validation.accessibility],
-    ['Storybook Coverage', validation.storybookCoverage],
-    ['Documentation Coverage', validation.documentationCoverage],
-  ];
+  const checkEntries = Object.entries(validation.checks);
+  const openCount = checkEntries.reduce((sum, [, c]) => sum + c.open.length, 0);
+  const fixedCount = validation.history.length;
+
+  const openRows = checkEntries.flatMap(([key, c]) =>
+    c.open.map((issue) => ({ label: CHECK_LABELS[key] ?? key, row: issue as unknown as Record<string, unknown> })),
+  );
+  const historyRows = validation.history.map((entry) => ({
+    label: CHECK_LABELS[entry.checkType] ?? entry.checkType,
+    row: entry as unknown as Record<string, unknown>,
+  }));
 
   return (
     <Section title="Validation Status">
@@ -82,10 +127,32 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
         <Pill label={validation.overall ? '✓ PASS' : '✗ FAIL'} tone={validation.overall ? 'pass' : 'fail'} />
       </div>
       <div>
-        {checks.map(([label, pass]) => (
-          <Pill key={label} label={`${pass ? '✓' : '✗'} ${label}`} tone={pass ? 'pass' : 'fail'} />
+        {checkEntries.map(([key, c]) => (
+          <Pill key={key} label={`${c.pass ? '✓' : '✗'} ${CHECK_LABELS[key] ?? key}`} tone={c.pass ? 'pass' : 'fail'} />
         ))}
       </div>
+
+      {/* The line the dashboard also surfaces: current open count plus the
+          cumulative caught-and-fixed count, both real (see
+          docs/design-system-rules.md §5 on how history is derived), not
+          asserted. */}
+      <p style={{ marginTop: 12, fontSize: 14 }}>
+        {fixedCount} issue{fixedCount === 1 ? '' : 's'} caught and fixed before merge · {openCount} currently open
+      </p>
+
+      {openCount > 0 && (
+        <div style={{ marginTop: 16 }}>
+          <h3 style={{ fontSize: 14, marginBottom: 4 }}>Open issues</h3>
+          <IssueTable rows={openRows} mode="open" />
+        </div>
+      )}
+
+      {fixedCount > 0 && (
+        <div style={{ marginTop: 16 }}>
+          <h3 style={{ fontSize: 14, marginBottom: 4 }}>Caught & fixed history</h3>
+          <IssueTable rows={historyRows} mode="history" />
+        </div>
+      )}
 
       {/* DesignOps metadata block, per the pipeline spec. */}
       <div
@@ -106,9 +173,10 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
         </div>
         <div>Checks:</div>
         <div style={{ paddingLeft: 16 }}>
-          {checks.map(([label, pass]) => (
-            <div key={label}>
-              {pass ? '✓' : '✗'} {label}
+          {checkEntries.map(([key, c]) => (
+            <div key={key}>
+              {c.pass ? '✓' : '✗'} {CHECK_LABELS[key] ?? key}
+              {c.warn > 0 ? ` (${c.warn} warning${c.warn === 1 ? '' : 's'})` : ''}
             </div>
           ))}
         </div>
