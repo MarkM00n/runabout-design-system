@@ -25,7 +25,10 @@ jobs:
         continue-on-error: true
         run: npm run design-sync
       - name: Format validation comment
-        run: npm run format-validation-comment > /tmp/validation-comment.md
+        # Direct node invocation, not `npm run` — npm prints its own "> pkg@ver
+        # script\n> node ..." banner to stdout ahead of the script's real
+        # output, which would land inside the PR comment body verbatim.
+        run: node scripts/format-validation-comment.js > /tmp/validation-comment.md
       - name: Post or update PR comment
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
