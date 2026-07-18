@@ -51,7 +51,28 @@ jobs:
             # a second line of defense in case the push credential ever
             # changes to a PAT.
             git commit -m "chore: regenerate dashboard data [skip ci]"
-            git push origin HEAD:main
+
+            # Two merges landing within seconds of each other can move main
+            # out from under this job between checkout and push — a real
+            # failure seen in production (PR #11 and #12 merging back to
+            # back), not a hypothetical. Retry with a rebase onto the latest
+            # main rather than failing the job over a conflict that isn't
+            # real: this commit only ever touches one generated file, so a
+            # rebase here is always clean in practice.
+            pushed=false
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Push rejected (attempt $attempt) — main moved, rebasing and retrying."
+              git fetch origin main
+              git rebase origin/main
+            done
+            if [ "$pushed" != true ]; then
+              echo "::error::Failed to push dashboard data after 5 attempts."
+              exit 1
+            fi
           fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
