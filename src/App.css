@@ -53,7 +53,7 @@
 
 .dashboard-links {
   display: flex;
-  gap: var(--spacing-03);
+  gap: var(--spacing-01);
 }
 
 .dashboard-metrics {
@@ -419,4 +419,27 @@
 
 .severity-fixed {
   color: var(--color-state-success);
+}
+
+/* Component status's Overall column — light-safe colors since this table's
+   rows are the zebra surface-tertiary/cream-200 treatment, not the dark
+   canvas. Three states, not two: pass-with-warnings gets its own amber
+   between clean-pass green and blocking-fail red. */
+.status-badge {
+  display: inline-block;
+  font-size: var(--text-label);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-pass {
+  color: var(--color-state-success);
+}
+
+.status-warn {
+  color: var(--color-amber-100);
+}
+
+.status-fail {
+  color: var(--color-state-error);
 }

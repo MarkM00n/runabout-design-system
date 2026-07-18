@@ -6,29 +6,34 @@
       "pass": true,
       "fail": 0,
       "warn": 0,
+      "status": "pass",
       "open": []
     },
     "accessibility": {
       "pass": true,
       "fail": 0,
       "warn": 0,
+      "status": "pass",
       "open": []
     },
     "storybookCoverage": {
       "pass": true,
       "fail": 0,
       "warn": 0,
+      "status": "pass",
       "open": []
     },
     "documentationCoverage": {
       "pass": true,
       "fail": 0,
       "warn": 0,
+      "status": "pass",
       "open": []
     }
   },
   "history": [],
   "overall": true,
+  "status": "pass",
   "tokensUsed": [
     "color-border-default",
     "color-border-focus",

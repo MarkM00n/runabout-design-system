@@ -27,6 +27,28 @@ function escapeCell(text) {
   return String(text).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
 
+// Same three-state model as the dashboard and Storybook badges
+// (statusFor() in design-sync.js computed `status`; this only presents it).
+function statusEmoji(status) {
+  if (status === 'fail') return '❌';
+  if (status === 'pass-with-warnings') return '⚠️';
+  return '✅';
+}
+
+function statusLabel(status, warnCount) {
+  if (status === 'fail') return 'Fail';
+  if (status === 'pass-with-warnings') return `Pass — ${warnCount} warning${warnCount === 1 ? '' : 's'}`;
+  return 'Pass';
+}
+
+// "N caught and fixed · N open warnings" — never call a warning an "issue".
+function summaryLine(fixedCount, failCount, warnCount) {
+  const parts = [`${fixedCount} caught and fixed`];
+  if (failCount > 0) parts.push(`${failCount} open failure${failCount === 1 ? '' : 's'}`);
+  parts.push(`${warnCount} open warning${warnCount === 1 ? '' : 's'}`);
+  return parts.join(' · ');
+}
+
 function issueRows(issues, mode) {
   return issues
     .map((issue) => {
@@ -41,9 +63,14 @@ function main() {
   const report = JSON.parse(readFileSync(REPORT_PATH, 'utf8'));
   const lines = [];
 
+  const totalOpenWarn = report.components.reduce(
+    (sum, c) => sum + Object.values(c.checks).reduce((s, ch) => s + ch.warn, 0),
+    0,
+  );
+
   lines.push('## 🔍 Design System Validation Report');
   lines.push('');
-  lines.push(`**Overall: ${report.overallStatus ? '✅ PASS' : '❌ FAIL'}**`);
+  lines.push(`**Overall: ${statusEmoji(report.status)} ${statusLabel(report.status, totalOpenWarn)}**`);
   lines.push('');
   lines.push(
     `Generated ${report.generatedAt} by \`npm run design-sync\` — single source of truth: ` +
@@ -73,20 +100,23 @@ function main() {
   lines.push('| Component | Status | Open | Caught & fixed |');
   lines.push('|---|---|---|---|');
   for (const component of report.components) {
+    const warnCount = Object.values(component.checks).reduce((sum, c) => sum + c.warn, 0);
     const openCount = Object.values(component.checks).reduce((sum, c) => sum + c.open.length, 0);
     lines.push(
-      `| ${component.component} | ${component.overall ? '✅' : '❌'} | ${openCount} | ${component.history.length} |`,
+      `| ${component.component} | ${statusEmoji(component.status)} ${statusLabel(component.status, warnCount)} | ${openCount} | ${component.history.length} |`,
     );
   }
   lines.push('');
 
   for (const component of report.components) {
     const openIssues = Object.values(component.checks).flatMap((c) => c.open);
+    const failCount = Object.values(component.checks).reduce((sum, c) => sum + c.fail, 0);
+    const warnCount = Object.values(component.checks).reduce((sum, c) => sum + c.warn, 0);
     if (openIssues.length === 0 && component.history.length === 0) continue;
 
     lines.push(`<details>`);
     lines.push(
-      `<summary>${component.component} — ${openIssues.length} open issue(s), ${component.history.length} caught &amp; fixed</summary>`,
+      `<summary>${component.component} — ${summaryLine(component.history.length, failCount, warnCount)}</summary>`,
     );
     lines.push('');
     if (openIssues.length > 0) {

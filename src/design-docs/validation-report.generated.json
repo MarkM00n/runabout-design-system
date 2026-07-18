@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-07-18T07:12:05.926Z",
+  "generatedAt": "2026-07-18T11:36:17.413Z",
   "overallStatus": true,
+  "status": "pass-with-warnings",
   "categoryPass": {
     "Token Compliance": true,
     "Accessibility": true,
@@ -17,29 +18,34 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass",
       "tokensUsed": [
         "color-action-highlight",
         "color-action-highlight-hover",
@@ -69,21 +75,24 @@
           "pass": true,
           "fail": 0,
           "warn": 2,
+          "status": "pass-with-warnings",
           "open": [
             {
               "level": "warn",
               "file": "src/components/Card/Card.tsx",
               "line": 50,
-              "message": "Raw color \"#d9d9d9\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
+              "code": "raw-hex:#d9d9d9:50",
+              "message": "This colour (#d9d9d9) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+              "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
               "checkType": "tokenCompliance"
             },
             {
               "level": "warn",
               "file": "src/components/Card/Card.tsx",
               "line": 61,
-              "message": "Raw color \"#f8ebda\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
+              "code": "raw-hex:#f8ebda:61",
+              "message": "This colour (#f8ebda) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+              "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
               "checkType": "tokenCompliance"
             }
           ]
@@ -92,23 +101,27 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass-with-warnings",
       "tokensUsed": [
         "color-sand-400",
         "color-surface-feature",
@@ -127,29 +140,34 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass",
       "tokensUsed": [
         "color-border-default",
         "color-border-focus",
@@ -176,29 +194,34 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass",
       "tokensUsed": [
         "color-border-default",
         "color-border-focus",
@@ -224,29 +247,34 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass",
       "tokensUsed": [
         "color-border-default",
         "color-border-focus",
@@ -272,29 +300,34 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "history": [],
       "overall": true,
+      "status": "pass",
       "tokensUsed": [
         "color-border-default",
         "color-border-focus",

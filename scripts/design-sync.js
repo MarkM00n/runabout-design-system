@@ -216,8 +216,9 @@ export function checkTokenCompliance(name, source) {
       level: 'fail',
       file,
       line: lineOf(codeOnly, match.index),
-      message: `Uses Tailwind's bare numeric scale "${match[0]}" — this renders 1.125x too large on this repo's 18px root font-size.`,
-      fix: 'Use an arbitrary px value (e.g. h-[24px]) or a registered token instead of the bare Tailwind scale.',
+      code: `dangerous-scale:${match[0]}`,
+      message: "This element's size doesn't quite match the design — it renders about 12.5% larger than intended.",
+      fix: 'Use an exact pixel size or a design token here instead of the default sizing, so it matches the design exactly.',
     });
   }
 
@@ -238,24 +239,27 @@ export function checkTokenCompliance(name, source) {
           level: 'warn',
           file,
           line: i + 1,
-          message: `Raw color "${hexMatch[0]}" — has a nearby comment.`,
-          fix: 'Confirm the nearby comment documents this as an intentionally unbound Figma value, not just a description of the code.',
+          code: `raw-hex:${hexMatch[0]}:${i + 1}`,
+          message: `This colour (${hexMatch[0]}) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.`,
+          fix: 'Check the nearby note really does explain why this one-off colour is needed, not just what it does.',
         });
       } else if (hasFileLevelJustification) {
         issues.push({
           level: 'warn',
           file,
           line: i + 1,
-          message: `Raw color "${hexMatch[0]}" — no comment on this specific line, but the file has a doc comment justifying unbound values.`,
-          fix: 'Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.',
+          code: `raw-hex:${hexMatch[0]}:${i + 1}`,
+          message: `This colour (${hexMatch[0]}) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.`,
+          fix: 'Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.',
         });
       } else {
         issues.push({
           level: 'fail',
           file,
           line: i + 1,
-          message: `Raw color "${hexMatch[0]}" with no nearby or file-level comment explaining why it isn't a token.`,
-          fix: "Add a token for this color (confirm the exact value against Figma first), or document it inline as an intentionally unbound literal.",
+          code: `raw-hex:${hexMatch[0]}:${i + 1}`,
+          message: `This colour (${hexMatch[0]}) isn't from the design system, and nothing explains why it's needed here.`,
+          fix: 'Use a design system colour instead — check the design file for the right one. If this exact colour really is a one-off, add a note explaining why.',
         });
       }
     }
@@ -335,8 +339,9 @@ export function checkAccessibility(name, rawSource) {
       level: 'fail',
       file,
       line: lineOf(source, divOnClick),
-      message: 'Found onClick on a <div> — interactive behavior should use a real native element, not a styled div.',
-      fix: 'Replace the <div onClick> with a real interactive element (<button>, <a>, etc.), or move the handler onto one that already exists nearby.',
+      code: 'div-onclick',
+      message: 'This clickable area is built from a plain block, not a real button or link — keyboard and screen-reader users may not be able to reach it.',
+      fix: 'Turn this into a real button or link instead of a clickable block — that makes it usable by keyboard and screen readers automatically.',
     });
   }
 
@@ -346,8 +351,9 @@ export function checkAccessibility(name, rawSource) {
       level: 'fail',
       file,
       line: lineOf(source, focusIdx),
-      message: "Uses `focus:` without any `focus-visible:` — focus rings should key off :focus-visible so mouse clicks don't show a keyboard-only ring.",
-      fix: 'Change `focus:` to `focus-visible:` so the ring only shows for keyboard users.',
+      code: 'focus-visible-missing',
+      message: "The focus outline shows up on mouse clicks as well as keyboard use, but it's meant to appear only for people navigating by keyboard.",
+      fix: "Switch this to the keyboard-only focus style so mouse users don't see a ring that isn't meant for them.",
     });
   }
 
@@ -358,8 +364,9 @@ export function checkAccessibility(name, rawSource) {
       level: 'warn',
       file,
       line: lineOf(source, disabledIdx),
-      message: 'Component references `disabled` but no `disabled:pointer-events-none` (or `has-[:disabled]:pointer-events-none`) found — hover states may visually leak through on a disabled control.',
-      fix: 'Add `disabled:pointer-events-none` (or `has-[:disabled]:pointer-events-none` for composite components) alongside the disabled styling.',
+      code: 'disabled-pointer-events-missing',
+      message: "This has a disabled state, but hover effects might still show while it's disabled — which can make it look clickable when it isn't.",
+      fix: "Turn off hover effects specifically for the disabled state, so it doesn't look interactive when it isn't.",
     });
   }
 
@@ -370,8 +377,9 @@ export function checkAccessibility(name, rawSource) {
         level: 'warn',
         file,
         line: lineOf(source, block.index),
-        message: `<svg> block #${idx + 1} has no aria-hidden.`,
-        fix: 'Add aria-hidden="true" to this decorative <svg>, or give it a real accessible name if it is not decorative.',
+        code: `svg-aria-hidden-missing:${idx}`,
+        message: "This icon isn't marked as decorative, so a screen reader may try to announce it and confuse the person using one.",
+        fix: "Mark the icon as decorative if it's just visual flair, or give it a real description if it conveys meaning on its own.",
       });
     }
   });
@@ -382,8 +390,9 @@ export function checkAccessibility(name, rawSource) {
       level: 'warn',
       file,
       line: lineOf(source, checkboxIdx),
-      message: 'Custom checkbox/radio input found without `sr-only`.',
-      fix: "If it's visually replaced with custom styling, keep the real input in the DOM and hide it with the sr-only utility — not hidden or removed.",
+      code: 'checkbox-sr-only-missing',
+      message: 'This checkbox or radio button has a custom look, but the real control underneath may not be reachable by keyboard or screen reader.',
+      fix: "Keep the real checkbox/radio in place and only hide it visually — don't remove it from the page, or keyboard and screen-reader users lose it entirely.",
     });
   }
 
@@ -404,8 +413,9 @@ export function checkStorybookCoverage(name, dir, componentSource, storiesSource
       level: 'fail',
       file: `src/components/${name}/index.ts`,
       line: null,
-      message: 'No index.ts barrel export found.',
-      fix: 'Add an index.ts barrel file exporting the component and its prop types.',
+      code: 'missing-index',
+      message: "This component isn't set up to be used anywhere else yet.",
+      fix: 'Add the missing export file so other parts of the app can use this component.',
     });
   }
 
@@ -414,8 +424,9 @@ export function checkStorybookCoverage(name, dir, componentSource, storiesSource
       level: 'fail',
       file: storiesFile,
       line: null,
-      message: "Missing `tags: ['autodocs']` in story meta.",
-      fix: "Add tags: ['autodocs'] to the story meta.",
+      code: 'missing-autodocs',
+      message: "This component won't get an automatic documentation page in Storybook.",
+      fix: "Turn on automatic documentation for this component's Storybook entry.",
     });
   }
 
@@ -426,8 +437,9 @@ export function checkStorybookCoverage(name, dir, componentSource, storiesSource
       level: 'fail',
       file: storiesFile,
       line: null,
-      message: 'Component supports `disabled` but no `Disabled` story export was found.',
-      fix: 'Add an exported `Disabled` story demonstrating the disabled state.',
+      code: 'missing-disabled-story',
+      message: "This component has a disabled state, but there's nowhere to preview what it looks like.",
+      fix: 'Add a Storybook example showing the disabled state, so it can be checked visually.',
     });
   }
 
@@ -437,8 +449,9 @@ export function checkStorybookCoverage(name, dir, componentSource, storiesSource
       level: 'fail',
       file: storiesFile,
       line: null,
-      message: 'No story exports found.',
-      fix: 'Add at least one exported Story object.',
+      code: 'missing-stories',
+      message: "There's nothing to preview for this component in Storybook yet.",
+      fix: 'Add at least one example so this component can be viewed and checked in Storybook.',
     });
   }
 
@@ -584,29 +597,32 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
       level: 'fail',
       file: docsFile,
       line: null,
-      message: `No ${name}.docs.ts found — description/usage/do-dont/accessibility content is missing.`,
-      fix: 'Run npm run design-sync to scaffold a stub, then replace the TODO fields with real prose.',
+      code: 'missing-docs-file',
+      message: "This component has no written guidance yet — no description, usage advice, or accessibility notes.",
+      fix: 'Run the design-sync command to generate a starting template, then fill it in with real guidance.',
     });
   } else if (!data) {
     issues.push({
       level: 'fail',
       file: docsFile,
       line: null,
-      message: `${name}.docs.ts exists but its docs object could not be parsed.`,
-      fix: 'Fix the docs.ts object literal syntax so design-sync can parse it (check for mismatched braces/quotes).',
+      code: 'docs-file-unparseable',
+      message: "The documentation for this component exists but is broken and can't be read.",
+      fix: 'Check the documentation file for a typo, like a missing bracket or quote, and fix it so it can be read again.',
     });
   } else {
     const hasTodo = JSON.stringify(data).includes('TODO');
     const level = hasTodo ? 'warn' : 'fail';
-    const todoNote = hasTodo ? ' (auto-generated stub — needs human authoring)' : '';
+    const todoNote = hasTodo ? ' (this was auto-filled and still needs a person to write the real version)' : '';
 
     if (!data.description?.trim()) {
       issues.push({
         level,
         file: docsFile,
         line: null,
-        message: `Description is missing or a TODO placeholder${todoNote}.`,
-        fix: 'Write a 1–2 sentence description of what the component is and when to use it.',
+        code: 'missing-description',
+        message: `There's no description explaining what this component is or when to use it${todoNote}.`,
+        fix: 'Write one or two sentences describing what this component is for and when someone should reach for it.',
       });
     }
     if (!data.usageGuidelines?.length) {
@@ -614,8 +630,9 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
         level,
         file: docsFile,
         line: null,
-        message: `Usage guidance is missing or a TODO placeholder${todoNote}.`,
-        fix: 'Add short, imperative usage guidance.',
+        code: 'missing-usage-guidelines',
+        message: `There's no guidance on how this component should be used${todoNote}.`,
+        fix: 'Add a few short, practical tips on how to use this component correctly.',
       });
     }
     if (!data.accessibilityNotes?.length) {
@@ -623,8 +640,9 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
         level,
         file: docsFile,
         line: null,
-        message: `Accessibility notes are missing or a TODO placeholder${todoNote}.`,
-        fix: "Add accessibility notes specific to this component's real behavior.",
+        code: 'missing-accessibility-notes',
+        message: `There are no accessibility notes for this component${todoNote}.`,
+        fix: 'Add a few notes on how this component behaves for keyboard and screen-reader users.',
       });
     }
     if (!data.codeExample?.trim() || data.codeExample.includes('TODO')) {
@@ -632,8 +650,9 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
         level: 'warn',
         file: docsFile,
         line: null,
-        message: `Code example is missing or a TODO placeholder${todoNote}.`,
-        fix: 'Add a short, real usage code snippet.',
+        code: 'missing-code-example',
+        message: `There's no example showing how to use this component in code${todoNote}.`,
+        fix: 'Add a short, real example of how this component is typically used.',
       });
     }
   }
@@ -643,8 +662,9 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
       level: 'warn',
       file: componentFile,
       line: null,
-      message: 'No registered design tokens detected in use — "Design Tokens Used" will be empty.',
-      fix: 'Confirm the component should use registered tokens — if so, check its class names against tokens.css.',
+      code: 'no-tokens-used',
+      message: "This component doesn't appear to use any colours, spacing, or sizing from the design system.",
+      fix: 'Double check this is intentional — if the component should be using design system values, update it to reference them.',
     });
   }
 
@@ -653,8 +673,9 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
       level: 'fail',
       file: storiesFile,
       line: null,
-      message: "Storybook Autodocs not configured — missing tags: ['autodocs'].",
-      fix: "Add tags: ['autodocs'] to the story meta.",
+      code: 'missing-autodocs',
+      message: "This component won't get an automatic documentation page in Storybook.",
+      fix: "Turn on automatic documentation for this component's Storybook entry.",
     });
   }
 
@@ -662,10 +683,11 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
   if (storyExportCount === 0) {
     issues.push({
       level: 'fail',
+      code: 'missing-stories',
       file: storiesFile,
       line: null,
-      message: 'Required stories are missing — no story exports found.',
-      fix: 'Add at least one exported Story object.',
+      message: "There's nothing to preview for this component in Storybook yet.",
+      fix: 'Add at least one example so this component can be viewed and checked in Storybook.',
     });
   }
 
@@ -694,10 +716,25 @@ function readPreviousReport(dir, name) {
 
 // Stable identity for an issue so the same problem is recognized as "the
 // same issue" across runs even if unrelated issues shift position in the
-// array. checkType + file + message is specific enough in practice — two
-// genuinely different issues in the same check never share message text.
+// array — deliberately NOT based on the human-readable message. Rewording a
+// message (to make it plainer, fix a typo, etc.) must never look like the
+// underlying issue was fixed and a new one appeared; `code` is a short,
+// stable identifier orthogonal to the prose, embedding whatever makes an
+// instance unique (e.g. the specific hex value for a raw-color hit) so two
+// different problems on the same line still resolve to different keys.
 function issueKey(issue) {
-  return `${issue.checkType}::${issue.file}::${issue.message}`;
+  return `${issue.checkType}::${issue.file}::${issue.code}`;
+}
+
+// Three-state status shared by every consumer (Storybook badges, dashboard
+// rows, PR comments) — computed once here, never re-derived downstream. A
+// component (or check) that passes everything but has open warnings isn't a
+// clean pass: it gets its own state rather than being collapsed into a
+// pass/fail boolean.
+function statusFor(fail, warn) {
+  if (fail > 0) return 'fail';
+  if (warn > 0) return 'pass-with-warnings';
+  return 'pass';
 }
 
 // Builds one component's full report: current open issues per check
@@ -710,20 +747,33 @@ function issueKey(issue) {
 // answer for this system's original 6 components.
 function buildComponentReport(name, dir, issuesByCheck) {
   const previous = readPreviousReport(dir, name);
+  // .filter(code != null) matters, not just belt-and-suspenders: a previous
+  // report written before `code` existed on issues (or before this history
+  // mechanism existed at all) has open issues with no `code` field. Without
+  // this filter, issueKey() would compute `code: undefined` for every one of
+  // them, which can never match a freshly-computed key (those always have a
+  // real code) — every old issue would look "resolved" on the very next run
+  // even though nothing was fixed. Excluding them makes a schema/key-scheme
+  // change behave the same honest way as "no prior report at all": nothing
+  // to diff against, so nothing gets asserted as caught-and-fixed.
   const previousOpenIssues = previous?.checks
-    ? Object.values(previous.checks).flatMap((c) => c.open ?? [])
+    ? Object.values(previous.checks).flatMap((c) => c.open ?? []).filter((issue) => issue.code != null)
     : [];
   const previousHistory = previous?.history ?? [];
 
   const checks = {};
   let overall = true;
+  let totalFail = 0;
+  let totalWarn = 0;
   for (const key of CHECK_TYPE_KEYS) {
     const issues = (issuesByCheck[key] ?? []).map((issue) => ({ ...issue, checkType: key }));
     const fail = issues.filter((i) => i.level === 'fail').length;
     const warn = issues.filter((i) => i.level === 'warn').length;
     const pass = fail === 0;
     if (!pass) overall = false;
-    checks[key] = { pass, fail, warn, open: issues };
+    totalFail += fail;
+    totalWarn += warn;
+    checks[key] = { pass, fail, warn, status: statusFor(fail, warn), open: issues };
   }
 
   const currentOpenKeys = new Set(Object.values(checks).flatMap((c) => c.open).map(issueKey));
@@ -739,7 +789,12 @@ function buildComponentReport(name, dir, issuesByCheck) {
       resolvedAt: today,
     }));
 
-  return { checks, history: [...previousHistory, ...newlyResolved], overall };
+  return {
+    checks,
+    history: [...previousHistory, ...newlyResolved],
+    overall,
+    status: statusFor(totalFail, totalWarn),
+  };
 }
 
 function writeValidationReport(dir, report) {
@@ -752,9 +807,18 @@ const VALIDATION_REPORT_PATH = join(ROOT, 'src', 'design-docs', 'validation-repo
 // comments) reads — same computation as the per-component files above, just
 // aggregated in one place instead of requiring six separate imports.
 function writeConsolidatedReport(componentResults, categoryPass, overallStatus) {
+  const totalFail = componentResults.reduce(
+    (sum, r) => sum + Object.values(r.checks).reduce((s, c) => s + c.fail, 0),
+    0,
+  );
+  const totalWarn = componentResults.reduce(
+    (sum, r) => sum + Object.values(r.checks).reduce((s, c) => s + c.warn, 0),
+    0,
+  );
   const data = {
     generatedAt: new Date().toISOString(),
     overallStatus,
+    status: statusFor(totalFail, totalWarn),
     categoryPass,
     components: componentResults,
   };
@@ -1222,8 +1286,9 @@ function run() {
           level: 'fail',
           file: `src/components/${name}/${name}.stories.tsx`,
           line: null,
-          message: `No ${name}.stories.tsx found.`,
-          fix: 'Add a co-located ComponentName.stories.tsx.',
+          code: 'missing-stories-file',
+          message: "There's nothing to preview for this component in Storybook yet — the stories file itself doesn't exist.",
+          fix: 'Add a co-located ComponentName.stories.tsx with at least one example.',
         }];
 
     // Step 3: generate missing documentation sections before validating them,
@@ -1236,7 +1301,7 @@ function run() {
     const docsResult = readDocsFile(dir, name);
     const docIssues = checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed);
 
-    const { checks, history, overall } = buildComponentReport(name, dir, {
+    const { checks, history, overall, status } = buildComponentReport(name, dir, {
       tokenCompliance: tokenIssues,
       accessibility: a11yIssues,
       storybookCoverage: storybookIssues,
@@ -1249,6 +1314,7 @@ function run() {
       checks,
       history,
       overall,
+      status,
       tokensUsed,
     };
     writeValidationReport(dir, report);

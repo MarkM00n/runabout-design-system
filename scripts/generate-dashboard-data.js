@@ -144,13 +144,17 @@ function main() {
       cycleTimes.push(cycleTimeSeconds);
     }
 
-    const openCount = Object.values(component.checks).reduce((sum, c) => sum + c.open.length, 0);
+    const openFailCount = Object.values(component.checks).reduce((sum, c) => sum + c.fail, 0);
+    const openWarnCount = Object.values(component.checks).reduce((sum, c) => sum + c.warn, 0);
 
     componentRows.push({
       name,
       overall: component.overall,
+      status: component.status,
       checks: component.checks,
-      openCount,
+      openCount: openFailCount + openWarnCount,
+      openFailCount,
+      openWarnCount,
       fixedCount: component.history.length,
       history: component.history,
       lastValidated: component.lastValidated,
@@ -173,6 +177,7 @@ function main() {
   const data = {
     generatedAt: new Date().toISOString(),
     validationReportGeneratedAt: validationReport.generatedAt,
+    status: validationReport.status,
     methodologyNotes: {
       cycleTime:
         "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, " +
