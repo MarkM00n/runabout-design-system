@@ -41,8 +41,6 @@
   align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--spacing-03);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.16);
-  padding-bottom: var(--spacing-04);
   margin-bottom: var(--spacing-05);
 }
 
@@ -77,16 +75,11 @@
   border-bottom-color: var(--color-amber-300);
 }
 
-/* No card chrome (border/fill) — smaller, denser, and separated by
-   whitespace rather than boxes, per the "decrease the weight" brief. Five
-   compact tiles read as one confident row instead of three heavy widgets. */
 .dashboard-metrics {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--spacing-05);
-  padding-bottom: var(--spacing-04);
-  margin-bottom: var(--spacing-01);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.1);
+  gap: var(--spacing-04);
+  margin-bottom: var(--spacing-06);
 }
 
 @media (max-width: 1100px) {
@@ -101,15 +94,25 @@
   }
 }
 
+/* Card style per stat, same warm accent Card itself uses for its
+   background — surface-feature is a mid-lightness terracotta, so nothing
+   in the palette clears 4.5:1 against it at small text sizes (checked:
+   text-inverse ~3.74:1, grey-50 ~3.91:1 — both real numbers, neither hits
+   normal-text AA). text-inverse is used anyway for consistency with Card's
+   own established text-sand-400-on-surface-feature pairing elsewhere in
+   this system, and the metric number itself is sized/weighted well past
+   the large-text-bold threshold (≥3:1), where 3.74:1 does pass cleanly. */
 .metric-tile {
   min-width: 0;
+  box-sizing: border-box;
+  background: var(--color-surface-feature);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-04);
 }
 
 /* Arbitrary display size — no token in this system was built for a
    metric-tile headline number, so this stays a literal value rather than
-   forcing a fit onto text-h3 (36px, sized for Card's title, not this).
-   Shrunk from an earlier 72px pass, which read as oversized/heavy next to
-   a five-tile row. */
+   forcing a fit onto text-h3 (36px, sized for Card's title, not this). */
 .metric-number {
   font-size: 40px;
   line-height: 1;
@@ -118,24 +121,20 @@
   color: var(--color-text-inverse);
 }
 
+/* amber-300 (used elsewhere on the dark canvas for emphasis) only reaches
+   2.09:1 against surface-feature — unusable here. grey-50 flips to a dark
+   numeral instead of shifting hue, which both reads as a real
+   differentiator against the other four cream numbers and, at 3.91:1,
+   clears more contrast margin than the cream default. */
 .metric-number-warn {
-  color: var(--color-amber-300);
+  color: var(--color-grey-50);
 }
 
 .metric-label {
   margin-top: var(--spacing-01);
   font-size: 13px;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   line-height: 1.4;
-}
-
-.metrics-footnote {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--color-olive-700);
-  opacity: 0.85;
-  max-width: 1000px;
-  margin: var(--spacing-02) 0 var(--spacing-06);
 }
 
 .dashboard-section {

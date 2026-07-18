@@ -263,9 +263,6 @@ function App() {
           <div className="metric-label">Design tokens documented</div>
         </div>
       </section>
-      <p className="metrics-footnote">
-        {data.methodologyNotes.cycleTime} First-time pass rate isn't shown: {data.methodologyNotes.firstTimePassRate}
-      </p>
 
       <section className="dashboard-section" aria-label="Errors caught by validation">
         <h2 className="section-title">Errors caught by validation, by check type</h2>
@@ -290,11 +287,6 @@ function App() {
             })}
           </tbody>
         </table>
-        <p className="section-caption">
-          Read straight from <code>src/design-docs/validation-report.generated.json</code> — the same file
-          Storybook badges and PR comments read, generated {formatGeneratedAt(data.validationReportGeneratedAt)}.
-          No surface here recomputes these numbers itself.
-        </p>
       </section>
 
       <section className="dashboard-section component-status-card" aria-label="Component status">
