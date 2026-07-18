@@ -195,8 +195,18 @@ function stripComments(source) {
     .replace(/\/\/[^\n]*/g, (m) => m.replace(/[^\n]/g, ' '));
 }
 
-export function checkTokenCompliance(source) {
+// Converts a character index into a 1-based line number so issues can point
+// at "where" in the file, not just describe "what" — index-based checks
+// (matchAll/search) feed this directly; per-line loops already have the
+// line number for free and don't need it.
+function lineOf(source, index) {
+  if (index == null || index < 0) return null;
+  return source.slice(0, index).split('\n').length;
+}
+
+export function checkTokenCompliance(name, source) {
   const issues = [];
+  const file = `src/components/${name}/${name}.tsx`;
   const codeOnly = stripComments(source);
 
   DANGEROUS_SCALE_RE.lastIndex = 0;
@@ -204,7 +214,10 @@ export function checkTokenCompliance(source) {
   while ((match = DANGEROUS_SCALE_RE.exec(codeOnly))) {
     issues.push({
       level: 'fail',
-      message: `Uses Tailwind's bare numeric scale "${match[0]}" — this renders 1.125x too large on this repo's 18px root font-size. Use an arbitrary px value (e.g. h-[24px]) or a token instead.`,
+      file,
+      line: lineOf(codeOnly, match.index),
+      message: `Uses Tailwind's bare numeric scale "${match[0]}" — this renders 1.125x too large on this repo's 18px root font-size.`,
+      fix: 'Use an arbitrary px value (e.g. h-[24px]) or a registered token instead of the bare Tailwind scale.',
     });
   }
 
@@ -223,17 +236,26 @@ export function checkTokenCompliance(source) {
       if (hasNearbyComment) {
         issues.push({
           level: 'warn',
-          message: `Raw color "${hexMatch[0]}" on line ${i + 1} — has a nearby comment; confirm it documents an unbound Figma value rather than just describing the code.`,
+          file,
+          line: i + 1,
+          message: `Raw color "${hexMatch[0]}" — has a nearby comment.`,
+          fix: 'Confirm the nearby comment documents this as an intentionally unbound Figma value, not just a description of the code.',
         });
       } else if (hasFileLevelJustification) {
         issues.push({
           level: 'warn',
-          message: `Raw color "${hexMatch[0]}" on line ${i + 1} — no comment on this specific line, but the file has a doc comment justifying unbound values. Consider a per-line note for traceability.`,
+          file,
+          line: i + 1,
+          message: `Raw color "${hexMatch[0]}" — no comment on this specific line, but the file has a doc comment justifying unbound values.`,
+          fix: 'Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.',
         });
       } else {
         issues.push({
           level: 'fail',
-          message: `Raw color "${hexMatch[0]}" on line ${i + 1} with no nearby or file-level comment explaining why it isn't a token.`,
+          file,
+          line: i + 1,
+          message: `Raw color "${hexMatch[0]}" with no nearby or file-level comment explaining why it isn't a token.`,
+          fix: "Add a token for this color (confirm the exact value against Figma first), or document it inline as an intentionally unbound literal.",
         });
       }
     }
@@ -302,46 +324,66 @@ export function extractTokensUsed(componentSource, cssTokenNames) {
 // 1b. Accessibility (heuristic — see docs/design-system-rules.md § Accessibility)
 // ---------------------------------------------------------------------------
 
-export function checkAccessibility(rawSource) {
+export function checkAccessibility(name, rawSource) {
   const issues = [];
+  const file = `src/components/${name}/${name}.tsx`;
   const source = stripComments(rawSource);
 
-  if (/<div[^>]*\bonClick\b/.test(source)) {
+  const divOnClick = source.search(/<div[^>]*\bonClick\b/);
+  if (divOnClick !== -1) {
     issues.push({
       level: 'fail',
+      file,
+      line: lineOf(source, divOnClick),
       message: 'Found onClick on a <div> — interactive behavior should use a real native element, not a styled div.',
+      fix: 'Replace the <div onClick> with a real interactive element (<button>, <a>, etc.), or move the handler onto one that already exists nearby.',
     });
   }
 
-  if (/\bfocus:/.test(source) && !/focus-visible:/.test(source)) {
+  const focusIdx = source.search(/\bfocus:/);
+  if (focusIdx !== -1 && !/focus-visible:/.test(source)) {
     issues.push({
       level: 'fail',
+      file,
+      line: lineOf(source, focusIdx),
       message: "Uses `focus:` without any `focus-visible:` — focus rings should key off :focus-visible so mouse clicks don't show a keyboard-only ring.",
+      fix: 'Change `focus:` to `focus-visible:` so the ring only shows for keyboard users.',
     });
   }
 
   const hasDisabledPointerEventsGuard = /(?:^|[\s'"])(?:disabled|has-\[:disabled\]):pointer-events-none\b/.test(source);
-  if (/\bdisabled\b/.test(source) && !hasDisabledPointerEventsGuard) {
+  const disabledIdx = source.search(/\bdisabled\b/);
+  if (disabledIdx !== -1 && !hasDisabledPointerEventsGuard) {
     issues.push({
       level: 'warn',
+      file,
+      line: lineOf(source, disabledIdx),
       message: 'Component references `disabled` but no `disabled:pointer-events-none` (or `has-[:disabled]:pointer-events-none`) found — hover states may visually leak through on a disabled control.',
+      fix: 'Add `disabled:pointer-events-none` (or `has-[:disabled]:pointer-events-none` for composite components) alongside the disabled styling.',
     });
   }
 
-  const svgBlocks = source.match(/<svg[\s\S]*?<\/svg>/g) ?? [];
+  const svgBlocks = [...source.matchAll(/<svg[\s\S]*?<\/svg>/g)];
   svgBlocks.forEach((block, idx) => {
-    if (!/aria-hidden/.test(block)) {
+    if (!/aria-hidden/.test(block[0])) {
       issues.push({
         level: 'warn',
-        message: `<svg> block #${idx + 1} has no aria-hidden — confirm it's purely decorative, or add aria-hidden="true".`,
+        file,
+        line: lineOf(source, block.index),
+        message: `<svg> block #${idx + 1} has no aria-hidden.`,
+        fix: 'Add aria-hidden="true" to this decorative <svg>, or give it a real accessible name if it is not decorative.',
       });
     }
   });
 
-  if (/type=["'](?:checkbox|radio)["']/.test(source) && !/sr-only/.test(source)) {
+  const checkboxIdx = source.search(/type=["'](?:checkbox|radio)["']/);
+  if (checkboxIdx !== -1 && !/sr-only/.test(source)) {
     issues.push({
       level: 'warn',
-      message: 'Custom checkbox/radio input found without `sr-only` — if it\'s visually replaced with custom styling, the real input should be sr-only, not hidden or removed.',
+      file,
+      line: lineOf(source, checkboxIdx),
+      message: 'Custom checkbox/radio input found without `sr-only`.',
+      fix: "If it's visually replaced with custom styling, keep the real input in the DOM and hide it with the sr-only utility — not hidden or removed.",
     });
   }
 
@@ -355,24 +397,49 @@ export function checkAccessibility(rawSource) {
 export function checkStorybookCoverage(name, dir, componentSource, storiesSource) {
   const issues = [];
   const indexPath = join(dir, 'index.ts');
+  const storiesFile = `src/components/${name}/${name}.stories.tsx`;
 
   if (!existsSync(indexPath)) {
-    issues.push({ level: 'fail', message: 'No index.ts barrel export found.' });
+    issues.push({
+      level: 'fail',
+      file: `src/components/${name}/index.ts`,
+      line: null,
+      message: 'No index.ts barrel export found.',
+      fix: 'Add an index.ts barrel file exporting the component and its prop types.',
+    });
   }
 
   if (!/tags:\s*\[[^\]]*['"]autodocs['"]/.test(storiesSource)) {
-    issues.push({ level: 'fail', message: "Missing `tags: ['autodocs']` in story meta." });
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      message: "Missing `tags: ['autodocs']` in story meta.",
+      fix: "Add tags: ['autodocs'] to the story meta.",
+    });
   }
 
   const hasDisabledProp = /\bdisabled\b/.test(stripComments(componentSource));
   const hasDisabledStory = /export const Disabled\b/i.test(storiesSource);
   if (hasDisabledProp && !hasDisabledStory) {
-    issues.push({ level: 'fail', message: 'Component supports `disabled` but no `Disabled` story export was found.' });
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      message: 'Component supports `disabled` but no `Disabled` story export was found.',
+      fix: 'Add an exported `Disabled` story demonstrating the disabled state.',
+    });
   }
 
   const storyExportCount = (storiesSource.match(/export const \w+: Story/g) ?? []).length;
   if (storyExportCount === 0) {
-    issues.push({ level: 'fail', message: 'No story exports found.' });
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      message: 'No story exports found.',
+      fix: 'Add at least one exported Story object.',
+    });
   }
 
   return issues;
@@ -508,41 +575,98 @@ export const docs: ComponentDocMeta = {
 export function checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed) {
   const issues = [];
   const { exists, data } = docsResult;
+  const docsFile = `src/components/${name}/${name}.docs.ts`;
+  const componentFile = `src/components/${name}/${name}.tsx`;
+  const storiesFile = `src/components/${name}/${name}.stories.tsx`;
 
   if (!exists) {
-    issues.push({ level: 'fail', message: `No ${name}.docs.ts found — description/usage/do-dont/accessibility content is missing.` });
+    issues.push({
+      level: 'fail',
+      file: docsFile,
+      line: null,
+      message: `No ${name}.docs.ts found — description/usage/do-dont/accessibility content is missing.`,
+      fix: 'Run npm run design-sync to scaffold a stub, then replace the TODO fields with real prose.',
+    });
   } else if (!data) {
-    issues.push({ level: 'fail', message: `${name}.docs.ts exists but its docs object could not be parsed.` });
+    issues.push({
+      level: 'fail',
+      file: docsFile,
+      line: null,
+      message: `${name}.docs.ts exists but its docs object could not be parsed.`,
+      fix: 'Fix the docs.ts object literal syntax so design-sync can parse it (check for mismatched braces/quotes).',
+    });
   } else {
     const hasTodo = JSON.stringify(data).includes('TODO');
     const level = hasTodo ? 'warn' : 'fail';
     const todoNote = hasTodo ? ' (auto-generated stub — needs human authoring)' : '';
 
     if (!data.description?.trim()) {
-      issues.push({ level, message: `Description is missing or a TODO placeholder${todoNote}.` });
+      issues.push({
+        level,
+        file: docsFile,
+        line: null,
+        message: `Description is missing or a TODO placeholder${todoNote}.`,
+        fix: 'Write a 1–2 sentence description of what the component is and when to use it.',
+      });
     }
     if (!data.usageGuidelines?.length) {
-      issues.push({ level, message: `Usage guidance is missing or a TODO placeholder${todoNote}.` });
+      issues.push({
+        level,
+        file: docsFile,
+        line: null,
+        message: `Usage guidance is missing or a TODO placeholder${todoNote}.`,
+        fix: 'Add short, imperative usage guidance.',
+      });
     }
     if (!data.accessibilityNotes?.length) {
-      issues.push({ level, message: `Accessibility notes are missing or a TODO placeholder${todoNote}.` });
+      issues.push({
+        level,
+        file: docsFile,
+        line: null,
+        message: `Accessibility notes are missing or a TODO placeholder${todoNote}.`,
+        fix: "Add accessibility notes specific to this component's real behavior.",
+      });
     }
     if (!data.codeExample?.trim() || data.codeExample.includes('TODO')) {
-      issues.push({ level: 'warn', message: `Code example is missing or a TODO placeholder${todoNote}.` });
+      issues.push({
+        level: 'warn',
+        file: docsFile,
+        line: null,
+        message: `Code example is missing or a TODO placeholder${todoNote}.`,
+        fix: 'Add a short, real usage code snippet.',
+      });
     }
   }
 
   if (tokensUsed.length === 0) {
-    issues.push({ level: 'warn', message: 'No registered design tokens detected in use — "Design Tokens Used" will be empty.' });
+    issues.push({
+      level: 'warn',
+      file: componentFile,
+      line: null,
+      message: 'No registered design tokens detected in use — "Design Tokens Used" will be empty.',
+      fix: 'Confirm the component should use registered tokens — if so, check its class names against tokens.css.',
+    });
   }
 
   if (!/tags:\s*\[[^\]]*['"]autodocs['"]/.test(storiesSource)) {
-    issues.push({ level: 'fail', message: "Storybook Autodocs not configured — missing tags: ['autodocs']." });
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      message: "Storybook Autodocs not configured — missing tags: ['autodocs'].",
+      fix: "Add tags: ['autodocs'] to the story meta.",
+    });
   }
 
   const storyExportCount = (storiesSource.match(/export const \w+: Story/g) ?? []).length;
   if (storyExportCount === 0) {
-    issues.push({ level: 'fail', message: 'Required stories are missing — no story exports found.' });
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      message: 'Required stories are missing — no story exports found.',
+      fix: 'Add at least one exported Story object.',
+    });
   }
 
   return issues;
@@ -550,11 +674,91 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
 
 // ---------------------------------------------------------------------------
 // Validation report: ComponentName.validation.json, consumed by DocsPage.tsx
-// for the "Validation Status" section and DesignOps metadata block.
+// for the "Validation Status" section and DesignOps metadata block. This is
+// also the single source of truth every other surface (dashboard, Storybook
+// badges, PR comments) reads from — none of them re-run these checks
+// themselves, they only read what this section computed and wrote.
 // ---------------------------------------------------------------------------
+
+const CHECK_TYPE_KEYS = ['tokenCompliance', 'accessibility', 'storybookCoverage', 'documentationCoverage'];
+
+function readPreviousReport(dir, name) {
+  const path = join(dir, `${name}.validation.json`);
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+// Stable identity for an issue so the same problem is recognized as "the
+// same issue" across runs even if unrelated issues shift position in the
+// array. checkType + file + message is specific enough in practice — two
+// genuinely different issues in the same check never share message text.
+function issueKey(issue) {
+  return `${issue.checkType}::${issue.file}::${issue.message}`;
+}
+
+// Builds one component's full report: current open issues per check
+// category, plus a history log of issues that were open in the *previous*
+// committed report but aren't open anymore — i.e. actually caught and fixed
+// between runs, not asserted. For a component whose previous report has no
+// issue-level detail (the old boolean-only schema, or no report at all yet),
+// there's nothing to diff against, so history starts empty rather than
+// guessing — see docs/design-system-rules.md §5 for why that's the honest
+// answer for this system's original 6 components.
+function buildComponentReport(name, dir, issuesByCheck) {
+  const previous = readPreviousReport(dir, name);
+  const previousOpenIssues = previous?.checks
+    ? Object.values(previous.checks).flatMap((c) => c.open ?? [])
+    : [];
+  const previousHistory = previous?.history ?? [];
+
+  const checks = {};
+  let overall = true;
+  for (const key of CHECK_TYPE_KEYS) {
+    const issues = (issuesByCheck[key] ?? []).map((issue) => ({ ...issue, checkType: key }));
+    const fail = issues.filter((i) => i.level === 'fail').length;
+    const warn = issues.filter((i) => i.level === 'warn').length;
+    const pass = fail === 0;
+    if (!pass) overall = false;
+    checks[key] = { pass, fail, warn, open: issues };
+  }
+
+  const currentOpenKeys = new Set(Object.values(checks).flatMap((c) => c.open).map(issueKey));
+  const today = new Date().toISOString().slice(0, 10);
+  const newlyResolved = previousOpenIssues
+    .filter((issue) => !currentOpenKeys.has(issueKey(issue)))
+    .map((issue) => ({
+      checkType: issue.checkType,
+      file: issue.file,
+      line: issue.line ?? null,
+      message: issue.message,
+      fix: issue.fix ?? null,
+      resolvedAt: today,
+    }));
+
+  return { checks, history: [...previousHistory, ...newlyResolved], overall };
+}
 
 function writeValidationReport(dir, report) {
   writeFileSync(join(dir, `${report.component}.validation.json`), JSON.stringify(report, null, 2) + '\n');
+}
+
+const VALIDATION_REPORT_PATH = join(ROOT, 'src', 'design-docs', 'validation-report.generated.json');
+
+// The one consolidated artifact every non-Storybook surface (dashboard, PR
+// comments) reads — same computation as the per-component files above, just
+// aggregated in one place instead of requiring six separate imports.
+function writeConsolidatedReport(componentResults, categoryPass, overallStatus) {
+  const data = {
+    generatedAt: new Date().toISOString(),
+    overallStatus,
+    categoryPass,
+    components: componentResults,
+  };
+  writeFileSync(VALIDATION_REPORT_PATH, JSON.stringify(data, null, 2) + '\n');
 }
 
 // Step 4: confirm the current (and any newly-generated) content actually
@@ -1010,11 +1214,17 @@ function run() {
     const storiesPath = join(dir, `${name}.stories.tsx`);
     const storiesSource = existsSync(storiesPath) ? readFileSync(storiesPath, 'utf8') : '';
 
-    const tokenIssues = checkTokenCompliance(componentSource);
-    const a11yIssues = checkAccessibility(componentSource);
+    const tokenIssues = checkTokenCompliance(name, componentSource);
+    const a11yIssues = checkAccessibility(name, componentSource);
     const storybookIssues = existsSync(storiesPath)
       ? checkStorybookCoverage(name, dir, componentSource, storiesSource)
-      : [{ level: 'fail', message: `No ${name}.stories.tsx found.` }];
+      : [{
+          level: 'fail',
+          file: `src/components/${name}/${name}.stories.tsx`,
+          line: null,
+          message: `No ${name}.stories.tsx found.`,
+          fix: 'Add a co-located ComponentName.stories.tsx.',
+        }];
 
     // Step 3: generate missing documentation sections before validating them,
     // so a component missing docs.ts gets scaffolded and re-checked in the
@@ -1026,19 +1236,18 @@ function run() {
     const docsResult = readDocsFile(dir, name);
     const docIssues = checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed);
 
-    const tokenCompliancePass = !tokenIssues.some((i) => i.level === 'fail');
-    const accessibilityPass = !a11yIssues.some((i) => i.level === 'fail');
-    const storybookCoveragePass = !storybookIssues.some((i) => i.level === 'fail');
-    const documentationCoveragePass = !docIssues.some((i) => i.level === 'fail');
-    const overall = tokenCompliancePass && accessibilityPass && storybookCoveragePass && documentationCoveragePass;
+    const { checks, history, overall } = buildComponentReport(name, dir, {
+      tokenCompliance: tokenIssues,
+      accessibility: a11yIssues,
+      storybookCoverage: storybookIssues,
+      documentationCoverage: docIssues,
+    });
 
     const report = {
       component: name,
       lastValidated: new Date().toISOString().slice(0, 10),
-      tokenCompliance: tokenCompliancePass,
-      accessibility: accessibilityPass,
-      storybookCoverage: storybookCoveragePass,
-      documentationCoverage: documentationCoveragePass,
+      checks,
+      history,
       overall,
       tokensUsed,
     };
@@ -1122,10 +1331,10 @@ function run() {
   console.log('');
 
   const categoryPass = {
-    'Token Compliance': tokenParityPass && componentResults.every((r) => r.tokenCompliance),
-    Accessibility: componentResults.every((r) => r.accessibility),
-    'Storybook Coverage': componentResults.every((r) => r.storybookCoverage),
-    'Documentation Coverage': componentResults.every((r) => r.documentationCoverage),
+    'Token Compliance': tokenParityPass && componentResults.every((r) => r.checks.tokenCompliance.pass),
+    Accessibility: componentResults.every((r) => r.checks.accessibility.pass),
+    'Storybook Coverage': componentResults.every((r) => r.checks.storybookCoverage.pass),
+    'Documentation Coverage': componentResults.every((r) => r.checks.documentationCoverage.pass),
     'Foundation Coverage': foundationCoveragePass,
   };
   printDotPaddedGroup(Object.entries(categoryPass));
@@ -1134,6 +1343,8 @@ function run() {
   const overallStatus = Object.values(categoryPass).every(Boolean) && buildResult.pass;
   printDotPaddedGroup([['Overall Status', overallStatus]]);
   console.log('');
+
+  writeConsolidatedReport(componentResults, categoryPass, overallStatus);
 
   console.log(
     `${DIM}Note: this is a static heuristic check. It does not compare rendered output against Figma —${RESET}`,
