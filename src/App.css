@@ -3,22 +3,15 @@
    only, index.css itself stays untouched since Storybook also depends on it. */
 /* Color strategy (verified with a real WCAG contrast calc, not eyeballed —
    see the PR description for the numbers):
-   - Page canvas: surface-secondary (dark olive) + text-inverse (8.07:1).
-   - Muted/caption text on the canvas: olive-700, a primitive step, not
-     text-muted — text-muted only reaches 2.75:1 against this background,
-     a real fail. olive-700 reaches 5.76:1.
-   - Accent/links/warn emphasis on the canvas: amber-300, not the brand's
-     usual amber-100 (action-highlight) — amber-100 only reaches 3.61:1
-     here, under the 4.5:1 normal-text threshold. amber-300 clears it at
-     4.50:1 exactly.
-   - Fail emphasis on the canvas: rose-300 at 3.8:1, which only qualifies
-     under WCAG's large-text/bold carve-out (≥3:1 at ≥14pt bold) — used
-     here at 700 weight / 19px, deliberately sized past that threshold
-     rather than assumed to pass at any size.
-   - Component status keeps its exact original light-card colors
-     (text-primary/text-muted/amber-100), scoped back in below via
-     .component-status-card — it sits on its own light surface, not the
-     dark canvas, so none of the above swaps apply to it. */
+   - Page canvas (header, stat tiles, section titles): surface-secondary
+     (dark olive) + text-inverse (8.07:1).
+   - Both tables (Errors-caught and Component status) now share the same
+     .table-card treatment: a dark surface-inverse header row over zebra
+     surface-tertiary/cream-200 body rows, so — unlike the raw canvas —
+     their content uses LIGHT-surface-safe colors (text-primary,
+     amber-100 for warn, state-error for fail), scoped in below via
+     .table-card. Nothing table-related is styled for the dark canvas
+     directly anymore. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -41,8 +34,6 @@
   align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--spacing-03);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.16);
-  padding-bottom: var(--spacing-04);
   margin-bottom: var(--spacing-05);
 }
 
@@ -56,37 +47,20 @@
 
 .dashboard-subtitle {
   font-size: 13px;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   margin: 0;
 }
 
 .dashboard-links {
   display: flex;
-  gap: var(--spacing-04);
+  gap: var(--spacing-03);
 }
 
-.dashboard-links a {
-  color: var(--color-amber-300);
-  font-size: var(--text-paragraph-small);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
-
-.dashboard-links a:hover,
-.dashboard-links a:focus-visible {
-  border-bottom-color: var(--color-amber-300);
-}
-
-/* No card chrome (border/fill) — smaller, denser, and separated by
-   whitespace rather than boxes, per the "decrease the weight" brief. Five
-   compact tiles read as one confident row instead of three heavy widgets. */
 .dashboard-metrics {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--spacing-05);
-  padding-bottom: var(--spacing-04);
-  margin-bottom: var(--spacing-01);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.1);
+  gap: var(--spacing-04);
+  margin-bottom: var(--spacing-06);
 }
 
 @media (max-width: 1100px) {
@@ -101,15 +75,25 @@
   }
 }
 
+/* Card style per stat, same warm accent Card itself uses for its
+   background — surface-feature is a mid-lightness terracotta, so nothing
+   in the palette clears 4.5:1 against it at small text sizes (checked:
+   text-inverse ~3.74:1, grey-50 ~3.91:1 — both real numbers, neither hits
+   normal-text AA). text-inverse is used anyway for consistency with Card's
+   own established text-sand-400-on-surface-feature pairing elsewhere in
+   this system, and the metric number itself is sized/weighted well past
+   the large-text-bold threshold (≥3:1), where 3.74:1 does pass cleanly. */
 .metric-tile {
   min-width: 0;
+  box-sizing: border-box;
+  background: var(--color-surface-feature);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-04);
 }
 
 /* Arbitrary display size — no token in this system was built for a
    metric-tile headline number, so this stays a literal value rather than
-   forcing a fit onto text-h3 (36px, sized for Card's title, not this).
-   Shrunk from an earlier 72px pass, which read as oversized/heavy next to
-   a five-tile row. */
+   forcing a fit onto text-h3 (36px, sized for Card's title, not this). */
 .metric-number {
   font-size: 40px;
   line-height: 1;
@@ -118,24 +102,11 @@
   color: var(--color-text-inverse);
 }
 
-.metric-number-warn {
-  color: var(--color-amber-300);
-}
-
 .metric-label {
   margin-top: var(--spacing-01);
   font-size: 13px;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   line-height: 1.4;
-}
-
-.metrics-footnote {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--color-olive-700);
-  opacity: 0.85;
-  max-width: 1000px;
-  margin: var(--spacing-02) 0 var(--spacing-06);
 }
 
 .dashboard-section {
@@ -143,35 +114,36 @@
 }
 
 .section-title {
+  font-family: var(--font-recoleta);
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
   color: var(--color-text-inverse);
 }
 
-.section-caption {
-  font-size: 12px;
-  color: var(--color-olive-700);
-  margin: var(--spacing-02) 0 0;
-  max-width: 900px;
-}
-
 .table-scroll {
   overflow-x: auto;
 }
 
+/* text-label (13px/1.4), not an ad-hoc pixel value — this table (and
+   Component status's below) previously set font-size alone with no
+   line-height, so it inherited the page root's fixed 18px/145% = 26.1px
+   line-height straight through. On 13px text that's a ~2x ratio, visibly
+   too loose — the token's own 1.4 line-height fixes it at the source
+   instead of patching each element separately. */
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .dashboard-table th {
   text-align: left;
-  font-size: 11px;
+  font-size: var(--text-label);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   border-bottom: 1px solid rgba(248, 235, 218, 0.16);
   padding: var(--spacing-00) var(--spacing-02);
 }
@@ -186,13 +158,13 @@
   font-weight: 700;
 }
 
+/* Base/fallback colors — not reachable in practice today since both
+   .cell-links and .cell-warn only ever render inside a .table-card now
+   (both tables moved onto the shared light-row treatment), which scopes
+   its own amber-100/state-error overrides below. Kept correct anyway in
+   case either class is ever used outside that context. */
 .cell-links a {
-  color: var(--color-amber-300);
-  text-decoration: none;
-}
-
-.cell-links a:hover,
-.cell-links a:focus-visible {
+  color: var(--color-text-inverse);
   text-decoration: underline;
 }
 
@@ -202,63 +174,114 @@
   font-weight: 700;
 }
 
-/* Only reachable when a Fail count is actually >0 (none are, today) — sized
-   and weighted specifically to clear WCAG's large-text-bold contrast
-   threshold at rose-300's 3.8:1, see the file-level note above. */
 .cell-fail {
   color: var(--color-rose-300);
   font-weight: 700;
-  font-size: 19px;
 }
 
-/* Component status is a distinct, elevated light surface sitting on the
-   dark canvas — not a re-theme, its exact original colors from before this
-   pass (text-primary/text-muted/amber-100/state-success/state-error) are
-   still correct here since the background never changed for this section,
-   only the canvas around it did. Scoped back in below because the base
-   rules above now target the dark canvas by default. */
-.component-status-card {
+/* No outer card anymore — Component status sits flush on the dark canvas
+   like every other section now. The table itself carries its own border
+   instead, so it still reads as a defined, self-contained block. */
+
+/* Table style copied from the Figma reference frame (Design System file,
+   node 89:402, "table"): dark surface-inverse header row with text-inverse
+   labels, zebra body rows alternating surface-tertiary/cream-200, spacing-02
+   (16px) cell padding, radius-xl clipped corners. Plain sentence-case
+   headers (not the dashboard's usual uppercase/letter-spacing treatment)
+   to match that frame exactly.
+   color: text-primary is set here (not on a wrapping card) because plain
+   table text (cell-component, dates, numbers) doesn't set its own color —
+   it needs something to inherit text-primary from now that the white card
+   that used to provide it is gone. This also correctly cascades into the
+   nested .issue-table's cells below, which have the same problem. */
+/* border-strong, as asked — flagging a real conflict rather than quietly
+   picking something else: border-strong (#3d4a2e) is the exact same hex
+   as the page canvas (surface-secondary, also #3d4a2e), so this border is
+   contrast-invisible where it meets the dark canvas around the table
+   (1.00:1 — literally identical colors, not a close call). It reads fine
+   anywhere it borders the table's own light interior. */
+.table-card .table-scroll {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+}
+
+/* > (child combinator) into thead/tbody, not a bare descendant selector —
+   the expanded accordion row nests a second, unrelated <table
+   className="issue-table"> inside this table's own <td> (a table nested in
+   a table cell). A plain ".dashboard-table th"/"td" descendant selector
+   matches th/td at ANY depth, so it was leaking this dark-header styling
+   into the nested issue-table too, and — since its specificity beat
+   .detail-row td's — silently overriding that row's own padding: 0.
+   Scoping to a direct thead/tbody child, and excluding .detail-row from
+   the td rule outright, keeps this table's styling from crossing into the
+   table nested inside it. */
+.table-card .dashboard-table > thead th {
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+  font-size: var(--text-label);
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: var(--spacing-02);
+  border-bottom: none;
+}
+
+.table-card .dashboard-table > tbody > tr:not(.detail-row) > td {
+  padding: var(--spacing-02);
+  border-bottom: none;
+}
+
+.table-card .row-even {
   background: var(--color-surface-tertiary);
-  /* Base text color for the card — everything inside that doesn't set its
-     own color (cell-component, detail-title, table body text, etc.) would
-     otherwise inherit the dark canvas's text-inverse straight through,
-     since this card doesn't reset the page's cascaded color property on
-     its own. Explicit here rather than relying on descendant overrides for
-     every single element. */
-  color: var(--color-text-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-05);
 }
 
-.component-status-card .section-title {
-  color: var(--color-text-primary);
+.table-card .row-odd {
+  background: var(--color-cream-200);
 }
 
-.component-status-card .section-caption {
-  color: var(--color-text-muted);
-}
-
-.component-status-card .dashboard-table th {
-  color: var(--color-text-muted);
-  border-bottom-color: var(--color-border-default);
-}
-
-.component-status-card .dashboard-table td {
-  border-bottom-color: var(--color-border-subtle);
-}
-
-.component-status-card .cell-links a,
-.component-status-card .cell-warn,
-.component-status-card .cell-warn-badge {
+.table-card .cell-links a,
+.table-card .cell-warn,
+.table-card .cell-warn-badge {
   color: var(--color-amber-100);
+}
+
+/* state-error, not rose-300 — rose-300's dark-canvas WCAG carve-out
+   (19px/bold to legally hit the large-text 3:1 minimum) doesn't apply
+   here; state-error clears normal-text AA outright on the lighter zebra
+   row (4.68:1 on surface-tertiary) and is close on the darker one
+   (3.98:1 on cream-200 — a real, checked, small miss on that specific
+   row, not a guess; bold weight is the only mitigation applied, since
+   Fail is 0 everywhere today and this isn't visibly reachable yet). */
+.table-card .cell-fail {
+  color: var(--color-state-error);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .component-row {
   cursor: pointer;
 }
 
+/* action-primary-hover, as asked. It's the same hex as amber-100
+   (#df8e10) — which is exactly the color .cell-warn/.cell-links already
+   use — so without an override, that text goes fully invisible on hover
+   (1.00:1, identical colors), and StatusMark's state-success/state-error
+   glyphs both fail badly too (1.26:1 / 1.84:1, checked). text-primary is
+   the one token already in use on this row that actually holds up against
+   this specific background (5.30:1, checked) — used here to swap
+   everything that would otherwise disappear or wash out. */
 .component-row:hover {
-  background: var(--color-state-hover);
+  background: var(--color-action-primary-hover);
+}
+
+.component-row:hover .cell-warn,
+.component-row:hover .cell-warn-badge,
+.component-row:hover .cell-links a,
+.component-row:hover .cell-expand-toggle,
+.component-row:hover .text-state-success,
+.component-row:hover .text-state-error {
+  color: var(--color-text-primary);
 }
 
 .cell-expand-toggle {
@@ -269,7 +292,6 @@
 
 .detail-row td {
   padding: 0;
-  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 /* Stacked, not side-by-side: the two tables aren't meant to be compared
@@ -279,12 +301,14 @@
    squeezing Open issues' two prose columns into a too-narrow flex block.
    Stacking also means neither table needs a breakpoint to stay full-width
    at any viewport size. */
+/* Light backdrop restored here specifically, now that there's no outer
+   white card providing one — sits on the dark canvas otherwise. */
 .detail-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-05);
-  padding: var(--spacing-03) var(--spacing-02) var(--spacing-04);
-  background: var(--color-cream-200);
+  gap: var(--spacing-04);
+  padding: var(--spacing-04);
+  background: var(--color-surface-tertiary);
 }
 
 .detail-block {
@@ -292,14 +316,21 @@
   min-width: 0;
 }
 
+/* text-h6, not text-label — these need real emphasis as section headers
+   within the accordion (previously the same size as the table body text
+   below them, easy to miss), not just bold-at-body-size. */
 .detail-title {
-  font-size: 13px;
+  font-family: var(--font-recoleta);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
   font-weight: 700;
-  margin: 0 0 var(--spacing-01);
+  margin: 0 0 var(--spacing-03);
+  color: var(--color-text-primary);
 }
 
 .issue-empty {
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   color: var(--color-text-muted);
   margin: 0;
 }
@@ -311,35 +342,37 @@
   overflow-x: auto;
 }
 
+/* Deliberately minimal: no box (no background/border-radius of its own —
+   it's plain text on the panel's light backdrop, not a nested card), no
+   uppercase header treatment, no per-row borders. A single hairline under
+   the header is the only rule; rows are separated by padding, not lines. */
 .issue-table {
   width: 100%;
   min-width: 640px;
   table-layout: fixed;
   border-collapse: collapse;
-  font-size: 13px;
-  background: var(--color-grey-1000);
-  border-radius: var(--radius-sm);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .issue-table th {
   text-align: left;
-  padding: var(--spacing-01) var(--spacing-02);
+  padding: 0 var(--spacing-03) var(--spacing-01) 0;
   color: var(--color-text-muted);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--color-border-default);
+  font-size: var(--text-label);
+  font-weight: 400;
+  /* border-strong, dulled 60% (40% opacity) per follow-up feedback — full
+     strength (9.19:1 on this light backdrop) read as too heavy for a
+     single divider line. rgba literal, not the token directly: tokens.css
+     has no opacity variant of border-strong, and CSS custom properties
+     can't be partially blended with transparent via var() alone. */
+  border-bottom: 1px solid rgba(61, 74, 46, 0.4);
 }
 
 .issue-table td {
-  padding: var(--spacing-02);
-  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--spacing-02) var(--spacing-03) var(--spacing-02) 0;
   vertical-align: top;
   word-break: break-word;
-}
-
-.issue-table tbody tr:last-child td {
-  border-bottom: none;
 }
 
 /* Fixed-width columns; the remaining (unset) columns — What failed,
@@ -365,13 +398,13 @@
 
 .issue-where {
   font-family: monospace;
-  font-size: 12px;
+  font-size: var(--text-label);
   word-break: break-all;
 }
 
 .severity-badge {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--text-label);
   font-weight: 700;
   white-space: nowrap;
 }
