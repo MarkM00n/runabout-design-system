@@ -54,7 +54,7 @@
 
 .dashboard-subtitle {
   font-size: 13px;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   margin: 0;
 }
 
@@ -63,16 +63,14 @@
   gap: var(--spacing-04);
 }
 
+/* text-inverse, not amber-300 — the link now reads the same color as
+   everything else on the canvas, so a permanent (not hover-only) underline
+   carries the "this is a link" signal instead, keeping it identifiable
+   without depending on color alone. */
 .dashboard-links a {
-  color: var(--color-amber-300);
+  color: var(--color-text-inverse);
   font-size: var(--text-paragraph-small);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
-
-.dashboard-links a:hover,
-.dashboard-links a:focus-visible {
-  border-bottom-color: var(--color-amber-300);
+  text-decoration: underline;
 }
 
 .dashboard-metrics {
@@ -133,6 +131,7 @@
 }
 
 .section-title {
+  font-family: var(--font-recoleta);
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
@@ -161,7 +160,7 @@
   font-size: var(--text-label);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-olive-700);
+  color: var(--color-text-inverse);
   border-bottom: 1px solid rgba(248, 235, 218, 0.16);
   padding: var(--spacing-00) var(--spacing-02);
 }
@@ -176,16 +175,21 @@
   font-weight: 700;
 }
 
+/* Only meaningful on the raw green canvas in practice — Component status
+   (the only place this class currently renders) scopes its own
+   amber-100 override below, so this base rule never actually shows
+   text-inverse today, but is corrected anyway for when it does. */
 .cell-links a {
-  color: var(--color-amber-300);
-  text-decoration: none;
-}
-
-.cell-links a:hover,
-.cell-links a:focus-visible {
+  color: var(--color-text-inverse);
   text-decoration: underline;
 }
 
+/* Deliberately NOT switched to text-inverse, unlike everything else on this
+   page: this is the one place color carries real information (the Warn
+   count in Errors-caught's table on the green canvas) rather than being
+   plain prose. Flattening it to text-inverse would make a "2" that needs
+   attention look identical to a "0" that doesn't — the opposite of what
+   this table exists to show. */
 .cell-warn,
 .cell-warn-badge {
   color: var(--color-amber-300);
@@ -330,11 +334,15 @@
   min-width: 0;
 }
 
+/* text-h6, not text-label — these need real emphasis as section headers
+   within the accordion (previously the same size as the table body text
+   below them, easy to miss), not just bold-at-body-size. */
 .detail-title {
-  font-size: var(--text-label);
-  line-height: var(--text-label--line-height);
+  font-family: var(--font-recoleta);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
   font-weight: 700;
-  margin: 0 0 var(--spacing-02);
+  margin: 0 0 var(--spacing-03);
   color: var(--color-text-primary);
 }
 
@@ -367,7 +375,7 @@
 
 .issue-table th {
   text-align: left;
-  padding: 0 var(--spacing-02) var(--spacing-01) 0;
+  padding: 0 var(--spacing-03) var(--spacing-01) 0;
   color: var(--color-text-muted);
   font-size: var(--text-label);
   font-weight: 400;
@@ -380,7 +388,7 @@
 }
 
 .issue-table td {
-  padding: var(--spacing-02) var(--spacing-02) var(--spacing-02) 0;
+  padding: var(--spacing-02) var(--spacing-03) var(--spacing-02) 0;
   vertical-align: top;
   word-break: break-word;
 }

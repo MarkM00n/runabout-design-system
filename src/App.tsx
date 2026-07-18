@@ -116,9 +116,12 @@ function whereLabel(file: string, line: number | null) {
 }
 
 function SeverityBadge({ level }: { level: 'fail' | 'warn' }) {
+  // Icon only, per request — but the label doesn't disappear, it moves to
+  // aria-label, so the distinction (not just the icon shape) still reaches
+  // screen readers rather than being dropped outright.
   return (
-    <span className={`severity-badge severity-${level}`}>
-      {level === 'fail' ? '✗ Fail' : '⚠ Warn'}
+    <span className={`severity-badge severity-${level}`} aria-label={level === 'fail' ? 'Fail' : 'Warn'}>
+      {level === 'fail' ? '✗' : '⚠'}
     </span>
   );
 }
@@ -263,7 +266,7 @@ function App() {
       </section>
 
       <section className="dashboard-section" aria-label="Errors caught by validation">
-        <h2 className="section-title">Errors caught by validation, by check type</h2>
+        <h2 className="section-title">Errors caught by validation</h2>
         <table className="dashboard-table">
           <thead>
             <tr>
