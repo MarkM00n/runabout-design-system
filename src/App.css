@@ -121,15 +121,6 @@
   color: var(--color-text-inverse);
 }
 
-/* amber-300 (used elsewhere on the dark canvas for emphasis) only reaches
-   2.09:1 against surface-feature — unusable here. grey-50 flips to a dark
-   numeral instead of shifting hue, which both reads as a real
-   differentiator against the other four cream numbers and, at 3.91:1,
-   clears more contrast margin than the cream default. */
-.metric-number-warn {
-  color: var(--color-grey-50);
-}
-
 .metric-label {
   margin-top: var(--spacing-01);
   font-size: 13px;

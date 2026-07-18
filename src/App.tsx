@@ -247,9 +247,7 @@ function App() {
         </div>
 
         <div className="metric-tile">
-          <div className={`metric-number ${data.totals.totalOpenIssues > 0 ? 'metric-number-warn' : ''}`}>
-            {data.totals.totalOpenIssues}
-          </div>
+          <div className="metric-number">{data.totals.totalOpenIssues}</div>
           <div className="metric-label">Open issues right now</div>
         </div>
 
