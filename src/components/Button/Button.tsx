@@ -13,7 +13,7 @@ export interface ButtonProps
 
 const baseStyles = clsx(
   'inline-flex items-center justify-center gap-01',
-  'font-tt-norms font-normal select-none',
+  'font-manrope font-normal select-none',
   'transition-colors duration-150 ease-out',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent',
   'disabled:cursor-not-allowed disabled:pointer-events-none',

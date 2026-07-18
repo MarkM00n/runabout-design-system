@@ -24,7 +24,7 @@
   text-align: left;
   background: var(--color-surface-secondary);
   color: var(--color-text-inverse);
-  font-family: var(--font-tt-norms);
+  font-family: var(--font-manrope);
   padding: var(--spacing-06) var(--spacing-07);
 }
 

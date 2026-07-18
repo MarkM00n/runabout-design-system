@@ -89,7 +89,7 @@ const data = dashboardData as DashboardData;
 // screen readers cannot represent nested controls"), so these are real
 // anchors carrying the same classes instead of a wrapped Button.
 const SECONDARY_LINK_CLASS =
-  'inline-flex items-center justify-center gap-01 font-tt-norms font-normal select-none ' +
+  'inline-flex items-center justify-center gap-01 font-manrope font-normal select-none ' +
   'transition-colors duration-150 ease-out h-[32px] px-02 rounded-xl text-label ' +
   'bg-transparent text-text-inverse border border-border-default ' +
   'hover:bg-action-secondary-hover hover:border-text-inverse ' +

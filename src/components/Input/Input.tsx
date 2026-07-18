@@ -17,7 +17,7 @@ export interface InputProps
 // mockup can't represent simultaneously.
 const baseStyles = clsx(
   'w-full box-border',
-  'font-tt-norms font-normal text-text-primary placeholder:text-text-muted',
+  'font-manrope font-normal text-text-primary placeholder:text-text-muted',
   'bg-surface-primary border border-border-default',
   'transition-colors duration-150 ease-out',
   // Figma's Hover variant increases stroke weight from 1px to 1.5px, not just color

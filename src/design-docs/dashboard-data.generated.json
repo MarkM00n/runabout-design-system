@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-18T12:16:58.083Z",
-  "validationReportGeneratedAt": "2026-07-18T12:16:57.673Z",
+  "generatedAt": "2026-07-18T21:45:05.090Z",
+  "validationReportGeneratedAt": "2026-07-18T21:44:59.807Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",

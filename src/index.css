@@ -1,3 +1,11 @@
+/* Self-hosted via @fontsource/manrope (SIL OFL 1.1) rather than a Google
+   Fonts <link> — this repo deploys publicly (GitHub Pages) and self-hosting
+   avoids a third-party request/CLS on every page load. Only 400 and 700 are
+   imported: the only weights any component actually uses (see
+   --font-manrope in styles/tokens.css). */
+@import '@fontsource/manrope/400.css';
+@import '@fontsource/manrope/700.css';
+
 @import 'tailwindcss';
 @import './styles/tokens.css';
 

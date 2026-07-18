@@ -21,7 +21,7 @@ export interface SelectProps
 // placeholder <option> for the "no selection" UX instead.
 const baseStyles = clsx(
   'w-full box-border appearance-none',
-  'font-tt-norms font-normal text-text-primary',
+  'font-manrope font-normal text-text-primary',
   'bg-surface-primary border border-border-default',
   'transition-colors duration-150 ease-out',
   'hover:bg-state-hover hover:border-[1.5px] hover:border-border-subtle',
