@@ -9,7 +9,7 @@ import {
   useOf,
 } from '@storybook/addon-docs/blocks';
 
-import type { ComponentDocMeta, ComponentValidationReport } from './types';
+import type { CheckResult, ComponentDocMeta, ComponentValidationReport } from './types';
 import { statusLabel, statusTone, summaryLine } from './statusFormat';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -100,6 +100,54 @@ function IssueTable({ rows, mode }: { rows: Array<{ label: string; row: Record<s
   );
 }
 
+// One card, not two: the status pills and what used to be a separate grey
+// metadata box below now say each thing exactly once. Every text color here
+// is set explicitly rather than left to inherit — the previous metadata box
+// picked up Storybook's muted docs-page text color by default, which read
+// as light grey and was flagged as hard to read.
+function SummaryCard({
+  validation,
+  checkEntries,
+  openFailCount,
+  openWarnCount,
+  fixedCount,
+}: {
+  validation: ComponentValidationReport;
+  checkEntries: [string, CheckResult][];
+  openFailCount: number;
+  openWarnCount: number;
+  fixedCount: number;
+}) {
+  return (
+    <div
+      style={{
+        padding: 16,
+        border: '1px solid #e3e5e8',
+        borderRadius: 8,
+        background: '#fafafa',
+      }}
+    >
+      <div style={{ marginBottom: 10 }}>
+        <Pill label={statusLabel(validation.status, openWarnCount)} tone={statusTone(validation.status)} />
+      </div>
+      <div style={{ marginBottom: 10 }}>
+        {checkEntries.map(([key, c]) => (
+          <Pill key={key} label={`${CHECK_LABELS[key] ?? key}: ${statusLabel(c.status, c.warn)}`} tone={statusTone(c.status)} />
+        ))}
+      </div>
+      {/* Real counts, read straight from the report (see
+          docs/design-system-rules.md §5 on how history is derived), not
+          asserted. Warnings are never called "issues" here. */}
+      <p style={{ margin: '0 0 10px', fontSize: 14, color: '#1a1a1a' }}>
+        {summaryLine(fixedCount, openFailCount, openWarnCount)}
+      </p>
+      <p style={{ margin: 0, fontSize: 12, color: '#555' }}>
+        {validation.component} · last validated {validation.lastValidated}
+      </p>
+    </div>
+  );
+}
+
 function ValidationStatusSection({ validation }: { validation?: ComponentValidationReport }) {
   if (!validation) {
     return (
@@ -127,25 +175,17 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
 
   return (
     <Section title="Validation Status">
-      <div style={{ marginBottom: 12 }}>
-        <Pill label={statusLabel(validation.status, openWarnCount)} tone={statusTone(validation.status)} />
-      </div>
-      <div>
-        {checkEntries.map(([key, c]) => (
-          <Pill key={key} label={`${CHECK_LABELS[key] ?? key}: ${statusLabel(c.status, c.warn)}`} tone={statusTone(c.status)} />
-        ))}
-      </div>
-
-      {/* The line the dashboard also surfaces: real counts, read straight
-          from the same report (see docs/design-system-rules.md §5 on how
-          history is derived), not asserted. Warnings are never called
-          "issues" here — that word is reserved for the open-issues table
-          below, which mixes fails and warnings together. */}
-      <p style={{ marginTop: 12, fontSize: 14 }}>{summaryLine(fixedCount, openFailCount, openWarnCount)}</p>
+      <SummaryCard
+        validation={validation}
+        checkEntries={checkEntries}
+        openFailCount={openFailCount}
+        openWarnCount={openWarnCount}
+        fixedCount={fixedCount}
+      />
 
       {openCount > 0 && (
         <div style={{ marginTop: 16 }}>
-          <h3 style={{ fontSize: 14, marginBottom: 4 }}>Open issues</h3>
+          <h3 style={{ fontSize: 14, marginBottom: 4 }}>Open warnings</h3>
           <IssueTable rows={openRows} mode="open" />
         </div>
       )}
@@ -156,32 +196,6 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
           <IssueTable rows={historyRows} mode="history" />
         </div>
       )}
-
-      {/* DesignOps metadata block, per the pipeline spec. */}
-      <div
-        style={{
-          marginTop: 20,
-          padding: 16,
-          border: '1px solid #e3e5e8',
-          borderRadius: 8,
-          fontFamily: 'monospace',
-          fontSize: 13,
-          lineHeight: 1.8,
-          background: '#fafafa',
-        }}
-      >
-        <div>Generated From: {validation.component}</div>
-        <div>Validation Status: {statusLabel(validation.status, openWarnCount)}</div>
-        <div>Checks:</div>
-        <div style={{ paddingLeft: 16 }}>
-          {checkEntries.map(([key, c]) => (
-            <div key={key}>
-              {CHECK_LABELS[key] ?? key}: {statusLabel(c.status, c.warn)}
-            </div>
-          ))}
-        </div>
-        <div>Last Validated: {validation.lastValidated}</div>
-      </div>
     </Section>
   );
 }
