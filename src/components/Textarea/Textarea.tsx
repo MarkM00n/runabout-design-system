@@ -16,7 +16,7 @@ export interface TextareaProps
 // is a deliberate addition for standard textarea UX, not a Figma binding.
 const baseStyles = clsx(
   'w-full box-border resize-y',
-  'font-tt-norms font-normal text-text-primary placeholder:text-text-muted',
+  'font-manrope font-normal text-text-primary placeholder:text-text-muted',
   'bg-surface-primary border border-border-default',
   'transition-colors duration-150 ease-out',
   'hover:bg-state-hover hover:border-[1.5px] hover:border-border-subtle',

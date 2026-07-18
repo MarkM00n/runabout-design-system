@@ -57,12 +57,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         <h3 className="font-recoleta text-h3 text-sand-400 m-0">{title}</h3>
 
         <div className="flex items-center gap-[16px]">
-          <span className="font-tt-norms text-paragraph-small text-sand-400">{date}</span>
+          <span className="font-manrope text-paragraph-small text-sand-400">{date}</span>
           <span className="h-[1px] w-[24px] bg-[#f8ebda]" aria-hidden="true" />
-          <span className="font-tt-norms text-paragraph-small text-sand-400">{time}</span>
+          <span className="font-manrope text-paragraph-small text-sand-400">{time}</span>
         </div>
 
-        <p className="font-tt-norms text-paragraph-small text-sand-400 m-0">{description}</p>
+        <p className="font-manrope text-paragraph-small text-sand-400 m-0">{description}</p>
       </div>
 
       {/* self-start: Figma hugs the CTA to its content width (128px), the

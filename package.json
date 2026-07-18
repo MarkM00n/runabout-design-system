@@ -15,6 +15,7 @@
     "format-validation-comment": "node scripts/format-validation-comment.js"
   },
   "dependencies": {
+    "@fontsource/manrope": "^5.2.8",
     "@tailwindcss/vite": "^4.3.2",
     "clsx": "^2.1.1",
     "react": "^19.2.7",

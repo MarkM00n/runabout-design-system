@@ -90,7 +90,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         </span>
         <span
           className={clsx(
-            'font-tt-norms font-normal text-text-inverse peer-disabled:text-text-muted',
+            'font-manrope font-normal text-text-inverse peer-disabled:text-text-muted',
             labelTextStyles[size],
           )}
         >
