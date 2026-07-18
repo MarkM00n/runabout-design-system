@@ -75,6 +75,20 @@ interface DashboardData {
 
 const data = dashboardData as DashboardData;
 
+// The real Button component's secondary + small variant, reapplied here
+// verbatim (see src/components/Button/Button.tsx) rather than approximated.
+// Button renders a <button>, and design-system-rules.md/Button's own docs
+// rule out nesting a link inside one ("nested interactive elements —
+// screen readers cannot represent nested controls"), so these are real
+// anchors carrying the same classes instead of a wrapped Button.
+const SECONDARY_LINK_CLASS =
+  'inline-flex items-center justify-center gap-01 font-tt-norms font-normal select-none ' +
+  'transition-colors duration-150 ease-out h-[32px] px-02 rounded-xl text-label ' +
+  'bg-transparent text-text-inverse border border-border-default ' +
+  'hover:bg-action-secondary-hover hover:border-text-inverse ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
+  'focus-visible:ring-offset-transparent focus-visible:border-border-focus focus-visible:ring-border-focus';
+
 const CHECK_LABELS: Record<keyof DashboardData['validationSummary'], string> = {
   tokenCompliance: 'Token Compliance',
   accessibility: 'Accessibility',
@@ -229,10 +243,10 @@ function App() {
           </p>
         </div>
         <nav className="dashboard-links">
-          <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer">
+          <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
             GitHub
           </a>
-          <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer">
+          <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
             Storybook
           </a>
         </nav>
@@ -265,32 +279,34 @@ function App() {
         </div>
       </section>
 
-      <section className="dashboard-section" aria-label="Errors caught by validation">
+      <section className="dashboard-section table-card" aria-label="Errors caught by validation">
         <h2 className="section-title">Errors caught by validation</h2>
-        <table className="dashboard-table">
-          <thead>
-            <tr>
-              <th>Check type</th>
-              <th>Fail</th>
-              <th>Warn</th>
-            </tr>
-          </thead>
-          <tbody>
-            {checkTypes.map((key) => {
-              const tally = data.validationSummary[key];
-              return (
-                <tr key={key}>
-                  <td>{CHECK_LABELS[key]}</td>
-                  <td className={tally.fail > 0 ? 'cell-fail' : ''}>{tally.fail}</td>
-                  <td className={tally.warn > 0 ? 'cell-warn' : ''}>{tally.warn}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="table-scroll">
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Check type</th>
+                <th>Fail</th>
+                <th>Warn</th>
+              </tr>
+            </thead>
+            <tbody>
+              {checkTypes.map((key, i) => {
+                const tally = data.validationSummary[key];
+                return (
+                  <tr key={key} className={i % 2 === 0 ? 'row-even' : 'row-odd'}>
+                    <td>{CHECK_LABELS[key]}</td>
+                    <td className={tally.fail > 0 ? 'cell-fail' : ''}>{tally.fail}</td>
+                    <td className={tally.warn > 0 ? 'cell-warn' : ''}>{tally.warn}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <section className="dashboard-section component-status-card" aria-label="Component status">
+      <section className="dashboard-section table-card" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
         <div className="table-scroll">
           <table className="dashboard-table">

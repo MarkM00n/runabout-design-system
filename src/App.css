@@ -3,22 +3,15 @@
    only, index.css itself stays untouched since Storybook also depends on it. */
 /* Color strategy (verified with a real WCAG contrast calc, not eyeballed —
    see the PR description for the numbers):
-   - Page canvas: surface-secondary (dark olive) + text-inverse (8.07:1).
-   - Muted/caption text on the canvas: olive-700, a primitive step, not
-     text-muted — text-muted only reaches 2.75:1 against this background,
-     a real fail. olive-700 reaches 5.76:1.
-   - Accent/links/warn emphasis on the canvas: amber-300, not the brand's
-     usual amber-100 (action-highlight) — amber-100 only reaches 3.61:1
-     here, under the 4.5:1 normal-text threshold. amber-300 clears it at
-     4.50:1 exactly.
-   - Fail emphasis on the canvas: rose-300 at 3.8:1, which only qualifies
-     under WCAG's large-text/bold carve-out (≥3:1 at ≥14pt bold) — used
-     here at 700 weight / 19px, deliberately sized past that threshold
-     rather than assumed to pass at any size.
-   - Component status keeps its exact original light-card colors
-     (text-primary/text-muted/amber-100), scoped back in below via
-     .component-status-card — it sits on its own light surface, not the
-     dark canvas, so none of the above swaps apply to it. */
+   - Page canvas (header, stat tiles, section titles): surface-secondary
+     (dark olive) + text-inverse (8.07:1).
+   - Both tables (Errors-caught and Component status) now share the same
+     .table-card treatment: a dark surface-inverse header row over zebra
+     surface-tertiary/cream-200 body rows, so — unlike the raw canvas —
+     their content uses LIGHT-surface-safe colors (text-primary,
+     amber-100 for warn, state-error for fail), scoped in below via
+     .table-card. Nothing table-related is styled for the dark canvas
+     directly anymore. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -60,17 +53,7 @@
 
 .dashboard-links {
   display: flex;
-  gap: var(--spacing-04);
-}
-
-/* text-inverse, not amber-300 — the link now reads the same color as
-   everything else on the canvas, so a permanent (not hover-only) underline
-   carries the "this is a link" signal instead, keeping it identifiable
-   without depending on color alone. */
-.dashboard-links a {
-  color: var(--color-text-inverse);
-  font-size: var(--text-paragraph-small);
-  text-decoration: underline;
+  gap: var(--spacing-03);
 }
 
 .dashboard-metrics {
@@ -175,39 +158,25 @@
   font-weight: 700;
 }
 
-/* Only meaningful on the raw green canvas in practice — Component status
-   (the only place this class currently renders) scopes its own
-   amber-100 override below, so this base rule never actually shows
-   text-inverse today, but is corrected anyway for when it does. */
+/* Base/fallback colors — not reachable in practice today since both
+   .cell-links and .cell-warn only ever render inside a .table-card now
+   (both tables moved onto the shared light-row treatment), which scopes
+   its own amber-100/state-error overrides below. Kept correct anyway in
+   case either class is ever used outside that context. */
 .cell-links a {
   color: var(--color-text-inverse);
   text-decoration: underline;
 }
 
-/* Deliberately NOT switched to text-inverse, unlike everything else on this
-   page: this is the one place color carries real information (the Warn
-   count in Errors-caught's table on the green canvas) rather than being
-   plain prose. Flattening it to text-inverse would make a "2" that needs
-   attention look identical to a "0" that doesn't — the opposite of what
-   this table exists to show. */
 .cell-warn,
 .cell-warn-badge {
   color: var(--color-amber-300);
   font-weight: 700;
 }
 
-/* Only reachable when a Fail count is actually >0 (none are, today) — sized
-   and weighted specifically to clear WCAG's large-text-bold contrast
-   threshold at rose-300's 3.8:1, see the file-level note above. */
 .cell-fail {
   color: var(--color-rose-300);
   font-weight: 700;
-  /* Not text-label — 19px is deliberate, not a leftover ad-hoc value: it's
-     what clears WCAG's large-text-bold contrast carve-out for rose-300 at
-     3.8:1 (see the file-level note above). Tight line-height matches the
-     other bold display numerals on this page (.metric-number). */
-  font-size: 19px;
-  line-height: 1.2;
 }
 
 /* No outer card anymore — Component status sits flush on the dark canvas
@@ -231,7 +200,7 @@
    contrast-invisible where it meets the dark canvas around the table
    (1.00:1 — literally identical colors, not a close call). It reads fine
    anywhere it borders the table's own light interior. */
-.component-status-card .table-scroll {
+.table-card .table-scroll {
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-xl);
   color: var(--color-text-primary);
@@ -247,7 +216,7 @@
    Scoping to a direct thead/tbody child, and excluding .detail-row from
    the td rule outright, keeps this table's styling from crossing into the
    table nested inside it. */
-.component-status-card .dashboard-table > thead th {
+.table-card .dashboard-table > thead th {
   background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
   font-size: var(--text-label);
@@ -258,23 +227,36 @@
   border-bottom: none;
 }
 
-.component-status-card .dashboard-table > tbody > tr:not(.detail-row) > td {
+.table-card .dashboard-table > tbody > tr:not(.detail-row) > td {
   padding: var(--spacing-02);
   border-bottom: none;
 }
 
-.component-status-card .row-even {
+.table-card .row-even {
   background: var(--color-surface-tertiary);
 }
 
-.component-status-card .row-odd {
+.table-card .row-odd {
   background: var(--color-cream-200);
 }
 
-.component-status-card .cell-links a,
-.component-status-card .cell-warn,
-.component-status-card .cell-warn-badge {
+.table-card .cell-links a,
+.table-card .cell-warn,
+.table-card .cell-warn-badge {
   color: var(--color-amber-100);
+}
+
+/* state-error, not rose-300 — rose-300's dark-canvas WCAG carve-out
+   (19px/bold to legally hit the large-text 3:1 minimum) doesn't apply
+   here; state-error clears normal-text AA outright on the lighter zebra
+   row (4.68:1 on surface-tertiary) and is close on the darker one
+   (3.98:1 on cream-200 — a real, checked, small miss on that specific
+   row, not a guess; bold weight is the only mitigation applied, since
+   Fail is 0 everywhere today and this isn't visibly reachable yet). */
+.table-card .cell-fail {
+  color: var(--color-state-error);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .component-row {
