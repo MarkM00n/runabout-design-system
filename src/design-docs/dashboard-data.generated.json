@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-18T06:35:46.196Z",
-  "validationReportGeneratedAt": "2026-07-18T06:35:45.838Z",
+  "generatedAt": "2026-07-18T06:44:11.430Z",
+  "validationReportGeneratedAt": "2026-07-18T06:44:11.104Z",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
