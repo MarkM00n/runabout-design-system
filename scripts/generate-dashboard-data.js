@@ -1,29 +1,38 @@
 #!/usr/bin/env node
 /**
  * generate-dashboard-data — builds src/design-docs/dashboard-data.generated.json,
- * the data source for the DesignOps dashboard (src/App.tsx).
+ * the single real-data source for the DesignOps dashboard (src/App.tsx).
  *
- * Validation numbers (pass/fail, open issues, caught-and-fixed history) are
- * read verbatim from src/design-docs/validation-report.generated.json —
- * design-sync.js's own output — never recomputed here. That file is the
- * single source of truth every surface (dashboard, Storybook badges, PR
- * comments) reads from; this script's only original computation is cycle
- * time and PR links, which the validation report doesn't cover.
+ * Reuses design-sync.js's own check functions (imported, not reimplemented)
+ * so the dashboard's error counts can never drift from what
+ * `npm run design-sync` itself finds. Read-only against the working tree —
+ * unlike design-sync.js, it never writes docs stubs, validation.json, or
+ * triggers a Storybook build.
  *
  * Cycle-time and PR-link data comes from local git history (merge commits +
  * a first-parent walk), not the GitHub API — no `gh` auth required to
  * regenerate this file.
  *
- * Usage: npm run dashboard-data (run design-sync first so the validation
- * report is current — this script does not run it for you)
+ * Usage: npm run dashboard-data
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  discoverComponents,
+  parseThemeTokenNames,
+  checkTokenCompliance,
+  checkAccessibility,
+  checkStorybookCoverage,
+  checkDocumentation,
+  readDocsFile,
+  extractTokensUsed,
+} from './design-sync.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const VALIDATION_REPORT_PATH = join(ROOT, 'src', 'design-docs', 'validation-report.generated.json');
+const COMPONENTS_DIR = join(ROOT, 'src', 'components');
+const TOKENS_CSS_PATH = join(ROOT, 'src', 'styles', 'tokens.css');
 const OUT_PATH = join(ROOT, 'src', 'design-docs', 'dashboard-data.generated.json');
 
 const GITHUB_REPO_URL = 'https://github.com/MarkM00n/runabout-design-system';
@@ -85,6 +94,65 @@ function firstAddCommit(relativePath) {
 }
 
 // ---------------------------------------------------------------------------
+// Validation, reusing design-sync's own (pure, side-effect-free) check
+// functions so this can never report a different number than the CLI does.
+// ---------------------------------------------------------------------------
+
+function runValidationChecks() {
+  const components = discoverComponents();
+  const cssRaw = existsSync(TOKENS_CSS_PATH) ? readFileSync(TOKENS_CSS_PATH, 'utf8') : '';
+  const cssTokenNames = parseThemeTokenNames(cssRaw);
+
+  const summary = {
+    tokenCompliance: { fail: 0, warn: 0 },
+    accessibility: { fail: 0, warn: 0 },
+    storybookCoverage: { fail: 0, warn: 0 },
+    documentationCoverage: { fail: 0, warn: 0 },
+  };
+
+  const perComponent = {};
+
+  for (const name of components) {
+    const dir = join(COMPONENTS_DIR, name);
+    const componentSource = readFileSync(join(dir, `${name}.tsx`), 'utf8');
+    const storiesPath = join(dir, `${name}.stories.tsx`);
+    const storiesSource = existsSync(storiesPath) ? readFileSync(storiesPath, 'utf8') : '';
+
+    const tokenIssues = checkTokenCompliance(componentSource);
+    const a11yIssues = checkAccessibility(componentSource);
+    const storybookIssues = existsSync(storiesPath)
+      ? checkStorybookCoverage(name, dir, componentSource, storiesSource)
+      : [{ level: 'fail', message: `No ${name}.stories.tsx found.` }];
+    const tokensUsed = extractTokensUsed(componentSource, cssTokenNames);
+    const docsResult = readDocsFile(dir, name);
+    const docIssues = checkDocumentation(name, dir, storiesSource, docsResult, tokensUsed);
+
+    const tally = (issues, key) => {
+      for (const issue of issues) summary[key][issue.level] += 1;
+    };
+    tally(tokenIssues, 'tokenCompliance');
+    tally(a11yIssues, 'accessibility');
+    tally(storybookIssues, 'storybookCoverage');
+    tally(docIssues, 'documentationCoverage');
+
+    perComponent[name] = {
+      tokenCompliance: !tokenIssues.some((i) => i.level === 'fail'),
+      accessibility: !a11yIssues.some((i) => i.level === 'fail'),
+      storybookCoverage: !storybookIssues.some((i) => i.level === 'fail'),
+      documentationCoverage: !docIssues.some((i) => i.level === 'fail'),
+      warnings: {
+        tokenCompliance: tokenIssues.filter((i) => i.level === 'warn').length,
+        accessibility: a11yIssues.filter((i) => i.level === 'warn').length,
+        storybookCoverage: storybookIssues.filter((i) => i.level === 'warn').length,
+        documentationCoverage: docIssues.filter((i) => i.level === 'warn').length,
+      },
+    };
+  }
+
+  return { summary, perComponent, components };
+}
+
+// ---------------------------------------------------------------------------
 // Assemble
 // ---------------------------------------------------------------------------
 
@@ -95,32 +163,16 @@ function formatDuration(seconds) {
 }
 
 function main() {
-  if (!existsSync(VALIDATION_REPORT_PATH)) {
-    console.error(
-      `${VALIDATION_REPORT_PATH.replace(ROOT + '/', '')} not found — run \`npm run design-sync\` first, it writes this file.`,
-    );
-    process.exit(1);
-  }
-  const validationReport = JSON.parse(readFileSync(VALIDATION_REPORT_PATH, 'utf8'));
+  const { summary, perComponent, components } = runValidationChecks();
   const merges = loadMergeHistory();
-
-  const validationSummary = {
-    tokenCompliance: { fail: 0, warn: 0 },
-    accessibility: { fail: 0, warn: 0 },
-    storybookCoverage: { fail: 0, warn: 0 },
-    documentationCoverage: { fail: 0, warn: 0 },
-  };
 
   const componentRows = [];
   const cycleTimes = [];
 
-  for (const component of validationReport.components) {
-    const name = component.component;
-
-    for (const [key, check] of Object.entries(component.checks)) {
-      validationSummary[key].fail += check.fail;
-      validationSummary[key].warn += check.warn;
-    }
+  for (const name of components) {
+    const dir = join(COMPONENTS_DIR, name);
+    const validationPath = join(dir, `${name}.validation.json`);
+    const validation = existsSync(validationPath) ? JSON.parse(readFileSync(validationPath, 'utf8')) : null;
 
     const relPath = `src/components/${name}/${name}.tsx`;
     const addCommit = firstAddCommit(relPath);
@@ -132,16 +184,15 @@ function main() {
       cycleTimes.push(cycleTimeSeconds);
     }
 
-    const openCount = Object.values(component.checks).reduce((sum, c) => sum + c.open.length, 0);
-
     componentRows.push({
       name,
-      overall: component.overall,
-      checks: component.checks,
-      openCount,
-      fixedCount: component.history.length,
-      history: component.history,
-      lastValidated: component.lastValidated,
+      tokenCompliance: perComponent[name].tokenCompliance,
+      accessibility: perComponent[name].accessibility,
+      storybookCoverage: perComponent[name].storybookCoverage,
+      documentationCoverage: perComponent[name].documentationCoverage,
+      warnings: perComponent[name].warnings,
+      overall: Object.values(perComponent[name]).slice(0, 4).every(Boolean),
+      lastValidated: validation?.lastValidated ?? null,
       storybookUrl: `${STORYBOOK_BASE_URL}?path=/docs/components-${name.toLowerCase()}--docs`,
       pr: merge ? { number: merge.prNumber, url: `${GITHUB_REPO_URL}/pull/${merge.prNumber}` } : null,
       firstCommitAt: merge?.firstCommitAt ?? null,
@@ -156,7 +207,6 @@ function main() {
 
   const data = {
     generatedAt: new Date().toISOString(),
-    validationReportGeneratedAt: validationReport.generatedAt,
     methodologyNotes: {
       cycleTime:
         "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, " +
@@ -164,22 +214,20 @@ function main() {
         'timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are ' +
         'not counted a second time.',
       firstTimePassRate:
-        'Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ' +
-        'ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, ' +
-        "and didn't exist at all until PR #5 — added after all 6 original components were already merged. " +
-        '"Caught & fixed" below is the honest, forward-looking replacement: real, mechanically tracked from here ' +
-        'on, starting at 0 for every component rather than backfilled from memory.',
-      caughtAndFixed:
-        'A component\'s "Caught & fixed" count only grows when a design-sync run finds an issue gone that was ' +
-        'open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 ' +
-        'original components, since no prior run recorded issue-level detail to diff against.',
+        'Omitted: no historical validation run log exists. ComponentName.validation.json is overwritten in place ' +
+        'on every design-sync run, and for all 6 components here that file did not exist until PR #5 (the ' +
+        'Documentation Generation stage) — added after every component was already merged. There is no ' +
+        'recoverable record of what a first design-sync run against these components would have found.',
+      errorsByCheckType:
+        'Reflects the design-sync checks run live when this file was generated, not a historical/cumulative ' +
+        "count — design-sync overwrites its results each run and doesn't keep a log of past findings.",
     },
     totals: {
-      totalComponents: validationReport.components.length,
+      totalComponents: components.length,
       averageCycleTimeSeconds,
       averageCycleTimeLabel: averageCycleTimeSeconds != null ? formatDuration(averageCycleTimeSeconds) : null,
     },
-    validationSummary,
+    validationSummary: summary,
     components: componentRows,
     links: {
       githubRepoUrl: GITHUB_REPO_URL,

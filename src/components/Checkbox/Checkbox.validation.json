@@ -1,33 +1,10 @@
 {
   "component": "Checkbox",
-  "lastValidated": "2026-07-18",
-  "checks": {
-    "tokenCompliance": {
-      "pass": true,
-      "fail": 0,
-      "warn": 0,
-      "open": []
-    },
-    "accessibility": {
-      "pass": true,
-      "fail": 0,
-      "warn": 0,
-      "open": []
-    },
-    "storybookCoverage": {
-      "pass": true,
-      "fail": 0,
-      "warn": 0,
-      "open": []
-    },
-    "documentationCoverage": {
-      "pass": true,
-      "fail": 0,
-      "warn": 0,
-      "open": []
-    }
-  },
-  "history": [],
+  "lastValidated": "2026-07-17",
+  "tokenCompliance": true,
+  "accessibility": true,
+  "storybookCoverage": true,
+  "documentationCoverage": true,
   "overall": true,
   "tokensUsed": [
     "color-border-default",

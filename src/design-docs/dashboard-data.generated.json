@@ -1,10 +1,9 @@
 {
-  "generatedAt": "2026-07-18T06:24:38.927Z",
-  "validationReportGeneratedAt": "2026-07-18T06:24:38.183Z",
+  "generatedAt": "2026-07-17T23:49:26.798Z",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
-    "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
-    "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
+    "firstTimePassRate": "Omitted: no historical validation run log exists. ComponentName.validation.json is overwritten in place on every design-sync run, and for all 6 components here that file did not exist until PR #5 (the Documentation Generation stage) — added after every component was already merged. There is no recoverable record of what a first design-sync run against these components would have found.",
+    "errorsByCheckType": "Reflects the design-sync checks run live when this file was generated, not a historical/cumulative count — design-sync overwrites its results each run and doesn't keep a log of past findings."
   },
   "totals": {
     "totalComponents": 6,
@@ -32,37 +31,18 @@
   "components": [
     {
       "name": "Button",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 0,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
       "pr": {
         "number": 1,
@@ -74,54 +54,18 @@
     },
     {
       "name": "Card",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 2,
-          "open": [
-            {
-              "level": "warn",
-              "file": "src/components/Card/Card.tsx",
-              "line": 50,
-              "message": "Raw color \"#d9d9d9\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
-              "checkType": "tokenCompliance"
-            },
-            {
-              "level": "warn",
-              "file": "src/components/Card/Card.tsx",
-              "line": 61,
-              "message": "Raw color \"#f8ebda\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
-              "checkType": "tokenCompliance"
-            }
-          ]
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 2,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 2,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-card--docs",
       "pr": {
         "number": 1,
@@ -133,37 +77,18 @@
     },
     {
       "name": "Checkbox",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 0,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-checkbox--docs",
       "pr": {
         "number": 2,
@@ -175,37 +100,18 @@
     },
     {
       "name": "Input",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 0,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-input--docs",
       "pr": {
         "number": 1,
@@ -217,37 +123,18 @@
     },
     {
       "name": "Select",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 0,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-select--docs",
       "pr": {
         "number": 2,
@@ -259,37 +146,18 @@
     },
     {
       "name": "Textarea",
-      "overall": true,
-      "checks": {
-        "tokenCompliance": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "accessibility": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "storybookCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        },
-        "documentationCoverage": {
-          "pass": true,
-          "fail": 0,
-          "warn": 0,
-          "open": []
-        }
+      "tokenCompliance": true,
+      "accessibility": true,
+      "storybookCoverage": true,
+      "documentationCoverage": true,
+      "warnings": {
+        "tokenCompliance": 0,
+        "accessibility": 0,
+        "storybookCoverage": 0,
+        "documentationCoverage": 0
       },
-      "openCount": 0,
-      "fixedCount": 0,
-      "history": [],
-      "lastValidated": "2026-07-18",
+      "overall": true,
+      "lastValidated": "2026-07-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-textarea--docs",
       "pr": {
         "number": 2,

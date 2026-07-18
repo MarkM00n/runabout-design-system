@@ -185,30 +185,9 @@ per component.
   verified against source" posture as §1's token-compliance rule.
 - **`ComponentName.validation.json` is a generated, committed artifact.**
   It's regenerated on every `design-sync` run (including in CI before the
-  Storybook build) and holds, per check category: `pass`, `fail`/`warn`
-  counts, and the `open` issues themselves (`checkType`, `file`, `line`,
-  `message`, `fix`) — not just a boolean. This is what powers the
-  "Validation Status" section and DesignOps metadata block on each docs
-  page. Don't hand-edit it.
-- **`history` is a real before/after diff, never asserted.** Each run reads
-  the *previous* committed report before overwriting it; any issue that was
-  open last run but isn't open now gets appended to `history` with a
-  `resolvedAt` date. A component's history starts empty and only grows when
-  a run actually observes an issue disappear — it is never backfilled from
-  memory or written by hand. (The six components this system started with
-  have no recoverable pre-history: issue-level detail didn't exist until
-  this history mechanism shipped, so their history starts at `[]` regardless
-  of what was fixed before then — see the dashboard's own "first-time pass
-  rate" note for the fuller explanation.)
-- **`src/design-docs/validation-report.generated.json` is the single source
-  of truth for validation numbers.** It's the same per-component
-  computation as the `ComponentName.validation.json` files, aggregated into
-  one file in the same `design-sync` run — not a second, independent
-  computation. The dashboard, Storybook's "Validation Status" section, and
-  the PR-comment workflow (`.github/workflows/validation-report-comment.yml`)
-  all read one of these two files; none of them re-run the checks
-  themselves. If a number ever looks wrong, the fix is in `design-sync.js`'s
-  check functions, not in whichever surface displayed it.
+  Storybook build) and holds the pass/fail per check category plus a
+  `lastValidated` date — this is what powers the "Validation Status" and
+  DesignOps metadata block on each docs page. Don't hand-edit it.
 - **A stub with `TODO` markers is not "documented."** `design-sync`'s
   documentation check parses the actual `docs.ts` object (not just "does
   the file exist") and treats unresolved `TODO` content as incomplete.
