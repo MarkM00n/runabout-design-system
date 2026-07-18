@@ -139,26 +139,26 @@
   color: var(--color-text-inverse);
 }
 
-.section-caption {
-  font-size: 12px;
-  color: var(--color-olive-700);
-  margin: var(--spacing-02) 0 0;
-  max-width: 900px;
-}
-
 .table-scroll {
   overflow-x: auto;
 }
 
+/* text-label (13px/1.4), not an ad-hoc pixel value — this table (and
+   Component status's below) previously set font-size alone with no
+   line-height, so it inherited the page root's fixed 18px/145% = 26.1px
+   line-height straight through. On 13px text that's a ~2x ratio, visibly
+   too loose — the token's own 1.4 line-height fixes it at the source
+   instead of patching each element separately. */
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .dashboard-table th {
   text-align: left;
-  font-size: 11px;
+  font-size: var(--text-label);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-olive-700);
@@ -198,7 +198,12 @@
 .cell-fail {
   color: var(--color-rose-300);
   font-weight: 700;
+  /* Not text-label — 19px is deliberate, not a leftover ad-hoc value: it's
+     what clears WCAG's large-text-bold contrast carve-out for rose-300 at
+     3.8:1 (see the file-level note above). Tight line-height matches the
+     other bold display numerals on this page (.metric-number). */
   font-size: 19px;
+  line-height: 1.2;
 }
 
 /* No outer card anymore — Component status sits flush on the dark canvas
@@ -216,8 +221,14 @@
    it needs something to inherit text-primary from now that the white card
    that used to provide it is gone. This also correctly cascades into the
    nested .issue-table's cells below, which have the same problem. */
+/* border-strong, as asked — flagging a real conflict rather than quietly
+   picking something else: border-strong (#3d4a2e) is the exact same hex
+   as the page canvas (surface-secondary, also #3d4a2e), so this border is
+   contrast-invisible where it meets the dark canvas around the table
+   (1.00:1 — literally identical colors, not a close call). It reads fine
+   anywhere it borders the table's own light interior. */
 .component-status-card .table-scroll {
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-xl);
   color: var(--color-text-primary);
 }
@@ -235,7 +246,7 @@
 .component-status-card .dashboard-table > thead th {
   background: var(--color-surface-inverse);
   color: var(--color-text-inverse);
-  font-size: 12px;
+  font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: normal;
   text-transform: none;
@@ -266,8 +277,25 @@
   cursor: pointer;
 }
 
+/* action-primary-hover, as asked. It's the same hex as amber-100
+   (#df8e10) — which is exactly the color .cell-warn/.cell-links already
+   use — so without an override, that text goes fully invisible on hover
+   (1.00:1, identical colors), and StatusMark's state-success/state-error
+   glyphs both fail badly too (1.26:1 / 1.84:1, checked). text-primary is
+   the one token already in use on this row that actually holds up against
+   this specific background (5.30:1, checked) — used here to swap
+   everything that would otherwise disappear or wash out. */
 .component-row:hover {
-  background: var(--color-state-hover);
+  background: var(--color-action-primary-hover);
+}
+
+.component-row:hover .cell-warn,
+.component-row:hover .cell-warn-badge,
+.component-row:hover .cell-links a,
+.component-row:hover .cell-expand-toggle,
+.component-row:hover .text-state-success,
+.component-row:hover .text-state-error {
+  color: var(--color-text-primary);
 }
 
 .cell-expand-toggle {
@@ -303,14 +331,16 @@
 }
 
 .detail-title {
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
   color: var(--color-text-primary);
 }
 
 .issue-empty {
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   color: var(--color-text-muted);
   margin: 0;
 }
@@ -331,16 +361,22 @@
   min-width: 640px;
   table-layout: fixed;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .issue-table th {
   text-align: left;
   padding: 0 var(--spacing-02) var(--spacing-01) 0;
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: var(--text-label);
   font-weight: 400;
-  border-bottom: 1px solid var(--color-border-subtle);
+  /* border-strong, dulled 60% (40% opacity) per follow-up feedback — full
+     strength (9.19:1 on this light backdrop) read as too heavy for a
+     single divider line. rgba literal, not the token directly: tokens.css
+     has no opacity variant of border-strong, and CSS custom properties
+     can't be partially blended with transparent via var() alone. */
+  border-bottom: 1px solid rgba(61, 74, 46, 0.4);
 }
 
 .issue-table td {
@@ -372,13 +408,13 @@
 
 .issue-where {
   font-family: monospace;
-  font-size: 12px;
+  font-size: var(--text-label);
   word-break: break-all;
 }
 
 .severity-badge {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--text-label);
   font-weight: 700;
   white-space: nowrap;
 }
