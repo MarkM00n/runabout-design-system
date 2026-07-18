@@ -30,10 +30,22 @@ export interface ValidationCheck {
 
 export type CheckTypeKey = 'tokenCompliance' | 'accessibility' | 'storybookCoverage' | 'documentationCoverage';
 
+/**
+ * Three-state status, computed once in design-sync.js and read verbatim by
+ * every surface (Storybook badges, dashboard rows, PR comments) — a pass
+ * with open warnings isn't a clean pass, so it gets its own state instead
+ * of being collapsed into a pass/fail boolean.
+ */
+export type ValidationStatus = 'pass' | 'pass-with-warnings' | 'fail';
+
 /** A single open (currently failing/warning) finding from a design-sync check. */
 export interface ValidationIssue {
   level: 'fail' | 'warn';
   checkType: CheckTypeKey;
+  /** Stable identity for this issue across runs, independent of `message`'s
+   *  wording — used to tell "still open" apart from "caught and fixed"
+   *  without a reworded message looking like a fix. Not meant for display. */
+  code: string;
   /** Repo-relative path of the file the issue was found in. */
   file: string;
   /** 1-based line number, where design-sync can determine one — some
@@ -63,6 +75,7 @@ export interface CheckResult {
   pass: boolean;
   fail: number;
   warn: number;
+  status: ValidationStatus;
   open: ValidationIssue[];
 }
 
@@ -85,6 +98,7 @@ export interface ComponentValidationReport {
    *  against, not backfilled from guesswork. */
   history: ResolvedIssue[];
   overall: boolean;
+  status: ValidationStatus;
   /** Token utility names found in use during the token-compliance scan —
    *  the auto-derived "Design Tokens Used" list, not hand-maintained. */
   tokensUsed: string[];

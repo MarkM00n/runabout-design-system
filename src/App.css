@@ -53,7 +53,7 @@
 
 .dashboard-links {
   display: flex;
-  gap: var(--spacing-03);
+  gap: var(--spacing-01);
 }
 
 .dashboard-metrics {
@@ -263,25 +263,28 @@
   cursor: pointer;
 }
 
-/* action-primary-hover, as asked. It's the same hex as amber-100
-   (#df8e10) — which is exactly the color .cell-warn/.cell-links already
-   use — so without an override, that text goes fully invisible on hover
-   (1.00:1, identical colors), and StatusMark's state-success/state-error
-   glyphs both fail badly too (1.26:1 / 1.84:1, checked). text-primary is
-   the one token already in use on this row that actually holds up against
-   this specific background (5.30:1, checked) — used here to swap
-   everything that would otherwise disappear or wash out. */
+/* action-primary-hover background, as asked in an earlier pass. text-inverse
+   for all row text/icons on hover, as asked here — flagging a real,
+   already-computed contrast problem rather than quietly shipping it:
+   text-inverse only reaches 2.23:1 against this background (checked),
+   under both the 4.5:1 normal-text and even the 3:1 large-text/UI
+   thresholds. Applied exactly as requested — text-primary (5.30:1, passes)
+   was the deliberate choice in the previous pass specifically to avoid
+   this, so this is a real step back on contrast, not a rounding error. */
 .component-row:hover {
   background: var(--color-action-primary-hover);
+  color: var(--color-text-inverse);
 }
 
 .component-row:hover .cell-warn,
 .component-row:hover .cell-warn-badge,
+.component-row:hover .cell-fail,
 .component-row:hover .cell-links a,
 .component-row:hover .cell-expand-toggle,
-.component-row:hover .text-state-success,
-.component-row:hover .text-state-error {
-  color: var(--color-text-primary);
+.component-row:hover .status-pass,
+.component-row:hover .status-warn,
+.component-row:hover .status-fail {
+  color: var(--color-text-inverse);
 }
 
 .cell-expand-toggle {
@@ -419,4 +422,27 @@
 
 .severity-fixed {
   color: var(--color-state-success);
+}
+
+/* Component status's Overall column — light-safe colors since this table's
+   rows are the zebra surface-tertiary/cream-200 treatment, not the dark
+   canvas. Three states, not two: pass-with-warnings gets its own amber
+   between clean-pass green and blocking-fail red. */
+.status-badge {
+  display: inline-block;
+  font-size: var(--text-label);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-pass {
+  color: var(--color-state-success);
+}
+
+.status-warn {
+  color: var(--color-amber-100);
+}
+
+.status-fail {
+  color: var(--color-state-error);
 }

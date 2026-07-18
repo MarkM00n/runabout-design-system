@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-07-18T09:57:00.738Z",
-  "validationReportGeneratedAt": "2026-07-18T09:57:00.356Z",
+  "generatedAt": "2026-07-18T11:58:48.005Z",
+  "validationReportGeneratedAt": "2026-07-18T11:36:17.413Z",
+  "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
@@ -36,33 +37,40 @@
     {
       "name": "Button",
       "overall": true,
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",
@@ -78,26 +86,30 @@
     {
       "name": "Card",
       "overall": true,
+      "status": "pass-with-warnings",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 2,
+          "status": "pass-with-warnings",
           "open": [
             {
               "level": "warn",
               "file": "src/components/Card/Card.tsx",
               "line": 50,
-              "message": "Raw color \"#d9d9d9\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
+              "code": "raw-hex:#d9d9d9:50",
+              "message": "This colour (#d9d9d9) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+              "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
               "checkType": "tokenCompliance"
             },
             {
               "level": "warn",
               "file": "src/components/Card/Card.tsx",
               "line": 61,
-              "message": "Raw color \"#f8ebda\" — no comment on this specific line, but the file has a doc comment justifying unbound values.",
-              "fix": "Add a per-line comment on this exact line, not just a file-level doc comment, for traceability.",
+              "code": "raw-hex:#f8ebda:61",
+              "message": "This colour (#f8ebda) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+              "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
               "checkType": "tokenCompliance"
             }
           ]
@@ -106,22 +118,27 @@
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 2,
+      "openFailCount": 0,
+      "openWarnCount": 2,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",
@@ -137,33 +154,40 @@
     {
       "name": "Checkbox",
       "overall": true,
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",
@@ -179,33 +203,40 @@
     {
       "name": "Input",
       "overall": true,
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",
@@ -221,33 +252,40 @@
     {
       "name": "Select",
       "overall": true,
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",
@@ -263,33 +301,40 @@
     {
       "name": "Textarea",
       "overall": true,
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "accessibility": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "storybookCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         },
         "documentationCoverage": {
           "pass": true,
           "fail": 0,
           "warn": 0,
+          "status": "pass",
           "open": []
         }
       },
       "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-07-18",

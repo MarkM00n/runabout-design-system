@@ -1,5 +1,7 @@
 import { Fragment, useState } from 'react';
 import dashboardData from './design-docs/dashboard-data.generated.json';
+import type { ValidationStatus } from './design-docs/types';
+import { statusLabel, statusTone } from './design-docs/statusFormat';
 import './App.css';
 
 interface ValidationIssue {
@@ -24,14 +26,18 @@ interface CheckResult {
   pass: boolean;
   fail: number;
   warn: number;
+  status: ValidationStatus;
   open: ValidationIssue[];
 }
 
 interface ComponentRow {
   name: string;
   overall: boolean;
+  status: ValidationStatus;
   checks: Record<string, CheckResult>;
   openCount: number;
+  openFailCount: number;
+  openWarnCount: number;
   fixedCount: number;
   history: ResolvedIssue[];
   lastValidated: string | null;
@@ -48,6 +54,7 @@ interface CheckTally {
 interface DashboardData {
   generatedAt: string;
   validationReportGeneratedAt: string;
+  status: ValidationStatus;
   methodologyNotes: {
     cycleTime: string;
     firstTimePassRate: string;
@@ -96,14 +103,14 @@ const CHECK_LABELS: Record<keyof DashboardData['validationSummary'], string> = {
   documentationCoverage: 'Documentation Coverage',
 };
 
-function StatusMark({ pass }: { pass: boolean }) {
+// Three states, not two: a component that passes every check but still has
+// open warnings isn't a clean pass, so it gets its own amber state rather
+// than being shown identical to a component with nothing open at all.
+function StatusBadge({ status, warnCount }: { status: ValidationStatus; warnCount: number }) {
+  const icon = status === 'fail' ? '✗' : status === 'pass-with-warnings' ? '⚠' : '✓';
   return (
-    <span
-      aria-label={pass ? 'Pass' : 'Fail'}
-      className={pass ? 'text-state-success' : 'text-state-error'}
-      style={{ fontWeight: 700 }}
-    >
-      {pass ? '✓' : '✗'}
+    <span className={`status-badge status-${statusTone(status)}`}>
+      {icon} {statusLabel(status, warnCount)}
     </span>
   );
 }
@@ -333,10 +340,12 @@ function App() {
                     >
                       <td className="cell-component">{c.name}</td>
                       <td>
-                        <StatusMark pass={c.overall} />
+                        <StatusBadge status={c.status} warnCount={c.openWarnCount} />
                       </td>
                       <td>{c.fixedCount}</td>
-                      <td className={c.openCount > 0 ? 'cell-warn' : ''}>{c.openCount}</td>
+                      <td className={c.openFailCount > 0 ? 'cell-fail' : c.openWarnCount > 0 ? 'cell-warn' : ''}>
+                        {c.openCount}
+                      </td>
                       <td className="cell-links">
                         <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
                           Story

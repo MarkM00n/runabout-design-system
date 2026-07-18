@@ -10,6 +10,7 @@ import {
 } from '@storybook/addon-docs/blocks';
 
 import type { ComponentDocMeta, ComponentValidationReport } from './types';
+import { statusLabel, statusTone, summaryLine } from './statusFormat';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -33,10 +34,11 @@ function BulletList({ items, empty }: { items: string[]; empty: string }) {
   );
 }
 
-function Pill({ label, tone }: { label: string; tone: 'neutral' | 'pass' | 'fail' }) {
+function Pill({ label, tone }: { label: string; tone: 'neutral' | 'pass' | 'warn' | 'fail' }) {
   const colors = {
     neutral: { bg: '#eef0f3', fg: '#333' },
     pass: { bg: '#e3f1ea', fg: '#1a7a4c' },
+    warn: { bg: '#fbf0da', fg: '#966a1a' },
     fail: { bg: '#fbe4e4', fg: '#c0392b' },
   }[tone];
   return (
@@ -110,7 +112,9 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
   }
 
   const checkEntries = Object.entries(validation.checks);
-  const openCount = checkEntries.reduce((sum, [, c]) => sum + c.open.length, 0);
+  const openFailCount = checkEntries.reduce((sum, [, c]) => sum + c.fail, 0);
+  const openWarnCount = checkEntries.reduce((sum, [, c]) => sum + c.warn, 0);
+  const openCount = openFailCount + openWarnCount;
   const fixedCount = validation.history.length;
 
   const openRows = checkEntries.flatMap(([key, c]) =>
@@ -124,21 +128,20 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
   return (
     <Section title="Validation Status">
       <div style={{ marginBottom: 12 }}>
-        <Pill label={validation.overall ? '✓ PASS' : '✗ FAIL'} tone={validation.overall ? 'pass' : 'fail'} />
+        <Pill label={statusLabel(validation.status, openWarnCount)} tone={statusTone(validation.status)} />
       </div>
       <div>
         {checkEntries.map(([key, c]) => (
-          <Pill key={key} label={`${c.pass ? '✓' : '✗'} ${CHECK_LABELS[key] ?? key}`} tone={c.pass ? 'pass' : 'fail'} />
+          <Pill key={key} label={`${CHECK_LABELS[key] ?? key}: ${statusLabel(c.status, c.warn)}`} tone={statusTone(c.status)} />
         ))}
       </div>
 
-      {/* The line the dashboard also surfaces: current open count plus the
-          cumulative caught-and-fixed count, both real (see
-          docs/design-system-rules.md §5 on how history is derived), not
-          asserted. */}
-      <p style={{ marginTop: 12, fontSize: 14 }}>
-        {fixedCount} issue{fixedCount === 1 ? '' : 's'} caught and fixed before merge · {openCount} currently open
-      </p>
+      {/* The line the dashboard also surfaces: real counts, read straight
+          from the same report (see docs/design-system-rules.md §5 on how
+          history is derived), not asserted. Warnings are never called
+          "issues" here — that word is reserved for the open-issues table
+          below, which mixes fails and warnings together. */}
+      <p style={{ marginTop: 12, fontSize: 14 }}>{summaryLine(fixedCount, openFailCount, openWarnCount)}</p>
 
       {openCount > 0 && (
         <div style={{ marginTop: 16 }}>
@@ -168,15 +171,12 @@ function ValidationStatusSection({ validation }: { validation?: ComponentValidat
         }}
       >
         <div>Generated From: {validation.component}</div>
-        <div>
-          Validation Status: {validation.overall ? '✓ PASS' : '✗ FAIL'}
-        </div>
+        <div>Validation Status: {statusLabel(validation.status, openWarnCount)}</div>
         <div>Checks:</div>
         <div style={{ paddingLeft: 16 }}>
           {checkEntries.map(([key, c]) => (
             <div key={key}>
-              {c.pass ? '✓' : '✗'} {CHECK_LABELS[key] ?? key}
-              {c.warn > 0 ? ` (${c.warn} warning${c.warn === 1 ? '' : 's'})` : ''}
+              {CHECK_LABELS[key] ?? key}: {statusLabel(c.status, c.warn)}
             </div>
           ))}
         </div>
