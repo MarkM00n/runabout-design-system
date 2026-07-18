@@ -56,6 +56,9 @@ interface DashboardData {
   totals: {
     totalComponents: number;
     averageCycleTimeLabel: string | null;
+    totalOpenIssues: number;
+    totalCaughtAndFixed: number;
+    totalDesignTokens: number | null;
   };
   validationSummary: {
     tokenCompliance: CheckTally;
@@ -235,20 +238,34 @@ function App() {
       <section className="dashboard-metrics" aria-label="Headline metrics">
         <div className="metric-tile">
           <div className="metric-number">{data.totals.totalComponents}</div>
-          <div className="metric-label">Components taken through the workflow</div>
+          <div className="metric-label">Components in the workflow</div>
         </div>
 
         <div className="metric-tile">
           <div className="metric-number">{data.totals.averageCycleTimeLabel ?? '—'}</div>
-          <div className="metric-label">Avg. first commit → merged PR</div>
-          <div className="metric-caption">{data.methodologyNotes.cycleTime}</div>
+          <div className="metric-label">Avg. commit → merged PR</div>
         </div>
 
-        <div className="metric-tile metric-tile-note">
-          <div className="metric-label metric-label-primary">First-time pass rate — not tracked</div>
-          <div className="metric-caption">{data.methodologyNotes.firstTimePassRate}</div>
+        <div className="metric-tile">
+          <div className={`metric-number ${data.totals.totalOpenIssues > 0 ? 'metric-number-warn' : ''}`}>
+            {data.totals.totalOpenIssues}
+          </div>
+          <div className="metric-label">Open issues right now</div>
+        </div>
+
+        <div className="metric-tile">
+          <div className="metric-number">{data.totals.totalCaughtAndFixed}</div>
+          <div className="metric-label">Caught &amp; fixed to date</div>
+        </div>
+
+        <div className="metric-tile">
+          <div className="metric-number">{data.totals.totalDesignTokens ?? '—'}</div>
+          <div className="metric-label">Design tokens documented</div>
         </div>
       </section>
+      <p className="metrics-footnote">
+        {data.methodologyNotes.cycleTime} First-time pass rate isn't shown: {data.methodologyNotes.firstTimePassRate}
+      </p>
 
       <section className="dashboard-section" aria-label="Errors caught by validation">
         <h2 className="section-title">Errors caught by validation, by check type</h2>
@@ -266,7 +283,7 @@ function App() {
               return (
                 <tr key={key}>
                   <td>{CHECK_LABELS[key]}</td>
-                  <td className={tally.fail > 0 ? 'text-state-error' : ''}>{tally.fail}</td>
+                  <td className={tally.fail > 0 ? 'cell-fail' : ''}>{tally.fail}</td>
                   <td className={tally.warn > 0 ? 'cell-warn' : ''}>{tally.warn}</td>
                 </tr>
               );
@@ -280,7 +297,7 @@ function App() {
         </p>
       </section>
 
-      <section className="dashboard-section" aria-label="Component status">
+      <section className="dashboard-section component-status-card" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
         <p className="section-caption">{data.methodologyNotes.caughtAndFixed} Click a row to see its issues.</p>
         <div className="table-scroll">
