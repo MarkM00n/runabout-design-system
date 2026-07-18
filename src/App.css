@@ -1,6 +1,24 @@
 /* Breaks out of index.css's centered #root column (1126px, bordered) so the
    dashboard can run full-width on a projector — scoped to this component
    only, index.css itself stays untouched since Storybook also depends on it. */
+/* Color strategy (verified with a real WCAG contrast calc, not eyeballed —
+   see the PR description for the numbers):
+   - Page canvas: surface-secondary (dark olive) + text-inverse (8.07:1).
+   - Muted/caption text on the canvas: olive-700, a primitive step, not
+     text-muted — text-muted only reaches 2.75:1 against this background,
+     a real fail. olive-700 reaches 5.76:1.
+   - Accent/links/warn emphasis on the canvas: amber-300, not the brand's
+     usual amber-100 (action-highlight) — amber-100 only reaches 3.61:1
+     here, under the 4.5:1 normal-text threshold. amber-300 clears it at
+     4.50:1 exactly.
+   - Fail emphasis on the canvas: rose-300 at 3.8:1, which only qualifies
+     under WCAG's large-text/bold carve-out (≥3:1 at ≥14pt bold) — used
+     here at 700 weight / 19px, deliberately sized past that threshold
+     rather than assumed to pass at any size.
+   - Component status keeps its exact original light-card colors
+     (text-primary/text-muted/amber-100), scoped back in below via
+     .component-status-card — it sits on its own light surface, not the
+     dark canvas, so none of the above swaps apply to it. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -11,8 +29,8 @@
   min-height: 100svh;
   box-sizing: border-box;
   text-align: left;
-  background: var(--color-surface-tertiary);
-  color: var(--color-text-primary);
+  background: var(--color-surface-secondary);
+  color: var(--color-text-inverse);
   font-family: var(--font-tt-norms);
   padding: var(--spacing-06) var(--spacing-07);
 }
@@ -23,22 +41,22 @@
   align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--spacing-03);
-  border-bottom: 1px solid var(--color-border-default);
+  border-bottom: 1px solid rgba(248, 235, 218, 0.16);
   padding-bottom: var(--spacing-04);
-  margin-bottom: var(--spacing-06);
+  margin-bottom: var(--spacing-05);
 }
 
 .dashboard-title {
   font-family: var(--font-recoleta);
-  font-size: 32px;
+  font-size: 26px;
   line-height: 1.15;
   margin: 0 0 var(--spacing-00);
-  color: var(--color-text-primary);
+  color: var(--color-text-inverse);
 }
 
 .dashboard-subtitle {
-  font-size: var(--text-paragraph-small);
-  color: var(--color-text-muted);
+  font-size: 13px;
+  color: var(--color-olive-700);
   margin: 0;
 }
 
@@ -48,86 +66,92 @@
 }
 
 .dashboard-links a {
-  color: var(--color-action-highlight);
-  font-size: var(--text-h6);
+  color: var(--color-amber-300);
+  font-size: var(--text-paragraph-small);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
 
 .dashboard-links a:hover,
 .dashboard-links a:focus-visible {
-  border-bottom-color: var(--color-action-highlight);
+  border-bottom-color: var(--color-amber-300);
 }
 
+/* No card chrome (border/fill) — smaller, denser, and separated by
+   whitespace rather than boxes, per the "decrease the weight" brief. Five
+   compact tiles read as one confident row instead of three heavy widgets. */
 .dashboard-metrics {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-04);
-  margin-bottom: var(--spacing-07);
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-05);
+  padding-bottom: var(--spacing-04);
+  margin-bottom: var(--spacing-01);
+  border-bottom: 1px solid rgba(248, 235, 218, 0.1);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .dashboard-metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-metrics {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 .metric-tile {
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-04);
-  background: var(--color-grey-1000);
+  min-width: 0;
 }
 
 /* Arbitrary display size — no token in this system was built for a
    metric-tile headline number, so this stays a literal value rather than
-   forcing a fit onto text-h3 (36px, sized for Card's title, not this). */
+   forcing a fit onto text-h3 (36px, sized for Card's title, not this).
+   Shrunk from an earlier 72px pass, which read as oversized/heavy next to
+   a five-tile row. */
 .metric-number {
-  font-size: 72px;
+  font-size: 40px;
   line-height: 1;
   font-weight: 700;
   font-family: var(--font-recoleta);
-  color: var(--color-text-primary);
+  color: var(--color-text-inverse);
+}
+
+.metric-number-warn {
+  color: var(--color-amber-300);
 }
 
 .metric-label {
-  margin-top: var(--spacing-02);
-  font-size: var(--text-h6);
-  color: var(--color-text-primary);
-}
-
-.metric-label-primary {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.metric-caption {
   margin-top: var(--spacing-01);
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--color-text-muted);
+  color: var(--color-olive-700);
+  line-height: 1.4;
 }
 
-.metric-tile-note {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.metrics-footnote {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-olive-700);
+  opacity: 0.85;
+  max-width: 1000px;
+  margin: var(--spacing-02) 0 var(--spacing-06);
 }
 
 .dashboard-section {
-  margin-bottom: var(--spacing-07);
+  margin-bottom: var(--spacing-06);
 }
 
 .section-title {
-  font-size: var(--text-h6);
+  font-size: 15px;
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
-  color: var(--color-text-primary);
+  color: var(--color-text-inverse);
 }
 
 .section-caption {
-  font-size: 13px;
-  color: var(--color-text-muted);
+  font-size: 12px;
+  color: var(--color-olive-700);
   margin: var(--spacing-02) 0 0;
   max-width: 900px;
 }
@@ -139,22 +163,22 @@
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-paragraph-small);
+  font-size: 13px;
 }
 
 .dashboard-table th {
   text-align: left;
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border-default);
-  padding: var(--spacing-01) var(--spacing-02);
+  color: var(--color-olive-700);
+  border-bottom: 1px solid rgba(248, 235, 218, 0.16);
+  padding: var(--spacing-00) var(--spacing-02);
 }
 
 .dashboard-table td {
-  padding: var(--spacing-02);
-  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--spacing-01) var(--spacing-02);
+  border-bottom: 1px solid rgba(248, 235, 218, 0.1);
   vertical-align: middle;
 }
 
@@ -163,7 +187,7 @@
 }
 
 .cell-links a {
-  color: var(--color-action-highlight);
+  color: var(--color-amber-300);
   text-decoration: none;
 }
 
@@ -174,8 +198,59 @@
 
 .cell-warn,
 .cell-warn-badge {
-  color: var(--color-amber-100);
+  color: var(--color-amber-300);
   font-weight: 700;
+}
+
+/* Only reachable when a Fail count is actually >0 (none are, today) — sized
+   and weighted specifically to clear WCAG's large-text-bold contrast
+   threshold at rose-300's 3.8:1, see the file-level note above. */
+.cell-fail {
+  color: var(--color-rose-300);
+  font-weight: 700;
+  font-size: 19px;
+}
+
+/* Component status is a distinct, elevated light surface sitting on the
+   dark canvas — not a re-theme, its exact original colors from before this
+   pass (text-primary/text-muted/amber-100/state-success/state-error) are
+   still correct here since the background never changed for this section,
+   only the canvas around it did. Scoped back in below because the base
+   rules above now target the dark canvas by default. */
+.component-status-card {
+  background: var(--color-surface-tertiary);
+  /* Base text color for the card — everything inside that doesn't set its
+     own color (cell-component, detail-title, table body text, etc.) would
+     otherwise inherit the dark canvas's text-inverse straight through,
+     since this card doesn't reset the page's cascaded color property on
+     its own. Explicit here rather than relying on descendant overrides for
+     every single element. */
+  color: var(--color-text-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-05);
+}
+
+.component-status-card .section-title {
+  color: var(--color-text-primary);
+}
+
+.component-status-card .section-caption {
+  color: var(--color-text-muted);
+}
+
+.component-status-card .dashboard-table th {
+  color: var(--color-text-muted);
+  border-bottom-color: var(--color-border-default);
+}
+
+.component-status-card .dashboard-table td {
+  border-bottom-color: var(--color-border-subtle);
+}
+
+.component-status-card .cell-links a,
+.component-status-card .cell-warn,
+.component-status-card .cell-warn-badge {
+  color: var(--color-amber-100);
 }
 
 .component-row {

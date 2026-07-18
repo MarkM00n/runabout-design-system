@@ -24,7 +24,19 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VALIDATION_REPORT_PATH = join(ROOT, 'src', 'design-docs', 'validation-report.generated.json');
+const FOUNDATIONS_DATA_PATH = join(ROOT, 'src', 'design-docs', 'foundations-data.generated.json');
 const OUT_PATH = join(ROOT, 'src', 'design-docs', 'dashboard-data.generated.json');
+
+// Counts every token across every Foundation category (color, typography,
+// spacing, radius, motion, breakpoint, shadow) — same file the Foundation
+// Storybook pages render from, so this can't drift from what's actually
+// documented there.
+function countDesignTokens() {
+  if (!existsSync(FOUNDATIONS_DATA_PATH)) return null;
+  const foundations = JSON.parse(readFileSync(FOUNDATIONS_DATA_PATH, 'utf8'));
+  const categories = ['color', 'typography', 'spacing', 'radius', 'motion', 'breakpoint', 'shadow'];
+  return categories.reduce((sum, key) => sum + (Array.isArray(foundations[key]) ? foundations[key].length : 0), 0);
+}
 
 const GITHUB_REPO_URL = 'https://github.com/MarkM00n/runabout-design-system';
 const STORYBOOK_BASE_URL = 'https://markm00n.github.io/runabout-design-system/';
@@ -154,6 +166,10 @@ function main() {
     ? Math.round(cycleTimes.reduce((a, b) => a + b, 0) / cycleTimes.length)
     : null;
 
+  const totalOpenIssues = componentRows.reduce((sum, c) => sum + c.openCount, 0);
+  const totalCaughtAndFixed = componentRows.reduce((sum, c) => sum + c.fixedCount, 0);
+  const totalDesignTokens = countDesignTokens();
+
   const data = {
     generatedAt: new Date().toISOString(),
     validationReportGeneratedAt: validationReport.generatedAt,
@@ -178,6 +194,9 @@ function main() {
       totalComponents: validationReport.components.length,
       averageCycleTimeSeconds,
       averageCycleTimeLabel: averageCycleTimeSeconds != null ? formatDuration(averageCycleTimeSeconds) : null,
+      totalOpenIssues,
+      totalCaughtAndFixed,
+      totalDesignTokens,
     },
     validationSummary,
     components: componentRows,
