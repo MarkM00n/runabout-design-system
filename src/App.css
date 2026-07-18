@@ -197,16 +197,23 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
+/* Stacked, not side-by-side: the two tables aren't meant to be compared
+   against each other, and every component today has Caught & fixed empty
+   (see the dashboard's own note on why) — splitting the row in half would
+   waste that entire half on "No issues caught and fixed yet." while
+   squeezing Open issues' two prose columns into a too-narrow flex block.
+   Stacking also means neither table needs a breakpoint to stay full-width
+   at any viewport size. */
 .detail-panel {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--spacing-05);
   padding: var(--spacing-03) var(--spacing-02) var(--spacing-04);
   background: var(--color-cream-200);
 }
 
 .detail-block {
-  flex: 1 1 420px;
+  width: 100%;
   min-width: 0;
 }
 
@@ -222,29 +229,86 @@
   margin: 0;
 }
 
+/* Own horizontal-scroll boundary, independent of the outer .table-scroll —
+   a narrow viewport can scroll this table without dragging the whole
+   component-status table with it. */
+.issue-table-scroll {
+  overflow-x: auto;
+}
+
 .issue-table {
   width: 100%;
+  min-width: 640px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 13px;
   background: var(--color-grey-1000);
   border-radius: var(--radius-sm);
-  overflow: hidden;
 }
 
 .issue-table th {
   text-align: left;
-  padding: var(--spacing-01);
+  padding: var(--spacing-01) var(--spacing-02);
   color: var(--color-text-muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   border-bottom: 1px solid var(--color-border-default);
 }
 
 .issue-table td {
-  padding: var(--spacing-01);
+  padding: var(--spacing-02);
   border-bottom: 1px solid var(--color-border-subtle);
   vertical-align: top;
+  word-break: break-word;
+}
+
+.issue-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Fixed-width columns; the remaining (unset) columns — What failed,
+   Suggested fix / What was wrong — split whatever space is left equally,
+   which is the point of table-layout: fixed here: those two prose columns
+   get the real estate, not whatever the browser guesses from content. */
+.issue-col-severity {
+  width: 90px;
+}
+
+.issue-col-check {
+  width: 160px;
+}
+
+.issue-col-where {
+  width: 150px;
+}
+
+.issue-col-fixed {
+  width: 170px;
+  white-space: nowrap;
 }
 
 .issue-where {
   font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.severity-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
   white-space: nowrap;
+}
+
+.severity-fail {
+  color: var(--color-state-error);
+}
+
+.severity-warn {
+  color: var(--color-amber-100);
+}
+
+.severity-fixed {
+  color: var(--color-state-success);
 }

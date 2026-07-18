@@ -98,36 +98,94 @@ function formatGeneratedAt(iso: string) {
   }).format(new Date(iso));
 }
 
-function IssueDetailTable({ rows, mode }: { rows: (ValidationIssue | ResolvedIssue)[]; mode: 'open' | 'history' }) {
-  if (rows.length === 0) {
-    return <p className="issue-empty">None.</p>;
+function checkLabel(checkType: string) {
+  return CHECK_LABELS[checkType as keyof DashboardData['validationSummary']] ?? checkType;
+}
+
+// Full repo-relative paths are redundant inside a panel that's already
+// scoped to one component (src/components/Card/Card.tsx:50 vs. just
+// Card.tsx:50) — the basename plus line number is what's actually scannable
+// at speed, and the full path is still one click away via the file's own
+// story/PR links elsewhere in the row.
+function whereLabel(file: string, line: number | null) {
+  const basename = file.split('/').pop() ?? file;
+  return line ? `${basename}:${line}` : basename;
+}
+
+function SeverityBadge({ level }: { level: 'fail' | 'warn' }) {
+  return (
+    <span className={`severity-badge severity-${level}`}>
+      {level === 'fail' ? '✗ Fail' : '⚠ Warn'}
+    </span>
+  );
+}
+
+function OpenIssuesTable({ issues }: { issues: ValidationIssue[] }) {
+  if (issues.length === 0) {
+    return <p className="issue-empty">No open issues.</p>;
+  }
+  // Worst-first so the thing most worth fixing is the first row, not
+  // whatever order the check functions happened to run in.
+  const sorted = [...issues].sort((a, b) => (a.level === b.level ? 0 : a.level === 'fail' ? -1 : 1));
+  return (
+    <div className="issue-table-scroll">
+      <table className="issue-table">
+        <thead>
+          <tr>
+            <th className="issue-col-severity">Severity</th>
+            <th className="issue-col-check">Check type</th>
+            <th>What failed</th>
+            <th className="issue-col-where">Where</th>
+            <th>Suggested fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.map((issue, i) => (
+            <tr key={i}>
+              <td className="issue-col-severity">
+                <SeverityBadge level={issue.level} />
+              </td>
+              <td className="issue-col-check">{checkLabel(issue.checkType)}</td>
+              <td>{issue.message}</td>
+              <td className="issue-col-where issue-where">{whereLabel(issue.file, issue.line)}</td>
+              <td>{issue.fix ?? '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function HistoryTable({ entries }: { entries: ResolvedIssue[] }) {
+  if (entries.length === 0) {
+    return <p className="issue-empty">No issues caught and fixed yet.</p>;
   }
   return (
-    <table className="issue-table">
-      <thead>
-        <tr>
-          <th>Check type</th>
-          <th>What failed</th>
-          <th>Where</th>
-          <th>{mode === 'open' ? 'Suggested fix' : 'Fixed'}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((issue, i) => (
-          <tr key={i}>
-            <td>{CHECK_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</td>
-            <td>{issue.message}</td>
-            <td className="issue-where">
-              {issue.file}
-              {issue.line ? `:${issue.line}` : ''}
-            </td>
-            <td>
-              {mode === 'open' ? issue.fix ?? '—' : `Resolved ${(issue as ResolvedIssue).resolvedAt}`}
-            </td>
+    <div className="issue-table-scroll">
+      <table className="issue-table">
+        <thead>
+          <tr>
+            <th className="issue-col-check">Check type</th>
+            <th>What was wrong</th>
+            <th className="issue-col-where">Where</th>
+            <th className="issue-col-fixed">Fixed</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {entries.map((entry, i) => (
+            <tr key={i}>
+              <td className="issue-col-check">{checkLabel(entry.checkType)}</td>
+              <td>{entry.message}</td>
+              <td className="issue-col-where issue-where">{whereLabel(entry.file, entry.line)}</td>
+              <td className="issue-col-fixed">
+                <span className="severity-badge severity-fixed">✓ Fixed</span> {entry.resolvedAt}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -139,11 +197,11 @@ function ComponentRowDetail({ component }: { component: ComponentRow }) {
         <div className="detail-panel">
           <div className="detail-block">
             <h3 className="detail-title">Open issues ({openIssues.length})</h3>
-            <IssueDetailTable rows={openIssues} mode="open" />
+            <OpenIssuesTable issues={openIssues} />
           </div>
           <div className="detail-block">
             <h3 className="detail-title">Caught &amp; fixed history ({component.history.length})</h3>
-            <IssueDetailTable rows={component.history} mode="history" />
+            <HistoryTable entries={component.history} />
           </div>
         </div>
       </td>
