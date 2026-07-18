@@ -289,7 +289,6 @@ function App() {
 
       <section className="dashboard-section component-status-card" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
-        <p className="section-caption">{data.methodologyNotes.caughtAndFixed} Click a row to see its issues.</p>
         <div className="table-scroll">
           <table className="dashboard-table">
             <thead>
@@ -304,12 +303,12 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {data.components.map((c) => {
+              {data.components.map((c, i) => {
                 const isExpanded = expanded === c.name;
                 return (
                   <Fragment key={c.name}>
                     <tr
-                      className="component-row"
+                      className={`component-row ${i % 2 === 0 ? 'row-even' : 'row-odd'}`}
                       onClick={() => setExpanded(isExpanded ? null : c.name)}
                       aria-expanded={isExpanded}
                     >

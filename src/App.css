@@ -201,40 +201,59 @@
   font-size: 19px;
 }
 
-/* Component status is a distinct, elevated light surface sitting on the
-   dark canvas — not a re-theme, its exact original colors from before this
-   pass (text-primary/text-muted/amber-100/state-success/state-error) are
-   still correct here since the background never changed for this section,
-   only the canvas around it did. Scoped back in below because the base
-   rules above now target the dark canvas by default. */
-.component-status-card {
+/* No outer card anymore — Component status sits flush on the dark canvas
+   like every other section now. The table itself carries its own border
+   instead, so it still reads as a defined, self-contained block. */
+
+/* Table style copied from the Figma reference frame (Design System file,
+   node 89:402, "table"): dark surface-inverse header row with text-inverse
+   labels, zebra body rows alternating surface-tertiary/cream-200, spacing-02
+   (16px) cell padding, radius-xl clipped corners. Plain sentence-case
+   headers (not the dashboard's usual uppercase/letter-spacing treatment)
+   to match that frame exactly.
+   color: text-primary is set here (not on a wrapping card) because plain
+   table text (cell-component, dates, numbers) doesn't set its own color —
+   it needs something to inherit text-primary from now that the white card
+   that used to provide it is gone. This also correctly cascades into the
+   nested .issue-table's cells below, which have the same problem. */
+.component-status-card .table-scroll {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+}
+
+/* > (child combinator) into thead/tbody, not a bare descendant selector —
+   the expanded accordion row nests a second, unrelated <table
+   className="issue-table"> inside this table's own <td> (a table nested in
+   a table cell). A plain ".dashboard-table th"/"td" descendant selector
+   matches th/td at ANY depth, so it was leaking this dark-header styling
+   into the nested issue-table too, and — since its specificity beat
+   .detail-row td's — silently overriding that row's own padding: 0.
+   Scoping to a direct thead/tbody child, and excluding .detail-row from
+   the td rule outright, keeps this table's styling from crossing into the
+   table nested inside it. */
+.component-status-card .dashboard-table > thead th {
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: var(--spacing-02);
+  border-bottom: none;
+}
+
+.component-status-card .dashboard-table > tbody > tr:not(.detail-row) > td {
+  padding: var(--spacing-02);
+  border-bottom: none;
+}
+
+.component-status-card .row-even {
   background: var(--color-surface-tertiary);
-  /* Base text color for the card — everything inside that doesn't set its
-     own color (cell-component, detail-title, table body text, etc.) would
-     otherwise inherit the dark canvas's text-inverse straight through,
-     since this card doesn't reset the page's cascaded color property on
-     its own. Explicit here rather than relying on descendant overrides for
-     every single element. */
-  color: var(--color-text-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-05);
 }
 
-.component-status-card .section-title {
-  color: var(--color-text-primary);
-}
-
-.component-status-card .section-caption {
-  color: var(--color-text-muted);
-}
-
-.component-status-card .dashboard-table th {
-  color: var(--color-text-muted);
-  border-bottom-color: var(--color-border-default);
-}
-
-.component-status-card .dashboard-table td {
-  border-bottom-color: var(--color-border-subtle);
+.component-status-card .row-odd {
+  background: var(--color-cream-200);
 }
 
 .component-status-card .cell-links a,
@@ -259,7 +278,6 @@
 
 .detail-row td {
   padding: 0;
-  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 /* Stacked, not side-by-side: the two tables aren't meant to be compared
@@ -269,12 +287,14 @@
    squeezing Open issues' two prose columns into a too-narrow flex block.
    Stacking also means neither table needs a breakpoint to stay full-width
    at any viewport size. */
+/* Light backdrop restored here specifically, now that there's no outer
+   white card providing one — sits on the dark canvas otherwise. */
 .detail-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-05);
-  padding: var(--spacing-03) var(--spacing-02) var(--spacing-04);
-  background: var(--color-cream-200);
+  gap: var(--spacing-04);
+  padding: var(--spacing-04);
+  background: var(--color-surface-tertiary);
 }
 
 .detail-block {
@@ -285,7 +305,8 @@
 .detail-title {
   font-size: 13px;
   font-weight: 700;
-  margin: 0 0 var(--spacing-01);
+  margin: 0 0 var(--spacing-02);
+  color: var(--color-text-primary);
 }
 
 .issue-empty {
@@ -301,35 +322,31 @@
   overflow-x: auto;
 }
 
+/* Deliberately minimal: no box (no background/border-radius of its own —
+   it's plain text on the panel's light backdrop, not a nested card), no
+   uppercase header treatment, no per-row borders. A single hairline under
+   the header is the only rule; rows are separated by padding, not lines. */
 .issue-table {
   width: 100%;
   min-width: 640px;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 13px;
-  background: var(--color-grey-1000);
-  border-radius: var(--radius-sm);
 }
 
 .issue-table th {
   text-align: left;
-  padding: var(--spacing-01) var(--spacing-02);
+  padding: 0 var(--spacing-02) var(--spacing-01) 0;
   color: var(--color-text-muted);
   font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--color-border-default);
+  font-weight: 400;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .issue-table td {
-  padding: var(--spacing-02);
-  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--spacing-02) var(--spacing-02) var(--spacing-02) 0;
   vertical-align: top;
   word-break: break-word;
-}
-
-.issue-table tbody tr:last-child td {
-  border-bottom: none;
 }
 
 /* Fixed-width columns; the remaining (unset) columns — What failed,
