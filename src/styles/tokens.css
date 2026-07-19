@@ -206,15 +206,15 @@
 
   /* Button small-size label text style. */
   --text-label: 13px;
-  --text-label--line-height: 1.4;
+  --text-label--line-height: 1.45;
   /* Button large-size label text; also the large-size value/label text for
      every Input-family control (Input/Select/Textarea/Checkbox). */
   --text-h6: 18px;
-  --text-h6--line-height: 1.3;
+  --text-h6--line-height: 1.35;
   /* Card's date/time/description text; also the small-size value/label
      text for every Input-family control. */
   --text-paragraph-small: 15px;
-  --text-paragraph-small--line-height: 1.6;
+  --text-paragraph-small--line-height: 1.65;
   /* Card's title text style — the only place the Recoleta display face
      is used. */
   --text-h3: 36px;
