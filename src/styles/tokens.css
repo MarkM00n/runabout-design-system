@@ -10,12 +10,17 @@
   /* Button primary variant's fill on hover. */
   --color-action-primary-hover: #df8e10;
   /* Button secondary variant's fill in its default state (transparent).
-     Not yet wired to a component via this token name — Secondary uses a
-     literal bg-transparent — included for completeness of the Figma
-     semantic layer. */
+     Aliases Alpha/White-0 in Figma (confirmed 2026-07-19 — the Alpha scale
+     is a real primitive collection in the file, just bound to no canvas
+     node, which is why the original token sync's node-binding search
+     missed it). Not yet wired to a component via this token name —
+     Secondary uses a literal bg-transparent — included for completeness of
+     the Figma semantic layer. */
   --color-action-secondary: rgba(255, 255, 255, 0);
   /* Button secondary variant's fill on hover — a white overlay at 10%
-     opacity, not a solid color, so it reads correctly over any background. */
+     opacity, not a solid color, so it reads correctly over any background.
+     Aliases Alpha/White-10 in Figma (confirmed 2026-07-19) — the one alpha
+     step with a real component consumer. */
   --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
   /* Button accent variant's fill (default/disabled state); also Button
      link variant's default text color. */
@@ -158,12 +163,12 @@
   --color-state-error: #b91c1c;
 
   /* Full primitive-tier palette ramps (Figma's "Primitives" variable
-     collection, 75 variables total as of the 2026-07-19 token sync — was
-     71, +Amber/25, +Olive/75, +Green/100, +Red/100). These sit underneath
-     the semantic tokens above — some semantic tokens alias directly into
-     these ramps (documented in the comments above), most of the ramp is
-     not consumed by any built component yet. sand-400 is the one primitive
-     with an existing, real consumer (Card). */
+     collection, 81 variables total as of the 2026-07-19 token sync — was
+     71, +Amber/25, +Olive/75, +Green/100, +Red/100, +6 Alpha steps). These
+     sit underneath the semantic tokens above — some semantic tokens alias
+     directly into these ramps (documented in the comments above), most of
+     the ramp is not consumed by any built component yet. sand-400 is the
+     one primitive with an existing, real consumer (Card). */
   --color-sand-100: #f3dbbc;
   --color-sand-200: #f4dfc3;
   --color-sand-300: #f6e3cb;
@@ -266,6 +271,20 @@
   /* New primitive family in the 2026-07-19 token sync. Aliased by
      state-error. */
   --color-red-100: #b91c1c;
+
+  /* Figma's Alpha primitive scale — added after the initial 2026-07-19
+     sync, since it's bound to no canvas node and only readable directly
+     from the Primitives variable collection, not any node-binding search.
+     Olive/100 (#5d6440) at four opacity steps: defined-but-unused,
+     reserved for overlays and scrims, not text-bearing surfaces. */
+  --color-alpha-olive-10: rgba(93, 100, 64, 0.1);
+  --color-alpha-olive-20: rgba(93, 100, 64, 0.2);
+  --color-alpha-olive-40: rgba(93, 100, 64, 0.4);
+  --color-alpha-olive-60: rgba(93, 100, 64, 0.6);
+  /* White at two opacity steps — the two alpha primitives already aliased
+     by action-secondary/action-secondary-hover above. */
+  --color-alpha-white-0: rgba(255, 255, 255, 0);
+  --color-alpha-white-10: rgba(255, 255, 255, 0.1);
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off

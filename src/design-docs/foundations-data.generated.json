@@ -30,7 +30,7 @@
       "name": "--color-action-secondary",
       "tokenPath": "color.action.secondary",
       "value": "rgba(255, 255, 255, 0)",
-      "usage": "Transparent — Button's secondary variant fill in its default state. Not yet wired to a component via this token name (Secondary uses a literal bg-transparent); included for completeness of the Figma semantic layer.",
+      "usage": "Transparent — Button's secondary variant fill in its default state. Aliases Alpha/White-0 in Figma (confirmed 2026-07-19 — the Alpha scale is a real primitive collection in the file, just bound to no canvas node, which is why it wasn't found in the original sync's node-binding search). Not yet wired to a component via this token name (Secondary uses a literal bg-transparent); included for completeness of the Figma semantic layer.",
       "documented": true,
       "consumedBy": []
     },
@@ -40,7 +40,7 @@
       "name": "--color-action-secondary-hover",
       "tokenPath": "color.action.secondary-hover",
       "value": "rgba(255, 255, 255, 0.1)",
-      "usage": "Button secondary variant's fill on hover — a white overlay at 10% opacity, not a solid color, so it reads correctly over any background.",
+      "usage": "Aliases Alpha/White-10 in Figma (confirmed 2026-07-19). Unlike action-secondary above, this one has a real consumer: Button's secondary variant hover state (hover:bg-action-secondary-hover).",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -436,7 +436,7 @@
       "name": "--color-sand-100",
       "tokenPath": "color.sand.100",
       "value": "#f3dbbc",
-      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 75 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
+      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 81 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100, +6 Alpha steps). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
       "documented": true,
       "consumedBy": []
     },
@@ -446,7 +446,7 @@
       "name": "--color-sand-200",
       "tokenPath": "color.sand.200",
       "value": "#f4dfc3",
-      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 75 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
+      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 81 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100, +6 Alpha steps). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
       "documented": true,
       "consumedBy": []
     },
@@ -456,7 +456,7 @@
       "name": "--color-sand-300",
       "tokenPath": "color.sand.300",
       "value": "#f6e3cb",
-      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 75 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
+      "usage": "Full primitive-tier palette ramps (Figma's \"Primitives\" variable collection, 81 variables total as of the 2026-07-19 token sync — was 71, +Amber/25, +Olive/75, +Green/100, +Red/100, +6 Alpha steps). These sit underneath the semantic tokens above — some semantic tokens alias directly into these ramps (documented in the comments above), most of the ramp is not consumed by any built component yet. sand-400 is the one primitive with an existing, real consumer (Card).",
       "documented": true,
       "consumedBy": []
     },
@@ -1179,6 +1179,66 @@
       "tokenPath": "color.red.100",
       "value": "#b91c1c",
       "usage": "New primitive family in the 2026-07-19 token sync. Aliased by state.error.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-olive-10",
+      "tokenPath": "color.alpha.olive-10",
+      "value": "rgba(93, 100, 64, 0.1)",
+      "usage": "New in the 2026-07-19 token sync (added later, after the initial sync missed it — it's bound to no canvas node in Figma, only readable directly from the Primitives variable collection). Olive/100 (#5d6440) at 10% opacity. Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces. Not yet used by any built component.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-olive-20",
+      "tokenPath": "color.alpha.olive-20",
+      "value": "rgba(93, 100, 64, 0.2)",
+      "usage": "New in the 2026-07-19 token sync. Olive/100 (#5d6440) at 20% opacity. Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces. Not yet used by any built component.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-olive-40",
+      "tokenPath": "color.alpha.olive-40",
+      "value": "rgba(93, 100, 64, 0.4)",
+      "usage": "New in the 2026-07-19 token sync. Olive/100 (#5d6440) at 40% opacity. Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces. Not yet used by any built component.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-olive-60",
+      "tokenPath": "color.alpha.olive-60",
+      "value": "rgba(93, 100, 64, 0.6)",
+      "usage": "New in the 2026-07-19 token sync. Olive/100 (#5d6440) at 60% opacity. Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces. Not yet used by any built component.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-white-0",
+      "tokenPath": "color.alpha.white-0",
+      "value": "rgba(255, 255, 255, 0)",
+      "usage": "New in the 2026-07-19 token sync. White at 0% opacity. Aliased by action.secondary — see that token's note.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-alpha-white-10",
+      "tokenPath": "color.alpha.white-10",
+      "value": "rgba(255, 255, 255, 0.1)",
+      "usage": "New in the 2026-07-19 token sync. White at 10% opacity. Aliased by action.secondary-hover — see that token's note. The one alpha step with a real component consumer (via action-secondary-hover).",
       "documented": true,
       "consumedBy": []
     }
