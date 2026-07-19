@@ -860,10 +860,25 @@ const FOUNDATION_PAGE_CATEGORY = {
 };
 
 // Associates each `--token: value;` declaration in the @theme block with
-// whatever comment immediately precedes it. A comment stays "pending" and
-// applies to every subsequent token until a blank line resets it or a new
-// comment replaces it — matching how tokens.css's own multi-token comment
-// blocks are written (e.g. one comment covering all 4 spacing tokens).
+// whatever comment immediately precedes it. A comment applies ONLY to the
+// single token directly beneath it — consumed and cleared the moment it's
+// used, never carried forward to later tokens in the same contiguous
+// (no-blank-line) run, even if no blank line separates them.
+//
+// An earlier version let a comment stay "pending" until a blank line or a
+// replacement comment appeared, so one comment could deliberately cover a
+// whole multi-token block (e.g. the spacing ramp's single "px, not rem"
+// note). That was caught in PR cross-review as a real bug, not a feature:
+// it let one token's specific note bleed across an entire unrelated ramp
+// whenever a new single-token comment was added without a following blank
+// line — every Amber step inherited Amber/25's "new token" note,
+// Terracotta 200-900 inherited Terracotta/100's "darkened" note while
+// actually being unchanged, Olive 100-900 inherited Olive/75's "new,
+// inferred" note. Per-token-only trades away the one legitimate
+// multi-token case (spacing's tokens now fall back to the generic spacing
+// description instead of the shared px-not-rem note) to make that whole
+// class of bug impossible — a genuinely shared note now has to be repeated
+// above each token it applies to, not implied by adjacency.
 function extractCssTokenComments(cssRaw) {
   const themeStart = cssRaw.indexOf('@theme');
   if (themeStart === -1) return {};
@@ -914,6 +929,10 @@ function extractCssTokenComments(cssRaw) {
     const tokenMatch = line.match(/^--([a-z0-9-]+)\s*:/i);
     if (tokenMatch && pending) {
       comments[tokenMatch[1]] = pending;
+      // Consumed — a comment describes only the token directly beneath it,
+      // never subsequent ones in the same contiguous run. See the note
+      // above this function for why this doesn't just reset on blank lines.
+      pending = null;
     }
   }
   return comments;
@@ -949,6 +968,9 @@ const PRIMITIVE_COLOR_FAMILIES = new Set([
   'olive',
   'grey',
   'cream',
+  'green',
+  'red',
+  'alpha',
 ]);
 
 function isPrimitiveColorGroup(group) {

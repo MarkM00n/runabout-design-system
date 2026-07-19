@@ -46,15 +46,17 @@
   --color-border-subtle: #f6e3cb;
   /* Aliases Olive/50 in Figma. Not yet used by any built component. */
   --color-border-strong: #3d4a2e;
-  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma —
-     inferred by pattern-matching the light/dark pairing convention
-     (text-link/text-button alias Amber/25 on light surfaces, their
-     -inverse counterparts alias Amber/400 on dark ones); not independently
-     confirmed, since no node in the file has this token bound and the
-     Surface Pairings spec doesn't list a border pairing. Candidate fix for
-     the border-focus contrast regression noted above — not wired into
-     Checkbox or Button by this sync, left for design review. */
-  --color-border-focus-inverse: #eab460;
+  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma —
+     confirmed directly by the token's creator during PR cross-review
+     (2026-07-19), correcting an initial pattern-matched guess of Amber/400
+     (#eab460). Same value as action-highlight/action-primary-hover/
+     text-highlight-inverse, kept distinct per convention. On the surfaces
+     it was meant to fix: clears WCAG 1.4.11's 3:1 minimum on
+     surface-inverse (5.3:1), surface-secondary (3.61:1), and
+     surface-emphasis (5.37:1) — but still falls short on surface-feature
+     (2.18:1, the Card CTA case). Not wired into Checkbox or Button by this
+     sync, left for design review. */
+  --color-border-focus-inverse: #df8e10;
 
   /* Default body text color; also the typed-value color for Input-family
      controls when focused (see Input's placeholder-vs-value reconstruction). */
@@ -91,30 +93,35 @@
      dark-surface counterpart of text-button. Not yet used by any built
      component. */
   --color-text-button-inverse: #eab460;
-  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma — value
-     confirmed by back-solving the Figma "Surface Pairings" spec's stated
-     contrast ratios (5.3:1 on surface-inverse, 5.4:1 on surface-emphasis)
-     against the primitive ramp, since no node in the file has this token
-     bound directly. Same value as action-highlight/action-primary-hover,
-     kept distinct per convention. Not yet used by any built component. */
+  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma —
+     originally back-solved by matching the Figma "Surface Pairings" spec's
+     stated contrast ratios (5.3:1 on surface-inverse, 5.4:1 on
+     surface-emphasis) against the primitive ramp, since no node in the
+     file had this token bound directly. Confirmed exactly right during PR
+     cross-review (2026-07-19). Same value as action-highlight/
+     action-primary-hover, kept distinct per convention. Not yet used by
+     any built component. */
   --color-text-highlight-inverse: #df8e10;
-  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — value
-     confirmed by back-solving the Figma "Surface Pairings" spec's stated
-     11.8:1 ratio on action-primary against the primitive ramp, since no
-     node in the file has this token bound directly. Same value as
+  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma —
+     originally back-solved by matching the Figma "Surface Pairings" spec's
+     stated 11.8:1 ratio on action-primary against the primitive ramp,
+     since no node in the file had this token bound directly. Confirmed
+     exactly right during PR cross-review (2026-07-19). Same value as
      text-primary, kept distinct per convention. Not yet used by any built
      component. */
   --color-text-on-action: #2f2c28;
-  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — value
-     confirmed by back-solving the Figma "Surface Pairings" spec's stated
-     5.3:1 ratio on action-highlight against the primitive ramp, since no
-     node in the file has this token bound directly. Not yet used by any
+  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma —
+     originally back-solved by matching the Figma "Surface Pairings" spec's
+     stated 5.3:1 ratio on action-highlight against the primitive ramp,
+     since no node in the file had this token bound directly. Confirmed
+     exactly right during PR cross-review (2026-07-19). Not yet used by any
      built component. */
   --color-text-on-highlight: #2f2c28;
-  /* New in the 2026-07-19 token sync. Aliases Sand/500 in Figma — value
-     confirmed by back-solving the Figma "Surface Pairings" spec's stated
-     4.9:1 ratio on surface-feature against the primitive ramp, since no
-     node in the file has this token bound directly. Same value as
+  /* New in the 2026-07-19 token sync. Aliases Sand/500 in Figma —
+     originally back-solved by matching the Figma "Surface Pairings" spec's
+     stated 4.9:1 ratio on surface-feature against the primitive ramp,
+     since no node in the file had this token bound directly. Confirmed
+     exactly right during PR cross-review (2026-07-19). Same value as
      text-inverse, kept distinct per convention (this is the dedicated
      feature-surface text token). Not yet used by any built component. */
   --color-text-on-feature: #f8ebda;
@@ -138,10 +145,12 @@
      by any built component (no Modal built yet). */
   --color-surface-scrim: #1d1b19;
   /* New in the 2026-07-19 token sync. Confirmed via a live Figma variable
-     binding. Aliases Olive/75 — inferred, not independently confirmed:
-     #4a5435 sits almost exactly at the linear midpoint of Olive/50
-     (#3d4a2e) and Olive/100 (#5d6440), matching the ramp-step naming the
-     sync request expected. Not yet used by any built component. */
+     binding. Aliases Olive/75 (VariableID 242:2) — confirmed to exist
+     during PR cross-review (2026-07-19); the initial sync had correctly
+     inferred both the value and the ramp-step name from #4a5435 sitting
+     almost exactly at the linear midpoint of Olive/50 (#3d4a2e) and
+     Olive/100 (#5d6440), but had flagged it as unconfirmed pending
+     designer sign-off. Not yet used by any built component. */
   --color-surface-card: #4a5435;
 
   /* Background fill for Input-family controls on hover. */
@@ -234,9 +243,9 @@
 
   --color-olive-25: #2a2d1e;
   --color-olive-50: #3d4a2e;
-  /* New in the 2026-07-19 token sync. Inferred, not independently
-     confirmed — see --color-surface-card above for how this value was
-     derived. */
+  /* New in the 2026-07-19 token sync. VariableID 242:2, confirmed during
+     PR cross-review (2026-07-19) — see --color-surface-card above for how
+     the value was originally derived, ahead of that confirmation. */
   --color-olive-75: #4a5435;
   --color-olive-100: #5d6440;
   --color-olive-200: #6f7555;
@@ -275,43 +284,74 @@
   /* Figma's Alpha primitive scale — added after the initial 2026-07-19
      sync, since it's bound to no canvas node and only readable directly
      from the Primitives variable collection, not any node-binding search.
-     Olive/100 (#5d6440) at four opacity steps: defined-but-unused,
-     reserved for overlays and scrims, not text-bearing surfaces. */
+     Olive/100 (#5d6440) at 10% opacity. Defined-but-unused: reserved for
+     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-10: rgba(93, 100, 64, 0.1);
+  /* Olive/100 (#5d6440) at 20% opacity. Defined-but-unused: reserved for
+     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-20: rgba(93, 100, 64, 0.2);
+  /* Olive/100 (#5d6440) at 40% opacity. Defined-but-unused: reserved for
+     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-40: rgba(93, 100, 64, 0.4);
+  /* Olive/100 (#5d6440) at 60% opacity. Defined-but-unused: reserved for
+     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-60: rgba(93, 100, 64, 0.6);
-  /* White at two opacity steps — the two alpha primitives already aliased
-     by action-secondary/action-secondary-hover above. */
+  /* White at 0% opacity. Aliased by action-secondary — see that token's
+     comment above. */
   --color-alpha-white-0: rgba(255, 255, 255, 0);
+  /* White at 10% opacity. Aliased by action-secondary-hover — see that
+     token's comment above. The one alpha step with a real component
+     consumer. */
   --color-alpha-white-10: rgba(255, 255, 255, 0.1);
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off
      its nominal value. Design tokens must stay pixel-exact regardless of the
-     host's font-size choice. */
+     host's font-size choice. Repeated on every step below (not left to
+     bleed across the ramp by adjacency) — see design-sync.js's
+     extractCssTokenComments for why a comment no longer implicitly covers
+     more than the one token directly beneath it. */
   --spacing-00: 4px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-01: 8px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-02: 16px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-03: 24px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-04: 32px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-05: 40px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-06: 48px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-07: 64px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-08: 80px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-09: 96px;
+  /* px, not rem — see spacing-00's comment above for why. */
   --spacing-10: 128px;
 
   /* Overrides Tailwind's default rounded-none/xs/sm/md/lg/xl/2xl/full scale
      to match the full extracted radius ramp (Figma's "Corner Radius"
-     collection, 8 steps). */
+     collection, 8 steps). Repeated on every step below — see
+     design-sync.js's extractCssTokenComments for why a comment no longer
+     implicitly covers more than the one token directly beneath it. */
   --radius-none: 0px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-xs: 2px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-sm: 4px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-md: 8px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-lg: 12px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-xl: 16px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-2xl: 24px;
+  /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-full: 9999px;
 
   --font-manrope: 'Manrope', system-ui, sans-serif;

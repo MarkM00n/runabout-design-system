@@ -323,17 +323,20 @@ surface).
   the same darkening that produced Amber/25 drops their contrast to ~2.3:1
   against `surface-inverse`/`surface-secondary` — under the WCAG 1.4.11 3:1
   minimum a focus indicator needs against its surroundings.
-  `border-focus-inverse` (`#eab460`) exists in the token set as a candidate
-  fix but was deliberately **not** wired into any component by the
-  2026-07-19 sync — see that sync's validation report before adopting it.
+  `border-focus-inverse` (`#df8e10`, Amber/100 — confirmed by the token's
+  creator during PR cross-review, correcting an initial pattern-matched
+  guess of Amber/400) exists in the token set as a partial fix: it clears
+  3:1 on `surface-inverse`/`surface-secondary`/`surface-emphasis`, but still
+  falls short on `surface-feature` (2.18:1 — the Card CTA case). Deliberately
+  **not** wired into any component by the 2026-07-19 sync — see that sync's
+  validation report before adopting it.
 - **`text-on-action`, `text-on-highlight`, `text-on-feature`, and
-  `text-highlight-inverse` have no live Figma node binding to confirm their
-  hex against** — Figma's own documentation pages hadn't caught up to these
-  tokens at sync time. Their values were back-solved from the ratios in this
-  table against the confirmed primitive ramp (see the corresponding
-  `tokens.css` comments for the exact derivation). Treat as high-confidence,
-  not Figma-verified — re-confirm against a live binding if Figma's docs
-  catch up.
+  `text-highlight-inverse` had no live Figma node binding to confirm their
+  hex against at sync time** — Figma's own documentation pages hadn't
+  caught up to these tokens yet. Their values were back-solved from the
+  ratios in this table against the confirmed primitive ramp (see the
+  corresponding `tokens.css` comments for the exact derivation), then
+  confirmed exactly right during PR cross-review.
 
 ## Sourcing Figma data
 
