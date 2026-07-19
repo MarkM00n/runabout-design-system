@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-18T22:21:41.425Z",
-  "validationReportGeneratedAt": "2026-07-18T22:21:41.124Z",
+  "generatedAt": "2026-07-19T03:23:04.182Z",
+  "validationReportGeneratedAt": "2026-07-19T03:23:03.925Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
@@ -73,7 +73,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
       "pr": {
         "number": 1,
@@ -141,7 +141,7 @@
       "openWarnCount": 2,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-card--docs",
       "pr": {
         "number": 1,
@@ -190,7 +190,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-checkbox--docs",
       "pr": {
         "number": 2,
@@ -239,7 +239,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-input--docs",
       "pr": {
         "number": 1,
@@ -288,7 +288,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-select--docs",
       "pr": {
         "number": 2,
@@ -337,7 +337,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-18",
+      "lastValidated": "2026-07-19",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-textarea--docs",
       "pr": {
         "number": 2,
