@@ -29,12 +29,27 @@
   --color-border-default: #f8ebda;
   /* Focus-ring border for Button primary/secondary/link and every
      Input-family control. Button accent's focus ring uses border-default
-     instead — a real, literal Figma difference, not an inconsistency. */
-  --color-border-focus: #df8e10;
+     instead — a real, literal Figma difference, not an inconsistency.
+     Changed from #df8e10 (Amber/100) to #88570a (Amber/25) in the
+     2026-07-19 token sync. Still fine against light surfaces (~5.2:1), but
+     now only ~2.3:1 against the dark/colored surfaces Button's secondary
+     variant and Checkbox use — below the WCAG 1.4.11 3:1 minimum for a
+     focus indicator. Flagged, not fixed — see the sync's validation report
+     and --color-border-focus-inverse below. */
+  --color-border-focus: #88570a;
   /* Hover-state border color for every Input-family control. */
   --color-border-subtle: #f6e3cb;
   /* Aliases Olive/50 in Figma. Not yet used by any built component. */
   --color-border-strong: #3d4a2e;
+  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma —
+     inferred by pattern-matching the light/dark pairing convention
+     (text-link/text-button alias Amber/25 on light surfaces, their
+     -inverse counterparts alias Amber/400 on dark ones); not independently
+     confirmed, since no node in the file has this token bound and the
+     Surface Pairings spec doesn't list a border pairing. Candidate fix for
+     the border-focus contrast regression noted above — not wired into
+     Checkbox or Button by this sync, left for design review. */
+  --color-border-focus-inverse: #eab460;
 
   /* Default body text color; also the typed-value color for Input-family
      controls when focused (see Input's placeholder-vs-value reconstruction). */
@@ -50,8 +65,54 @@
   --color-text-muted: #8b8a88;
   /* Checkbox's checkmark glyph binds to this rather than border-focus/
      action-highlight — same value, distinct token, kept separate per the
-     established convention. */
-  --color-text-highlight: #df8e10;
+     established convention. Changed from #df8e10 (Amber/100) to #88570a
+     (Amber/25) in the 2026-07-19 token sync — moved in lockstep with
+     border-focus/state-focus, so it no longer matches action-highlight's
+     value the way it used to. */
+  --color-text-highlight: #88570a;
+  /* New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet
+     used by any built component — Button's link variant currently binds to
+     action-highlight instead; that's a pre-existing divergence, not
+     something this sync changed. */
+  --color-text-link: #88570a;
+  /* New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet
+     used by any built component. */
+  --color-text-button: #88570a;
+  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the
+     dark-surface counterpart of text-link. Not yet used by any built
+     component. */
+  --color-text-link-inverse: #eab460;
+  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the
+     dark-surface counterpart of text-button. Not yet used by any built
+     component. */
+  --color-text-button-inverse: #eab460;
+  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma — value
+     confirmed by back-solving the Figma "Surface Pairings" spec's stated
+     contrast ratios (5.3:1 on surface-inverse, 5.4:1 on surface-emphasis)
+     against the primitive ramp, since no node in the file has this token
+     bound directly. Same value as action-highlight/action-primary-hover,
+     kept distinct per convention. Not yet used by any built component. */
+  --color-text-highlight-inverse: #df8e10;
+  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — value
+     confirmed by back-solving the Figma "Surface Pairings" spec's stated
+     11.8:1 ratio on action-primary against the primitive ramp, since no
+     node in the file has this token bound directly. Same value as
+     text-primary, kept distinct per convention. Not yet used by any built
+     component. */
+  --color-text-on-action: #2f2c28;
+  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — value
+     confirmed by back-solving the Figma "Surface Pairings" spec's stated
+     5.3:1 ratio on action-highlight against the primitive ramp, since no
+     node in the file has this token bound directly. Not yet used by any
+     built component. */
+  --color-text-on-highlight: #2f2c28;
+  /* New in the 2026-07-19 token sync. Aliases Sand/500 in Figma — value
+     confirmed by back-solving the Figma "Surface Pairings" spec's stated
+     4.9:1 ratio on surface-feature against the primitive ramp, since no
+     node in the file has this token bound directly. Same value as
+     text-inverse, kept distinct per convention (this is the dedicated
+     feature-surface text token). Not yet used by any built component. */
+  --color-text-on-feature: #f8ebda;
 
   /* Default background fill for every Input-family control. */
   --color-surface-primary: #f7e7d2;
@@ -62,34 +123,47 @@
   /* Aliases Grey/100 in Figma. Not yet used by any built component. */
   --color-surface-inverse: #2f2c28;
   /* Bound to Card's background in Figma; distinct token from surface-primary
-     even though unrelated in value. */
-  --color-surface-feature: #c4582a;
+     even though unrelated in value. Darkened from #c4582a to #a74b24 in the
+     2026-07-19 token sync (Terracotta/100 darkened) so text-inverse reaches
+     AA contrast on this surface. */
+  --color-surface-feature: #a74b24;
   /* Aliases Olive/25 in Figma. Not yet used by any built component. */
   --color-surface-emphasis: #2a2d1e;
   /* Aliases Grey/50 in Figma — for modal/overlay backdrops. Not yet used
      by any built component (no Modal built yet). */
   --color-surface-scrim: #1d1b19;
+  /* New in the 2026-07-19 token sync. Confirmed via a live Figma variable
+     binding. Aliases Olive/75 — inferred, not independently confirmed:
+     #4a5435 sits almost exactly at the linear midpoint of Olive/50
+     (#3d4a2e) and Olive/100 (#5d6440), matching the ramp-step naming the
+     sync request expected. Not yet used by any built component. */
+  --color-surface-card: #4a5435;
 
   /* Background fill for Input-family controls on hover. */
   --color-state-hover: #f6e3cb;
   /* Border color for Input-family controls in the disabled state. */
   --color-state-disabled: #8b8a88;
-  /* Aliases Amber/100 in Figma. Not yet used by any built component —
-     border-focus is what components currently reference for focus styling. */
-  --color-state-focus: #df8e10;
-  /* Not aliased to a primitive in Figma — a standalone value. Not yet used
-     by any built component. */
-  --color-state-success: #16a34a;
-  /* Not aliased to a primitive in Figma — a standalone value. Not yet used
-     by any built component. */
-  --color-state-error: #dc2626;
+  /* Aliases Amber/25 in Figma. Not yet used by any built component —
+     border-focus is what components currently reference for focus styling,
+     and its value moved in lockstep with this one. Changed from #df8e10
+     (Amber/100) in the 2026-07-19 token sync. */
+  --color-state-focus: #88570a;
+  /* Aliases Green/100 in Figma — changed from the previously-unaliased
+     #16a34a in the 2026-07-19 token sync, which also formalized Green/100
+     as a primitive. Not yet used by any built component. */
+  --color-state-success: #166534;
+  /* Aliases Red/100 in Figma — changed from the previously-unaliased
+     #dc2626 in the 2026-07-19 token sync, which also formalized Red/100 as
+     a primitive. Not yet used by any built component. */
+  --color-state-error: #b91c1c;
 
   /* Full primitive-tier palette ramps (Figma's "Primitives" variable
-     collection, 71 variables total). These sit underneath the semantic
-     tokens above — some semantic tokens alias directly into these ramps
-     (documented in the comments above), most of the ramp is not consumed
-     by any built component yet. sand-400 is the one primitive with an
-     existing, real consumer (Card). */
+     collection, 75 variables total as of the 2026-07-19 token sync — was
+     71, +Amber/25, +Olive/75, +Green/100, +Red/100). These sit underneath
+     the semantic tokens above — some semantic tokens alias directly into
+     these ramps (documented in the comments above), most of the ramp is
+     not consumed by any built component yet. sand-400 is the one primitive
+     with an existing, real consumer (Card). */
   --color-sand-100: #f3dbbc;
   --color-sand-200: #f4dfc3;
   --color-sand-300: #f6e3cb;
@@ -104,7 +178,9 @@
   --color-sand-800: #fcf7f0;
   --color-sand-900: #fefbf8;
 
-  --color-terracotta-100: #c4582a;
+  /* Darkened from #c4582a in the 2026-07-19 token sync so surface-feature
+     keeps AA text contrast. Steps 200-900 are unchanged. */
+  --color-terracotta-100: #a74b24;
   --color-terracotta-200: #cb6c43;
   --color-terracotta-300: #d2805c;
   --color-terracotta-400: #d99375;
@@ -135,6 +211,11 @@
   --color-burgundy-800: #d2caca;
   --color-burgundy-900: #e8e4e5;
 
+  /* New in the 2026-07-19 token sync — a darker amber step added so
+     text-highlight/border-focus/state-focus/text-link/text-button reach AA
+     contrast on light surfaces. Named "Amber/25" in Figma's own Full Token
+     Registry documentation. */
+  --color-amber-25: #88570a;
   --color-amber-50: #c07b0e;
   --color-amber-100: #df8e10;
   --color-amber-200: #e39b2b;
@@ -148,6 +229,10 @@
 
   --color-olive-25: #2a2d1e;
   --color-olive-50: #3d4a2e;
+  /* New in the 2026-07-19 token sync. Inferred, not independently
+     confirmed — see --color-surface-card above for how this value was
+     derived. */
+  --color-olive-75: #4a5435;
   --color-olive-100: #5d6440;
   --color-olive-200: #6f7555;
   --color-olive-300: #81866a;
@@ -171,7 +256,16 @@
   --color-grey-1000: #ffffff;
 
   --color-cream-100: #f9ecd2;
-  --color-cream-200: #ebe9e3;
+  /* Renamed from --color-cream-200 in the 2026-07-19 token sync — same
+     value (#ebe9e3), Figma re-numbered the ramp step. */
+  --color-cream-50: #ebe9e3;
+
+  /* New primitive family in the 2026-07-19 token sync. Aliased by
+     state-success. */
+  --color-green-100: #166534;
+  /* New primitive family in the 2026-07-19 token sync. Aliased by
+     state-error. */
+  --color-red-100: #b91c1c;
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off

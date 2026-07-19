@@ -287,6 +287,54 @@ the pages render that, they don't hand-list token values.
   explicitly aliases into (e.g. `sand-400`, consumed directly by `Card`)
   carry a real per-token comment on top of that fallback.
 
+## 7. Surface pairings
+
+Every text/link/button token pairs with exactly one surface — components
+never choose text colours freely; the surface decides. Sourced from Figma's
+"Surface Pairings" spec (`Design System` file, node `235:14`) and
+cross-checked against a real WCAG 2.1 contrast calculation for every pairing
+below, not eyeballed. Regenerated 2026-07-19 from a token sync that darkened
+`border-focus`/`text-highlight`/`state-focus` (Amber/100 → Amber/25,
+`#df8e10` → `#88570a`) and `surface-feature` (Terracotta/100 darkened,
+`#c4582a` → `#a74b24`, specifically so `text-inverse` clears AA on that
+surface).
+
+| Surface | Text tokens · contrast ratio |
+|---|---|
+| `surface-primary` (`#f7e7d2`) | text-primary · 11.5:1 · text-secondary · 5.1:1 · text-muted · 5.6:1 · text-link · 5.1:1 · text-button · 5.1:1 · text-highlight · 5.1:1 · state-error · 5.3:1 · state-success · 5.9:1 |
+| `surface-secondary` (`#3d4a2e`) | text-inverse · 8.1:1 · text-link-inverse · 5.0:1 · text-button-inverse · 5.0:1 |
+| `surface-tertiary` (`#fefbf8`) | text-primary · 13.5:1 · text-secondary · 6.1:1 · text-muted · 6.6:1 · text-link · 6.0:1 · text-button · 6.0:1 · text-highlight · 6.0:1 · state-error · 6.3:1 · state-success · 6.9:1 |
+| `surface-inverse` (`#2f2c28`) | text-inverse · 11.8:1 · text-highlight-inverse · 5.3:1 · text-link-inverse · 7.4:1 · text-button-inverse · 7.4:1 |
+| `surface-feature` (`#a74b24`) | text-on-feature · 4.9:1 · text-inverse · 4.9:1 |
+| `surface-emphasis` (`#2a2d1e`) | text-inverse · 12.0:1 · text-highlight-inverse · 5.4:1 · text-link-inverse · 7.5:1 · text-button-inverse · 7.5:1 |
+| `action-primary` (`#f8ebda`) | text-on-action · 11.8:1 · text-link · 5.2:1 · text-button · 5.2:1 · text-highlight · 5.2:1 |
+| `action-highlight` (`#df8e10`) | text-on-highlight · 5.3:1 |
+
+- **`surface-feature` has no amber primitive that clears AA against it** — it
+  sits at mid-luminance, so no shade of amber (the interactive-text family)
+  gets there. That's why it gets its own dedicated `text-on-feature` token
+  (aliasing the same value as `text-inverse`, `#f8ebda`) instead of
+  `text-link`/`text-button`/`text-highlight`. Links on `surface-feature`
+  additionally get an underline for distinction from body copy, since colour
+  alone can't separate them here — see Checkbox-style patterns for how a
+  non-colour affordance substitutes when contrast rules out a colour one.
+- **This table covers text contrast, not border contrast** —
+  `border-focus`/`state-focus` (both `#88570a`, Amber/25) aren't in it, but
+  the same darkening that produced Amber/25 drops their contrast to ~2.3:1
+  against `surface-inverse`/`surface-secondary` — under the WCAG 1.4.11 3:1
+  minimum a focus indicator needs against its surroundings.
+  `border-focus-inverse` (`#eab460`) exists in the token set as a candidate
+  fix but was deliberately **not** wired into any component by the
+  2026-07-19 sync — see that sync's validation report before adopting it.
+- **`text-on-action`, `text-on-highlight`, `text-on-feature`, and
+  `text-highlight-inverse` have no live Figma node binding to confirm their
+  hex against** — Figma's own documentation pages hadn't caught up to these
+  tokens at sync time. Their values were back-solved from the ratios in this
+  table against the confirmed primitive ramp (see the corresponding
+  `tokens.css` comments for the exact derivation). Treat as high-confidence,
+  not Figma-verified — re-confirm against a live binding if Figma's docs
+  catch up.
+
 ## Sourcing Figma data
 
 - Use the `use_figma` tool (Plugin API) for inspection, not `get_metadata`
