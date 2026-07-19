@@ -44,3 +44,33 @@ locally is strictly better than catching it there.
 `docs/design-system-rules.md` is the source of truth for *why* each rule
 exists, including edge cases this summary doesn't spell out — read it, not
 just this file, before making a judgment call it might already cover.
+
+## Generated files never get hand-merged
+
+`src/design-docs/*.generated.json` and every component's
+`*.validation.json` are fully derived from `tokens.css`/`tokens.json` (and,
+for dashboard-data, git history) — never hand-edit them, and never resolve
+a merge conflict in one by picking lines from either side. Two branches
+that each ran `npm run design-sync`/`npm run dashboard-data` independently
+will produce two different snapshots of the same computed file, and a
+line-based merge of those is never the right answer regardless of which
+side "wins."
+
+The fix is two-layered:
+
+- **`.gitattributes`** marks these paths `merge=ours`, so a local merge or
+  rebase touching them never produces conflict markers — git just keeps
+  the current side and moves on. `package.json`'s `prepare` script
+  registers the `ours` driver in `.git/config` automatically on
+  `npm install`/`npm ci` (silently no-ops outside a git repo); without
+  that one-time registration `.gitattributes` alone doesn't do anything —
+  git warns and falls back to a normal merge.
+- **Regenerate after, always.** `merge=ours` picking a side is never
+  itself the correct answer — it just guarantees the merge doesn't block
+  on these paths. After merging or rebasing anything that touches
+  `tokens.css`/`tokens.json`, run `npm run design-sync && npm run
+  dashboard-data` and commit whatever changes. `.github/workflows/
+  deploy-storybook.yml` does this automatically on every push to `main`,
+  which keeps `main` from ever carrying a stale snapshot into the next
+  branch that merges — that staleness is what turns an unrelated PR into a
+  generated-file conflict in the first place.

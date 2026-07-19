@@ -1,0 +1,20 @@
+# Generated files — never hand-merge these. They're fully derived from
+# tokens.css/tokens.json (and, for dashboard-data, git history) by
+# scripts/design-sync.js and scripts/generate-dashboard-data.js; a
+# line-based 3-way merge across two branches that each regenerated the
+# same file independently produces either a spurious conflict or a
+# "successful" merge that's really just whichever side's diff happened to
+# apply cleanly — neither is a real answer. `merge=ours` makes git skip
+# the merge for these paths entirely and keep the current side, no
+# conflict markers, no partial-line-merge risk. That's fine specifically
+# because the correct post-merge content isn't "ours" or "theirs" — it's
+# whatever `npm run design-sync && npm run dashboard-data` produces
+# against the merged tokens, which must be run afterward regardless of
+# what this driver picked. See package.json's `prepare` script, which
+# registers the `ours` driver locally on `npm install`/`npm ci` — without
+# that one-time config, git silently falls back to a normal merge for
+# these paths instead of erroring, so this file alone doesn't guarantee
+# the behavior; re-run `npm run design-sync`/`npm run dashboard-data`
+# after any merge that touches tokens.css/tokens.json regardless.
+src/design-docs/*.generated.json merge=ours
+src/components/*/*.validation.json merge=ours

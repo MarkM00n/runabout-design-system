@@ -7,11 +7,12 @@
      (dark olive) + text-inverse (8.07:1).
    - Both tables (Errors-caught and Component status) now share the same
      .table-card treatment: a dark surface-inverse header row over zebra
-     surface-tertiary/cream-200 body rows, so — unlike the raw canvas —
+     surface-tertiary/cream-50 body rows, so — unlike the raw canvas —
      their content uses LIGHT-surface-safe colors (text-primary,
      amber-100 for warn, state-error for fail), scoped in below via
      .table-card. Nothing table-related is styled for the dark canvas
-     directly anymore. */
+     directly anymore. cream-50 was renamed from cream-200 in the
+     2026-07-19 token sync (same value, #ebe9e3). */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -76,13 +77,15 @@
 }
 
 /* Card style per stat, same warm accent Card itself uses for its
-   background — surface-feature is a mid-lightness terracotta, so nothing
-   in the palette clears 4.5:1 against it at small text sizes (checked:
-   text-inverse ~3.74:1, grey-50 ~3.91:1 — both real numbers, neither hits
-   normal-text AA). text-inverse is used anyway for consistency with Card's
-   own established text-sand-400-on-surface-feature pairing elsewhere in
-   this system, and the metric number itself is sized/weighted well past
-   the large-text-bold threshold (≥3:1), where 3.74:1 does pass cleanly. */
+   background. surface-feature was darkened (Terracotta/100: #c4582a ->
+   #a74b24) in the 2026-07-19 token sync, which changes this pairing's
+   contrast: text-inverse now clears normal-text AA outright (~4.87:1, was
+   ~3.74:1 and failing); grey-50 improved too but still falls short
+   (~3.0:1, was ~3.91:1 — both real numbers, neither hits normal-text AA).
+   text-inverse is used anyway for consistency with Card's own established
+   text-sand-400-on-surface-feature pairing elsewhere in this system, and
+   the metric number itself is sized/weighted well past the
+   large-text-bold threshold (>=3:1), where 4.87:1 passes cleanly. */
 .metric-tile {
   min-width: 0;
   box-sizing: border-box;
@@ -185,7 +188,7 @@
 
 /* Table style copied from the Figma reference frame (Design System file,
    node 89:402, "table"): dark surface-inverse header row with text-inverse
-   labels, zebra body rows alternating surface-tertiary/cream-200, spacing-02
+   labels, zebra body rows alternating surface-tertiary/cream-50, spacing-02
    (16px) cell padding, radius-xl clipped corners. Plain sentence-case
    headers (not the dashboard's usual uppercase/letter-spacing treatment)
    to match that frame exactly.
@@ -237,7 +240,7 @@
 }
 
 .table-card .row-odd {
-  background: var(--color-cream-200);
+  background: var(--color-cream-50);
 }
 
 .table-card .cell-links a,
@@ -248,11 +251,11 @@
 
 /* state-error, not rose-300 — rose-300's dark-canvas WCAG carve-out
    (19px/bold to legally hit the large-text 3:1 minimum) doesn't apply
-   here; state-error clears normal-text AA outright on the lighter zebra
-   row (4.68:1 on surface-tertiary) and is close on the darker one
-   (3.98:1 on cream-200 — a real, checked, small miss on that specific
-   row, not a guess; bold weight is the only mitigation applied, since
-   Fail is 0 everywhere today and this isn't visibly reachable yet). */
+   here. state-error was darkened (#dc2626 -> #b91c1c) in the 2026-07-19
+   token sync, which resolves what used to be a real, checked, small AA
+   miss on the darker zebra row: it now clears normal-text AA on both rows
+   outright (6.28:1 on surface-tertiary, 5.33:1 on cream-50 — was 4.68:1
+   and 3.98:1/failing respectively). */
 .table-card .cell-fail {
   color: var(--color-state-error);
   font-size: var(--text-label);
@@ -425,7 +428,7 @@
 }
 
 /* Component status's Overall column — light-safe colors since this table's
-   rows are the zebra surface-tertiary/cream-200 treatment, not the dark
+   rows are the zebra surface-tertiary/cream-50 treatment, not the dark
    canvas. Three states, not two: pass-with-warnings gets its own amber
    between clean-pass green and blocking-fail red. */
 .status-badge {

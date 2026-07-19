@@ -38,27 +38,38 @@ jobs:
       - run: npm run design-sync
       - name: Regenerate dashboard data
         run: npm run dashboard-data
-      - name: Commit dashboard data if changed
+      - name: Commit regenerated data if changed
         run: |
-          if git diff --quiet -- src/design-docs/dashboard-data.generated.json; then
-            echo "dashboard-data.generated.json unchanged — nothing to commit"
+          # Every *.generated.json under src/design-docs/ (dashboard-data,
+          # foundations-data, validation-report) plus each component's
+          # *.validation.json — everything `npm run design-sync` and
+          # `npm run dashboard-data` write. Broadened from just
+          # dashboard-data.generated.json so main never carries a stale
+          # snapshot of the other four into whatever branch merges next —
+          # a stale snapshot there is exactly what turns an unrelated PR's
+          # merge into a generated-file conflict (see .gitattributes'
+          # merge=ours for the branch-local half of that fix).
+          GENERATED_PATHS="src/design-docs/*.generated.json src/components/*/*.validation.json"
+          if git diff --quiet -- $GENERATED_PATHS; then
+            echo "Generated files unchanged — nothing to commit"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add src/design-docs/dashboard-data.generated.json
+            git add $GENERATED_PATHS
             # GITHUB_TOKEN-authored pushes don't trigger further workflow
             # runs (GitHub's built-in loop guard), but [skip ci] is kept as
             # a second line of defense in case the push credential ever
             # changes to a PAT.
-            git commit -m "chore: regenerate dashboard data [skip ci]"
+            git commit -m "chore: regenerate derived data [skip ci]"
 
             # Two merges landing within seconds of each other can move main
             # out from under this job between checkout and push — a real
             # failure seen in production (PR #11 and #12 merging back to
             # back), not a hypothetical. Retry with a rebase onto the latest
             # main rather than failing the job over a conflict that isn't
-            # real: this commit only ever touches one generated file, so a
-            # rebase here is always clean in practice.
+            # real: this commit only ever touches generated files, and
+            # .gitattributes' merge=ours for those paths keeps a rebase here
+            # conflict-free even if main moved.
             pushed=false
             for attempt in 1 2 3 4 5; do
               if git push origin HEAD:main; then
@@ -70,7 +81,7 @@ jobs:
               git rebase origin/main
             done
             if [ "$pushed" != true ]; then
-              echo "::error::Failed to push dashboard data after 5 attempts."
+              echo "::error::Failed to push regenerated data after 5 attempts."
               exit 1
             fi
           fi
