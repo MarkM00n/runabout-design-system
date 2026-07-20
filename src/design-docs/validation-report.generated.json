@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T04:06:29.280Z",
+  "generatedAt": "2026-07-20T05:49:12.992Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -11,8 +11,67 @@
   },
   "components": [
     {
+      "component": "Badge",
+      "lastValidated": "2026-07-20",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "history": [
+        {
+          "checkType": "documentationCoverage",
+          "file": "src/components/Badge/Badge.docs.ts",
+          "line": null,
+          "message": "There's no example showing how to use this component in code (this was auto-filled and still needs a person to write the real version).",
+          "fix": "Add a short, real example of how this component is typically used.",
+          "resolvedAt": "2026-07-20"
+        }
+      ],
+      "overall": true,
+      "status": "pass",
+      "tokensUsed": [
+        "color-state-error",
+        "color-state-focus",
+        "color-state-success",
+        "color-surface-inverse",
+        "color-text-inverse",
+        "font-manrope",
+        "radius-full",
+        "spacing-00",
+        "spacing-01",
+        "spacing-02",
+        "text-label"
+      ]
+    },
+    {
       "component": "Button",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -69,7 +128,7 @@
     },
     {
       "component": "Card",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -134,7 +193,7 @@
     },
     {
       "component": "Checkbox",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -188,7 +247,7 @@
     },
     {
       "component": "Input",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -241,7 +300,7 @@
     },
     {
       "component": "Select",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -294,7 +353,7 @@
     },
     {
       "component": "Textarea",
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-20",
       "checks": {
         "tokenCompliance": {
           "pass": true,
