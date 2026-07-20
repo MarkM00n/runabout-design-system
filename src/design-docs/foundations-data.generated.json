@@ -411,6 +411,16 @@
       "value": "#88570a",
       "usage": "Aliases Amber/25 in Figma — changed from #df8e10 (Amber/100) in the 2026-07-19 token sync. Not yet used by any built component — border-focus is what components currently reference for focus styling, and its value moved in lockstep with this one.",
       "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-state-warning",
+      "tokenPath": "color.state.warning",
+      "value": "#88570a",
+      "usage": "Aliases Amber/25 in Figma. Badge's Warning variant background — Figma rebound this from state.focus to its own dedicated variable on 2026-07-20; same value, new binding.",
+      "documented": true,
       "consumedBy": [
         "Badge"
       ]

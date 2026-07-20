@@ -162,6 +162,10 @@
      and its value moved in lockstep with this one. Changed from #df8e10
      (Amber/100) in the 2026-07-19 token sync. */
   --color-state-focus: #88570a;
+  /* Aliases Amber/25 in Figma. Badge's Warning variant background — Figma
+     rebound this from state-focus to its own dedicated variable on
+     2026-07-20; same value, new binding. */
+  --color-state-warning: #88570a;
   /* Aliases Green/100 in Figma — changed from the previously-unaliased
      #16a34a in the 2026-07-19 token sync, which also formalized Green/100
      as a primitive. Not yet used by any built component. */

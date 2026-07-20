@@ -45,8 +45,8 @@
   "status": "pass",
   "tokensUsed": [
     "color-state-error",
-    "color-state-focus",
     "color-state-success",
+    "color-state-warning",
     "color-surface-inverse",
     "color-text-inverse",
     "font-manrope",

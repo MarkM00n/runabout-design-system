@@ -28,10 +28,7 @@ const sizeStyles: Record<BadgeSize, string> = {
 const variantStyles: Record<BadgeVariant, string> = {
   neutral: 'bg-surface-inverse',
   success: 'bg-state-success',
-  // Figma's variable is literally named "state/state-focus" but is bound to
-  // Badge's Warning variant here, not a focus ring (border-focus is a
-  // distinct token/value) — this is the real Figma binding, not a mistake.
-  warning: 'bg-state-focus',
+  warning: 'bg-state-warning',
   error: 'bg-state-error',
 };
 

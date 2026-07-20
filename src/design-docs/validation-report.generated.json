@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T05:49:12.992Z",
+  "generatedAt": "2026-07-20T06:04:05.846Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -57,8 +57,8 @@
       "status": "pass",
       "tokensUsed": [
         "color-state-error",
-        "color-state-focus",
         "color-state-success",
+        "color-state-warning",
         "color-surface-inverse",
         "color-text-inverse",
         "font-manrope",
