@@ -1,0 +1,83 @@
+name: Slack PR notification
+
+# Only fires once a PR is ready for a human to look at. A freshly opened PR
+# (draft or not) and a draft that gets new commits stay between the author
+# and CI — the channel only sees PRs that need a reviewer. `ready_for_review`
+# covers the first ping; `synchronize` (new commits) re-pings, gated below
+# on the PR no longer being a draft.
+on:
+  pull_request:
+    types: [ready_for_review, synchronize]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  notify:
+    # ready_for_review always has draft == false by the time this fires, so
+    # this one check covers both trigger types: notify on the transition to
+    # ready, and on later commits as long as the PR is still (or now) ready.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need the PR's base commit reachable to diff against and to check
+          # whether a touched component's directory existed before this PR.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Informational, same as validation-report-comment.yml: a PR that
+      # intentionally introduces a FAIL shouldn't break this notification.
+      - name: Run design-sync
+        continue-on-error: true
+        run: npm run design-sync
+
+      - name: Find existing validation report comment
+        id: validation_comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          url=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '[.[] | select(.body | test("Design System Validation Report"))] | last | .html_url // empty')
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Build Slack payload
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRIGGER_EVENT: ${{ github.event.action }}
+          VALIDATION_COMMENT_URL: ${{ steps.validation_comment.outputs.url }}
+          STORYBOOK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        # Direct node invocation, not `npm run` — see format-validation-comment.js's
+        # step in validation-report-comment.yml for why (npm's banner would land in
+        # the payload body verbatim).
+        run: node scripts/format-slack-notification.js > /tmp/slack-payload.json
+
+      - name: Post to Slack
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        # The notification is informational, never a merge gate — a missing
+        # secret, a bad webhook, or Slack being down must not fail the workflow.
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "::warning::SLACK_WEBHOOK secret is not set — skipping Slack notification. See docs/how-work-flows.md for setup."
+            exit 0
+          fi
+          status_code=$(curl -sS -o /tmp/slack-response.txt -w '%{http_code}' \
+            -X POST -H 'Content-type: application/json' \
+            --data-binary @/tmp/slack-payload.json \
+            "$SLACK_WEBHOOK" || echo "000")
+          if [ "$status_code" != "200" ]; then
+            echo "::warning::Slack notification failed (HTTP $status_code): $(cat /tmp/slack-response.txt 2>/dev/null)"
+          else
+            echo "Slack notification posted."
+          fi
