@@ -18,6 +18,23 @@ A design that isn't ready for AI makes every rule below impossible to
 satisfy honestly — there's nothing to check token compliance or parity
 against if the source itself is ambiguous.
 
+## Fixes belong where the source of truth is
+
+Before fixing anything — a bad value, a mismatch, a bug — work out whether
+the root cause is in the Figma design or in the code. See
+`docs/design-system-rules.md` §8 for the full rule and how to tell the two
+apart; don't skip reading it just because the fix looks obvious.
+
+- **Design-originated** (a token value or binding, a variant name, a
+  missing behavior note): report it in plain language a designer can act
+  on, say exactly what to change in Figma, and stop — don't write a
+  code-side workaround that papers over it.
+- **Code-originated** (implementation, markup, accessibility of the
+  generated output): fix it in code as normal.
+- **Only patch a design problem in code if explicitly asked to**, and label
+  the patch clearly as a temporary workaround — never present it as the
+  real fix.
+
 ## Component work always follows the design system rules
 
 Any request to build, add, modify, or refactor a component under
