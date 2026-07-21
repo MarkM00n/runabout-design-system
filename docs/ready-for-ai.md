@@ -129,8 +129,10 @@ this exact shape:
      (`https://www.figma.com/design/<fileKey>/<fileName>?node-id=<id>`,
      with the node's `:` swapped for a `-`) so it opens with one click.
 
-   Separate each block from the next with a blank line — when there's more
-   than one failure, they must read as distinct blocks, never run together.
+   Put a blank line after the What line, after the Why it matters line, and
+   after the Fix line — each of the four lines reads as its own statement,
+   not a paragraph. Separate one failure block from the next with **two**
+   blank lines, so distinct failures are unmistakably distinct.
 4. **Close with one line:** that re-running this check is the next step
    once the fix is made.
 
@@ -157,21 +159,30 @@ Verdict: NOT READY · 4 of 6 checks passed
 Needs fixing
 
 Colours — no one-off values → Warning / Medium
+
 What: This variant uses a one-off colour instead of the state-warning
 variable every other variant uses.
+
 Why it matters: It happens to match today, but won't follow if
 state-warning changes again.
+
 Fix: Rebind Warning/Medium's fill to the state-warning variable, the
 same binding every other variant already has.
+
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
 
+
 Behaviour notes in the description field → Badge (component set)
+
 What: The description field is empty.
+
 Why it matters: Without it, anyone building from this design has to
 guess at rules like "text truncates at one line" or "pair colour with
 text" instead of reading them.
+
 Fix: Add a short description covering when to use Badge and how it
 behaves, on the component set itself.
+
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-437
 
 Run the check again once that's done.
