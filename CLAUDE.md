@@ -1,5 +1,23 @@
 # Runabout Design System — project instructions
 
+## Every Figma-to-code request starts with a Ready-for-AI check
+
+Before generating any component code from a Figma design (a frame,
+component, or component set), check that design against
+`docs/ready-for-ai.md` — first, before anything else in this file, every
+time, even if the request doesn't mention the check by name.
+
+- **If the design fails any criterion in that file:** stop. Don't generate
+  any component code. Report exactly what's wrong in plain language a
+  designer can act on — which criterion failed and on which layer or
+  property — then offer to fix it.
+- **If it passes:** say so briefly, then continue straight into the normal
+  build workflow below.
+
+A design that isn't ready for AI makes every rule below impossible to
+satisfy honestly — there's nothing to check token compliance or parity
+against if the source itself is ambiguous.
+
 ## Component work always follows the design system rules
 
 Any request to build, add, modify, or refactor a component under
