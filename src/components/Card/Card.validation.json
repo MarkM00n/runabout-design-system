@@ -11,19 +11,19 @@
         {
           "level": "warn",
           "file": "src/components/Card/Card.tsx",
-          "line": 50,
-          "code": "raw-hex:#d9d9d9:50",
-          "message": "This colour (#d9d9d9) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
-          "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
+          "line": 51,
+          "code": "raw-hex:#d9d9d9:51",
+          "message": "This colour (#d9d9d9) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
           "checkType": "tokenCompliance"
         },
         {
           "level": "warn",
           "file": "src/components/Card/Card.tsx",
-          "line": 61,
-          "code": "raw-hex:#f8ebda:61",
-          "message": "This colour (#f8ebda) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
-          "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
+          "line": 63,
+          "code": "raw-hex:#f8ebda:63",
+          "message": "This colour (#f8ebda) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
           "checkType": "tokenCompliance"
         }
       ]
@@ -50,7 +50,24 @@
       "open": []
     }
   },
-  "history": [],
+  "history": [
+    {
+      "checkType": "tokenCompliance",
+      "file": "src/components/Card/Card.tsx",
+      "line": 50,
+      "message": "This colour (#d9d9d9) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+      "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
+      "resolvedAt": "2026-07-21"
+    },
+    {
+      "checkType": "tokenCompliance",
+      "file": "src/components/Card/Card.tsx",
+      "line": 61,
+      "message": "This colour (#f8ebda) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
+      "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
+      "resolvedAt": "2026-07-21"
+    }
+  ],
   "overall": true,
   "status": "pass-with-warnings",
   "tokensUsed": [
