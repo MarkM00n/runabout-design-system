@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T05:50:01.258Z",
+  "generatedAt": "2026-07-21T10:36:44.761Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -113,8 +113,14 @@
         "color-action-secondary-hover",
         "color-border-default",
         "color-border-focus",
+        "color-border-focus-on-highlight",
+        "color-state-disabled",
         "color-surface-primary",
+        "color-text-button",
+        "color-text-button-inverse",
         "color-text-inverse",
+        "color-text-on-action",
+        "color-text-on-highlight",
         "color-text-primary",
         "font-manrope",
         "radius-2xl",
