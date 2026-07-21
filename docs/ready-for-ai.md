@@ -107,34 +107,49 @@ which one, in plain language, before writing any code.
 
 ## How to report results
 
-This check's audience is a designer, not an engineer — report every run in
-this exact shape:
+This check's audience is a designer, not an engineer, and the report is
+often read over a screen-share — output it as **real, rendered markdown in
+the chat response, never inside a single code fence.** A code fence forces
+everything into flat monospace text and throws away every bit of the
+hierarchy below; the fenced blocks in this doc are only there so the raw
+markup is visible on the page, not a model for how to actually report.
 
-1. **Verdict line, on its own line, with a count:**
-   `READY · 6 of 6 checks passed` or, e.g.,
-   `NOT READY · 5 of 6 checks passed`.
-2. **All six checks, every run, as a clean list** — a status marker and the
-   check's name only, nothing else on the line:
-   - ✓ (green) — passes cleanly.
-   - ! (amber) — passes, but something's worth flagging (e.g. correct today
-     but fragile, or a borderline case).
-   - ✗ (red) — fails.
-3. **A "Needs fixing" section underneath, one block per failing check**
-   (skip this section entirely when the verdict is `READY`). Each block:
-   - **Heading:** the check's name and which variant or layer it's on.
-   - **What:** what's wrong, in plain words.
-   - **Why it matters:** the concrete consequence of leaving it as-is.
-   - **Fix:** the exact Figma-side change that resolves it.
-   - **Figma link:** a direct link to that node
+Chat surfaces can't tint arbitrary text, so colour is carried by emoji,
+which render in full colour everywhere: ✅ (green), ⚠️ (amber), ❌ (red),
+🟢/🔴 for the verdict circle. Report every run in this exact shape:
+
+1. **Verdict line, on its own line, bold, with a colour and a count:**
+   🟢 for `READY`, 🔴 for `NOT READY` — e.g.
+   `🔴 **NOT READY · 5 of 6 checks passed**`.
+2. **A horizontal rule (`---`), then all six checks as an indented,
+   bulleted list** — a colour-coded status emoji and the check's name only,
+   nothing else on the line:
+   - ✅ — passes cleanly.
+   - ⚠️ — passes, but something's worth flagging (e.g. correct today but
+     fragile, or a borderline case).
+   - ❌ — fails.
+3. **Another horizontal rule, then a bold "Needs fixing" heading, then one
+   block per failing check** (skip this whole section, its rules, and the
+   closing line when the verdict is `READY`). Each block:
+   - **Heading, bold:** the failing check's name, then `→`, then which
+     variant or layer it's on — e.g. **Colours — no one-off values** →
+     Warning / Medium.
+   - An indented (blockquoted) group of three statements, one per line,
+     each its own line with a blank line after it:
+     - **What:** what's wrong, in plain words.
+     - **Why it matters:** the concrete consequence of leaving it as-is.
+     - **Fix:** the exact Figma-side change that resolves it.
+   - **Figma link, on its own line, flush left — not indented, not inside
+     the blockquote** — so the URL never wraps awkwardly under an indent:
+     a direct link to that node
      (`https://www.figma.com/design/<fileKey>/<fileName>?node-id=<id>`,
      with the node's `:` swapped for a `-`) so it opens with one click.
 
-   Put a blank line after the What line, after the Why it matters line, and
-   after the Fix line — each of the four lines reads as its own statement,
-   not a paragraph. Separate one failure block from the next with **two**
-   blank lines, so distinct failures are unmistakably distinct.
-4. **Close with one line:** that re-running this check is the next step
-   once the fix is made.
+   Separate one failure block from the next with **two** blank lines, so
+   distinct failures are unmistakably distinct from each other, not just
+   from the indented statements inside a single block.
+4. **A final horizontal rule, then one line:** that re-running this check
+   is the next step once the fix is made.
 
 **No code syntax anywhere in this report** — no Tailwind classes, no CSS
 variable references, no `bg-[var(--x,#y)]`-style strings. Translate to
@@ -144,46 +159,54 @@ Technical detail (the exact token name, the raw hex, which tool call
 surfaced it) is for when it's asked for directly — keep it out of the
 default report.
 
-Example — a run that fails two checks, everything else clean:
+Example — the raw markdown source for a run that fails two checks,
+everything else clean (shown fenced here only so the markup itself is
+visible on this page; report it unfenced, letting it render):
 
-```
-Verdict: NOT READY · 4 of 6 checks passed
+````markdown
+🔴 **NOT READY · 4 of 6 checks passed**
 
-✓ Built from real design system components
-✗ Colours — no one-off values
-✓ Sizes — no one-off values
-✓ Spacing — no one-off values
-✓ Clearly named variants and options
-✗ Behaviour notes in the description field
+---
 
-Needs fixing
+- ✅ Built from real design system components
+- ❌ Colours — no one-off values
+- ✅ Sizes — no one-off values
+- ✅ Spacing — no one-off values
+- ✅ Clearly named variants and options
+- ❌ Behaviour notes in the description field
 
-Colours — no one-off values → Warning / Medium
+---
 
-What: This variant uses a one-off colour instead of the state-warning
-variable every other variant uses.
+**Needs fixing**
 
-Why it matters: It happens to match today, but won't follow if
-state-warning changes again.
+**Colours — no one-off values** → Warning / Medium
 
-Fix: Rebind Warning/Medium's fill to the state-warning variable, the
-same binding every other variant already has.
+> What: This variant uses a one-off colour instead of the state-warning
+> variable every other variant uses.
+>
+> Why it matters: It happens to match today, but won't follow if
+> state-warning changes again.
+>
+> Fix: Rebind Warning/Medium's fill to the state-warning variable, the
+> same binding every other variant already has.
 
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
 
 
-Behaviour notes in the description field → Badge (component set)
+**Behaviour notes in the description field** → Badge (component set)
 
-What: The description field is empty.
-
-Why it matters: Without it, anyone building from this design has to
-guess at rules like "text truncates at one line" or "pair colour with
-text" instead of reading them.
-
-Fix: Add a short description covering when to use Badge and how it
-behaves, on the component set itself.
+> What: The description field is empty.
+>
+> Why it matters: Without it, anyone building from this design has to
+> guess at rules like "text truncates at one line" or "pair colour with
+> text" instead of reading them.
+>
+> Fix: Add a short description covering when to use Badge and how it
+> behaves, on the component set itself.
 
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-437
 
+---
+
 Run the check again once that's done.
-```
+````
