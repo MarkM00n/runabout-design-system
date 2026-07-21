@@ -32,7 +32,10 @@ later, and it gives whoever builds from it nothing to trace back to.
   this check by default — there's nothing to have detached or redrawn instead.
 - **Fail looks like:** a "button" that's actually a detached instance, or a
   plain frame with a fill and a text layer, sitting next to real `Button`
-  instances elsewhere in the same file.
+  instances elsewhere in the same file. If nothing suitable exists anywhere
+  in the libraries actually added to this file, that's a different
+  outcome — a system-level gap, not an instance fail — see "Before
+  reporting a failure" below for how to tell the two apart.
 
 ## 2. Colours bound to variables
 
@@ -109,6 +112,34 @@ component's name, leaves that judgment call to whoever builds it.
 
 All six must pass. A single failing check is enough to block — report
 which one, in plain language, before writing any code.
+
+## Before reporting a failure
+
+Two things get verified before any "What" or "Fix" text gets written.
+Getting either wrong doesn't just weaken the report — it sends someone
+chasing a fix that doesn't exist, or blames a layer that was never at
+fault.
+
+- **Confirm the fix is actually possible in this file before instructing
+  it.** "Use a library component" is only a valid fix if a suitable
+  component is genuinely available here. Check `get_libraries` —
+  specifically `libraries_added_to_file`, not `libraries_available_to_add`
+  — before naming one as the fix. A broad `search_design_system` match
+  isn't enough on its own: it can surface components from libraries the
+  org has access to but this specific file has never added. If nothing
+  suitable is added to the file, this isn't a fixable instance-level
+  problem — it's a system-level gap. Report it as one and stop there,
+  rather than inventing a fix that can't actually be carried out: "there
+  is no icon library in this file — icons are raw vectors. This is a gap
+  in the design system, not a fault in this component."
+- **Verify the exact failing layer directly — never infer it from a
+  neighbour.** Don't assume which layer failed from a sibling's generated
+  code, from "colour usually means the text," or from a pattern that
+  matched a different bug found earlier. Check the specific node's own
+  bindings (`get_variable_defs`, or a live read via `use_figma`) before
+  naming it in a report. Name the real Figma layer by its actual layer
+  name and type — "the icon vector, not the label text" — never a
+  plausible-looking layer nearby.
 
 ## How to report results
 
