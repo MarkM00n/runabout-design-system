@@ -419,7 +419,7 @@
       "name": "--color-state-warning",
       "tokenPath": "color.state.warning",
       "value": "#88570a",
-      "usage": "Aliases Amber/25 in Figma. Badge's Warning variant background — Figma rebound this from state.focus to its own dedicated variable on 2026-07-20; same value, new binding.",
+      "usage": "Aliases Amber/25 in Figma. Badge's Warning variant background — Figma rebound this from state.focus to its own dedicated variable on 2026-07-20. Briefly moved to #c07b0e/Amber/50 in a 2026-07-21 re-check, which failed WCAG AA against text-inverse (2.94:1, needs 4.5:1, confirmed via Storybook's a11y addon on the Warning story); rebound back to Amber/25 in Figma the same day once that was flagged.",
       "documented": true,
       "consumedBy": [
         "Badge"
