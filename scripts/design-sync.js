@@ -679,6 +679,21 @@ export function checkDocumentation(name, dir, storiesSource, docsResult, tokensU
     });
   }
 
+  // A docs file can exist, parse, and have real content while never actually
+  // reaching Storybook — the shared DocsPage template only renders it if the
+  // story imports it and threads it into parameters.designSystem. Checking
+  // the docs file in isolation (above) can't catch that gap; this can.
+  if (exists && data && !/designSystem:\s*docs\b/.test(storiesSource)) {
+    issues.push({
+      level: 'fail',
+      file: storiesFile,
+      line: null,
+      code: 'docs-not-wired',
+      message: "This component's documentation was written but never connected to Storybook — the story doesn't import it and pass it as parameters.designSystem, so the Docs page falls back to the bare auto-generated prop table instead of showing it.",
+      fix: `Import docs from './${name}.docs' and validation from './${name}.validation.json', then add designSystem: docs and designSystemValidation: validation to the story's parameters — see an existing component's .stories.tsx for the pattern.`,
+    });
+  }
+
   const storyExportCount = (storiesSource.match(/export const \w+: Story/g) ?? []).length;
   if (storyExportCount === 0) {
     issues.push({
