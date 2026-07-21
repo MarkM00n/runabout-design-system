@@ -22,26 +22,27 @@
      Aliases Alpha/White-10 in Figma (confirmed 2026-07-19) — the one alpha
      step with a real component consumer. */
   --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
-  /* Button accent variant's fill (default/disabled state); also Button
-     link variant's default text color. */
+  /* Button accent variant's fill in its default and focused states. */
   --color-action-highlight: #df8e10;
-  /* Button accent variant's fill on hover; also Button link variant's
-     hover text color. */
-  --color-action-highlight-hover: #c07b0e;
+  /* Button accent variant's fill on hover. Aliases Amber/200 in Figma —
+     rebound from Amber/50 (#c07b0e) in the 2026-07-21 re-check found while
+     building Button; this was also the fix for a real WCAG failure —
+     Amber/50 measured only 4.02:1 against Accent's text-primary label,
+     under the 4.5:1 minimum (SC 1.4.3). Amber/200 clears it at 5.95:1. */
+  --color-action-highlight-hover: #e39b2b;
 
   /* Button secondary variant's resting border; also the resting border for
      every Input-family control (Input/Select/Textarea/Checkbox). */
   --color-border-default: #f8ebda;
   /* Focus-ring border for Button primary/secondary/link and every
-     Input-family control. Button accent's focus ring uses border-default
-     instead — a real, literal Figma difference, not an inconsistency.
-     Changed from #df8e10 (Amber/100) to #88570a (Amber/25) in the
-     2026-07-19 token sync. Still fine against light surfaces (~5.2:1), but
-     now only ~2.3:1 against the dark/colored surfaces Button's secondary
-     variant and Checkbox use — below the WCAG 1.4.11 3:1 minimum for a
-     focus indicator. Flagged, not fixed — see the sync's validation report
-     and --color-border-focus-inverse below. */
-  --color-border-focus: #88570a;
+     Input-family control. Aliases Blue/100 in Figma — rebound from Amber/25
+     (#88570a) in a 2026-07-21 re-check found while building Button; this
+     moved in lockstep with state-focus's own Amber/25 -> Blue/100 rebind
+     earlier that day. Button accent's focus ring does NOT use this token —
+     it binds its own dedicated border-focus-on-highlight below, since
+     Blue/100 measures only 1.47:1 against accent's action-highlight fill
+     (fails WCAG 1.4.11's 3:1 non-text minimum; see that token's comment). */
+  --color-border-focus: #307cff;
   /* Hover-state border color for every Input-family control. */
   --color-border-subtle: #f6e3cb;
   /* Aliases Olive/50 in Figma. Not yet used by any built component. */
@@ -57,6 +58,14 @@
      (2.18:1, the Card CTA case). Not wired into Checkbox or Button by this
      sync, left for design review. */
   --color-border-focus-inverse: #df8e10;
+  /* New 2026-07-21. Aliases Blue/25 in Figma. Button accent's Focused-state
+     ring only — border-focus (Blue/100, #307cff) measures 1.47:1 against
+     accent's action-highlight fill (#df8e10), well short of WCAG 1.4.11's
+     3:1 non-text minimum. This darker blue clears it at 3.96:1, and still
+     clears 8.83:1 against action-primary if ever reused there. Scoped to
+     accent specifically — border-focus is unchanged and still what every
+     other Button variant and every Input-family control uses. */
+  --color-border-focus-on-highlight: #1e3a8a;
 
   /* Default body text color; also the typed-value color for Input-family
      controls when focused (see Input's placeholder-vs-value reconstruction). */
@@ -82,16 +91,23 @@
      action-highlight instead; that's a pre-existing divergence, not
      something this sync changed. */
   --color-text-link: #88570a;
-  /* New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet
-     used by any built component. */
+  /* Aliases Amber/25 in Figma. Went through two rebinds the same day while
+     building Button: Amber/25 (#88570a) originally -> Amber/100 (#df8e10),
+     which measured only 2.62:1 against white (and worse, ~2.2:1, against
+     the system's actual light surfaces action-primary/surface-primary) —
+     under WCAG 1.4.3's 4.5:1 minimum. Rebound back to Amber/25 once that
+     was flagged, which clears AA everywhere checked (~5.1-6.2:1). Button
+     link's Default state binds to this directly. */
   --color-text-button: #88570a;
   /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the
      dark-surface counterpart of text-link. Not yet used by any built
      component. */
   --color-text-link-inverse: #eab460;
-  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the
-     dark-surface counterpart of text-button. Not yet used by any built
-     component. */
+  /* Aliases Amber/400 in Figma. Went through two rebinds the same day while
+     building Button: Amber/400 (#eab460) originally -> Amber/300
+     (#e6a745), then back to Amber/400 alongside text-button's own
+     Amber/100 -> Amber/25 revert. Button link's Hover and Focused states
+     both bind to this directly. */
   --color-text-button-inverse: #eab460;
   /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma —
      originally back-solved by matching the Figma "Surface Pairings" spec's
@@ -107,15 +123,18 @@
      stated 11.8:1 ratio on action-primary against the primitive ramp,
      since no node in the file had this token bound directly. Confirmed
      exactly right during PR cross-review (2026-07-19). Same value as
-     text-primary, kept distinct per convention. Not yet used by any built
-     component. */
+     text-primary, kept distinct per convention. Button primary's Default,
+     Hover, and Focused label text binds to this directly (Disabled keeps
+     text-primary — confirmed as two genuinely separate bindings, not
+     collapsed just because the value matches). */
   --color-text-on-action: #2f2c28;
   /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma —
      originally back-solved by matching the Figma "Surface Pairings" spec's
      stated 5.3:1 ratio on action-highlight against the primitive ramp,
      since no node in the file had this token bound directly. Confirmed
-     exactly right during PR cross-review (2026-07-19). Not yet used by any
-     built component. */
+     exactly right during PR cross-review (2026-07-19). Button accent's
+     Default, Hover, and Focused label text binds to this directly (Disabled
+     keeps text-primary, same distinction as text-on-action above). */
   --color-text-on-highlight: #2f2c28;
   /* New in the 2026-07-19 token sync. Aliases Sand/500 in Figma —
      originally back-solved by matching the Figma "Surface Pairings" spec's
@@ -155,8 +174,11 @@
 
   /* Background fill for Input-family controls on hover. */
   --color-state-hover: #f6e3cb;
-  /* Border color for Input-family controls in the disabled state. */
-  --color-state-disabled: #8b8a88;
+  /* Border color for Input-family controls in the disabled state; also
+     Button link's disabled-state label text. Aliases Olive/400 in Figma —
+     rebound from Grey/500 (#8b8a88) in a 2026-07-21 re-check found while
+     building Button. */
+  --color-state-disabled: #939880;
   /* Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from
      Amber/25 (#88570a), which state-focus previously shared with
      state-warning/border-focus by coincidence rather than real relation.
@@ -290,8 +312,15 @@
   /* New primitive family in the 2026-07-19 token sync. Aliased by
      state-error. */
   --color-red-100: #b91c1c;
-  /* New primitive family, added 2026-07-21. Aliased by state-focus. */
+  /* New primitive family, added 2026-07-21. Aliased by state-focus and, as
+     of a same-day re-check, border-focus too (border-focus had moved off
+     Amber/25 in lockstep with state-focus's own rebind). */
   --color-blue-100: #307cff;
+  /* New 2026-07-21. A darker blue step, same motivation as Amber/25's own
+     history — added specifically because Blue/100 fails WCAG 1.4.11 (3:1
+     non-text contrast) against mid-luminance fills like action-highlight.
+     Aliased by border-focus-on-highlight. */
+  --color-blue-25: #1e3a8a;
 
   /* Figma's Alpha primitive scale — added after the initial 2026-07-19
      sync, since it's bound to no canvas node and only readable directly

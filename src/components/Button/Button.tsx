@@ -27,9 +27,30 @@ const sizeStyles: Record<ButtonSize, string> = {
   small: 'h-[32px] px-02 rounded-xl text-label',
 };
 
+// Figma's Button/Icon "Arrow" (node 265:550, Iconography library) — a
+// trailing arrow every Button variant now shows unconditionally. Embedded
+// as a static path rather than an image export so its colour can follow
+// currentColor like every other token-driven value in this system, instead
+// of baking one flattened raster/vector per state.
+const iconSizeStyles: Record<ButtonSize, string> = {
+  large: 'size-[24px]',
+  small: 'size-[16px]',
+};
+
+const ArrowIcon = ({ size }: { size: ButtonSize }) => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={clsx('shrink-0', iconSizeStyles[size])}
+  >
+    <path d="M13.2673 4.20926C12.9674 3.92357 12.4926 3.93511 12.2069 4.23504C11.9213 4.53497 11.9328 5.0097 12.2327 5.29539L18.4841 11.25H3.75C3.33579 11.25 3 11.5858 3 12C3 12.4142 3.33579 12.75 3.75 12.75H18.4842L12.2327 18.7047C11.9328 18.9904 11.9213 19.4651 12.2069 19.7651C12.4926 20.065 12.9674 20.0765 13.2673 19.7908L20.6862 12.7241C20.8551 12.5632 20.9551 12.358 20.9861 12.1446C20.9952 12.0978 21 12.0495 21 12C21 11.9504 20.9952 11.902 20.986 11.8551C20.955 11.6419 20.855 11.4368 20.6862 11.276L13.2673 4.20926Z" />
+  </svg>
+);
+
 const variantStyles: Record<ButtonVariant, string> = {
   primary: clsx(
-    'bg-action-primary text-text-primary',
+    'bg-action-primary text-text-on-action',
     'hover:bg-action-primary-hover',
     'focus-visible:ring-border-focus',
     'disabled:opacity-40 disabled:bg-action-primary disabled:text-text-primary',
@@ -38,22 +59,27 @@ const variantStyles: Record<ButtonVariant, string> = {
     'bg-transparent text-text-inverse border border-border-default',
     'hover:bg-action-secondary-hover hover:border-text-inverse',
     'focus-visible:border-border-focus focus-visible:ring-border-focus',
+    // Figma's Disabled variant binds no border colour at all here (unlike
+    // every other state) — kept at text-inverse rather than guessing a new
+    // value, since that's what the border already was and nothing in the
+    // source indicates it should change.
     'disabled:opacity-60 disabled:bg-surface-primary disabled:text-text-primary disabled:border-text-inverse',
   ),
   accent: clsx(
-    'bg-action-highlight text-text-primary',
+    'bg-action-highlight text-text-on-highlight',
     'hover:bg-action-highlight-hover',
-    // Figma binds Accent's Focused border to border-default (cream), not border-focus
-    'focus-visible:ring-border-default',
+    // Accent's Focused ring uses its own dedicated token, not border-focus —
+    // border-focus (Blue/100) measures only 1.47:1 against action-highlight,
+    // short of WCAG 1.4.11's 3:1 non-text minimum. border-focus-on-highlight
+    // (Blue/25) clears it at 3.96:1. See tokens.css for the full story.
+    'focus-visible:ring-border-focus-on-highlight',
     'disabled:opacity-40 disabled:bg-surface-primary disabled:text-text-primary disabled:border disabled:border-text-inverse',
   ),
   link: clsx(
-    'bg-transparent text-action-highlight px-0',
-    'hover:text-action-highlight-hover',
-    // No distinct Focused token and no Disabled variant exist for Link in Figma —
-    // ring/opacity below are an accessibility-driven addition, not Figma-sourced.
-    'focus-visible:ring-border-focus',
-    'disabled:opacity-40',
+    'bg-transparent text-text-button',
+    'hover:text-text-button-inverse hover:underline',
+    'focus-visible:ring-border-focus focus-visible:text-text-button-inverse focus-visible:underline',
+    'disabled:opacity-40 disabled:text-state-disabled',
   ),
 };
 
@@ -69,6 +95,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       {...props}
     >
       {children}
+      <ArrowIcon size={size} />
     </button>
   ),
 );

@@ -52,7 +52,7 @@
       "name": "--color-action-highlight",
       "tokenPath": "color.action.highlight",
       "value": "#df8e10",
-      "usage": "Button accent variant's fill (default/disabled state); also Button link variant's default text color.",
+      "usage": "Button accent variant's fill in its default and focused states.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -63,8 +63,8 @@
       "tier": "semantic",
       "name": "--color-action-highlight-hover",
       "tokenPath": "color.action.highlight-hover",
-      "value": "#c07b0e",
-      "usage": "Button accent variant's fill on hover; also Button link variant's hover text color.",
+      "value": "#e39b2b",
+      "usage": "Aliases Amber/200 in Figma — rebound from Amber/50 (#c07b0e) in a 2026-07-21 re-check found while building Button. Amber/50 measured only 4.02:1 against Accent's text-primary label, under WCAG 1.4.3's 4.5:1 minimum; Amber/200 clears it at 5.95:1. Button accent's Hover state binds to this directly.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -91,8 +91,8 @@
       "tier": "semantic",
       "name": "--color-border-focus",
       "tokenPath": "color.border.focus",
-      "value": "#88570a",
-      "usage": "Aliases Amber/25 in Figma — changed from #df8e10 (Amber/100) in the 2026-07-19 token sync. This darkened the focus ring's own contrast against light surfaces (still fine, ~5.2:1) but dropped its contrast to ~2.3:1 against the dark/colored surfaces Button's secondary variant and Checkbox use — see the sync's validation report. Not auto-fixed; components keep using border-focus until reviewed.",
+      "value": "#307cff",
+      "usage": "Aliases Blue/100 in Figma — rebound from Amber/25 (#88570a) in a 2026-07-21 re-check found while building Button; moved in lockstep with state-focus's own Amber/25 -> Blue/100 rebind earlier that day. Button primary/secondary/link's Focused state and every Input-family control bind to this directly. Button accent's Focused state does NOT use this — see border-focus-on-highlight below, since Blue/100 fails WCAG 1.4.11 (1.47:1) against accent's action-highlight fill.",
       "documented": true,
       "consumedBy": [
         "Button",
@@ -136,6 +136,18 @@
       "usage": "New in the 2026-07-19 token sync. Aliases Amber/100 in Figma — confirmed directly by the token's creator during PR cross-review (2026-07-19), correcting an initial pattern-matched guess of Amber/400 (#eab460). Same value as action-highlight/action-primary-hover/text-highlight-inverse, kept distinct per convention. On the surfaces it was meant to fix: clears WCAG 1.4.11's 3:1 minimum on surface-inverse (5.3:1), surface-secondary (3.61:1), and surface-emphasis (5.37:1) — but still falls short on surface-feature (2.18:1, the Card CTA case). Not applied to Checkbox or Button by this sync.",
       "documented": true,
       "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-border-focus-on-highlight",
+      "tokenPath": "color.border.focus-on-highlight",
+      "value": "#1e3a8a",
+      "usage": "New 2026-07-21. Aliases Blue/25 in Figma. Button accent's Focused-state ring only — border-focus (Blue/100) measures 1.47:1 against accent's action-highlight fill, short of WCAG 1.4.11's 3:1 non-text minimum. This darker blue clears it at 3.96:1. Scoped to accent specifically; border-focus is unchanged everywhere else.",
+      "documented": true,
+      "consumedBy": [
+        "Button"
+      ]
     },
     {
       "type": "Color",
@@ -209,7 +221,7 @@
       "name": "--color-text-link",
       "tokenPath": "color.text.link",
       "value": "#88570a",
-      "usage": "New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet used by any built component — Button's link variant currently binds to action-highlight instead; that's a real existing divergence, not something this sync changed.",
+      "usage": "New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet used by any built component — Button's link variant binds to text-button/text-button-inverse instead; that's a real existing divergence, not something this sync changed.",
       "documented": true,
       "consumedBy": []
     },
@@ -219,9 +231,11 @@
       "name": "--color-text-button",
       "tokenPath": "color.text.button",
       "value": "#88570a",
-      "usage": "New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet used by any built component.",
+      "usage": "Aliases Amber/25 in Figma. Went through two rebinds the same day while building Button: Amber/25 originally -> Amber/100 (#df8e10), which measured only 2.62:1 against white (and worse, ~2.2:1, against the system's actual light surfaces action-primary/surface-primary) — under WCAG 1.4.3's 4.5:1 minimum. Rebound back to Amber/25 once that was flagged, which clears AA everywhere checked (~5.1-6.2:1). Button link's Default state binds to this directly.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Button"
+      ]
     },
     {
       "type": "Color",
@@ -239,9 +253,11 @@
       "name": "--color-text-button-inverse",
       "tokenPath": "color.text.button-inverse",
       "value": "#eab460",
-      "usage": "New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the dark-surface counterpart of text-button. Not yet used by any built component.",
+      "usage": "Aliases Amber/400 in Figma. Went through two rebinds the same day while building Button: Amber/400 originally -> Amber/300 (#e6a745), then back to Amber/400 alongside text-button's own Amber/100 -> Amber/25 revert. Button link's Hover and Focused states both bind to this directly.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Button"
+      ]
     },
     {
       "type": "Color",
@@ -259,9 +275,11 @@
       "name": "--color-text-on-action",
       "tokenPath": "color.text.on-action",
       "value": "#2f2c28",
-      "usage": "New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — originally back-solved by matching the Figma 'Surface Pairings' spec's stated 11.8:1 ratio on action-primary against the primitive ramp, since no node in the file had this token bound directly. Confirmed exactly right during PR cross-review (2026-07-19). Same value as text-primary, kept distinct per convention. Not yet used by any built component.",
+      "usage": "New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — originally back-solved by matching the Figma 'Surface Pairings' spec's stated 11.8:1 ratio on action-primary against the primitive ramp, since no node in the file had this token bound directly. Confirmed exactly right during PR cross-review (2026-07-19). Same value as text-primary, kept distinct per convention. Button primary's Default/Hover/Focused label text binds to this directly (Disabled keeps text-primary — a real, separate binding, not collapsed just because the value matches).",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Button"
+      ]
     },
     {
       "type": "Color",
@@ -269,9 +287,11 @@
       "name": "--color-text-on-highlight",
       "tokenPath": "color.text.on-highlight",
       "value": "#2f2c28",
-      "usage": "New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — originally back-solved by matching the Figma 'Surface Pairings' spec's stated 5.3:1 ratio on action-highlight against the primitive ramp, since no node in the file had this token bound directly. Confirmed exactly right during PR cross-review (2026-07-19). Not yet used by any built component.",
+      "usage": "New in the 2026-07-19 token sync. Aliases Grey/100 in Figma — originally back-solved by matching the Figma 'Surface Pairings' spec's stated 5.3:1 ratio on action-highlight against the primitive ramp, since no node in the file had this token bound directly. Confirmed exactly right during PR cross-review (2026-07-19). Button accent's Default/Hover/Focused label text binds to this directly (Disabled keeps text-primary, same distinction as text-on-action above).",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Button"
+      ]
     },
     {
       "type": "Color",
@@ -393,10 +413,11 @@
       "tier": "semantic",
       "name": "--color-state-disabled",
       "tokenPath": "color.state.disabled",
-      "value": "#8b8a88",
-      "usage": "Border color for Input-family controls in the disabled state.",
+      "value": "#939880",
+      "usage": "Aliases Olive/400 in Figma — rebound from Grey/500 (#8b8a88) in a 2026-07-21 re-check found while building Button. Border color for Input-family controls in the disabled state; also Button link's disabled-state label text.",
       "documented": true,
       "consumedBy": [
+        "Button",
         "Checkbox",
         "Input",
         "Select",
@@ -409,7 +430,7 @@
       "name": "--color-state-focus",
       "tokenPath": "color.state.focus",
       "value": "#307cff",
-      "usage": "Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from Amber/25 (#88570a), which state.focus previously shared with state.warning/border.focus by coincidence rather than real relation. Gives \"focus\" its own distinct color now that Badge's Warning variant has its own dedicated state.warning token. Not yet used by any built component — border.focus (unchanged, still Amber/25) is what components currently reference for focus-ring styling.",
+      "usage": "Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from Amber/25 (#88570a), which state.focus previously shared with state.warning/border.focus by coincidence rather than real relation. Gives \"focus\" its own distinct color now that Badge's Warning variant has its own dedicated state.warning token. Not yet used by any built component directly — border.focus is what components reference for focus-ring styling, and it moved to Blue/100 too in a same-day re-check.",
       "documented": true,
       "consumedBy": []
     },
@@ -1204,10 +1225,20 @@
     {
       "type": "Color",
       "tier": "semantic",
+      "name": "--color-blue-25",
+      "tokenPath": "color.blue.25",
+      "value": "#1e3a8a",
+      "usage": "New 2026-07-21. A darker blue step, same motivation as Amber/25's own history — added because Blue/100 fails WCAG 1.4.11 (3:1 non-text contrast) against mid-luminance fills like action-highlight. Aliased by border.focus-on-highlight.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
       "name": "--color-blue-100",
       "tokenPath": "color.blue.100",
       "value": "#307cff",
-      "usage": "New primitive family, added 2026-07-21. Aliased by state.focus.",
+      "usage": "New primitive family, added 2026-07-21. Aliased by state.focus and border.focus.",
       "documented": true,
       "consumedBy": []
     },

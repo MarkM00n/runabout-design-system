@@ -44,6 +44,18 @@ export const Secondary: Story = {
     size: 'large',
     children: 'Button',
   },
+  // Secondary's text/border bind to text-inverse in Figma — a token meant
+  // for a dark/colored surface, not Storybook's plain white canvas (same
+  // reason Checkbox's stories carry this decorator). Scoped to this one
+  // story rather than the whole meta, since Primary/Accent are self-
+  // contained and Link's amber tokens already clear AA on a light surface.
+  decorators: [
+    (Story) => (
+      <div style={{ background: '#2f2c28', padding: 32, borderRadius: 12 }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Accent: Story = {
