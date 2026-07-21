@@ -25,6 +25,10 @@ const {
   PR_TITLE,
   PR_URL,
   PR_AUTHOR,
+  PR_BODY,
+  PR_ADDITIONS,
+  PR_DELETIONS,
+  PR_CHANGED_FILES,
   BASE_SHA,
   HEAD_SHA,
   TRIGGER_EVENT, // 'ready_for_review' | 'synchronize'
@@ -116,6 +120,56 @@ function statusText(status) {
   return 'All checks passed';
 }
 
+function truncate(text, max) {
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+// The PR title is a label, not a description — this pulls the first real
+// line of the PR body so "what changed" says something beyond the title.
+// Skips markdown headings ("## Summary") to land on the first line of
+// actual content.
+function whatChangedLine() {
+  if (!PR_BODY) return null;
+  const line = PR_BODY.split('\n')
+    .map((l) => l.trim())
+    .find((l) => l.length > 0 && !/^#+\s/.test(l));
+  return line ? truncate(line.replace(/^[-*]\s*/, ''), 200) : null;
+}
+
+function diffSizeText() {
+  const files = Number(PR_CHANGED_FILES);
+  const additions = Number(PR_ADDITIONS);
+  const deletions = Number(PR_DELETIONS);
+  if (!Number.isFinite(files) || !Number.isFinite(additions) || !Number.isFinite(deletions)) return null;
+  return `${files} file${files === 1 ? '' : 's'} · +${additions} −${deletions}`;
+}
+
+// Surfaces the actual issue, not just a count — the point of a warn/fail
+// count with no content is that a reviewer has to click through to the
+// Validation Report to learn anything, even for something trivial.
+function issueBullets(scopedComponents, multiComponent) {
+  const issues = [];
+  for (const component of scopedComponents) {
+    for (const check of Object.values(component.checks)) {
+      for (const issue of check.open) {
+        issues.push({ ...issue, component: component.component });
+      }
+    }
+  }
+  issues.sort((a, b) => (a.level === b.level ? 0 : a.level === 'fail' ? -1 : 1));
+
+  const CAP = 4;
+  const shown = issues.slice(0, CAP);
+  const lines = shown.map((issue) => {
+    const emoji = issue.level === 'fail' ? '❌' : '⚠️';
+    const where = issue.line ? `${issue.file}:${issue.line}` : issue.file;
+    const prefix = multiComponent ? `*${issue.component}* · ` : '';
+    return `• ${prefix}${emoji} *${CHECK_LABELS[issue.checkType] ?? issue.checkType}* — \`${where}\`: ${truncate(issue.message, 140)}`;
+  });
+  if (issues.length > CAP) lines.push(`_+${issues.length - CAP} more — see Validation Report_`);
+  return lines;
+}
+
 function main() {
   const report = JSON.parse(readFileSync(REPORT_PATH, 'utf8'));
   const touched = changedComponents();
@@ -133,12 +187,7 @@ function main() {
     }
   }
 
-  const componentLabel =
-    touched.length === 0
-      ? 'Runabout Design System'
-      : touched.length <= 3
-        ? touched.join(', ')
-        : `${touched.slice(0, 2).join(', ')} & ${touched.length - 2} more`;
+  const componentLabel = touched.length === 0 ? 'Runabout Design System' : touched.join(', ');
 
   const newComponents = touched.filter((name) => !existedAtBase(name));
   // Only components this PR modifies (not adds) have a live page right now
@@ -148,10 +197,15 @@ function main() {
     .map((name) => ({ name, url: storybookDocsUrl(name) }))
     .filter((entry) => entry.url !== null);
 
-  const triggerLine =
-    TRIGGER_EVENT === 'synchronize'
-      ? `New commits pushed to a ready PR by @${PR_AUTHOR} — "${PR_TITLE}"`
-      : `Marked ready for review by @${PR_AUTHOR} — "${PR_TITLE}"`;
+  const triggerVerb = TRIGGER_EVENT === 'synchronize' ? 'New commits pushed to a ready PR' : 'Marked ready for review';
+  const metaParts = [`PR #${PR_NUMBER}`, `${triggerVerb} by @${PR_AUTHOR}`];
+  const sizeText = diffSizeText();
+  if (sizeText) metaParts.push(sizeText);
+
+  const contextLines = [`*${PR_TITLE}*`];
+  const whatChanged = whatChangedLine();
+  if (whatChanged) contextLines.push(whatChanged);
+  contextLines.push(metaParts.join(' · '));
 
   const fields = Object.entries(CHECK_LABELS).map(([key, label]) => ({
     type: 'mrkdwn',
@@ -198,11 +252,18 @@ function main() {
     },
     {
       type: 'section',
-      text: { type: 'mrkdwn', text: `PR #${PR_NUMBER} · ${triggerLine}` },
+      text: { type: 'mrkdwn', text: contextLines.join('\n') },
     },
     { type: 'divider' },
     { type: 'section', fields },
   ];
+
+  if (overallStatus !== 'pass') {
+    const bullets = issueBullets(scoped, touched.length > 1);
+    if (bullets.length > 0) {
+      blocks.push({ type: 'section', text: { type: 'mrkdwn', text: bullets.join('\n') } });
+    }
+  }
 
   if (newComponents.length > 0) {
     const label = newComponents.length === 1 ? newComponents[0] : `${newComponents.length} new components`;

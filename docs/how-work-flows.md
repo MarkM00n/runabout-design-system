@@ -35,11 +35,22 @@ cumulative status.
 
 The message is Slack Block Kit, posted as **Runabout CI** with a bot icon:
 
-- **Header** — the touched component name(s) + status emoji (✅ / ⚠️ / ❌)
-- **One line of context** — what triggered it (ready-for-review vs. new
-  commits) and who
+- **Header** — the touched component name(s), in full (no truncation), +
+  status emoji (✅ / ⚠️ / ❌)
+- **Context** — the PR title (bold), the first real line of the PR
+  description (skipping markdown headings) if one exists, and a meta line:
+  PR number, who triggered it and how (ready-for-review vs. new commits),
+  and diff size (files changed, +/−) — enough for a reviewer to judge scope
+  and effort before clicking anything
 - **Validation summary** — pass/warn/fail counts per check type, scoped to
   the touched components
+- **Inline issue detail** — when status isn't a clean pass, the actual
+  open issue(s) (check type, file:line, message — not just a count),
+  capped at four with a "+N more" fallback to the validation report. The
+  norm this workflow assumes (see stage 1) is that a PR is green *before*
+  it's marked ready, so anything non-green reaching Slack is the exception
+  — it should be obvious what's wrong without a click-through, not hidden
+  behind a bare count
 - **Buttons** — the pull request, the validation report (links straight to
   the sticky comment from stage 1, found via the GitHub API), and one
   Storybook button per *existing* component the PR modifies — deep-linked
