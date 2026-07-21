@@ -128,6 +128,9 @@ this exact shape:
    - **Figma link:** a direct link to that node
      (`https://www.figma.com/design/<fileKey>/<fileName>?node-id=<id>`,
      with the node's `:` swapped for a `-`) so it opens with one click.
+
+   Separate each block from the next with a blank line — when there's more
+   than one failure, they must read as distinct blocks, never run together.
 4. **Close with one line:** that re-running this check is the next step
    once the fix is made.
 
@@ -139,17 +142,17 @@ Technical detail (the exact token name, the raw hex, which tool call
 surfaced it) is for when it's asked for directly — keep it out of the
 default report.
 
-Example — a run that fails one check, everything else clean:
+Example — a run that fails two checks, everything else clean:
 
 ```
-Verdict: NOT READY · 5 of 6 checks passed
+Verdict: NOT READY · 4 of 6 checks passed
 
 ✓ Built from real design system components
 ✗ Colours — no one-off values
 ✓ Sizes — no one-off values
 ✓ Spacing — no one-off values
 ✓ Clearly named variants and options
-✓ Behaviour notes in the description field
+✗ Behaviour notes in the description field
 
 Needs fixing
 
@@ -161,6 +164,15 @@ state-warning changes again.
 Fix: Rebind Warning/Medium's fill to the state-warning variable, the
 same binding every other variant already has.
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
+
+Behaviour notes in the description field → Badge (component set)
+What: The description field is empty.
+Why it matters: Without it, anyone building from this design has to
+guess at rules like "text truncates at one line" or "pair colour with
+text" instead of reading them.
+Fix: Add a short description covering when to use Badge and how it
+behaves, on the component set itself.
+Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-437
 
 Run the check again once that's done.
 ```
