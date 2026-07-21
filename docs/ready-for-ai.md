@@ -197,10 +197,10 @@ which one, in plain language, before writing any code.
 
 ## Before reporting a failure
 
-Two things get verified before any "What" or "Fix" text gets written.
-Getting either wrong doesn't just weaken the report — it sends someone
-chasing a fix that doesn't exist, or blames a layer that was never at
-fault.
+Three things get verified before any "What" or "Fix" text gets written.
+Getting any of them wrong doesn't just weaken the report — it sends
+someone chasing a fix that doesn't exist, blames a layer that was never
+at fault, or reports a gap that was never really there.
 
 - **Confirm the fix is actually possible in this file before instructing
   it.** "Use a library component" is only a valid fix if a suitable
@@ -222,6 +222,13 @@ fault.
   naming it in a report. Name the real Figma layer by its actual layer
   name and type — "the icon vector, not the label text" — never a
   plausible-looking layer nearby.
+- **Confirm you've actually seen the whole file before concluding
+  something is missing.** `get_metadata` with no `nodeId` can under-report
+  pages — it once reported only 1 page in a file that actually had 8,
+  making a fully-built file look empty. Before reporting an empty file, an
+  empty page, or a missing component as a system-level gap, cross-check
+  with a live `use_figma` read (`figma.root.children`) rather than
+  trusting a single `get_metadata` call.
 
 ## How to report results
 
