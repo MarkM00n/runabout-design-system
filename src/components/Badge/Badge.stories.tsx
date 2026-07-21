@@ -1,12 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Badge } from './Badge';
+import { docs } from './Badge.docs';
+import validation from './Badge.validation.json';
 
 const meta = {
   title: 'Components/Badge',
   component: Badge,
   parameters: {
     layout: 'centered',
+    designSystem: docs,
+    designSystemValidation: validation,
   },
   tags: ['autodocs'],
   argTypes: {
