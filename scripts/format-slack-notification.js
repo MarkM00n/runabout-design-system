@@ -8,11 +8,15 @@
  * mentally filter the whole design system's status out of a per-PR ping.
  *
  * Inputs come from env vars set by the calling workflow step, not flags —
- * this only ever runs inside GitHub Actions.
+ * this only ever runs inside GitHub Actions. Also writes a `status`
+ * (pass | pass-with-warnings | fail) to $GITHUB_OUTPUT when present, which
+ * the workflow uses to decide whether to actually post the payload this
+ * prints — a failing status is rendered here (so this stays testable
+ * standalone) but is never posted; see slack-pr-notification.yml.
  *
  * Usage: node scripts/format-slack-notification.js > slack-payload.json
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, appendFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -120,6 +124,17 @@ function statusText(status) {
   return 'All checks passed';
 }
 
+// Tells the reviewer what to do, not just what happened. A failing status
+// never actually reaches Slack (the calling workflow step is gated on the
+// `status` output this script writes below) — this case is kept here so
+// the payload stays correct if this script is ever run standalone to
+// preview all three states.
+function statusGuidance(status) {
+  if (status === 'fail') return '❌ Not ready — checks failing.';
+  if (status === 'pass-with-warnings') return '⚠️ Safe to merge — these are noted, not blocking.';
+  return '✅ Ready for review.';
+}
+
 function truncate(text, max) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
@@ -176,6 +191,13 @@ function main() {
   const scoped = touched.length > 0 ? report.components.filter((c) => touched.includes(c.component)) : report.components;
 
   const overallStatus = scoped.length > 0 ? worstStatus(scoped.map((c) => c.status)) : report.status;
+
+  // Step output for the calling workflow to gate the actual Slack post on —
+  // this script computes status, but "does a failing PR post" is a firing
+  // decision the workflow makes, not this renderer.
+  if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(process.env.GITHUB_OUTPUT, `status=${overallStatus}\n`);
+  }
 
   const totals = {};
   for (const key of Object.keys(CHECK_LABELS)) totals[key] = { pass: 0, warn: 0, fail: 0 };
@@ -249,6 +271,10 @@ function main() {
         text: `${componentLabel} — ${statusEmoji(overallStatus)} ${statusText(overallStatus)}`,
         emoji: true,
       },
+    },
+    {
+      type: 'section',
+      text: { type: 'mrkdwn', text: `*${statusGuidance(overallStatus)}*` },
     },
     {
       type: 'section',
