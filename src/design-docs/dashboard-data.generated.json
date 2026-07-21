@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T10:36:45.396Z",
-  "validationReportGeneratedAt": "2026-07-21T10:36:44.761Z",
+  "generatedAt": "2026-07-21T10:45:01.987Z",
+  "validationReportGeneratedAt": "2026-07-21T10:45:01.411Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
@@ -12,7 +12,7 @@
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
     "totalOpenIssues": 2,
-    "totalCaughtAndFixed": 1,
+    "totalCaughtAndFixed": 2,
     "totalDesignTokens": 147
   },
   "validationSummary": {
@@ -71,7 +71,7 @@
       "openCount": 0,
       "openFailCount": 0,
       "openWarnCount": 0,
-      "fixedCount": 1,
+      "fixedCount": 2,
       "history": [
         {
           "checkType": "documentationCoverage",
@@ -80,6 +80,14 @@
           "message": "There's no example showing how to use this component in code (this was auto-filled and still needs a person to write the real version).",
           "fix": "Add a short, real example of how this component is typically used.",
           "resolvedAt": "2026-07-20"
+        },
+        {
+          "checkType": "documentationCoverage",
+          "file": "src/components/Badge/Badge.stories.tsx",
+          "line": null,
+          "message": "This component's documentation was written but never connected to Storybook — the story doesn't import it and pass it as parameters.designSystem, so the Docs page falls back to the bare auto-generated prop table instead of showing it.",
+          "fix": "Import docs from './Badge.docs' and validation from './Badge.validation.json', then add designSystem: docs and designSystemValidation: validation to the story's parameters — see an existing component's .stories.tsx for the pattern.",
+          "resolvedAt": "2026-07-21"
         }
       ],
       "lastValidated": "2026-07-21",
