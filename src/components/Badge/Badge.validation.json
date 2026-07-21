@@ -1,6 +1,6 @@
 {
   "component": "Badge",
-  "lastValidated": "2026-07-20",
+  "lastValidated": "2026-07-21",
   "checks": {
     "tokenCompliance": {
       "pass": true,

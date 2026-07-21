@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-19T04:06:29.605Z",
-  "validationReportGeneratedAt": "2026-07-19T04:06:29.280Z",
+  "generatedAt": "2026-07-21T00:29:17.496Z",
+  "validationReportGeneratedAt": "2026-07-21T00:29:16.995Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
@@ -8,12 +8,12 @@
     "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
   },
   "totals": {
-    "totalComponents": 6,
-    "averageCycleTimeSeconds": 31316,
-    "averageCycleTimeLabel": "8h 42m",
+    "totalComponents": 7,
+    "averageCycleTimeSeconds": 36429,
+    "averageCycleTimeLabel": "10h 7m",
     "totalOpenIssues": 2,
-    "totalCaughtAndFixed": 0,
-    "totalDesignTokens": 143
+    "totalCaughtAndFixed": 1,
+    "totalDesignTokens": 144
   },
   "validationSummary": {
     "tokenCompliance": {
@@ -34,6 +34,64 @@
     }
   },
   "components": [
+    {
+      "name": "Badge",
+      "overall": true,
+      "status": "pass",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
+      "fixedCount": 1,
+      "history": [
+        {
+          "checkType": "documentationCoverage",
+          "file": "src/components/Badge/Badge.docs.ts",
+          "line": null,
+          "message": "There's no example showing how to use this component in code (this was auto-filled and still needs a person to write the real version).",
+          "fix": "Add a short, real example of how this component is typically used.",
+          "resolvedAt": "2026-07-20"
+        }
+      ],
+      "lastValidated": "2026-07-21",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-badge--docs",
+      "pr": {
+        "number": 22,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/22"
+      },
+      "firstCommitAt": "2026-07-20T15:50:27+10:00",
+      "mergedAt": "2026-07-21T10:28:56+10:00",
+      "cycleTimeSeconds": 67109
+    },
     {
       "name": "Button",
       "overall": true,
@@ -73,7 +131,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
       "pr": {
         "number": 1,
@@ -141,7 +199,7 @@
       "openWarnCount": 2,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-card--docs",
       "pr": {
         "number": 1,
@@ -190,7 +248,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-checkbox--docs",
       "pr": {
         "number": 2,
@@ -239,7 +297,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-input--docs",
       "pr": {
         "number": 1,
@@ -288,7 +346,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-select--docs",
       "pr": {
         "number": 2,
@@ -337,7 +395,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-07-19",
+      "lastValidated": "2026-07-21",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-textarea--docs",
       "pr": {
         "number": 2,
