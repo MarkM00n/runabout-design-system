@@ -47,6 +47,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       )}
       {...props}
     >
+      {/* #d9d9d9 is unbound in Figma (Image frame fill, node 132:7) — no variable to trace to */}
       <div className="h-[200px] w-full overflow-hidden rounded-[8px] bg-[#d9d9d9]/30">
         {imageSrc ? (
           <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
@@ -58,6 +59,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
         <div className="flex items-center gap-[16px]">
           <span className="font-manrope text-paragraph-small text-sand-400">{date}</span>
+          {/* #f8ebda is unbound in Figma (divider frame fill, node 131:417) — no variable to trace to */}
           <span className="h-[1px] w-[24px] bg-[#f8ebda]" aria-hidden="true" />
           <span className="font-manrope text-paragraph-small text-sand-400">{time}</span>
         </div>
