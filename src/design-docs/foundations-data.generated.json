@@ -171,6 +171,7 @@
       "usage": "Text/border color for content meant to sit on a dark or colored surface (Button secondary variant, Checkbox's label) — assumes a dark backdrop, see Checkbox's Storybook decorator for why.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Button",
         "Checkbox"
       ]
@@ -326,7 +327,9 @@
       "value": "#2f2c28",
       "usage": "Aliases Grey/100 in Figma. Not yet used by any built component.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Badge"
+      ]
     },
     {
       "type": "Color",
@@ -413,12 +416,26 @@
     {
       "type": "Color",
       "tier": "semantic",
+      "name": "--color-state-warning",
+      "tokenPath": "color.state.warning",
+      "value": "#88570a",
+      "usage": "Aliases Amber/25 in Figma. Badge's Warning variant background — Figma rebound this from state.focus to its own dedicated variable on 2026-07-20; same value, new binding.",
+      "documented": true,
+      "consumedBy": [
+        "Badge"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
       "name": "--color-state-success",
       "tokenPath": "color.state.success",
       "value": "#166534",
       "usage": "Aliases Green/100 in Figma — changed from the previously-unaliased #16a34a in the 2026-07-19 token sync, which also formalized Green/100 as a primitive. Not yet used by any built component.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Badge"
+      ]
     },
     {
       "type": "Color",
@@ -428,7 +445,9 @@
       "value": "#b91c1c",
       "usage": "Aliases Red/100 in Figma — changed from the previously-unaliased #dc2626 in the 2026-07-19 token sync, which also formalized Red/100 as a primitive. Not yet used by any built component.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Badge"
+      ]
     },
     {
       "type": "Color",
@@ -1257,6 +1276,7 @@
       "usage": "Button small-size label text style.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Button"
       ]
     },
@@ -1335,6 +1355,7 @@
       "usage": "px, not rem: the host app sets root font-size to 18px (see index.css), which would otherwise scale every rem-based Tailwind utility 1.125x off its nominal value. Design tokens must stay pixel-exact regardless of the host's font-size choice. Repeated on every step below (not left to bleed across the ramp by adjacency) — see design-sync.js's extractCssTokenComments for why a comment no longer implicitly covers more than the one token directly beneath it.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Checkbox"
       ]
     },
@@ -1346,6 +1367,7 @@
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Button",
         "Card",
         "Checkbox"
@@ -1359,6 +1381,7 @@
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Button",
         "Input",
         "Select",
@@ -1514,7 +1537,9 @@
       "value": "9999px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Badge"
+      ]
     }
   ],
   "motion": [

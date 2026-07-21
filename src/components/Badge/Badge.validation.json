@@ -1,5 +1,5 @@
 {
-  "component": "Textarea",
+  "component": "Badge",
   "lastValidated": "2026-07-20",
   "checks": {
     "tokenCompliance": {
@@ -31,23 +31,29 @@
       "open": []
     }
   },
-  "history": [],
+  "history": [
+    {
+      "checkType": "documentationCoverage",
+      "file": "src/components/Badge/Badge.docs.ts",
+      "line": null,
+      "message": "There's no example showing how to use this component in code (this was auto-filled and still needs a person to write the real version).",
+      "fix": "Add a short, real example of how this component is typically used.",
+      "resolvedAt": "2026-07-20"
+    }
+  ],
   "overall": true,
   "status": "pass",
   "tokensUsed": [
-    "color-border-default",
-    "color-border-focus",
-    "color-border-subtle",
-    "color-state-disabled",
-    "color-state-hover",
-    "color-surface-primary",
-    "color-text-muted",
-    "color-text-primary",
+    "color-state-error",
+    "color-state-success",
+    "color-state-warning",
+    "color-surface-inverse",
+    "color-text-inverse",
     "font-manrope",
-    "radius-2xl",
+    "radius-full",
+    "spacing-00",
+    "spacing-01",
     "spacing-02",
-    "spacing-03",
-    "text-h6",
-    "text-paragraph-small"
+    "text-label"
   ]
 }
