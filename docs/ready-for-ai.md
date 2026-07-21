@@ -81,3 +81,49 @@ component's name, leaves that judgment call to whoever builds it.
 
 All four must pass. A single failing criterion is enough to block —
 report which one, in plain language, before writing any code.
+
+## How to report results
+
+This check's audience is a designer, not an engineer — report every run in
+this shape, every time:
+
+1. **Verdict first, on its own line:** `READY` or `NOT READY`.
+2. **All four checks, every run**, each with a status marker:
+   - ✓ (green) — passes cleanly.
+   - ! (amber) — passes, but something's worth flagging (e.g. correct today
+     but fragile, or a borderline case).
+   - ✗ (red) — fails.
+3. **For every check that isn't ✓:** say what's wrong in plain words, name
+   the specific variant or layer it's on, and link directly to that node in
+   Figma (`https://www.figma.com/design/<fileKey>/<fileName>?node-id=<id>`,
+   with the node's `:` swapped for a `-`) so the designer can open it with
+   one click.
+4. **Close with one line:** what needs to change, plus that re-running this
+   check is the next step once it's done.
+
+**No code syntax anywhere in this report** — no Tailwind classes, no CSS
+variable references, no `bg-[var(--x,#y)]`-style strings. Translate to
+plain language instead: "uses a one-off colour instead of the
+state-warning variable," not the class or binding that produced it.
+Technical detail (the exact token name, the raw hex, which tool call
+surfaced it) is for when it's asked for directly — keep it out of the
+default report.
+
+Example — a run that fails check 2 on one variant, everything else clean:
+
+```
+Verdict: NOT READY
+
+✓ Built from real design system components
+✓ Clearly named variants and options
+✓ Behaviour notes in the description field
+✗ System colours, sizes, spacing — no one-off values
+   The Warning/Medium badge uses a one-off colour instead of the
+   state-warning variable every other variant uses. It happens to match
+   today, but won't follow if state-warning changes again.
+   → Warning / Medium: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
+
+What to change: rebind Warning/Medium's fill to the state-warning
+variable, the same binding every other variant already has. Re-run this
+check once that's done.
+```
