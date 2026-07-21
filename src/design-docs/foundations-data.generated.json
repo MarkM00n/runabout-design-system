@@ -408,8 +408,8 @@
       "tier": "semantic",
       "name": "--color-state-focus",
       "tokenPath": "color.state.focus",
-      "value": "#88570a",
-      "usage": "Aliases Amber/25 in Figma — changed from #df8e10 (Amber/100) in the 2026-07-19 token sync. Not yet used by any built component — border-focus is what components currently reference for focus styling, and its value moved in lockstep with this one.",
+      "value": "#307cff",
+      "usage": "Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from Amber/25 (#88570a), which state.focus previously shared with state.warning/border.focus by coincidence rather than real relation. Gives \"focus\" its own distinct color now that Badge's Warning variant has its own dedicated state.warning token. Not yet used by any built component — border.focus (unchanged, still Amber/25) is what components currently reference for focus-ring styling.",
       "documented": true,
       "consumedBy": []
     },
@@ -1198,6 +1198,16 @@
       "tokenPath": "color.red.100",
       "value": "#b91c1c",
       "usage": "New primitive family in the 2026-07-19 token sync. Aliased by state.error.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-blue-100",
+      "tokenPath": "color.blue.100",
+      "value": "#307cff",
+      "usage": "New primitive family, added 2026-07-21. Aliased by state.focus.",
       "documented": true,
       "consumedBy": []
     },

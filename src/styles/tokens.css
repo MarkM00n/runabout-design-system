@@ -157,11 +157,14 @@
   --color-state-hover: #f6e3cb;
   /* Border color for Input-family controls in the disabled state. */
   --color-state-disabled: #8b8a88;
-  /* Aliases Amber/25 in Figma. Not yet used by any built component —
-     border-focus is what components currently reference for focus styling,
-     and its value moved in lockstep with this one. Changed from #df8e10
-     (Amber/100) in the 2026-07-19 token sync. */
-  --color-state-focus: #88570a;
+  /* Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from
+     Amber/25 (#88570a), which state-focus previously shared with
+     state-warning/border-focus by coincidence rather than real relation.
+     This gives "focus" its own distinct color now that Badge's Warning
+     variant has its own dedicated state-warning token. Not yet used by any
+     built component — border-focus (unchanged, still Amber/25) is what
+     components currently reference for focus-ring styling. */
+  --color-state-focus: #307cff;
   /* Aliases Amber/25 in Figma. Badge's Warning variant background — Figma
      rebound this from state-focus to its own dedicated variable on
      2026-07-20. Briefly moved to #c07b0e/Amber/50 in a 2026-07-21 re-check,
@@ -287,6 +290,8 @@
   /* New primitive family in the 2026-07-19 token sync. Aliased by
      state-error. */
   --color-red-100: #b91c1c;
+  /* New primitive family, added 2026-07-21. Aliased by state-focus. */
+  --color-blue-100: #307cff;
 
   /* Figma's Alpha primitive scale — added after the initial 2026-07-19
      sync, since it's bound to no canvas node and only readable directly
