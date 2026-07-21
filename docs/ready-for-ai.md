@@ -14,7 +14,7 @@ design, not after. Catching a gap here costs a Figma edit; catching the
 same gap once code exists costs a re-generation plus whatever already
 consumed the wrong output.
 
-A design must satisfy all six checks below to be ready to build from.
+A design must satisfy all seven checks below to be ready to build from.
 
 ## 1. Uses library components (not detached)
 
@@ -108,9 +108,63 @@ component's name, leaves that judgment call to whoever builds it.
 - **Fail looks like:** an empty description field, or one that just says
   "Badge component."
 
+## 7. Accessibility basics
+
+This check bundles four separate accessibility criteria under one name.
+If more than one fails on the same design, give each its own "Needs
+fixing" block rather than merging them — label each block with which of
+the four it is (e.g. "Accessibility basics — Contrast").
+
+**Contrast.** Every text layer must clear WCAG AA against the surface
+directly behind it — 4.5:1 for normal text, 3:1 for large text (18pt/24px
+regular, or 14pt/18.66px bold, and up).
+
+- **Check:** resolve the text colour's and the surface colour's actual RGB
+  values (via variable bindings or a live `use_figma` read), then compute
+  the real contrast ratio using the WCAG relative-luminance formula —
+  never eyeball it and never estimate. Report the exact computed ratio,
+  e.g. `2.94:1`, not a rounded-off guess.
+- **Fail looks like:** pale text on a mid-tone fill that measures `2.94:1`
+  against a `4.5:1` requirement — close enough to pass at a glance,
+  numerically short.
+
+**Approved pairings.** The text token used must be one of the surface's
+approved partners in the Surface pairings table (`docs/design-system-rules.md`
+§7) — not just any combination that happens to clear contrast on its own.
+
+- **Check:** identify the bound surface variable and the bound text
+  variable, then look up that surface's row in §7's table. If the text
+  token isn't listed for that surface, it fails this check even if its
+  measured contrast would independently clear AA.
+- **Fail looks like:** text bound to `text-highlight` sitting on
+  `surface-secondary`, which might measure a passing ratio but isn't one
+  of `surface-secondary`'s three approved partners (`text-inverse`,
+  `text-link-inverse`, `text-button-inverse`) in the table.
+
+**Touch targets.** Every interactive component's touch target must be at
+least 44×44px, even when its visual size is smaller.
+
+- **Check:** the component's real touch-target dimensions — an explicit
+  hit-target frame if one exists, otherwise the component's own bounding
+  box — against the 44px minimum in both directions.
+- **Fail looks like:** a 32px-tall small control with no expanded
+  touch-target frame around it — the same gap `Button/Close`'s own
+  description already calls out ("Minimum 44x44px touch target regardless
+  of visual size").
+
+**Focus state.** Every interactive component's variant set must include a
+state representing focus.
+
+- **Check:** the component's state/variant property values
+  (`get_metadata` / `get_context_for_code_connect`) for a value
+  representing focus — `Focused`, or equivalent.
+- **Fail looks like:** a component with `Default`/`Hover`/`Disabled`
+  states defined but no `Focused` state anywhere in the set — nothing to
+  build a focus-visible style against.
+
 ## Verdict
 
-All six must pass. A single failing check is enough to block — report
+All seven must pass. A single failing check is enough to block — report
 which one, in plain language, before writing any code.
 
 ## Before reporting a failure
@@ -156,8 +210,8 @@ which render in full colour everywhere: ✅ (green), ⚠️ (amber), ❌ (red),
 
 1. **Verdict line, on its own line, bold, with a colour and a count:**
    🟢 for `READY`, 🔴 for `NOT READY` — e.g.
-   `🔴 **NOT READY · 5 of 6 checks passed**`.
-2. **A horizontal rule (`---`), then all six checks as an indented,
+   `🔴 **NOT READY · 6 of 7 checks passed**`.
+2. **A horizontal rule (`---`), then all seven checks as an indented,
    bulleted list** — a colour-coded status emoji and the check's name only,
    nothing else on the line:
    - ✅ — passes cleanly.
@@ -210,12 +264,12 @@ Variables panel, not a code term. What stays out of the default report is
 implementation detail: raw hex values, Tailwind classes, CSS syntax, which
 tool call surfaced the gap. That's for when it's asked for directly.
 
-Example — the raw markdown source for a run that fails two checks,
+Example — the raw markdown source for a run that fails three checks,
 everything else clean (shown fenced here only so the markup itself is
 visible on this page; report it unfenced, letting it render):
 
 ````markdown
-🔴 **NOT READY · 4 of 6 checks passed**
+🔴 **NOT READY · 4 of 7 checks passed**
 
 ---
 
@@ -224,6 +278,7 @@ visible on this page; report it unfenced, letting it render):
 - ✅ Text styles applied
 - ✅ Spacing bound to variables
 - ✅ Variant properties clearly named
+- ❌ Accessibility basics
 - ❌ Behaviour notes in the description
 
 ---
@@ -242,6 +297,20 @@ visible on this page; report it unfenced, letting it render):
 >
 > Fix: Select this variant, open its fill, and bind it to the
 > state-warning variable instead of leaving a fixed colour applied.
+
+Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
+
+
+**Accessibility basics — Contrast** → Warning / Medium
+
+> What: This variant's text measures 2.94:1 against its background.
+> WCAG AA needs 4.5:1 for text this size.
+>
+> Why it matters: The text reads as low-contrast for a real share of
+> users, even though it's legible enough to pass a casual glance.
+>
+> Fix: Swap the text colour to one that clears 4.5:1 against this
+> background, or darken the background until the pairing clears it.
 
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
 
