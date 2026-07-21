@@ -72,6 +72,32 @@ function existedAtBase(componentName) {
   }
 }
 
+// Mirrors Storybook's own toId(): each '/'-separated part of a story title
+// lowercased, non-alphanumeric runs collapsed to a single '-', joined by '-'.
+function toStorybookId(title) {
+  return title
+    .split('/')
+    .map((part) => part.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
+    .join('-');
+}
+
+// The specific component's docs page — not the Storybook homepage. A
+// reviewer's actual use for this link is comparing the PR's diff against
+// the component's current live rendering, which only a deep link gives them.
+// Reads the story title at the PR's head commit, not disk, so this stays
+// correct if the workflow ever runs from a detached/shallow checkout.
+function storybookDocsUrl(componentName) {
+  let source;
+  try {
+    source = git(['show', `${HEAD_SHA}:src/components/${componentName}/${componentName}.stories.tsx`]);
+  } catch {
+    return null;
+  }
+  const match = source.match(/title:\s*['"`]([^'"`]+)['"`]/);
+  if (!match) return null;
+  return `${STORYBOOK_BASE_URL}?path=/docs/${toStorybookId(match[1])}--docs`;
+}
+
 function worstStatus(statuses) {
   if (statuses.includes('fail')) return 'fail';
   if (statuses.includes('pass-with-warnings')) return 'pass-with-warnings';
@@ -115,7 +141,12 @@ function main() {
         : `${touched.slice(0, 2).join(', ')} & ${touched.length - 2} more`;
 
   const newComponents = touched.filter((name) => !existedAtBase(name));
-  const storybookLinkAvailable = touched.length === 0 || newComponents.length < touched.length;
+  // Only components this PR modifies (not adds) have a live page right now
+  // — a Storybook link is only useful to a reviewer for those.
+  const existingTouched = touched.filter((name) => !newComponents.includes(name));
+  const storybookLinks = existingTouched
+    .map((name) => ({ name, url: storybookDocsUrl(name) }))
+    .filter((entry) => entry.url !== null);
 
   const triggerLine =
     TRIGGER_EVENT === 'synchronize'
@@ -143,14 +174,18 @@ function main() {
       url: VALIDATION_COMMENT_URL,
     });
   }
-  if (storybookLinkAvailable) {
+  storybookLinks.forEach((entry, i) => {
     buttons.push({
       type: 'button',
-      action_id: 'view_storybook',
-      text: { type: 'plain_text', text: 'Storybook', emoji: true },
-      url: STORYBOOK_BASE_URL,
+      action_id: `view_storybook_${i}`,
+      text: {
+        type: 'plain_text',
+        text: storybookLinks.length === 1 ? 'Storybook' : `${entry.name} in Storybook`,
+        emoji: true,
+      },
+      url: entry.url,
     });
-  }
+  });
 
   const blocks = [
     {
@@ -169,10 +204,11 @@ function main() {
     { type: 'section', fields },
   ];
 
-  if (!storybookLinkAvailable) {
+  if (newComponents.length > 0) {
+    const label = newComponents.length === 1 ? newComponents[0] : `${newComponents.length} new components`;
     blocks.push({
       type: 'context',
-      elements: [{ type: 'mrkdwn', text: '_Storybook available after merge — new component, no page yet._' }],
+      elements: [{ type: 'mrkdwn', text: `_${label} — Storybook available after merge, no page yet._` }],
     });
   }
 

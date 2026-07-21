@@ -41,11 +41,17 @@ The message is Slack Block Kit, posted as **Runabout CI** with a bot icon:
 - **Validation summary** — pass/warn/fail counts per check type, scoped to
   the touched components
 - **Buttons** — the pull request, the validation report (links straight to
-  the sticky comment from stage 1, found via the GitHub API), and
-  Storybook — but only if a touched component already has a live page.
-  A component newly added in this PR gets "Storybook available after
-  merge" instead of a link, since Storybook only (re)deploys on push to
-  `main` (stage 3) — linking a page that doesn't exist yet would 404.
+  the sticky comment from stage 1, found via the GitHub API), and one
+  Storybook button per *existing* component the PR modifies — deep-linked
+  to that component's own docs page (e.g. `?path=/docs/components-badge--docs`,
+  read from its story's `title`), not the Storybook homepage, since the
+  reviewer's actual use for it is comparing the PR's diff against the
+  component's current live rendering. A component newly added in this PR
+  gets a "Storybook available after merge" note instead, since Storybook
+  only (re)deploys on push to `main` (stage 3) — linking a page that
+  doesn't exist yet would 404. A PR that touches no components (e.g. this
+  workflow's own PR) gets neither a button nor a note — there's no
+  component-specific Storybook context to give.
 
 Posting is best-effort: a missing `SLACK_WEBHOOK` secret, a bad webhook,
 or Slack being down logs a `::warning::` and lets the workflow finish
