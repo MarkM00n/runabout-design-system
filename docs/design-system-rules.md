@@ -338,6 +338,46 @@ surface).
   corresponding `tokens.css` comments for the exact derivation), then
   confirmed exactly right during PR cross-review.
 
+## 8. Where fixes belong
+
+A fix belongs in whichever layer actually owns the mistake. Conflating the
+two either hides a design problem behind a code patch — so it silently
+recurs the next time the design is touched — or turns a genuine
+implementation bug into a demand that a designer go edit Figma for
+something Figma never got wrong. The Warning badge's contrast near-miss is
+the case that motivated writing this down: `state-warning` was briefly
+rebound in Figma to a value (Amber/50) that fails WCAG AA against
+`text-inverse`. The right move was to report that to design and get it
+rebound — not to quietly swap Badge's text color in code to compensate for
+a background value the design file itself didn't actually intend.
+
+- **A design-originated problem gets reported, not patched.** If the root
+  cause is in the design — an unbound or wrong token value, a variable
+  bound to the wrong thing, an ambiguously named variant or property, a
+  missing or unhelpful component description — say so plainly, state
+  exactly what needs to change in Figma (which variable, which node, which
+  property), and stop. Don't generate code that works around it, and don't
+  silently "correct" the value in `tokens.css`/`tokens.json` to something
+  the design file doesn't actually say.
+- **A code-originated problem gets fixed in code**, same as every other
+  rule in this document: a wrong Tailwind class, incorrect ARIA wiring, a
+  markup structure using the wrong native element, a computed style that
+  doesn't match a token that IS correctly bound in Figma. Nothing about
+  this rule changes how those get handled — fix them directly.
+- **A code-side patch for a design problem only happens on explicit
+  request**, and gets labeled — in a code comment and in whatever's told to
+  whoever asked — as a temporary workaround, never presented as the real
+  fix. The underlying Figma-side gap stays reported regardless of whether a
+  temporary patch also goes in.
+- **Telling design from code apart:** if a value, name, or gap is
+  verifiably wrong (or verifiably right) in the Figma file itself — checked
+  via `get_variable_defs`, `boundVariables`, a component's description
+  field, or a live Plugin API read, not eyeballed — the problem lives in
+  Figma, full stop, no matter how trivial a code-side fix would be. If
+  Figma's value is correct and the generated/rendered code doesn't match
+  it, or introduces a bug the design never asked for (bad ARIA, the wrong
+  native element, a rem-scaling slip), the problem lives in code.
+
 ## Sourcing Figma data
 
 - Use the `use_figma` tool (Plugin API) for inspection, not `get_metadata`
