@@ -110,14 +110,19 @@ component's name, leaves that judgment call to whoever builds it.
 
 ## 7. Accessibility basics
 
-This check bundles four separate accessibility criteria under one name.
+This check tests against **WCAG 2.2 Level AA only — never AAA.** Every
+sub-criterion below cites its Success Criterion (SC) number; state that
+number in any failure reported against it, so it's clear exactly which
+standard is being applied and at which level.
+
+This check bundles five separate accessibility criteria under one name.
 If more than one fails on the same design, give each its own "Needs
 fixing" block rather than merging them — label each block with which of
-the four it is (e.g. "Accessibility basics — Contrast").
+the five it is (e.g. "Accessibility basics — Text contrast").
 
-**Contrast.** Every text layer must clear WCAG AA against the surface
-directly behind it — 4.5:1 for normal text, 3:1 for large text (18pt/24px
-regular, or 14pt/18.66px bold, and up).
+**Text contrast (SC 1.4.3, AA).** Every text layer must clear 4.5:1
+against the surface directly behind it for normal text, or 3:1 for large
+text (18pt/24px regular, or 14pt/18.66px bold, and up).
 
 - **Check:** resolve the text colour's and the surface colour's actual RGB
   values (via variable bindings or a live `use_figma` read), then compute
@@ -125,12 +130,27 @@ regular, or 14pt/18.66px bold, and up).
   never eyeball it and never estimate. Report the exact computed ratio,
   e.g. `2.94:1`, not a rounded-off guess.
 - **Fail looks like:** pale text on a mid-tone fill that measures `2.94:1`
-  against a `4.5:1` requirement — close enough to pass at a glance,
-  numerically short.
+  against a `4.5:1` requirement (SC 1.4.3) — close enough to pass at a
+  glance, numerically short.
 
-**Approved pairings.** The text token used must be one of the surface's
-approved partners in the Surface pairings table (`docs/design-system-rules.md`
-§7) — not just any combination that happens to clear contrast on its own.
+**Non-text contrast (SC 1.4.11, AA).** Every UI component boundary or
+graphic that conveys information — focus indicators, icon-only controls,
+input borders — must clear 3:1 against its adjacent colour(s).
+
+- **Check:** resolve the actual RGB values of the boundary/graphic and
+  whatever's immediately adjacent to it (via variable bindings or a live
+  `use_figma` read), then compute the real contrast ratio the same way as
+  text contrast. Report the exact ratio.
+- **Fail looks like:** a focus ring that measures `2.3:1` against the
+  surface it sits on, short of the `3:1` minimum (SC 1.4.11) — a real,
+  previously-flagged gap in this system (`border-focus`/`state-focus`
+  against `surface-inverse`/`surface-secondary`, see
+  `docs/design-system-rules.md` §7).
+
+**Approved pairings** (a design-system rule, not itself a WCAG criterion).
+The text token used must be one of the surface's approved partners in the
+Surface pairings table (`docs/design-system-rules.md` §7) — not just any
+combination that happens to clear contrast on its own.
 
 - **Check:** identify the bound surface variable and the bound text
   variable, then look up that surface's row in §7's table. If the text
@@ -141,26 +161,34 @@ approved partners in the Surface pairings table (`docs/design-system-rules.md`
   of `surface-secondary`'s three approved partners (`text-inverse`,
   `text-link-inverse`, `text-button-inverse`) in the table.
 
-**Touch targets.** Every interactive component's touch target must be at
-least 44×44px, even when its visual size is smaller.
+**Touch targets (SC 2.5.8, AA — Target Size Minimum).** Every interactive
+component's touch target must be at least 24×24px, even when its visual
+size is smaller. **Not 44×44px** — that's SC 2.5.5 (Target Size Enhanced),
+which is **AAA**, and out of scope for this check. Don't flag anything at
+or above 24×24px as a failure.
 
 - **Check:** the component's real touch-target dimensions — an explicit
   hit-target frame if one exists, otherwise the component's own bounding
-  box — against the 44px minimum in both directions.
-- **Fail looks like:** a 32px-tall small control with no expanded
-  touch-target frame around it — the same gap `Button/Close`'s own
-  description already calls out ("Minimum 44x44px touch target regardless
-  of visual size").
+  box — against the 24px minimum in both directions.
+- **Fail looks like:** an 18px-tall control with no expanded touch-target
+  frame around it, short of the `24px` minimum (SC 2.5.8).
+- **House preferences aren't the AA bar.** If a component's own
+  description states a stricter target than 24px (e.g. `Button/Close`'s
+  "Minimum 44x44px touch target regardless of visual size"), that's a
+  documented house preference for that specific component, not evidence
+  of the AA minimum generally. Note it as that component's own stated
+  rule if relevant, but never cite it as grounds to fail a different
+  component that clears the actual 24px AA minimum.
 
-**Focus state.** Every interactive component's variant set must include a
-state representing focus.
+**Focus state (supports SC 2.4.7, AA — Focus Visible).** Every interactive
+component's variant set must include a state representing focus, since
+there's nothing to build a focus-visible style against otherwise.
 
 - **Check:** the component's state/variant property values
   (`get_metadata` / `get_context_for_code_connect`) for a value
   representing focus — `Focused`, or equivalent.
 - **Fail looks like:** a component with `Default`/`Hover`/`Disabled`
-  states defined but no `Focused` state anywhere in the set — nothing to
-  build a focus-visible style against.
+  states defined but no `Focused` state anywhere in the set (SC 2.4.7).
 
 ## Verdict
 
@@ -301,10 +329,10 @@ visible on this page; report it unfenced, letting it render):
 Figma link: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=248-431
 
 
-**Accessibility basics — Contrast** → Warning / Medium
+**Accessibility basics — Text contrast** → Warning / Medium
 
 > What: This variant's text measures 2.94:1 against its background.
-> WCAG AA needs 4.5:1 for text this size.
+> WCAG 2.2 AA (SC 1.4.3) needs 4.5:1 for text this size.
 >
 > Why it matters: The text reads as low-contrast for a real share of
 > users, even though it's legible enough to pass a casual glance.
