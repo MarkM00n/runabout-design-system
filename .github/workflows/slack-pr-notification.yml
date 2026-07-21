@@ -1,0 +1,108 @@
+name: Slack PR notification
+
+# Two independent gates decide whether this actually posts to Slack:
+#
+# 1. Draft state (job-level `if`, below): only `ready_for_review` and
+#    `synchronize` on a non-draft PR run this job at all. A freshly opened
+#    PR (draft or not) and a draft that gets new commits stay between the
+#    author and CI — the channel only ever sees PRs that want a reviewer.
+#
+# 2. Check status (step-level `if` on "Post to Slack", below): design-sync
+#    failing means nothing posts, full stop — it stays with the author on
+#    the PR until green. Clean pass or pass-with-warnings both post; a
+#    warning is "safe to merge, noted, not blocking," never a reason to
+#    withhold the ping.
+#
+# This is a check-result gate, not a git-mergeability one — a PR with a
+# merge conflict is a separate git state GitHub already surfaces on the PR
+# itself, and isn't inspected anywhere in this workflow.
+on:
+  pull_request:
+    types: [ready_for_review, synchronize]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  notify:
+    # ready_for_review always has draft == false by the time this fires, so
+    # this one check covers both trigger types: notify on the transition to
+    # ready, and on later commits as long as the PR is still (or now) ready.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need the PR's base commit reachable to diff against and to check
+          # whether a touched component's directory existed before this PR.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Informational, same as validation-report-comment.yml: a PR that
+      # intentionally introduces a FAIL shouldn't break this notification.
+      - name: Run design-sync
+        continue-on-error: true
+        run: npm run design-sync
+
+      - name: Find existing validation report comment
+        id: validation_comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          url=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '[.[] | select(.body | test("Design System Validation Report"))] | last | .html_url // empty')
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Build Slack payload
+        id: build_payload
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_ADDITIONS: ${{ github.event.pull_request.additions }}
+          PR_DELETIONS: ${{ github.event.pull_request.deletions }}
+          PR_CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRIGGER_EVENT: ${{ github.event.action }}
+          VALIDATION_COMMENT_URL: ${{ steps.validation_comment.outputs.url }}
+          STORYBOOK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        # Direct node invocation, not `npm run` — see format-validation-comment.js's
+        # step in validation-report-comment.yml for why (npm's banner would land in
+        # the payload body verbatim).
+        run: node scripts/format-slack-notification.js > /tmp/slack-payload.json
+
+      # design-sync failing is a check-result gate, not a git-mergeability
+      # gate — a PR can fail this and still be perfectly mergeable, or pass
+      # this and still have a merge conflict GitHub flags separately. This
+      # step only ever looks at check status.
+      - name: Checks failing — hold for the author
+        if: steps.build_payload.outputs.status == 'fail'
+        run: echo "::notice::design-sync is failing for this PR's touched component(s) — not posting to Slack. Stays with the author on the PR until it's green."
+
+      - name: Post to Slack
+        if: steps.build_payload.outputs.status != 'fail'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        # The notification is informational, never a merge gate — a missing
+        # secret, a bad webhook, or Slack being down must not fail the workflow.
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "::warning::SLACK_WEBHOOK secret is not set — skipping Slack notification. See docs/how-work-flows.md for setup."
+            exit 0
+          fi
+          status_code=$(curl -sS -o /tmp/slack-response.txt -w '%{http_code}' \
+            -X POST -H 'Content-type: application/json' \
+            --data-binary @/tmp/slack-payload.json \
+            "$SLACK_WEBHOOK" || echo "000")
+          if [ "$status_code" != "200" ]; then
+            echo "::warning::Slack notification failed (HTTP $status_code): $(cat /tmp/slack-response.txt 2>/dev/null)"
+          else
+            echo "Slack notification posted."
+          fi
