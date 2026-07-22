@@ -50,9 +50,8 @@ function git(args) {
   return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 }
 
-// Which src/components/* directories this PR's diff actually touches —
-// scoping the summary to "what changed" instead of the whole design system.
-function changedComponents() {
+// Which src/components/* directories this PR's diff actually touches.
+function changedComponentsFromFiles() {
   let diffOutput;
   try {
     diffOutput = git(['diff', '--name-only', BASE_SHA, HEAD_SHA, '--', 'src/components']);
@@ -64,7 +63,42 @@ function changedComponents() {
     const match = line.match(/^src\/components\/([^/]+)\//);
     if (match) names.add(match[1]);
   }
-  return [...names].sort();
+  return names;
+}
+
+// Which components' actual validation results changed between base and head
+// — independent of which files the diff touched. A regenerate-only commit
+// (e.g. confirming a Figma-side variable rebind, where the rendered value
+// never changed) can leave src/components/ completely untouched while still
+// being "about" one specific component. `lastValidated` is stamped to
+// today's date on every component on every design-sync run regardless of
+// whether that component changed, so it's stripped out before comparing —
+// otherwise every component would look "changed" on every PR.
+function changedComponentsFromReport(headReport) {
+  let baseReport;
+  try {
+    baseReport = JSON.parse(git(['show', `${BASE_SHA}:src/design-docs/validation-report.generated.json`]));
+  } catch {
+    return new Set(headReport.components.map((c) => c.component));
+  }
+  const stableJson = (c) => JSON.stringify({ ...c, lastValidated: undefined });
+  const baseByName = new Map(baseReport.components.map((c) => [c.component, stableJson(c)]));
+
+  const names = new Set();
+  for (const component of headReport.components) {
+    if (baseByName.get(component.component) !== stableJson(component)) {
+      names.add(component.component);
+    }
+  }
+  return names;
+}
+
+// Union of both signals — scoping the summary to "what changed" instead of
+// the whole design system, however that change actually surfaced in the diff.
+function changedComponents(headReport) {
+  const fromFiles = changedComponentsFromFiles();
+  const fromReport = changedComponentsFromReport(headReport);
+  return [...new Set([...fromFiles, ...fromReport])].sort();
 }
 
 function worstStatus(statuses) {
@@ -148,7 +182,7 @@ function issueBullets(scopedComponents, multiComponent) {
 
 function main() {
   const report = JSON.parse(readFileSync(REPORT_PATH, 'utf8'));
-  const touched = changedComponents();
+  const touched = changedComponents(report);
   const scoped = touched.length > 0 ? report.components.filter((c) => touched.includes(c.component)) : report.components;
 
   const overallStatus = scoped.length > 0 ? worstStatus(scoped.map((c) => c.status)) : report.status;
