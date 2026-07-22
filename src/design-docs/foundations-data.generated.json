@@ -80,6 +80,7 @@
       "documented": true,
       "consumedBy": [
         "Button",
+        "Card",
         "Checkbox",
         "Input",
         "Select",
@@ -152,6 +153,18 @@
     {
       "type": "Color",
       "tier": "semantic",
+      "name": "--color-border-focus-on-feature",
+      "tokenPath": "color.border.focus-on-feature",
+      "value": "#b3d1ff",
+      "usage": "New 2026-07-23, added while building Card. None of border.focus (~1.5:1), border.focus-inverse (2.18:1), or border.focus-on-highlight (~1.8:1) clear WCAG 1.4.11's 3:1 non-text minimum against surface.feature — the 'Card CTA case' flagged in the Surface pairings notes never actually got a compliant token. Card's Focus state (the clickable image/title/metadata region) needs its own ring here. Aliases the new Blue/50 primitive, which clears ~3.70:1 against surface.feature. Scoped to surface-feature specifically, same convention as border.focus-on-highlight's accent-only scoping.",
+      "documented": true,
+      "consumedBy": [
+        "Card"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
       "name": "--color-text-primary",
       "tokenPath": "color.text.primary",
       "value": "#2f2c28",
@@ -180,7 +193,7 @@
       "name": "--color-text-inverse",
       "tokenPath": "color.text.inverse",
       "value": "#f8ebda",
-      "usage": "Text/border color for content meant to sit on a dark or colored surface (Button secondary variant, Checkbox's label) — assumes a dark backdrop, see Checkbox's Storybook decorator for why.",
+      "usage": "Button secondary variant, Checkbox's label. Also Card's title/date/time/description text as of 2026-07-23 — rebound from sand.400 in Figma once that binding was flagged as not being one of surface.feature's approved §7 pairing partners (text.inverse and text.on-feature are; sand.400 is neither, despite its value nearly matching).",
       "documented": true,
       "consumedBy": [
         "Badge",
@@ -506,11 +519,9 @@
       "name": "--color-sand-400",
       "tokenPath": "color.sand.400",
       "value": "#f7e7d2",
-      "usage": "Primitive palette token; Card binds to this directly rather than a semantic text/surface token.",
+      "usage": "Card's title/date/description text used to bind directly to this rather than a semantic text/surface token. Rebound to text.inverse on 2026-07-23 once that direct binding was flagged as an Approved Pairings gap (§7) — sand.400 isn't one of surface.feature's approved partners, even though its value nearly matched text.inverse's. No remaining component consumer.",
       "documented": true,
-      "consumedBy": [
-        "Card"
-      ]
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -1235,6 +1246,16 @@
     {
       "type": "Color",
       "tier": "semantic",
+      "name": "--color-blue-50",
+      "tokenPath": "color.blue.50",
+      "value": "#b3d1ff",
+      "usage": "New 2026-07-23, added while building Card. A lighter blue step — border.focus-on-highlight (Blue/25) and border.focus (Blue/100) both fail WCAG 1.4.11's 3:1 non-text minimum against surface.feature (~1.8:1 / ~1.5:1); this clears it at ~3.70:1. Aliased by border.focus-on-feature.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
       "name": "--color-blue-100",
       "tokenPath": "color.blue.100",
       "value": "#307cff",
@@ -1300,7 +1321,9 @@
       "value": "rgba(255, 255, 255, 0.1)",
       "usage": "New in the 2026-07-19 token sync. White at 10% opacity. Aliased by action.secondary-hover — see that token's note. The one alpha step with a real component consumer (via action-secondary-hover).",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Card"
+      ]
     }
   ],
   "typography": [
@@ -1424,6 +1447,7 @@
       "consumedBy": [
         "Badge",
         "Button",
+        "Card",
         "Input",
         "Select",
         "Textarea"
@@ -1450,7 +1474,9 @@
       "value": "32px",
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Card"
+      ]
     },
     {
       "type": "Spacing",
@@ -1468,7 +1494,9 @@
       "value": "48px",
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Card"
+      ]
     },
     {
       "type": "Spacing",
@@ -1535,7 +1563,9 @@
       "value": "8px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Card"
+      ]
     },
     {
       "type": "Radius",
@@ -1554,7 +1584,8 @@
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
       "consumedBy": [
-        "Button"
+        "Button",
+        "Card"
       ]
     },
     {
