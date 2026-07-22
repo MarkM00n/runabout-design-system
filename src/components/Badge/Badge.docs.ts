@@ -1,29 +1,29 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma `Badge` component set (Design System, JpFA7KtVlSOrM9fIYYgOsn).
+// Source: Figma Badge component set (Design System, JpFA7KtVlSOrM9fIYYgOsn,
+// node 248:437).
 export const docs: ComponentDocMeta = {
   description:
-    'A short status label. Communicates state — not an action — with a colored pill and a word or two of text.',
+    'A short status label — neutral, success, warning, or error — for showing state at a glance. Non-interactive; it never carries an action.',
   usageGuidelines: [
-    'Use Badge to surface state (e.g. an order or account status), never as a clickable control — it renders a plain <span>, not a button or link.',
-    'Always pass meaningful text as children. Per Figma\'s own usage note, color never carries meaning alone, so a badge can\'t rely on variant alone to communicate.',
-    'Pick variant by meaning, not by which color looks best: success for a completed/healthy state, warning for something needing attention, error for a failed/blocked state, neutral for anything else.',
-    'Use size="small" in dense contexts like table rows or lists; size="medium" (the default) elsewhere.',
+    'Use to surface state (e.g. "Success", "Warning") next to or inside other content, not as a clickable control.',
+    'Keep the label to a single short word or phrase — text truncates at one line rather than wrapping.',
+    'Pick the variant that matches the underlying state (success/warning/error), or neutral for anything that is not one of those three.',
   ],
   dos: [
-    'Keep the label short — the component truncates to one line rather than wrapping, so long text will be cut off with an ellipsis.',
-    'Use size="small" consistently within a dense list/table so badges align with the surrounding row height.',
+    'Pair the badge with its own visible text label — never rely on color alone to convey which state it represents.',
+    'Use size="small" wherever the surrounding content is already dense (tables, list rows) and size="medium" (the default) elsewhere.',
   ],
   donts: [
-    'Do not use Badge for actions (e.g. a dismissible tag or filter chip) — it has no interactive semantics or click handling built in.',
-    'Do not rely on variant color alone to convey meaning — pair it with a clear text label.',
+    'Do not attach onClick or otherwise make a Badge interactive — use Button if the element needs to trigger an action.',
+    'Do not use warning/error variants for anything other than an actual warning or error state — they carry that meaning to the user.',
   ],
   variants: ['neutral', 'success', 'warning', 'error'],
   states: ['default'],
   accessibilityNotes: [
-    'Renders a plain <span>, not a button — it is not focusable and has no interactive role, matching its non-interactive, state-only purpose.',
-    'Carries no built-in ARIA role or live-region behavior; if a badge communicates a change that should be announced to screen readers, wrap it in an appropriate live region at the call site.',
-    'Text is required (not optional) so every badge has real, readable content — color is never the only signal.',
+    'Renders a <span>, since a badge conveys status, not structure or interactivity — no role or tabIndex is added.',
+    'Every variant\'s text sits on its own fill color (text-inverse on surface-inverse/state-success/state-warning/state-error) rather than relying on a shared page background, so contrast holds regardless of where the badge is placed.',
+    'Color never carries meaning alone — the variant\'s text label ("Success", "Warning", etc.) is what actually communicates state; color reinforces it.',
   ],
-  codeExample: '<Badge variant="success" size="medium">\n  Active\n</Badge>',
+  codeExample: '<Badge variant="success" size="medium">Success</Badge>',
 };

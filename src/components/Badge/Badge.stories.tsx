@@ -20,7 +20,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['medium', 'small'],
+      options: ['small', 'medium'],
     },
   },
 } satisfies Meta<typeof Badge>;
@@ -28,7 +28,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Neutral: Story = {
+export const NeutralMedium: Story = {
   args: {
     variant: 'neutral',
     size: 'medium',
@@ -36,7 +36,7 @@ export const Neutral: Story = {
   },
 };
 
-export const Success: Story = {
+export const SuccessMedium: Story = {
   args: {
     variant: 'success',
     size: 'medium',
@@ -44,7 +44,7 @@ export const Success: Story = {
   },
 };
 
-export const Warning: Story = {
+export const WarningMedium: Story = {
   args: {
     variant: 'warning',
     size: 'medium',
@@ -52,7 +52,7 @@ export const Warning: Story = {
   },
 };
 
-export const Error: Story = {
+export const ErrorMedium: Story = {
   args: {
     variant: 'error',
     size: 'medium',
@@ -60,7 +60,7 @@ export const Error: Story = {
   },
 };
 
-export const Small: Story = {
+export const NeutralSmall: Story = {
   args: {
     variant: 'neutral',
     size: 'small',
@@ -68,24 +68,26 @@ export const Small: Story = {
   },
 };
 
-export const AllVariants: Story = {
+export const SuccessSmall: Story = {
   args: {
-    children: 'Badge',
+    variant: 'success',
+    size: 'small',
+    children: 'Success',
   },
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex', gap: 16 }}>
-        <Badge variant="neutral">Neutral</Badge>
-        <Badge variant="success">Success</Badge>
-        <Badge variant="warning">Warning</Badge>
-        <Badge variant="error">Error</Badge>
-      </div>
-      <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-        <Badge variant="neutral" size="small">Neutral</Badge>
-        <Badge variant="success" size="small">Success</Badge>
-        <Badge variant="warning" size="small">Warning</Badge>
-        <Badge variant="error" size="small">Error</Badge>
-      </div>
-    </div>
-  ),
+};
+
+export const WarningSmall: Story = {
+  args: {
+    variant: 'warning',
+    size: 'small',
+    children: 'Warning',
+  },
+};
+
+export const ErrorSmall: Story = {
+  args: {
+    variant: 'error',
+    size: 'small',
+    children: 'Error',
+  },
 };
