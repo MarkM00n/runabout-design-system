@@ -33,9 +33,12 @@ const variantStyles: Record<BadgeVariant, string> = {
 };
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ variant = 'neutral', size = 'medium', className, children, ...props }, ref) => (
+  ({ variant = 'neutral', size = 'medium', className, children, title, ...props }, ref) => (
     <span
       ref={ref}
+      // Truncated text (per Figma: "Text truncates at one line") has no other
+      // way to reveal its full value, so fall back to a native tooltip.
+      title={title ?? (typeof children === 'string' ? children : undefined)}
       className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}
     >
