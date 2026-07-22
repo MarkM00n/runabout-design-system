@@ -71,12 +71,27 @@ A fixed colour doesn't carry the variable's identity with it; it's a guess
 about which variable was intended, and it won't follow if that variable's
 value ever changes.
 
-- **Check:** the node's variable bindings (`get_variable_defs`) — every
-  colour that should be systematized needs a variable bound to it, not
-  just a fixed colour with nothing attached.
+- **Check:** for a component set, walk **every variant instance
+  individually** — not just the currently-selected node, not just the
+  first variant — and read each one's real `boundVariables` via a live
+  `use_figma` (Plugin API) script. **Never rely on `get_design_context`'s
+  merged code output or `get_variable_defs`'s aggregate list as evidence a
+  colour is bound.** Both summarize across the whole component set: a
+  variable that's correctly bound on one sibling variant can get
+  pattern-matched into the merged code for a variant that isn't actually
+  bound to anything, and the aggregate variable list still shows that
+  variable as "present" even when only some variants are really bound to
+  it. If any single variant's fill, stroke, or text colour is unbound, the
+  whole component fails this check — report it against that specific
+  variant, not the set in general.
 - **Fail looks like:** a fill with a fixed colour of `#b91c2a` applied
   directly, no variable bound — one shade off the real `state-error`
-  variable and indistinguishable from it by eye.
+  variable and indistinguishable from it by eye. Or, more subtly: a fixed
+  colour that's pixel-identical to a real variable's current value (e.g.
+  `#88570a` matching `state-warning` exactly) on one variant while every
+  sibling variant is properly bound to that variable — invisible in a
+  screenshot and invisible in a merged code summary, only caught by
+  reading that variant's own `boundVariables` directly.
 
 ## 3. Text styles applied
 
@@ -85,24 +100,51 @@ size, and line-height set directly, even when the values currently match a
 style. Matching values with no style applied is a coincidence, not a
 connection, and it won't follow if that style changes.
 
-- **Check:** the text node's applied style (`get_variable_defs` /
-  `get_design_context`) — every text layer that should be systematized
-  needs a named text style applied, not just matching values with nothing
-  attached.
+- **Check:** for a component set, walk **every variant instance
+  individually** — not just the currently-selected node, not just the
+  first variant — and read each text node's real `textStyleId` via a live
+  `use_figma` (Plugin API) script. **Never rely on `get_design_context`'s
+  merged code output or `get_variable_defs`'s aggregate list as evidence a
+  text style is applied.** Both summarize across the whole component set,
+  so a style correctly applied on one sibling variant can be
+  pattern-matched into the merged output for a variant whose text has no
+  style applied at all. If any single variant's text node has an empty
+  `textStyleId`, the whole component fails this check — report it against
+  that specific variant, not the set in general.
 - **Fail looks like:** a label set to Manrope 13/1.45 directly, with no
   text style applied — it matches the Label style's values today, but a
-  future change to Label won't reach it.
+  future change to Label won't reach it. Or, more subtly: one variant's
+  text values match the applied style's values exactly while genuinely
+  having no style applied (`textStyleId` empty), sitting next to sibling
+  variants that do have the style applied — indistinguishable by eye or in
+  a merged code summary, only caught by reading that variant's own
+  `textStyleId` directly.
 
 ## 4. Spacing bound to variables
 
 Every gap, padding, and margin must be bound to a published spacing
 variable — not a fixed value applied directly.
 
-- **Check:** the node's variable bindings (`get_variable_defs`) on its
-  auto layout — gap and padding need a variable bound to them, not just a
-  fixed value with nothing attached.
+- **Check:** for a component set, walk **every variant instance
+  individually** — not just the currently-selected node, not just the
+  first variant — and read each one's real `boundVariables` for
+  `paddingLeft`/`paddingRight`/`paddingTop`/`paddingBottom`/`itemSpacing`
+  via a live `use_figma` (Plugin API) script. **Never rely on
+  `get_design_context`'s merged code output or `get_variable_defs`'s
+  aggregate list as evidence spacing is bound.** Both summarize across the
+  whole component set, so a spacing variable correctly bound on one
+  sibling variant can be pattern-matched into the merged output for a
+  variant whose padding or gap isn't actually bound to anything. If any
+  single variant's gap, padding, or margin is unbound, the whole component
+  fails this check — report it against that specific variant, not the set
+  in general.
 - **Fail looks like:** a badge padded at a fixed `15`, no variable bound,
-  when the system's spacing scale only defines `8`/`16` steps.
+  when the system's spacing scale only defines `8`/`16` steps. Or, more
+  subtly: a fixed padding value that's numerically identical to a real
+  spacing variable's current value on one variant while every sibling
+  variant is properly bound to that variable — invisible in a screenshot
+  and invisible in a merged code summary, only caught by reading that
+  variant's own `boundVariables` directly.
 
 ## 5. Variant properties clearly named
 
