@@ -1,6 +1,6 @@
 name: Slack PR notification
 
-# Two independent gates decide whether this actually posts to Slack:
+# Three independent gates decide whether this actually posts to Slack:
 #
 # 1. Draft state (job-level `if`, below): only `ready_for_review` and
 #    `synchronize` on a non-draft PR run this job at all. A freshly opened
@@ -13,9 +13,18 @@ name: Slack PR notification
 #    warning is "safe to merge, noted, not blocking," never a reason to
 #    withhold the ping.
 #
-# This is a check-result gate, not a git-mergeability one — a PR with a
-# merge conflict is a separate git state GitHub already surfaces on the PR
-# itself, and isn't inspected anywhere in this workflow.
+# 3. Design-relevance (step-level `if` on "Post to Slack", below): a PR that
+#    touches no src/components/ file and whose validation report entries are
+#    all identical to base (tooling, CI, docs, unrelated app code) has
+#    nothing design-system-related to report. Posting here would fall back
+#    to the whole repo's current status — attaching other components'
+#    pre-existing warnings to a PR that never touched them, exactly the
+#    confusion component-scoping exists to prevent — so it's skipped
+#    entirely rather than shown as a whole-design-system message.
+#
+# Gates 2 and 3 are check-result / diff-content gates, not a git-mergeability
+# one — a PR with a merge conflict is a separate git state GitHub already
+# surfaces on the PR itself, and isn't inspected anywhere in this workflow.
 on:
   pull_request:
     types: [ready_for_review, synchronize]
@@ -85,8 +94,12 @@ jobs:
         if: steps.build_payload.outputs.status == 'fail'
         run: echo "::notice::design-sync is failing for this PR's touched component(s) — not posting to Slack. Stays with the author on the PR until it's green."
 
+      - name: No design components touched — skipping
+        if: steps.build_payload.outputs.should_post != 'true'
+        run: echo "::notice::This PR doesn't touch any design system component, directly or via its validation report entry — not posting to Slack. Nothing design-relevant to report."
+
       - name: Post to Slack
-        if: steps.build_payload.outputs.status != 'fail'
+        if: steps.build_payload.outputs.status != 'fail' && steps.build_payload.outputs.should_post == 'true'
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         # The notification is informational, never a merge gate — a missing
