@@ -86,6 +86,19 @@ locally is strictly better than catching it there.
 exists, including edge cases this summary doesn't spell out — read it, not
 just this file, before making a judgment call it might already cover.
 
+## Durable instructions go in project files, not memory
+
+Never save a durable rule, instruction, or behaviour for this project to
+assistant memory. If asked to remember something like that, it goes into
+the appropriate project file instead — this file for a standing rule that
+shapes how work gets done here, or the relevant rules file (e.g.
+`docs/design-system-rules.md`, `docs/ready-for-ai.md`) when the content
+belongs there instead. One source of truth beats a memory copy that can
+drift out of sync with it.
+
+- **Before writing it anywhere, confirm which file it's going into** — ask,
+  don't assume.
+
 ## Generated files never get hand-merged
 
 `src/design-docs/*.generated.json` and every component's
