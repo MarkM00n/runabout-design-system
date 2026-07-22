@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-22T07:44:00.058Z",
-  "validationReportGeneratedAt": "2026-07-22T07:36:58.675Z",
-  "status": "pass-with-warnings",
+  "generatedAt": "2026-07-22T21:58:09.784Z",
+  "validationReportGeneratedAt": "2026-07-22T21:53:43.653Z",
+  "status": "pass",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
@@ -11,14 +11,14 @@
     "totalComponents": 7,
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
-    "totalOpenIssues": 2,
-    "totalCaughtAndFixed": 2,
-    "totalDesignTokens": 147
+    "totalOpenIssues": 0,
+    "totalCaughtAndFixed": 4,
+    "totalDesignTokens": 149
   },
   "validationSummary": {
     "tokenCompliance": {
       "fail": 0,
-      "warn": 2
+      "warn": 0
     },
     "accessibility": {
       "fail": 0,
@@ -135,33 +135,14 @@
     {
       "name": "Card",
       "overall": true,
-      "status": "pass-with-warnings",
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
-          "warn": 2,
-          "status": "pass-with-warnings",
-          "open": [
-            {
-              "level": "warn",
-              "file": "src/components/Card/Card.tsx",
-              "line": 51,
-              "code": "raw-hex:#d9d9d9:51",
-              "message": "This colour (#d9d9d9) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            },
-            {
-              "level": "warn",
-              "file": "src/components/Card/Card.tsx",
-              "line": 63,
-              "code": "raw-hex:#f8ebda:63",
-              "message": "This colour (#f8ebda) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            }
-          ]
+          "warn": 0,
+          "status": "pass",
+          "open": []
         },
         "accessibility": {
           "pass": true,
@@ -185,10 +166,10 @@
           "open": []
         }
       },
-      "openCount": 2,
+      "openCount": 0,
       "openFailCount": 0,
-      "openWarnCount": 2,
-      "fixedCount": 2,
+      "openWarnCount": 0,
+      "fixedCount": 4,
       "history": [
         {
           "checkType": "tokenCompliance",
@@ -205,6 +186,22 @@
           "message": "This colour (#f8ebda) isn't from the design system. The file explains why one-off colours are allowed here, but this line doesn't say why it needs one.",
           "fix": "Add a short note on this line explaining why a one-off colour is needed — so the exception is on the record.",
           "resolvedAt": "2026-07-21"
+        },
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Card/Card.tsx",
+          "line": 51,
+          "message": "This colour (#d9d9d9) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-07-22"
+        },
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Card/Card.tsx",
+          "line": 63,
+          "message": "This colour (#f8ebda) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-07-22"
         }
       ],
       "lastValidated": "2026-07-22",
