@@ -13,6 +13,12 @@ time, even if the request doesn't mention the check by name.
   property — then offer to fix it.
 - **If it passes:** say so briefly, then continue straight into the normal
   build workflow below.
+- **Always check against live Figma state, never a cached result.** If this
+  design was already checked earlier in the conversation — even if it
+  failed — re-read the current source and re-run the check fresh before
+  reporting or blocking again on a request to build. The user may have
+  already fixed the issue in Figma since the last check; never block (or
+  pass) on a stale reading. Report only what the live check finds.
 
 A design that isn't ready for AI makes every rule below impossible to
 satisfy honestly — there's nothing to check token compliance or parity
