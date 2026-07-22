@@ -32,6 +32,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = join(ROOT, 'src', 'components');
 const TOKENS_CSS_PATH = join(ROOT, 'src', 'styles', 'tokens.css');
 const TOKENS_JSON_PATH = join(ROOT, 'src', 'tokens', 'tokens.json');
+const DESIGN_RULES_PATH = join(ROOT, 'docs', 'design-system-rules.md');
 
 const RESET = '\x1b[0m';
 const RED = '\x1b[31m';
@@ -394,6 +395,145 @@ export function checkAccessibility(name, rawSource) {
       message: 'This checkbox or radio button has a custom look, but the real control underneath may not be reachable by keyboard or screen reader.',
       fix: "Keep the real checkbox/radio in place and only hide it visually — don't remove it from the page, or keyboard and screen-reader users lose it entirely.",
     });
+  }
+
+  return issues;
+}
+
+// ---------------------------------------------------------------------------
+// 1b-2. Contrast maths + approved-pairings cross-reference (deferred here
+// from the interactive Ready-for-AI check because both require resolving
+// real hex values and running the WCAG formula, not a quick lookup — see
+// docs/ready-for-ai.md's "Check speed" section. This is the part of
+// Accessibility basics that's authoritative; the Ready-for-AI check only
+// does a manual gut-check.
+// ---------------------------------------------------------------------------
+
+// Pulls every --color-{text,surface,state,action}-* value out of
+// tokens.css, keyed by the suffix that also appears as a Surface Pairings
+// row/column key (e.g. "surface-inverse", "state-warning", "text-inverse")
+// — the same suffix Tailwind uses in bg-{suffix}/text-{suffix}. rgba()
+// values (e.g. action-secondary's transparent fill) can't be reduced to a
+// single contrast figure against an unknown backdrop, so they're kept out
+// of the map entirely rather than guessed at.
+export function parseColorHexTokens(cssRaw) {
+  const map = new Map();
+  const re = /--color-((?:text|surface|state|action)-[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g;
+  let match;
+  while ((match = re.exec(cssRaw))) {
+    map.set(match[1], match[2]);
+  }
+  return map;
+}
+
+// Parses design-system-rules.md §7's Surface Pairings table into
+// { rows: Map<surfaceKey, Map<textKey, ratioLabel>>, textUniverse: Set<textKey> }.
+// `rows`' keys double as the only valid bg-{key} tokens to check (anything
+// not in this table was never meant to be a text-pairing surface); textUniverse
+// is every token ever listed as an approved text partner across all rows,
+// which is also the only valid text-{key} tokens to check — this is what
+// lets `bg-state-hover` (a real Tailwind class, but not a documented surface)
+// and `text-label` (a typography token, not a colour) get ignored automatically
+// rather than needing their own exclusion list.
+export function parseSurfacePairingsTable(rulesRaw) {
+  const rows = new Map();
+  const textUniverse = new Set();
+  const rowRe = /^\|\s*`([a-z0-9-]+)`\s*\(`#[0-9a-fA-F]{3,8}`\)\s*\|\s*(.+?)\s*\|\s*$/;
+  for (const rawLine of rulesRaw.split('\n')) {
+    const m = rowRe.exec(rawLine.trim());
+    if (!m) continue;
+    const [, surfaceKey, cellText] = m;
+    const parts = cellText.split('·').map((s) => s.trim()).filter(Boolean);
+    const textMap = new Map();
+    for (let i = 0; i < parts.length - 1; i += 2) {
+      textMap.set(parts[i], parts[i + 1]);
+      textUniverse.add(parts[i]);
+    }
+    rows.set(surfaceKey, textMap);
+  }
+  return { rows, textUniverse };
+}
+
+function hexToRgb01(hex) {
+  const h = hex.slice(1);
+  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h.slice(0, 6);
+  return {
+    r: parseInt(full.slice(0, 2), 16) / 255,
+    g: parseInt(full.slice(2, 4), 16) / 255,
+    b: parseInt(full.slice(4, 6), 16) / 255,
+  };
+}
+
+// Standard sRGB -> linear-light transfer function, per the WCAG 2.x
+// relative-luminance definition.
+function srgbToLinear(c) {
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function relativeLuminance(hex) {
+  const { r, g, b } = hexToRgb01(hex);
+  return 0.2126 * srgbToLinear(r) + 0.7152 * srgbToLinear(g) + 0.0722 * srgbToLinear(b);
+}
+
+export function contrastRatio(hexA, hexB) {
+  const a = relativeLuminance(hexA);
+  const b = relativeLuminance(hexB);
+  const lighter = Math.max(a, b);
+  const darker = Math.min(a, b);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+// Real contrast maths + §7 cross-reference for a component's background/text
+// token pairs. Only runs when the file uses exactly one colour-token text
+// class — with more than one, which text token actually renders against
+// which background can't be told apart from source text alone (e.g.
+// Button's several variant-specific text colours), and guessing would risk
+// a false FAIL against real, working code; with zero, there's nothing to
+// pair. One shared text colour applied across several backgrounds (Badge's
+// base label colour against each variant's fill) is exactly the case this
+// can check safely.
+export function checkContrastPairings(name, source, colorHex, pairingsTable) {
+  const issues = [];
+  const file = `src/components/${name}/${name}.tsx`;
+  const codeOnly = stripComments(source);
+
+  const bgTokens = [...new Set([...codeOnly.matchAll(/\bbg-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
+    (t) => pairingsTable.rows.has(t),
+  );
+  const textTokens = [...new Set([...codeOnly.matchAll(/\btext-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
+    (t) => pairingsTable.textUniverse.has(t) && colorHex.has(t),
+  );
+
+  if (bgTokens.length === 0 || textTokens.length !== 1) return issues;
+
+  const [textToken] = textTokens;
+  const textHex = colorHex.get(textToken);
+
+  for (const bgToken of bgTokens) {
+    const bgHex = colorHex.get(bgToken);
+    if (!bgHex) continue;
+    const ratio = contrastRatio(bgHex, textHex);
+    const ratioLabel = `${ratio.toFixed(1)}:1`;
+
+    if (ratio < 4.5) {
+      issues.push({
+        level: 'fail',
+        file,
+        line: null,
+        code: `contrast-fail:${bgToken}:${textToken}`,
+        message: `text-${textToken} on bg-${bgToken} measures ${ratioLabel} — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).`,
+        fix: 'Use a text or background token here that clears 4.5:1 against its pair, or ask design to rebind one of these tokens.',
+      });
+    } else if (!pairingsTable.rows.get(bgToken)?.has(textToken)) {
+      issues.push({
+        level: 'warn',
+        file,
+        line: null,
+        code: `contrast-undocumented:${bgToken}:${textToken}`,
+        message: `text-${textToken} on bg-${bgToken} clears AA (${ratioLabel}) but isn't listed as an approved pairing in docs/design-system-rules.md §7.`,
+        fix: `Add text-${textToken} to bg-${bgToken}'s row in the Surface Pairings table (§7) so this combination is documented, not just coincidentally passing.`,
+      });
+    }
   }
 
   return issues;
@@ -1291,6 +1431,9 @@ function run() {
 
   const cssRaw = existsSync(TOKENS_CSS_PATH) ? readFileSync(TOKENS_CSS_PATH, 'utf8') : '';
   const cssTokenNames = parseThemeTokenNames(cssRaw);
+  const rulesRaw = existsSync(DESIGN_RULES_PATH) ? readFileSync(DESIGN_RULES_PATH, 'utf8') : '';
+  const colorHexTokens = parseColorHexTokens(cssRaw);
+  const pairingsTable = parseSurfacePairingsTable(rulesRaw);
 
   console.log(`${BOLD}Step 1-2: validating components and documentation${RESET}`);
   console.log(`${BOLD}Token parity${RESET} (tokens.css <-> tokens.json)`);
@@ -1316,7 +1459,10 @@ function run() {
     const storiesSource = existsSync(storiesPath) ? readFileSync(storiesPath, 'utf8') : '';
 
     const tokenIssues = checkTokenCompliance(name, componentSource);
-    const a11yIssues = checkAccessibility(name, componentSource);
+    const a11yIssues = [
+      ...checkAccessibility(name, componentSource),
+      ...checkContrastPairings(name, componentSource, colorHexTokens, pairingsTable),
+    ];
     const storybookIssues = existsSync(storiesPath)
       ? checkStorybookCoverage(name, dir, componentSource, storiesSource)
       : [{

@@ -16,6 +16,32 @@ consumed the wrong output.
 
 A design must satisfy all seven checks below to be ready to build from.
 
+## Check speed: build time vs. CI
+
+This check runs live, in conversation, while someone is waiting on it — so
+everything in it is scoped to what resolves in seconds: presence checks,
+binding checks, naming checks. All of checks 1–6, plus three of
+**Accessibility basics**' five sub-criteria (non-text contrast, touch
+targets, focus state), are this kind of check and gate the verdict below —
+a failure in any of them blocks build and must be fixed in Figma first.
+
+Two sub-criteria under **Accessibility basics** don't fit that budget:
+**Text contrast** and **Approved pairings** both require resolving real hex
+values and running the WCAG relative-luminance formula, then (for
+approved pairings) cross-referencing the result against
+`docs/design-system-rules.md` §7 — real analysis, not a lookup. Rather than
+either skip them or make every build-time check wait on them, they're
+computed for real after the component exists, as part of the same
+`npm run design-sync` gate that already runs in CI on every PR
+(`checkContrastPairings` in `scripts/design-sync.js`, surfaced via the PR's
+validation comment) — where a few extra seconds of CI time costs nothing.
+They stay **advisory at build time**: still worth a quick gut check against
+the current §7 table before generating code, but they no longer block the
+Ready-for-AI verdict — the CI run is the authoritative check, not this one.
+Non-text contrast stays build-time regardless, since there's no equivalent
+structured reference table yet for border/focus tokens to cross-reference
+against automatically.
+
 ## 1. Uses library components (not detached)
 
 The design must use real library component instances wherever it needs
@@ -124,11 +150,15 @@ the five it is (e.g. "Accessibility basics — Text contrast").
 against the surface directly behind it for normal text, or 3:1 for large
 text (18pt/24px regular, or 14pt/18.66px bold, and up).
 
-- **Check:** resolve the text colour's and the surface colour's actual RGB
-  values (via variable bindings or a live `use_figma` read), then compute
-  the real contrast ratio using the WCAG relative-luminance formula —
-  never eyeball it and never estimate. Report the exact computed ratio,
-  e.g. `2.94:1`, not a rounded-off guess.
+- **Runs:** in CI on the PR, not at build time — advisory here, see "Check
+  speed" above. `checkContrastPairings` in `scripts/design-sync.js`
+  computes this for real once the component exists.
+- **Check (manual gut-check only — CI is authoritative):** resolve the
+  text colour's and the surface colour's actual RGB values (via variable
+  bindings or a live `use_figma` read), then compute the real contrast
+  ratio using the WCAG relative-luminance formula — never eyeball it and
+  never estimate. Report the exact computed ratio, e.g. `2.94:1`, not a
+  rounded-off guess.
 - **Fail looks like:** pale text on a mid-tone fill that measures `2.94:1`
   against a `4.5:1` requirement (SC 1.4.3) — close enough to pass at a
   glance, numerically short.
@@ -137,6 +167,10 @@ text (18pt/24px regular, or 14pt/18.66px bold, and up).
 graphic that conveys information — focus indicators, icon-only controls,
 input borders — must clear 3:1 against its adjacent colour(s).
 
+- **Runs:** at build time — blocks the verdict. No structured
+  border/focus-token reference table exists yet (unlike text contrast's
+  §7 table), so this can't be automated in CI the same way; it stays a
+  manual check here until one exists.
 - **Check:** resolve the actual RGB values of the boundary/graphic and
   whatever's immediately adjacent to it (via variable bindings or a live
   `use_figma` read), then compute the real contrast ratio the same way as
@@ -152,10 +186,14 @@ The text token used must be one of the surface's approved partners in the
 Surface pairings table (`docs/design-system-rules.md` §7) — not just any
 combination that happens to clear contrast on its own.
 
-- **Check:** identify the bound surface variable and the bound text
-  variable, then look up that surface's row in §7's table. If the text
-  token isn't listed for that surface, it fails this check even if its
-  measured contrast would independently clear AA.
+- **Runs:** in CI on the PR, not at build time — advisory here, see "Check
+  speed" above. `checkContrastPairings` in `scripts/design-sync.js` runs
+  this cross-reference for real once the component exists.
+- **Check (manual gut-check only — CI is authoritative):** identify the
+  bound surface variable and the bound text variable, then look up that
+  surface's row in §7's table. If the text token isn't listed for that
+  surface, it fails this check even if its measured contrast would
+  independently clear AA.
 - **Fail looks like:** text bound to `text-highlight` sitting on
   `surface-secondary`, which might measure a passing ratio but isn't one
   of `surface-secondary`'s three approved partners (`text-inverse`,
@@ -167,6 +205,8 @@ size is smaller. **Not 44×44px** — that's SC 2.5.5 (Target Size Enhanced),
 which is **AAA**, and out of scope for this check. Don't flag anything at
 or above 24×24px as a failure.
 
+- **Runs:** at build time — blocks the verdict. A size comparison, not
+  live contrast math, so it's cheap either way.
 - **Check:** the component's real touch-target dimensions — an explicit
   hit-target frame if one exists, otherwise the component's own bounding
   box — against the 24px minimum in both directions.
@@ -184,6 +224,8 @@ or above 24×24px as a failure.
 component's variant set must include a state representing focus, since
 there's nothing to build a focus-visible style against otherwise.
 
+- **Runs:** at build time — blocks the verdict. A presence check, not
+  live contrast math, so it's cheap either way.
 - **Check:** the component's state/variant property values
   (`get_metadata` / `get_context_for_code_connect`) for a value
   representing focus — `Focused`, or equivalent.
@@ -192,8 +234,14 @@ there's nothing to build a focus-visible style against otherwise.
 
 ## Verdict
 
-All seven must pass. A single failing check is enough to block — report
-which one, in plain language, before writing any code.
+All seven checks must pass to gate the verdict, **except** Accessibility
+basics' Text contrast and Approved pairings sub-criteria — those are
+advisory here and are enforced for real by CI after the component is
+built (see "Check speed" above). A single failing check among the rest is
+enough to block — report which one, in plain language, before writing any
+code. If a manual gut-check on Text contrast or Approved pairings turns up
+something that looks wrong, still mention it — just don't treat it as a
+blocker on its own.
 
 ## Before reporting a failure
 
