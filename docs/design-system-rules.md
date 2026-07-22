@@ -309,6 +309,9 @@ surface).
 | `surface-emphasis` (`#2a2d1e`) | text-inverse · 12.0:1 · text-highlight-inverse · 5.4:1 · text-link-inverse · 7.5:1 · text-button-inverse · 7.5:1 |
 | `action-primary` (`#f8ebda`) | text-on-action · 11.8:1 · text-link · 5.2:1 · text-button · 5.2:1 · text-highlight · 5.2:1 |
 | `action-highlight` (`#df8e10`) | text-on-highlight · 5.3:1 |
+| `state-success` (`#166534`) | text-inverse · 6.1:1 |
+| `state-warning` (`#88570a`) | text-inverse · 5.2:1 |
+| `state-error` (`#b91c1c`) | text-inverse · 5.5:1 |
 
 - **`surface-feature` has no amber primitive that clears AA against it** — it
   sits at mid-luminance, so no shade of amber (the interactive-text family)
