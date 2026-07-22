@@ -158,6 +158,13 @@ variable — not a fixed value applied directly.
   single variant's gap, padding, or margin is unbound, the whole component
   fails this check — report it against that specific variant, not the set
   in general.
+- **`itemSpacing` only counts on a variant with two or more children.** It
+  has no visual effect with zero or one child, so an unbound `itemSpacing`
+  on a single-child variant isn't a real drift risk the way an unbound
+  padding value or a 2+-child gap would be — don't flag it. Count each
+  variant's own children before flagging; unbound
+  `paddingLeft`/`paddingRight`/`paddingTop`/`paddingBottom` still fails
+  regardless of child count, since padding always has a visible effect.
 - **Fail looks like:** a badge padded at a fixed `15`, no variable bound,
   when the system's spacing scale only defines `8`/`16` steps. Or, more
   subtly: a fixed padding value that's numerically identical to a real
