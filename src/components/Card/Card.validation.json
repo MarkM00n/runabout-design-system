@@ -3,11 +3,48 @@
   "lastValidated": "2026-07-22",
   "checks": {
     "tokenCompliance": {
-      "pass": true,
-      "fail": 0,
+      "pass": false,
+      "fail": 4,
       "warn": 0,
-      "status": "pass",
-      "open": []
+      "status": "fail",
+      "open": [
+        {
+          "level": "fail",
+          "file": "src/components/Card/Card.tsx",
+          "line": 63,
+          "code": "dead-class:text-inverse:63",
+          "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
+          "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
+          "checkType": "tokenCompliance"
+        },
+        {
+          "level": "fail",
+          "file": "src/components/Card/Card.tsx",
+          "line": 66,
+          "code": "dead-class:text-inverse:66",
+          "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
+          "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
+          "checkType": "tokenCompliance"
+        },
+        {
+          "level": "fail",
+          "file": "src/components/Card/Card.tsx",
+          "line": 68,
+          "code": "dead-class:text-inverse:68",
+          "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
+          "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
+          "checkType": "tokenCompliance"
+        },
+        {
+          "level": "fail",
+          "file": "src/components/Card/Card.tsx",
+          "line": 71,
+          "code": "dead-class:text-inverse:71",
+          "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
+          "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
+          "checkType": "tokenCompliance"
+        }
+      ]
     },
     "accessibility": {
       "pass": true,
@@ -65,8 +102,8 @@
       "resolvedAt": "2026-07-22"
     }
   ],
-  "overall": true,
-  "status": "pass",
+  "overall": false,
+  "status": "fail",
   "tokensUsed": [
     "color-alpha-white-10",
     "color-border-default",
