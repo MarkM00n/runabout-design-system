@@ -37,7 +37,6 @@ const {
   HEAD_SHA,
   TRIGGER_EVENT, // 'ready_for_review' | 'synchronize'
   VALIDATION_COMMENT_URL, // '' if no PR comment was found yet
-  STORYBOOK_BASE_URL,
 } = process.env;
 
 const CHECK_LABELS = {
@@ -66,44 +65,6 @@ function changedComponents() {
     if (match) names.add(match[1]);
   }
   return [...names].sort();
-}
-
-// A component is "new" if its directory didn't exist at the PR's base
-// commit — its Storybook page can't exist yet either, since Storybook only
-// (re)deploys on push to main (see deploy-storybook.yml).
-function existedAtBase(componentName) {
-  try {
-    const out = git(['ls-tree', '-d', '--name-only', BASE_SHA, `src/components/${componentName}`]);
-    return out.trim().length > 0;
-  } catch {
-    return false;
-  }
-}
-
-// Mirrors Storybook's own toId(): each '/'-separated part of a story title
-// lowercased, non-alphanumeric runs collapsed to a single '-', joined by '-'.
-function toStorybookId(title) {
-  return title
-    .split('/')
-    .map((part) => part.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
-    .join('-');
-}
-
-// The specific component's docs page — not the Storybook homepage. A
-// reviewer's actual use for this link is comparing the PR's diff against
-// the component's current live rendering, which only a deep link gives them.
-// Reads the story title at the PR's head commit, not disk, so this stays
-// correct if the workflow ever runs from a detached/shallow checkout.
-function storybookDocsUrl(componentName) {
-  let source;
-  try {
-    source = git(['show', `${HEAD_SHA}:src/components/${componentName}/${componentName}.stories.tsx`]);
-  } catch {
-    return null;
-  }
-  const match = source.match(/title:\s*['"`]([^'"`]+)['"`]/);
-  if (!match) return null;
-  return `${STORYBOOK_BASE_URL}?path=/docs/${toStorybookId(match[1])}--docs`;
 }
 
 function worstStatus(statuses) {
@@ -211,14 +172,6 @@ function main() {
 
   const componentLabel = touched.length === 0 ? 'Runabout Design System' : touched.join(', ');
 
-  const newComponents = touched.filter((name) => !existedAtBase(name));
-  // Only components this PR modifies (not adds) have a live page right now
-  // — a Storybook link is only useful to a reviewer for those.
-  const existingTouched = touched.filter((name) => !newComponents.includes(name));
-  const storybookLinks = existingTouched
-    .map((name) => ({ name, url: storybookDocsUrl(name) }))
-    .filter((entry) => entry.url !== null);
-
   const triggerVerb = TRIGGER_EVENT === 'synchronize' ? 'New commits pushed to a ready PR' : 'Marked ready for review';
   const metaParts = [`PR #${PR_NUMBER}`, `${triggerVerb} by @${PR_AUTHOR}`];
   const sizeText = diffSizeText();
@@ -250,19 +203,6 @@ function main() {
       url: VALIDATION_COMMENT_URL,
     });
   }
-  storybookLinks.forEach((entry, i) => {
-    buttons.push({
-      type: 'button',
-      action_id: `view_storybook_${i}`,
-      text: {
-        type: 'plain_text',
-        text: storybookLinks.length === 1 ? 'Storybook' : `${entry.name} in Storybook`,
-        emoji: true,
-      },
-      url: entry.url,
-    });
-  });
-
   const blocks = [
     {
       type: 'header',
@@ -291,11 +231,16 @@ function main() {
     }
   }
 
-  if (newComponents.length > 0) {
-    const label = newComponents.length === 1 ? newComponents[0] : `${newComponents.length} new components`;
+  // Never link Storybook at this stage: the deployed site only reflects
+  // main, not this PR's branch, and only (re)deploys on merge (see
+  // deploy-storybook.yml) — a link here would either 404 (new component) or
+  // silently show pre-PR content (modified component). The merge-complete
+  // Slack message (format-slack-merge-notification.js) is where a real,
+  // PR-accurate Storybook link shows up.
+  if (touched.length > 0) {
     blocks.push({
       type: 'context',
-      elements: [{ type: 'mrkdwn', text: `_${label} — Storybook available after merge, no page yet._` }],
+      elements: [{ type: 'mrkdwn', text: '_Storybook available after merge._' }],
     });
   }
 

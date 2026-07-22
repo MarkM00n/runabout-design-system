@@ -85,6 +85,16 @@ jobs:
               exit 1
             fi
           fi
+      - name: Build dashboard app
+        # Relative base (`./`) so the built asset paths resolve regardless
+        # of nesting depth — this output lands one level deeper than
+        # Storybook's own root build, under storybook-static/dashboard/,
+        # in the next step.
+        run: npm run build:dashboard
+      - name: Merge dashboard into Storybook output
+        run: |
+          mkdir -p storybook-static/dashboard
+          cp -r dist-dashboard/. storybook-static/dashboard/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -99,3 +109,59 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Fires once Storybook and the dashboard have actually finished deploying
+  # — the point at which the "Storybook available after merge" note on the
+  # ready-for-review message (stage 2, slack-pr-notification.yml) becomes
+  # true. Only on an actual push to main, not a manual workflow_dispatch
+  # re-run, so re-running this workflow by hand doesn't re-spam the channel.
+  notify-merge:
+    needs: deploy
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Find merged PR for this commit
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          response=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls")
+          echo "number=$(echo "$response" | jq -r '.[0].number // empty')" >> "$GITHUB_OUTPUT"
+          echo "title=$(echo "$response" | jq -r '.[0].title // empty')" >> "$GITHUB_OUTPUT"
+          echo "url=$(echo "$response" | jq -r '.[0].html_url // empty')" >> "$GITHUB_OUTPUT"
+      - name: Build Slack payload
+        env:
+          STORYBOOK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+          DASHBOARD_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard/
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_TITLE: ${{ steps.pr.outputs.title }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: node scripts/format-slack-merge-notification.js > /tmp/slack-payload.json
+      # Always a new message, never a threaded reply to the ready-for-review
+      # post — see format-slack-merge-notification.js's header comment for
+      # why an incoming webhook can't thread, and docs/how-work-flows.md for
+      # what a bot-token upgrade would take.
+      - name: Post merge notification to Slack
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "::warning::SLACK_WEBHOOK secret is not set — skipping Slack merge notification. See docs/how-work-flows.md for setup."
+            exit 0
+          fi
+          status_code=$(curl -sS -o /tmp/slack-response.txt -w '%{http_code}' \
+            -X POST -H 'Content-type: application/json' \
+            --data-binary @/tmp/slack-payload.json \
+            "$SLACK_WEBHOOK" || echo "000")
+          if [ "$status_code" != "200" ]; then
+            echo "::warning::Slack merge notification failed (HTTP $status_code): $(cat /tmp/slack-response.txt 2>/dev/null)"
+          else
+            echo "Slack merge notification posted."
+          fi

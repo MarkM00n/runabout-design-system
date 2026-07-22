@@ -74,18 +74,18 @@ The message is Slack Block Kit, posted as **Runabout CI** with a bot icon:
   assumes is that a PR is green *before* it's marked ready, so a warning
   reaching Slack is already the exception — it should be obvious what's
   noted without a click-through, not hidden behind a bare count
-- **Buttons** — the pull request, the validation report (links straight to
-  the sticky comment from stage 1, found via the GitHub API), and one
-  Storybook button per *existing* component the PR modifies — deep-linked
-  to that component's own docs page (e.g. `?path=/docs/components-badge--docs`,
-  read from its story's `title`), not the Storybook homepage, since the
-  reviewer's actual use for it is comparing the PR's diff against the
-  component's current live rendering. A component newly added in this PR
-  gets a "Storybook available after merge" note instead, since Storybook
-  only (re)deploys on push to `main` (stage 3) — linking a page that
-  doesn't exist yet would 404. A PR that touches no components (e.g. this
-  workflow's own PR) gets neither a button nor a note — there's no
-  component-specific Storybook context to give.
+- **Buttons** — the pull request, and the validation report (links straight
+  to the sticky comment from stage 1, found via the GitHub API).
+  Deliberately **no Storybook button at this stage, ever** — the deployed
+  site only reflects `main`, not this PR's branch, and only (re)deploys on
+  push to `main` (stage 3). Linking it here would either 404 (a component
+  newly added in this PR) or silently show pre-PR content (a component this
+  PR modifies) — neither is the reviewer's actual diff. Instead, any PR
+  that touches at least one component gets a plain context line: *"Storybook
+  available after merge."* A PR that touches no components (e.g. this
+  workflow's own PR) gets neither a button nor the note — there's no
+  component-specific Storybook context to give. The real, PR-accurate
+  Storybook link shows up once merged, in stage 4 below.
 
 Separately from the check-status gate above: the act of posting is also
 best-effort. A missing `SLACK_WEBHOOK` secret, a bad webhook, or Slack
@@ -101,10 +101,41 @@ Slack message can never show a different number than either of those.
 repository secret named `SLACK_WEBHOOK` (Settings → Secrets and variables →
 Actions → New repository secret). Never commit the URL itself.
 
-**Known limitation:** incoming webhooks can only post new messages, not
-edit an existing one — so "re-post/update" on new commits means a new
-Slack message each time, not an edited one. Editing in place would need a
-Slack bot token and `chat.update`, not a webhook.
+**Known limitation:** incoming webhooks can only post new messages — they
+can't edit an existing one, and they can't thread a reply under one either.
+A webhook's response to a post is just `{"ok": true}` in plain text, never
+the message's `ts` (timestamp), which is the only handle Slack's API uses
+to address a specific message for editing (`chat.update`) or threading
+(`thread_ts` on a later `chat.postMessage` call). So "re-post/update" on
+new commits means a new Slack message each time, and the merge-complete
+follow-up in stage 4 below is a second, separate message too — not a
+threaded reply to the ready-for-review one.
+
+Closing this gap needs a **Slack bot token**, not a webhook:
+
+1. Create (or reuse) a Slack app with the `chat:write` bot scope, install
+   it to the workspace, and invite the bot to the channel. Store its Bot
+   User OAuth Token (`xoxb-…`) as a new repo secret, e.g. `SLACK_BOT_TOKEN`
+   — never the same secret as `SLACK_WEBHOOK`, since it's a materially more
+   powerful credential (it can post/edit as the bot anywhere it's a
+   member, not just push to one fixed channel).
+2. Swap the `curl … "$SLACK_WEBHOOK"` posts for `POST
+   https://slack.com/api/chat.postMessage` with `Authorization: Bearer
+   $SLACK_BOT_TOKEN`. Unlike a webhook, this returns real JSON — capture
+   `ts` and `channel` from the response.
+3. Persist that `ts`/`channel` somewhere the *next* workflow run (a
+   different job, sometimes minutes later, triggered by the merge) can
+   read — e.g. a small hidden-comment marker on the PR itself, the same
+   pattern `slack-pr-notification.yml` already uses to find its own
+   validation-report comment via the GitHub API.
+4. In `deploy-storybook.yml`'s merge notification, read that marker back
+   and either call `chat.update` on the original `ts` (edit it in place —
+   e.g. flip the header to "✅ Merged") or `chat.postMessage` with
+   `thread_ts` set to it (a real threaded reply) instead of posting a bare
+   second message.
+
+None of this is implemented — stage 2 and stage 4 remain independent,
+un-threaded webhook posts until someone does it.
 
 ## 3. Merge to `main` → design-sync, dashboard data, Storybook deploy
 
@@ -121,3 +152,31 @@ guarantee, and `CLAUDE.md` for the full rule on generated files).
 This is also the point at which a newly-added component's Storybook page
 actually goes live — which is why stage 2 waits until after merge to link
 it.
+
+Before this workflow's `build` job uploads the Pages artifact, it also
+builds the root Vite app (`src/App.tsx`, the "Pilot Dashboard" reading
+`dashboard-data.generated.json`) via `npm run build:dashboard` — a relative
+(`--base ./`) build, distinct from the plain `npm run build` used for local
+preview — and copies its output into `storybook-static/dashboard/`. That
+puts the dashboard live at `<storybook-url>/dashboard/`, one path below
+Storybook's own root, in the same Pages deploy. There's no separate
+dashboard hosting to configure or keep in sync.
+
+## 4. Deploy completes → merge Slack notification
+
+**`deploy-storybook.yml`**'s `notify-merge` job, gated on `needs: deploy`
+and `github.event_name == 'push'` (so a manual `workflow_dispatch` re-run
+doesn't re-spam the channel) — posts once Storybook and the dashboard have
+actually finished deploying: **"✅ Merged — Storybook and dashboard
+updated"**, with buttons to both, plus a Pull Request button when a PR is
+found associated with the merge commit (via
+`repos/{repo}/commits/{sha}/pulls`; a direct push to `main` with no
+associated PR just posts without one). Built by
+`scripts/format-slack-merge-notification.js`.
+
+Posted to the same `SLACK_WEBHOOK` secret and channel as stage 2, but as
+its **own, separate message** — see stage 2's "Known limitation" above for
+why an incoming webhook can't thread this under, or edit, the
+ready-for-review post, and what a bot-token upgrade would take to fix
+that. Best-effort like stage 2's post: a missing secret or a failed POST
+logs a `::warning::` and leaves the workflow green.

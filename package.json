@@ -7,6 +7,7 @@
     "prepare": "git config merge.ours.driver true 2>/dev/null || true",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:dashboard": "tsc -b && vite build --base ./ --outDir dist-dashboard",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
