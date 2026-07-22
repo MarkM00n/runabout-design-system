@@ -26,3 +26,6 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Claude Code local tooling (settings, worktrees) — not project source
+.claude/
