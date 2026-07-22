@@ -187,10 +187,21 @@ function main() {
 
   const overallStatus = scoped.length > 0 ? worstStatus(scoped.map((c) => c.status)) : report.status;
 
-  // Step output for the calling workflow to gate the actual Slack post on —
-  // this script computes status, but "does a failing PR post" is a firing
+  // Step outputs for the calling workflow to gate the actual Slack post on —
+  // this script computes status, but "does this PR post at all" is a firing
   // decision the workflow makes, not this renderer.
+  //
+  // touched.length === 0 means neither signal in changedComponents() found a
+  // design-relevant change: no src/components/ file in the diff, and no
+  // component's report entry differs from base. That's a PR with nothing
+  // design-system-related to report (tooling, CI, docs, unrelated app code)
+  // — posting the whole repo's current status here would attach unrelated
+  // components' pre-existing warnings to a PR that never touched them, which
+  // is the exact confusion this scoping exists to prevent. should_post=false
+  // tells the workflow to skip Slack for this PR entirely rather than fall
+  // back to a whole-design-system view.
   if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(process.env.GITHUB_OUTPUT, `should_post=${touched.length > 0}\n`);
     appendFileSync(process.env.GITHUB_OUTPUT, `status=${overallStatus}\n`);
   }
 
