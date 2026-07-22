@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-22T00:53:28.910Z",
-  "validationReportGeneratedAt": "2026-07-22T00:53:28.424Z",
+  "generatedAt": "2026-07-22T01:39:11.494Z",
+  "validationReportGeneratedAt": "2026-07-22T01:39:10.769Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
@@ -12,7 +12,7 @@
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
     "totalOpenIssues": 2,
-    "totalCaughtAndFixed": 4,
+    "totalCaughtAndFixed": 5,
     "totalDesignTokens": 147
   },
   "validationSummary": {
@@ -71,7 +71,7 @@
       "openCount": 0,
       "openFailCount": 0,
       "openWarnCount": 0,
-      "fixedCount": 2,
+      "fixedCount": 3,
       "history": [
         {
           "checkType": "documentationCoverage",
@@ -88,6 +88,14 @@
           "message": "This component's documentation was written but never connected to Storybook — the story doesn't import it and pass it as parameters.designSystem, so the Docs page falls back to the bare auto-generated prop table instead of showing it.",
           "fix": "Import docs from './Badge.docs' and validation from './Badge.validation.json', then add designSystem: docs and designSystemValidation: validation to the story's parameters — see an existing component's .stories.tsx for the pattern.",
           "resolvedAt": "2026-07-21"
+        },
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Badge/Badge.tsx",
+          "line": 31,
+          "message": "This colour (#d9d9d9) isn't from the design system, and nothing explains why it's needed here.",
+          "fix": "Use a design system colour instead — check the design file for the right one. If this exact colour really is a one-off, add a note explaining why.",
+          "resolvedAt": "2026-07-22"
         }
       ],
       "lastValidated": "2026-07-22",
