@@ -47,6 +47,14 @@
       "message": "This component's documentation was written but never connected to Storybook — the story doesn't import it and pass it as parameters.designSystem, so the Docs page falls back to the bare auto-generated prop table instead of showing it.",
       "fix": "Import docs from './Badge.docs' and validation from './Badge.validation.json', then add designSystem: docs and designSystemValidation: validation to the story's parameters — see an existing component's .stories.tsx for the pattern.",
       "resolvedAt": "2026-07-21"
+    },
+    {
+      "checkType": "tokenCompliance",
+      "file": "src/components/Badge/Badge.tsx",
+      "line": 31,
+      "message": "This colour (#d9d9d9) isn't from the design system, and nothing explains why it's needed here.",
+      "fix": "Use a design system colour instead — check the design file for the right one. If this exact colour really is a one-off, add a note explaining why.",
+      "resolvedAt": "2026-07-22"
     }
   ],
   "overall": true,
