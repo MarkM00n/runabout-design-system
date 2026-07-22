@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T21:53:43.653Z",
+  "generatedAt": "2026-07-22T22:03:46.081Z",
   "overallStatus": true,
   "status": "pass",
   "categoryPass": {
@@ -197,6 +197,7 @@
         "color-border-default",
         "color-border-focus-on-feature",
         "color-surface-feature",
+        "color-text-inverse",
         "font-manrope",
         "font-recoleta",
         "radius-md",
