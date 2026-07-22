@@ -970,13 +970,25 @@ function writeConsolidatedReport(componentResults, categoryPass, overallStatus) 
     (sum, r) => sum + Object.values(r.checks).reduce((s, c) => s + c.warn, 0),
     0,
   );
-  const data = {
-    generatedAt: new Date().toISOString(),
+  const contentFields = {
     overallStatus,
     status: statusFor(totalFail, totalWarn),
     categoryPass,
     components: componentResults,
   };
+
+  // Only touch the file (and bump generatedAt) when the actual report
+  // content changed — otherwise every run produces a timestamp-only diff,
+  // which shows up as a no-op PR with nothing real to review.
+  if (existsSync(VALIDATION_REPORT_PATH)) {
+    const existing = JSON.parse(readFileSync(VALIDATION_REPORT_PATH, 'utf8'));
+    const { generatedAt: _existingGeneratedAt, ...existingContentFields } = existing;
+    if (JSON.stringify(existingContentFields) === JSON.stringify(contentFields)) {
+      return;
+    }
+  }
+
+  const data = { generatedAt: new Date().toISOString(), ...contentFields };
   writeFileSync(VALIDATION_REPORT_PATH, JSON.stringify(data, null, 2) + '\n');
 }
 
