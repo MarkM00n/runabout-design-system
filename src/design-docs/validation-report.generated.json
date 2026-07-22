@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T23:40:43.590Z",
+  "generatedAt": "2026-07-22T00:12:46.962Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -12,7 +12,7 @@
   "components": [
     {
       "component": "Badge",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -79,7 +79,7 @@
     },
     {
       "component": "Button",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -142,7 +142,7 @@
     },
     {
       "component": "Card",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -224,7 +224,7 @@
     },
     {
       "component": "Checkbox",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -278,7 +278,7 @@
     },
     {
       "component": "Input",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -331,7 +331,7 @@
     },
     {
       "component": "Select",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -384,7 +384,7 @@
     },
     {
       "component": "Textarea",
-      "lastValidated": "2026-07-21",
+      "lastValidated": "2026-07-22",
       "checks": {
         "tokenCompliance": {
           "pass": true,

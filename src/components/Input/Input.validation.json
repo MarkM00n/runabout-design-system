@@ -1,6 +1,6 @@
 {
   "component": "Input",
-  "lastValidated": "2026-07-21",
+  "lastValidated": "2026-07-22",
   "checks": {
     "tokenCompliance": {
       "pass": true,
