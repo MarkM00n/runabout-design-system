@@ -16,6 +16,26 @@ consumed the wrong output.
 
 A design must satisfy all seven checks below to be ready to build from.
 
+## Default file for live Plugin API reads
+
+The live `use_figma` reads several checks below require (colours,
+spacing, text styles — see each check's own instructions) need an
+explicit Figma file key. Unlike the dev-mode `get_metadata`/
+`get_design_context` tools, which read whatever's currently open in the
+Figma desktop app, `use_figma`, `get_libraries`, and
+`get_context_for_code_connect` have no notion of "current selection" —
+every call needs a `fileKey` up front.
+
+This design system has one Figma source file, so its key is fixed and
+known ahead of time: **`JpFA7KtVlSOrM9fIYYgOsn`** (the same file
+`docs/design-system-rules.md`'s "Design source" line names). Use it as
+the default `fileKey` for every such call this check makes. Combine it
+with the node ID from the user's current selection (via dev-mode
+`get_metadata`, no URL needed) to target the right node — don't ask the
+user for a Figma URL just to extract a file key that's already fixed.
+Only fall back to asking for a URL if the selection turns out to live in
+a different Figma file than this one.
+
 ## Check speed: build time vs. CI
 
 This check runs live, in conversation, while someone is waiting on it — so
