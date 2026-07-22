@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { Button } from '../Button';
 
+export type CardTitleLevel = 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
 export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   title: string;
   date: string;
@@ -11,17 +13,23 @@ export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>
   description: string;
   ctaLabel?: string;
   onCtaClick?: () => void;
+  /** Makes the image/title/metadata region one clickable, focusable unit
+   * (Figma: "form one clickable unit with a single focus stop"), separate
+   * from the CTA button. Omit to keep that region static. */
+  onCardClick?: () => void;
   imageSrc?: string;
   imageAlt?: string;
+  /** Heading tag for the title. Figma: "the card does not own its heading
+   * level" — the caller picks what's correct for the page's outline. Visual
+   * size stays text-h3 regardless of the tag chosen. */
+  titleLevel?: CardTitleLevel;
 }
 
 /**
- * Source: Figma `cards/events` component. Several of its layout values
- * (container padding/gap/radius, the date/time row gap, the divider) are not
- * bound to Figma variables — they're implemented here as literal px so they
- * don't silently imply a token relationship the design file doesn't have.
- * The 624/528px widths in Figma were just this instance's canvas size, not a
- * real constraint, so this implementation is fluid-width instead.
+ * Source: Figma `cards` component set (`State: Default | Focus`). The Focus
+ * variant's ring only applies to the clickable image/title/metadata region,
+ * not the whole card — it's rendered here via :focus-visible on that
+ * region's own element, not a prop-driven variant.
  */
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   (
@@ -32,48 +40,69 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       description,
       ctaLabel = 'Book now',
       onCtaClick,
+      onCardClick,
       imageSrc,
       imageAlt = '',
+      titleLevel = 'h3',
       className,
       ...props
     },
     ref,
-  ) => (
-    <div
-      ref={ref}
-      className={clsx(
-        'flex flex-col p-[48px] gap-[32px] rounded-[16px] bg-surface-feature',
-        className,
-      )}
-      {...props}
-    >
-      {/* #d9d9d9 is unbound in Figma (Image frame fill, node 132:7) — no variable to trace to */}
-      <div className="h-[200px] w-full overflow-hidden rounded-[8px] bg-[#d9d9d9]/30">
-        {imageSrc ? (
-          <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
-        ) : null}
-      </div>
+  ) => {
+    const TitleTag = titleLevel;
 
-      <div className="flex flex-col gap-01">
-        <h3 className="font-recoleta text-h3 text-sand-400 m-0">{title}</h3>
-
-        <div className="flex items-center gap-[16px]">
-          <span className="font-manrope text-paragraph-small text-sand-400">{date}</span>
-          {/* #f8ebda is unbound in Figma (divider frame fill, node 131:417) — no variable to trace to */}
-          <span className="h-[1px] w-[24px] bg-[#f8ebda]" aria-hidden="true" />
-          <span className="font-manrope text-paragraph-small text-sand-400">{time}</span>
+    const content = (
+      <>
+        <div className="h-[200px] w-full overflow-hidden rounded-md bg-alpha-white-10">
+          {imageSrc ? (
+            <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
+          ) : null}
         </div>
 
-        <p className="font-manrope text-paragraph-small text-sand-400 m-0">{description}</p>
-      </div>
+        <div className="flex flex-col gap-01">
+          <TitleTag className="font-recoleta text-h3 text-inverse m-0">{title}</TitleTag>
 
-      {/* self-start: Figma hugs the CTA to its content width (128px), the
-          flex column's default align-items:stretch would otherwise fill it */}
-      <Button variant="secondary" size="large" onClick={onCtaClick} className="self-start">
-        {ctaLabel}
-      </Button>
-    </div>
-  ),
+          <div className="flex items-center gap-02">
+            <span className="font-manrope text-paragraph-small text-inverse">{date}</span>
+            <span className="h-[1px] w-[24px] bg-border-default" aria-hidden="true" />
+            <span className="font-manrope text-paragraph-small text-inverse">{time}</span>
+          </div>
+
+          <p className="font-manrope text-paragraph-small text-inverse m-0">{description}</p>
+        </div>
+      </>
+    );
+
+    return (
+      <div
+        ref={ref}
+        className={clsx('flex flex-col p-06 gap-04 rounded-xl bg-surface-feature', className)}
+        {...props}
+      >
+        {onCardClick ? (
+          <button
+            type="button"
+            onClick={onCardClick}
+            className={clsx(
+              'flex flex-col gap-04 w-full text-left bg-transparent border-0 p-0',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+              'focus-visible:ring-offset-transparent focus-visible:ring-border-focus-on-feature',
+            )}
+          >
+            {content}
+          </button>
+        ) : (
+          <div className="flex flex-col gap-04">{content}</div>
+        )}
+
+        {/* self-start: Figma hugs the CTA to its content width (128px), the
+            flex column's default align-items:stretch would otherwise fill it */}
+        <Button variant="secondary" size="large" onClick={onCtaClick} className="self-start">
+          {ctaLabel}
+        </Button>
+      </div>
+    );
+  },
 );
 
 Card.displayName = 'Card';

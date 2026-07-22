@@ -66,6 +66,16 @@
      accent specifically — border-focus is unchanged and still what every
      other Button variant and every Input-family control uses. */
   --color-border-focus-on-highlight: #1e3a8a;
+  /* New 2026-07-23, added while building Card. None of border-focus (~1.5:1),
+     border-focus-inverse (2.18:1), or border-focus-on-highlight (~1.8:1)
+     clear WCAG 1.4.11's 3:1 non-text minimum against surface-feature — the
+     "Card CTA case" flagged in the Surface pairings notes never actually got
+     a compliant token. Card's Focus state (the clickable image/title/
+     metadata region) needs its own ring here. Aliases the new Blue/50
+     primitive, which clears ~3.70:1 against surface-feature. Scoped to
+     surface-feature specifically, same convention as
+     border-focus-on-highlight's accent-only scoping. */
+  --color-border-focus-on-feature: #b3d1ff;
 
   /* Default body text color; also the typed-value color for Input-family
      controls when focused (see Input's placeholder-vs-value reconstruction). */
@@ -74,7 +84,11 @@
   --color-text-secondary: #5d6440;
   /* Text/border color for content meant to sit on a dark or colored surface
      (Button secondary variant, Checkbox's label) — assumes a dark backdrop,
-     see Checkbox's Storybook decorator for why. */
+     see Checkbox's Storybook decorator for why. Also Card's title/date/time/
+     description text as of 2026-07-23 — rebound from sand-400 in Figma once
+     that binding was flagged as not being one of surface-feature's approved
+     §7 pairing partners (text-inverse and text-on-feature are; sand-400 is
+     neither, despite its value nearly matching). */
   --color-text-inverse: #f8ebda;
   /* Placeholder text color for Input-family controls; also Checkbox's
      disabled-state checkmark/label color. */
@@ -213,10 +227,13 @@
   --color-sand-100: #f3dbbc;
   --color-sand-200: #f4dfc3;
   --color-sand-300: #f6e3cb;
-  /* Primitive-tier palette token — Card's title/date/description text binds
-     directly to this rather than a semantic text-* token in Figma. Kept
-     distinct rather than aliased to surface-primary/text-inverse even though
-     the values currently match, since the Figma binding is what it is. */
+  /* Card's title/date/description text used to bind directly to this
+     primitive rather than a semantic text-* token in Figma. Rebound to
+     text-inverse on 2026-07-23 once that direct binding was flagged as an
+     Approved Pairings gap (§7) — sand-400 isn't one of surface-feature's
+     approved partners, even though its value nearly matched text-inverse's.
+     No remaining component consumer; kept in the ramp as a real primitive
+     step regardless. */
   --color-sand-400: #f7e7d2;
   --color-sand-500: #f8ebda;
   --color-sand-600: #faefe1;
@@ -321,6 +338,12 @@
      non-text contrast) against mid-luminance fills like action-highlight.
      Aliased by border-focus-on-highlight. */
   --color-blue-25: #1e3a8a;
+  /* New 2026-07-23, added while building Card. A lighter blue step —
+     border-focus-on-highlight (Blue/25) and border-focus (Blue/100) both
+     fail WCAG 1.4.11's 3:1 non-text minimum against surface-feature
+     (~1.8:1 / ~1.5:1); this clears it at ~3.70:1. Aliased by the new
+     border-focus-on-feature semantic token. */
+  --color-blue-50: #b3d1ff;
 
   /* Figma's Alpha primitive scale — added after the initial 2026-07-19
      sync, since it's bound to no canvas node and only readable directly
