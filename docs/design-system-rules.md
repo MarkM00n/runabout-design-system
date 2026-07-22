@@ -133,13 +133,24 @@ stretching to full width, Select's chevron and Checkbox's box both
 independently hitting the same rem bug, the illegible Checkbox story) was
 found by rendering the component and measuring it, not by reading the JSX.
 
-- **Never mark a component done because it compiled or because it "looks
-  right" in a screenshot glance.** Run it through a live Storybook instance
-  and pull `getComputedStyle()` values (via Playwright, or the Chrome
-  extension if connected) for at least: background/border/text color,
-  border-radius, height, padding, and font-size — across every size and
-  state variant — and diff them against the literal values extracted from
-  Figma.
+That verification is real and still expected — it's just not automatic.
+**Live rendering (Storybook + `getComputedStyle()`) is a separate,
+explicit step, run on purpose by whoever's driving the work, or by CI —
+never launched automatically as part of generating a component or running
+the Ready-for-AI check.** Storybook's startup cost makes firing it on
+every build turn a drag on the normal flow; keeping it explicit is what
+keeps that flow fast while still leaving the real check available
+whenever someone actually wants it.
+
+- **A component isn't verified just because it compiled, "looks right" in
+  a screenshot glance, or passes `design-sync`.** `design-sync` is a
+  static heuristic — it checks source against token names, not rendered
+  output — and its own report says as much. When the live-render step does
+  run (on request, or in CI), start a live Storybook instance and pull
+  `getComputedStyle()` values (via Playwright, or the Chrome extension if
+  connected) for at least: background/border/text color, border-radius,
+  height, padding, and font-size — across every size and state variant —
+  and diff them against the literal values extracted from Figma.
 - **Don't assume sibling components share a rule.** `Button`'s radius steps
   down at the `small` size; `Input`, `Select`, and `Textarea` all stay pill
   at both sizes. Assuming "it's probably the same as the last component"
@@ -153,7 +164,9 @@ found by rendering the component and measuring it, not by reading the JSX.
   sanity check on top of the computed-style diffing — numbers can match and
   a layout can still look visually wrong (this is exactly how the Card
   CTA-width bug was caught: the computed styles for color/radius/height were
-  all already correct, and the bug was only visible in the screenshot).
+  all already correct, and the bug was only visible in the screenshot). Like
+  the rest of this section, this happens during the explicit live-render
+  step, not automatically.
 
 ## 5. Documentation
 
