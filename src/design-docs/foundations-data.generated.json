@@ -198,6 +198,7 @@
       "consumedBy": [
         "Badge",
         "Button",
+        "Card",
         "Checkbox"
       ]
     },

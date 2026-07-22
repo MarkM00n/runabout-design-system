@@ -60,15 +60,15 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         </div>
 
         <div className="flex flex-col gap-01">
-          <TitleTag className="font-recoleta text-h3 text-inverse m-0">{title}</TitleTag>
+          <TitleTag className="font-recoleta text-h3 text-text-inverse m-0">{title}</TitleTag>
 
           <div className="flex items-center gap-02">
-            <span className="font-manrope text-paragraph-small text-inverse">{date}</span>
+            <span className="font-manrope text-paragraph-small text-text-inverse">{date}</span>
             <span className="h-[1px] w-[24px] bg-border-default" aria-hidden="true" />
-            <span className="font-manrope text-paragraph-small text-inverse">{time}</span>
+            <span className="font-manrope text-paragraph-small text-text-inverse">{time}</span>
           </div>
 
-          <p className="font-manrope text-paragraph-small text-inverse m-0">{description}</p>
+          <p className="font-manrope text-paragraph-small text-text-inverse m-0">{description}</p>
         </div>
       </>
     );
