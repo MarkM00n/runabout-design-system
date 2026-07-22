@@ -136,6 +136,29 @@ jobs:
           echo "number=$(echo "$response" | jq -r '.[0].number // empty')" >> "$GITHUB_OUTPUT"
           echo "title=$(echo "$response" | jq -r '.[0].title // empty')" >> "$GITHUB_OUTPUT"
           echo "url=$(echo "$response" | jq -r '.[0].html_url // empty')" >> "$GITHUB_OUTPUT"
+      - name: Find components touched by this PR
+        id: components
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Component folder names under src/components/ with a real file
+          # change — excludes *.validation.json, since that regenerates on
+          # any design-sync run (including one merge's "chore: regenerate
+          # derived data" commit picking up an unrelated component) and
+          # isn't itself evidence this PR changed that component. Sorted
+          # alphabetically for a deterministic "first" component to deep
+          # link to, not diff order (which `gh api .../files` doesn't
+          # guarantee stays stable anyway).
+          if [ -z "${{ steps.pr.outputs.number }}" ]; then
+            names=""
+          else
+            names=$(gh api "repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.number }}/files" --paginate --jq '.[].filename' \
+              | grep -E '^src/components/[^/]+/' \
+              | grep -v '\.validation\.json$' \
+              | sed -E 's#^src/components/([^/]+)/.*#\1#' \
+              | sort -u | paste -sd, -)
+          fi
+          echo "names=$names" >> "$GITHUB_OUTPUT"
       - name: Build Slack payload
         env:
           STORYBOOK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
@@ -143,6 +166,7 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           PR_TITLE: ${{ steps.pr.outputs.title }}
           PR_URL: ${{ steps.pr.outputs.url }}
+          CHANGED_COMPONENTS: ${{ steps.components.outputs.names }}
         run: node scripts/format-slack-merge-notification.js > /tmp/slack-payload.json
       # Always a new message, never a threaded reply to the ready-for-review
       # post — see format-slack-merge-notification.js's header comment for

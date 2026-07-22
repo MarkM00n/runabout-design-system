@@ -18,19 +18,47 @@
  *
  * Usage: node scripts/format-slack-merge-notification.js > slack-payload.json
  */
-const { STORYBOOK_BASE_URL, DASHBOARD_URL, PR_NUMBER, PR_TITLE, PR_URL } = process.env;
+const { STORYBOOK_BASE_URL, DASHBOARD_URL, PR_NUMBER, PR_TITLE, PR_URL, CHANGED_COMPONENTS } = process.env;
 
 const contextLines = ['*✅ Merged — Storybook and dashboard updated*'];
 if (PR_NUMBER && PR_TITLE) {
   contextLines.push(`PR #${PR_NUMBER}: ${PR_TITLE}`);
 }
 
+// Deep-links the Storybook button straight to the changed component's docs
+// page instead of Storybook's root, when the merged PR touched exactly the
+// kind of file that means "this component changed" (see the workflow step
+// that computes CHANGED_COMPONENTS — *.validation.json doesn't count).
+// Storybook's autodocs page id is predictable from a story's own
+// `title: 'Components/Name'` meta — verified directly against the live
+// deployed Storybook's index.json (every entry follows
+// components-<name-lowercase>--docs, e.g. components-card--docs) rather
+// than assumed from Storybook's docs. A PR touching more than one component
+// links the first (alphabetically, matching how the workflow step sorts
+// the list) and names the rest in a line under the buttons; a PR touching
+// none (docs/tooling/CI-only) keeps the plain root link.
+const changedComponents = (CHANGED_COMPONENTS ?? '')
+  .split(',')
+  .map((name) => name.trim())
+  .filter(Boolean);
+
+let storybookUrl = STORYBOOK_BASE_URL;
+let storybookButtonText = 'Storybook';
+if (changedComponents.length > 0) {
+  const [firstComponent, ...restComponents] = changedComponents;
+  storybookUrl = `${STORYBOOK_BASE_URL}?path=/docs/components-${firstComponent.toLowerCase()}--docs`;
+  storybookButtonText = `Storybook: ${firstComponent}`;
+  if (restComponents.length > 0) {
+    contextLines.push(`Also touched: ${restComponents.join(', ')}`);
+  }
+}
+
 const buttons = [
   {
     type: 'button',
     action_id: 'view_storybook',
-    text: { type: 'plain_text', text: 'Storybook', emoji: true },
-    url: STORYBOOK_BASE_URL,
+    text: { type: 'plain_text', text: storybookButtonText, emoji: true },
+    url: storybookUrl,
   },
   {
     type: 'button',
