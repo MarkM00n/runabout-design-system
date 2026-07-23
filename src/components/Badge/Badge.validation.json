@@ -1,6 +1,6 @@
 {
   "component": "Badge",
-  "lastValidated": "2026-07-22",
+  "lastValidated": "2026-07-23",
   "checks": {
     "tokenCompliance": {
       "pass": true,
@@ -41,7 +41,7 @@
     "color-surface-inverse",
     "color-text-inverse",
     "font-manrope",
-    "radius-full",
+    "radius-sm",
     "spacing-00",
     "spacing-01",
     "spacing-02",
