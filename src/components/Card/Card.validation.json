@@ -1,6 +1,6 @@
 {
   "component": "Card",
-  "lastValidated": "2026-07-22",
+  "lastValidated": "2026-07-23",
   "checks": {
     "tokenCompliance": {
       "pass": true,

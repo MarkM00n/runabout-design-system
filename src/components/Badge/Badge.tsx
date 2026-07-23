@@ -11,7 +11,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const baseStyles = clsx(
-  'inline-flex items-center justify-center rounded-full',
+  'inline-flex items-center justify-center rounded-sm',
   'font-manrope font-normal text-label truncate',
 );
 

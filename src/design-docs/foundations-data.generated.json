@@ -1554,6 +1554,7 @@
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
       "consumedBy": [
+        "Badge",
         "Checkbox"
       ]
     },
@@ -1610,9 +1611,7 @@
       "value": "9999px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": [
-        "Badge"
-      ]
+      "consumedBy": []
     }
   ],
   "motion": [
