@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-05T21:07:08.149Z",
-  "validationReportGeneratedAt": "2026-08-05T11:33:09.818Z",
-  "status": "pass-with-warnings",
+  "generatedAt": "2026-08-05T21:51:51.676Z",
+  "validationReportGeneratedAt": "2026-08-05T21:10:12.834Z",
+  "status": "pass",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
@@ -11,14 +11,14 @@
     "totalComponents": 8,
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
-    "totalOpenIssues": 2,
-    "totalCaughtAndFixed": 10,
+    "totalOpenIssues": 0,
+    "totalCaughtAndFixed": 12,
     "totalDesignTokens": 155
   },
   "validationSummary": {
     "tokenCompliance": {
       "fail": 0,
-      "warn": 2
+      "warn": 0
     },
     "accessibility": {
       "fail": 0,
@@ -86,33 +86,14 @@
     {
       "name": "Button",
       "overall": true,
-      "status": "pass-with-warnings",
+      "status": "pass",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
-          "warn": 2,
-          "status": "pass-with-warnings",
-          "open": [
-            {
-              "level": "warn",
-              "file": "src/components/Button/Button.tsx",
-              "line": 93,
-              "code": "raw-hex:#eab460:93",
-              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            },
-            {
-              "level": "warn",
-              "file": "src/components/Button/Button.tsx",
-              "line": 94,
-              "code": "raw-hex:#eab460:94",
-              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            }
-          ]
+          "warn": 0,
+          "status": "pass",
+          "open": []
         },
         "accessibility": {
           "pass": true,
@@ -136,11 +117,28 @@
           "open": []
         }
       },
-      "openCount": 2,
+      "openCount": 0,
       "openFailCount": 0,
-      "openWarnCount": 2,
-      "fixedCount": 0,
-      "history": [],
+      "openWarnCount": 0,
+      "fixedCount": 2,
+      "history": [
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Button/Button.tsx",
+          "line": 93,
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-08-05"
+        },
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Button/Button.tsx",
+          "line": 94,
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-08-05"
+        }
+      ],
       "lastValidated": "2026-08-05",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
       "pr": {
