@@ -11,7 +11,12 @@
  *   3. Generate missing documentation sections (writes a ComponentName.docs.ts
  *      stub — with auto-derived variants/states — for any component missing one)
  *   4. Regenerate Storybook docs (npm run build-storybook, to confirm the
- *      current + newly-generated content actually builds)
+ *      current + newly-generated content actually builds) and build the
+ *      dashboard app (npm run build:dashboard) — a second, independent
+ *      Tailwind entry point that consumes tokens.css directly but lives
+ *      outside src/components/, so nothing above this step ever looks at
+ *      it. See CLAUDE.md's "Token/design-system changes must also sweep
+ *      the dashboard app" for the incident that made this its own step.
  *   5. Report PASS / FAIL
  *
  * Deliberately does NOT attempt design-parity checks (comparing rendered
@@ -34,6 +39,13 @@ const TOKENS_CSS_PATH = join(ROOT, 'src', 'styles', 'tokens.css');
 const TOKENS_JSON_PATH = join(ROOT, 'src', 'tokens', 'tokens.json');
 const DESIGN_RULES_PATH = join(ROOT, 'docs', 'design-system-rules.md');
 const STORYBOOK_STATIC_DIR = join(ROOT, 'storybook-static');
+// The dashboard (src/App.tsx/App.css) is a second Tailwind entry point,
+// built and checked independently of Storybook's own build/compiled CSS —
+// see readCompiledCss's doc comment for why a shared compiled-CSS string
+// can't be reused across the two.
+const APP_TSX_PATH = join(ROOT, 'src', 'App.tsx');
+const APP_CSS_PATH = join(ROOT, 'src', 'App.css');
+const DASHBOARD_DIST_DIR = join(ROOT, 'dist-dashboard');
 
 const RESET = '\x1b[0m';
 const RED = '\x1b[31m';
@@ -419,10 +431,16 @@ function classExistsInCompiledCss(candidate, compiledCss) {
   }
 }
 
-export function checkCompiledClassesExist(name, source, compiledCss) {
+// Shared walk: finds every token-utility-shaped class candidate in `source`
+// and reports one whose selector doesn't exist in `compiledCss`. Factored
+// out of checkCompiledClassesExist so the dashboard check (checkDashboard
+// CompiledClasses, below) can reuse the exact same candidate-detection and
+// dead-class logic against src/App.tsx instead of a component file — the
+// two are the same check against two different Tailwind entry points, not
+// two different checks.
+function findDeadClasses(file, source, compiledCss) {
   const issues = [];
   if (!compiledCss) return issues;
-  const file = `src/components/${name}/${name}.tsx`;
   const codeOnly = stripComments(source);
   const seen = new Set();
 
@@ -443,6 +461,72 @@ export function checkCompiledClassesExist(name, source, compiledCss) {
           code: `dead-class:${candidate}:${i + 1}`,
           message: `The class "${candidate}" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.`,
           fix: `This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.`,
+        });
+      }
+    }
+  });
+
+  return issues;
+}
+
+export function checkCompiledClassesExist(name, source, compiledCss) {
+  return findDeadClasses(`src/components/${name}/${name}.tsx`, source, compiledCss);
+}
+
+// Dashboard-specific: src/App.tsx (Tailwind utility classes) checked the
+// same way as a component, plus src/App.css (raw CSS, not Tailwind
+// classes — App.css sets colours via `color: var(--color-x)` directly,
+// not utility classes) checked for custom-property names that no longer
+// exist anywhere in the compiled output. Both walk the dashboard's own
+// build (dist-dashboard/, via build:dashboard below), not Storybook's —
+// App.tsx/App.css are a second, independent Tailwind entry point outside
+// src/components/, so Storybook's compiled CSS was never guaranteed to
+// contain their classes/properties at all.
+export function checkDashboardCompiledClasses(appTsxSource, compiledCss) {
+  return findDeadClasses('src/App.tsx', appTsxSource, compiledCss);
+}
+
+const CSS_VAR_USAGE_RE = /var\((--[a-z0-9-]+)\)/g;
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// A custom property is "declared in the compiled output" if its name
+// appears anywhere immediately followed by a colon (only whitespace, if
+// anything, in between) — true whether it's declared in @theme's base
+// block or a [data-mode] override block; this check only cares whether
+// the property exists at all, not which mode resolves it. A property
+// that's been retired/renamed/misspelled won't appear this way anywhere,
+// and silently falls back to its initial/inherited value at runtime —
+// no build error, no visual difference until someone actually looks.
+function customPropertyDeclaredInCompiledCss(propName, compiledCss) {
+  return new RegExp(escapeRegExp(propName) + '\\s*:').test(compiledCss);
+}
+
+export function checkDashboardCssVariables(appCssSource, compiledCss) {
+  const issues = [];
+  if (!compiledCss) return issues;
+  const file = 'src/App.css';
+  const codeOnly = stripComments(appCssSource);
+  const seen = new Set();
+
+  codeOnly.split('\n').forEach((line, i) => {
+    CSS_VAR_USAGE_RE.lastIndex = 0;
+    let match;
+    while ((match = CSS_VAR_USAGE_RE.exec(line))) {
+      const propName = match[1];
+      const key = `${propName}:${i + 1}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (!customPropertyDeclaredInCompiledCss(propName, compiledCss)) {
+        issues.push({
+          level: 'fail',
+          file,
+          line: i + 1,
+          code: `dead-css-var:${propName}:${i + 1}`,
+          message: `The custom property "${propName}" isn't declared anywhere in the compiled output — it's retired, renamed, or misspelled, and silently resolves to nothing (falls back to its initial/inherited value, not an error) rather than failing loudly.`,
+          fix: `Check tokens.css for this token's current name — this repo's own history has retired tokens exactly this way. See CLAUDE.md's "Token/design-system changes must also sweep the dashboard app".`,
         });
       }
     }
@@ -1199,6 +1283,20 @@ function regenerateStorybookDocs() {
   }
 }
 
+// Step 4b: same reasoning as regenerateStorybookDocs, for the dashboard's
+// own independent Tailwind entry point (src/App.tsx/App.css) — a build
+// failure here means something in the dashboard itself is broken, not just
+// a dead-class/dead-variable finding (those need the build to have
+// succeeded in order to check against real compiled output at all).
+function buildDashboardApp() {
+  try {
+    execSync('npm run build:dashboard', { cwd: ROOT, stdio: 'pipe' });
+    return { pass: true };
+  } catch (err) {
+    return { pass: false, output: (err.stdout ?? err.message ?? '').toString().slice(-2000) };
+  }
+}
+
 // ---------------------------------------------------------------------------
 // 3. Design Foundations: reads tokens.css/tokens.json as the single source of
 // truth (never re-derives values by other means), generates the data every
@@ -1751,6 +1849,20 @@ function run() {
     console.log('');
   }
 
+  // Step 4b: the dashboard's own independent Tailwind entry point — see
+  // this file's header comment and CLAUDE.md's "Token/design-system
+  // changes must also sweep the dashboard app" for why this exists as its
+  // own build, not folded into Storybook's.
+  console.log(`${BOLD}Step 4b: building the dashboard app${RESET} (npm run build:dashboard)`);
+  const dashboardBuildResult = buildDashboardApp();
+  if (dashboardBuildResult.pass) {
+    console.log(`  ${GREEN}PASS${RESET}  Dashboard app builds cleanly\n`);
+  } else {
+    console.log(`  ${RED}FAIL${RESET}  Dashboard build failed:`);
+    console.log(dashboardBuildResult.output.split('\n').map((l) => `    ${l}`).join('\n'));
+    console.log('');
+  }
+
   // Second pass: now that Step 4 has produced (or failed to produce) real
   // compiled CSS, finalize each component's report — folding the
   // compiled-class check into token compliance — and write/print it. Can't
@@ -1760,6 +1872,24 @@ function run() {
   // run rather than guessed at — the build failure already fails the overall
   // status regardless.
   const compiledCss = buildResult.pass ? readCompiledCss() : null;
+  const dashboardCompiledCss = dashboardBuildResult.pass ? readCompiledCss(DASHBOARD_DIST_DIR) : null;
+
+  console.log(`${BOLD}Dashboard${RESET} (src/App.tsx, src/App.css — outside src/components/, checked against its own build)`);
+  const appTsxSource = existsSync(APP_TSX_PATH) ? readFileSync(APP_TSX_PATH, 'utf8') : '';
+  const appCssSource = existsSync(APP_CSS_PATH) ? readFileSync(APP_CSS_PATH, 'utf8') : '';
+  const dashboardIssues = [
+    ...checkDashboardCompiledClasses(appTsxSource, dashboardCompiledCss),
+    ...checkDashboardCssVariables(appCssSource, dashboardCompiledCss),
+  ];
+  const dashboardCoveragePass = dashboardBuildResult.pass && dashboardIssues.length === 0;
+  if (!dashboardBuildResult.pass) {
+    console.log(`  ${RED}FAIL${RESET}  Skipped — dashboard build failed above, nothing trustworthy to check against\n`);
+  } else if (dashboardIssues.length === 0) {
+    console.log(`  ${GREEN}PASS${RESET}  no dead classes or retired custom properties found\n`);
+  } else {
+    printIssues(dashboardIssues);
+    console.log('');
+  }
 
   console.log(`${BOLD}Step 1-2: validating components and documentation${RESET}`);
   const componentResults = [];
@@ -1832,11 +1962,12 @@ function run() {
     'Storybook Coverage': componentResults.every((r) => r.checks.storybookCoverage.pass),
     'Documentation Coverage': componentResults.every((r) => r.checks.documentationCoverage.pass),
     'Foundation Coverage': foundationCoveragePass,
+    'Dashboard Coverage': dashboardCoveragePass,
   };
   printDotPaddedGroup(Object.entries(categoryPass));
   console.log('');
 
-  const overallStatus = Object.values(categoryPass).every(Boolean) && buildResult.pass;
+  const overallStatus = Object.values(categoryPass).every(Boolean) && buildResult.pass && dashboardBuildResult.pass;
   printDotPaddedGroup([['Overall Status', overallStatus]]);
   console.log('');
 
