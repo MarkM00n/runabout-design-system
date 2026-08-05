@@ -129,6 +129,31 @@ value ever changes.
   `opacity/disabled` variable — a fixed 0.38 opacity with no variable
   bound, or swapped-out disabled fill colours, both fail the system's
   intent even when every individual colour is bound.
+- **Bound is necessary but not sufficient — the variable's own namespace
+  must match the property it's on.** A stroke bound to a `text/*`
+  variable, or a fill bound to an `icon/*` variable, technically clears
+  "is this bound to a real published variable" while still being wrong:
+  the two are unrelated categories that happen to share a value today,
+  not a real design relationship. When reading each variant's
+  `boundVariables`, also resolve each bound variable's own **name** (not
+  just its colour) via `figma.variables.getVariableByIdAsync`, and check
+  its namespace against the property's conventional role — fills/strokes
+  that form a persistent border use `border/*` (or a `state/*` boundary
+  token); text and icon fills use `text/*`/`icon/*`; container fills use
+  `surface/*`, `action/*`, or `state/*`. A `text/*` variable bound to a
+  `strokes` property, or vice versa, fails this check regardless of
+  whether the two currently resolve to the same colour.
+- **Fail looks like (cross-category binding):** a component's stroke
+  bound to `text/primary` instead of a `border/*` token — real, found
+  and fixed live in this file's Button/Secondary component set
+  (2026-08-05): 4 of its 8 variants had their stroke bound to
+  `text/primary`, while the other 4 correctly used `border/strong` or
+  `border/default`. `text/primary` and `border/strong` shared the exact
+  same current value, so it passed a naive "is it bound" check and
+  looked correct in every screenshot — the split between which variants
+  had which binding, inconsistent within the same component set, was
+  the actual tell. Nothing keeps a text-role token and a border-role
+  token in sync if one is revalued independently of the other.
 
 ## 3. Text styles applied
 
