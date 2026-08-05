@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-05T11:33:09.818Z",
+  "generatedAt": "2026-08-05T21:10:12.834Z",
   "overallStatus": true,
-  "status": "pass-with-warnings",
+  "status": "pass",
   "categoryPass": {
     "Token Compliance": true,
     "Accessibility": true,
@@ -68,28 +68,9 @@
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
-          "warn": 2,
-          "status": "pass-with-warnings",
-          "open": [
-            {
-              "level": "warn",
-              "file": "src/components/Button/Button.tsx",
-              "line": 93,
-              "code": "raw-hex:#eab460:93",
-              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            },
-            {
-              "level": "warn",
-              "file": "src/components/Button/Button.tsx",
-              "line": 94,
-              "code": "raw-hex:#eab460:94",
-              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
-              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
-              "checkType": "tokenCompliance"
-            }
-          ]
+          "warn": 0,
+          "status": "pass",
+          "open": []
         },
         "accessibility": {
           "pass": true,
@@ -113,9 +94,26 @@
           "open": []
         }
       },
-      "history": [],
+      "history": [
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Button/Button.tsx",
+          "line": 93,
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-08-05"
+        },
+        {
+          "checkType": "tokenCompliance",
+          "file": "src/components/Button/Button.tsx",
+          "line": 94,
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "resolvedAt": "2026-08-05"
+        }
+      ],
       "overall": true,
-      "status": "pass-with-warnings",
+      "status": "pass",
       "tokensUsed": [
         "color-action-highlight",
         "color-action-highlight-hover",
