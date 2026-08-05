@@ -296,17 +296,18 @@ function App() {
         </div>
       </section>
 
-      {/* data-mode="light" overrides the page's ambient dark mode back to
-          light for this card's own zebra-row content — without it,
-          text-primary here would inherit the dark-mode value (light text)
-          and become nearly invisible against the light rows. */}
-      <section
-        className="dashboard-section table-card"
-        data-mode="light"
-        aria-label="Errors caught by validation"
-      >
+      {/* data-mode="light" lives on .table-scroll specifically, not the
+          whole <section> — it overrides the page's ambient dark mode back
+          to light for the table's own zebra-row content, which needs it
+          (text-primary would otherwise inherit the dark-mode value and
+          become nearly invisible against the light rows). .section-title
+          sits visually on the dark canvas above the table box, not inside
+          it — scoping data-mode="light" to the whole section previously
+          pulled the heading into that override too, rendering dark text
+          on the dark canvas (near-invisible, filed 2026-08-05). */}
+      <section className="dashboard-section table-card" aria-label="Errors caught by validation">
         <h2 className="section-title">Errors caught by validation</h2>
-        <div className="table-scroll">
+        <div className="table-scroll" data-mode="light">
           <table className="dashboard-table">
             <thead>
               <tr>
@@ -331,9 +332,9 @@ function App() {
         </div>
       </section>
 
-      <section className="dashboard-section table-card" data-mode="light" aria-label="Component status">
+      <section className="dashboard-section table-card" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
-        <div className="table-scroll">
+        <div className="table-scroll" data-mode="light">
           <table className="dashboard-table">
             <thead>
               <tr>
