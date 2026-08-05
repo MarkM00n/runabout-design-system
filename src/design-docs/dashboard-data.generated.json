@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-05T04:32:35.216Z",
-  "validationReportGeneratedAt": "2026-08-05T03:36:22.490Z",
+  "generatedAt": "2026-08-05T04:33:52.622Z",
+  "validationReportGeneratedAt": "2026-08-05T03:48:30.834Z",
   "status": "pass",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
@@ -8,7 +8,7 @@
     "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
   },
   "totals": {
-    "totalComponents": 7,
+    "totalComponents": 8,
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
     "totalOpenIssues": 0,
@@ -392,6 +392,52 @@
       "firstCommitAt": "2026-07-16T12:24:51+10:00",
       "mergedAt": "2026-07-16T13:00:40+10:00",
       "cycleTimeSeconds": 2149
+    },
+    {
+      "name": "Tab",
+      "overall": true,
+      "status": "pass",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
+      "fixedCount": 0,
+      "history": [],
+      "lastValidated": "2026-08-05",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-tab--docs",
+      "pr": null,
+      "firstCommitAt": null,
+      "mergedAt": null,
+      "cycleTimeSeconds": null
     },
     {
       "name": "Textarea",
