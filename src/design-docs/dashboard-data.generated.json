@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-05T04:33:52.622Z",
-  "validationReportGeneratedAt": "2026-08-05T03:48:30.834Z",
-  "status": "pass",
+  "generatedAt": "2026-08-05T04:55:36.805Z",
+  "validationReportGeneratedAt": "2026-08-05T04:36:29.465Z",
+  "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
@@ -11,14 +11,14 @@
     "totalComponents": 8,
     "averageCycleTimeSeconds": 36429,
     "averageCycleTimeLabel": "10h 7m",
-    "totalOpenIssues": 0,
-    "totalCaughtAndFixed": 8,
-    "totalDesignTokens": 149
+    "totalOpenIssues": 2,
+    "totalCaughtAndFixed": 10,
+    "totalDesignTokens": 155
   },
   "validationSummary": {
     "tokenCompliance": {
       "fail": 0,
-      "warn": 0
+      "warn": 2
     },
     "accessibility": {
       "fail": 0,
@@ -86,14 +86,33 @@
     {
       "name": "Button",
       "overall": true,
-      "status": "pass",
+      "status": "pass-with-warnings",
       "checks": {
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
-          "warn": 0,
-          "status": "pass",
-          "open": []
+          "warn": 2,
+          "status": "pass-with-warnings",
+          "open": [
+            {
+              "level": "warn",
+              "file": "src/components/Button/Button.tsx",
+              "line": 93,
+              "code": "raw-hex:#eab460:93",
+              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+              "checkType": "tokenCompliance"
+            },
+            {
+              "level": "warn",
+              "file": "src/components/Button/Button.tsx",
+              "line": 94,
+              "code": "raw-hex:#eab460:94",
+              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+              "checkType": "tokenCompliance"
+            }
+          ]
         },
         "accessibility": {
           "pass": true,
@@ -117,9 +136,9 @@
           "open": []
         }
       },
-      "openCount": 0,
+      "openCount": 2,
       "openFailCount": 0,
-      "openWarnCount": 0,
+      "openWarnCount": 2,
       "fixedCount": 0,
       "history": [],
       "lastValidated": "2026-08-05",
@@ -169,7 +188,7 @@
       "openCount": 0,
       "openFailCount": 0,
       "openWarnCount": 0,
-      "fixedCount": 8,
+      "fixedCount": 9,
       "history": [
         {
           "checkType": "tokenCompliance",
@@ -234,6 +253,14 @@
           "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
           "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
           "resolvedAt": "2026-07-22"
+        },
+        {
+          "checkType": "accessibility",
+          "file": "src/components/Card/Card.tsx",
+          "line": null,
+          "message": "text-text-primary on bg-border-default measures 1.2:1 in data-mode=\"feature\" context — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).",
+          "fix": "Use a text or background token here that clears 4.5:1 against its pair in this context, or ask design to rebind one of these tokens.",
+          "resolvedAt": "2026-08-05"
         }
       ],
       "lastValidated": "2026-08-05",
@@ -430,8 +457,17 @@
       "openCount": 0,
       "openFailCount": 0,
       "openWarnCount": 0,
-      "fixedCount": 0,
-      "history": [],
+      "fixedCount": 1,
+      "history": [
+        {
+          "checkType": "accessibility",
+          "file": "src/components/Tab/Tab.tsx",
+          "line": null,
+          "message": "text-text-primary on bg-text-highlight measures 1.9:1 in the default (On Light) context — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).",
+          "fix": "Use a text or background token here that clears 4.5:1 against its pair in this context, or ask design to rebind one of these tokens.",
+          "resolvedAt": "2026-08-05"
+        }
+      ],
       "lastValidated": "2026-08-05",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-tab--docs",
       "pr": null,
