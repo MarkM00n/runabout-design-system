@@ -88,11 +88,16 @@ const data = dashboardData as DashboardData;
 // rule out nesting a link inside one ("nested interactive elements —
 // screen readers cannot represent nested controls"), so these are real
 // anchors carrying the same classes instead of a wrapped Button.
+// text-inverse (used here pre-2026-08-05) is retired — no successor, the
+// mode resolves what it used to hand-pick. text-primary is the mode-aware
+// replacement; it resolves correctly here because the dashboard's root
+// element now carries data-mode="dark" (see the JSX below), same pattern
+// as Card/Button-secondary in the component sync.
 const SECONDARY_LINK_CLASS =
   'inline-flex items-center justify-center gap-01 font-manrope font-normal select-none ' +
   'transition-colors duration-150 ease-out h-[32px] px-02 rounded-xl text-label ' +
-  'bg-transparent text-text-inverse border border-border-default ' +
-  'hover:bg-action-secondary-hover hover:border-text-inverse ' +
+  'bg-transparent text-text-primary border border-border-default ' +
+  'hover:bg-action-secondary-hover hover:border-text-primary ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
   'focus-visible:ring-offset-transparent focus-visible:border-border-focus focus-visible:ring-border-focus';
 
@@ -241,7 +246,12 @@ function App() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="dashboard">
+    // data-mode="dark" — this page's canvas (surface-secondary) is a
+    // permanent dark surface, same reasoning as Card's data-mode="feature":
+    // every nested text-*/border-*/action-* token needs the On Dark column,
+    // not the ambient default. The two .table-card sections below override
+    // this back to data-mode="light" for their own light zebra-row content.
+    <div className="dashboard" data-mode="dark">
       <header className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Runabout DesignOps — Pilot Dashboard</h1>
@@ -260,33 +270,41 @@ function App() {
       </header>
 
       <section className="dashboard-metrics" aria-label="Headline metrics">
-        <div className="metric-tile">
+        <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.totalComponents}</div>
           <div className="metric-label">Components in the workflow</div>
         </div>
 
-        <div className="metric-tile">
+        <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.averageCycleTimeLabel ?? '—'}</div>
           <div className="metric-label">Avg. commit → merged PR</div>
         </div>
 
-        <div className="metric-tile">
+        <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.totalOpenIssues}</div>
           <div className="metric-label">Open issues right now</div>
         </div>
 
-        <div className="metric-tile">
+        <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.totalCaughtAndFixed}</div>
           <div className="metric-label">Caught &amp; fixed to date</div>
         </div>
 
-        <div className="metric-tile">
+        <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.totalDesignTokens ?? '—'}</div>
           <div className="metric-label">Design tokens documented</div>
         </div>
       </section>
 
-      <section className="dashboard-section table-card" aria-label="Errors caught by validation">
+      {/* data-mode="light" overrides the page's ambient dark mode back to
+          light for this card's own zebra-row content — without it,
+          text-primary here would inherit the dark-mode value (light text)
+          and become nearly invisible against the light rows. */}
+      <section
+        className="dashboard-section table-card"
+        data-mode="light"
+        aria-label="Errors caught by validation"
+      >
         <h2 className="section-title">Errors caught by validation</h2>
         <div className="table-scroll">
           <table className="dashboard-table">
@@ -313,7 +331,7 @@ function App() {
         </div>
       </section>
 
-      <section className="dashboard-section table-card" aria-label="Component status">
+      <section className="dashboard-section table-card" data-mode="light" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
         <div className="table-scroll">
           <table className="dashboard-table">
