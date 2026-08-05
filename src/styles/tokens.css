@@ -377,7 +377,54 @@
  * surface/* tokens, action-highlight(-hover), text-on-highlight,
  * text-on-state, state-hover, border-focus-on-highlight, opacity-disabled)
  * have no entry here; there is nothing to override.
+ *
+ * [data-mode='light'] exists even though its values are identical to
+ * @theme's base — @theme only sets the *initial* value; it doesn't
+ * override an ancestor's [data-mode="dark"/"feature"] block for a
+ * descendant that needs to go back to light (e.g. a light-content card
+ * nested inside an otherwise-dark page, or Storybook's mode-switcher
+ * toolbar explicitly selecting Light). CSS custom properties don't reset
+ * themselves just because a new attribute value is present — only an
+ * explicit rule for that attribute value does that. Without this block,
+ * data-mode="light" on such a descendant would silently do nothing and
+ * the dark/feature values would keep inheriting straight through.
  */
+[data-mode='light'] {
+  --color-action-primary: #2f2c28;
+  --color-action-primary-hover: #464340;
+  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  --color-action-disabled: #f4dfc3;
+
+  --color-border-default: #939880;
+  --color-border-subtle: #f4dfc3;
+  --color-border-strong: #3d4a2e;
+  --color-border-focus: #2563eb;
+
+  --color-text-primary: #2f2c28;
+  --color-text-secondary: #4a5435;
+  --color-text-muted: #5d5b58;
+  --color-text-highlight: #7a4e09;
+  --color-text-link: #7a4e09;
+  --color-text-button: #7a4e09;
+  --color-text-on-action: #f7e7d2;
+
+  --color-surface-card: #fefbf8;
+  --color-surface-subtle: #faefe1;
+
+  --color-state-disabled: #747270;
+  --color-state-focus: #2563eb;
+  --color-state-warning: #7a4e09;
+  --color-state-success: #166534;
+  --color-state-error: #b91c1c;
+
+  --color-icon-primary: #2f2c28;
+  --color-icon-secondary: #4a5435;
+  --color-icon-muted: #5d5b58;
+  --color-icon-interactive: #7a4e09;
+  --color-icon-on-action: #f7e7d2;
+  --color-icon-disabled: #747270;
+}
+
 [data-mode='dark'] {
   --color-action-primary: #f7e7d2;
   --color-action-primary-hover: #df8e10;

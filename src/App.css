@@ -4,15 +4,21 @@
 /* Color strategy (verified with a real WCAG contrast calc, not eyeballed —
    see the PR description for the numbers):
    - Page canvas (header, stat tiles, section titles): surface-secondary
-     (dark olive) + text-inverse (8.07:1).
+     (dark olive) + text-primary resolved On Dark (~7.81:1 — text-inverse,
+     the token originally verified at 8.07:1 here, was retired with no
+     successor in the 2026-08-05 mode-based token sync; text-primary is
+     its mode-aware replacement and resolves correctly here because
+     .dashboard carries data-mode="dark", see App.tsx).
    - Both tables (Errors-caught and Component status) now share the same
      .table-card treatment: a dark surface-inverse header row over zebra
-     surface-tertiary/cream-50 body rows, so — unlike the raw canvas —
-     their content uses LIGHT-surface-safe colors (text-primary,
-     amber-100 for warn, state-error for fail), scoped in below via
-     .table-card. Nothing table-related is styled for the dark canvas
-     directly anymore. cream-50 was renamed from cream-200 in the
-     2026-07-19 token sync (same value, #ebe9e3). */
+     surface-tertiary/cream-100 body rows, so — unlike the raw canvas —
+     their content uses LIGHT-surface-safe colors (text-primary resolved
+     On Light, amber-800 for warn, state-error for fail), scoped in below
+     via .table-card, which carries data-mode="light" to override the
+     page's ambient dark mode back for its own subtree. Nothing
+     table-related is styled for the dark canvas directly anymore.
+     cream-100 was renumbered from cream-50 in the 2026-08-05 primitive
+     renumbering (same value, #ebe9e3) — see tokens.css. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -24,7 +30,7 @@
   box-sizing: border-box;
   text-align: left;
   background: var(--color-surface-secondary);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   font-family: var(--font-manrope);
   padding: var(--spacing-06) var(--spacing-07);
 }
@@ -43,12 +49,12 @@
   font-size: 26px;
   line-height: 1.15;
   margin: 0 0 var(--spacing-00);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
 }
 
 .dashboard-subtitle {
   font-size: 13px;
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -77,15 +83,13 @@
 }
 
 /* Card style per stat, same warm accent Card itself uses for its
-   background. surface-feature was darkened (Terracotta/100: #c4582a ->
-   #a74b24) in the 2026-07-19 token sync, which changes this pairing's
-   contrast: text-inverse now clears normal-text AA outright (~4.87:1, was
-   ~3.74:1 and failing); grey-50 improved too but still falls short
-   (~3.0:1, was ~3.91:1 — both real numbers, neither hits normal-text AA).
-   text-inverse is used anyway for consistency with Card's own established
-   text-sand-400-on-surface-feature pairing elsewhere in this system, and
-   the metric number itself is sized/weighted well past the
-   large-text-bold threshold (>=3:1), where 4.87:1 passes cleanly. */
+   background (surface-feature, mode-invariant #a74b24). The tile carries
+   its own data-mode="feature" (App.tsx) rather than inheriting the page's
+   ambient data-mode="dark" — same reasoning as Card itself: a surface's
+   own fixed color should resolve its nested text against its own matching
+   mode, not whatever the surrounding page happens to be. text-primary On
+   Feature (#fefbf8) is design-system-rules.md §7's officially-verified
+   pairing for this surface at 5.5:1 — clears normal-text AA outright. */
 .metric-tile {
   min-width: 0;
   box-sizing: border-box;
@@ -102,13 +106,13 @@
   line-height: 1;
   font-weight: 700;
   font-family: var(--font-recoleta);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
 }
 
 .metric-label {
   margin-top: var(--spacing-01);
   font-size: 13px;
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   line-height: 1.4;
 }
 
@@ -121,7 +125,7 @@
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
 }
 
 .table-scroll {
@@ -146,7 +150,7 @@
   font-size: var(--text-label);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   border-bottom: 1px solid rgba(248, 235, 218, 0.16);
   padding: var(--spacing-00) var(--spacing-02);
 }
@@ -164,21 +168,25 @@
 /* Base/fallback colors — not reachable in practice today since both
    .cell-links and .cell-warn only ever render inside a .table-card now
    (both tables moved onto the shared light-row treatment), which scopes
-   its own amber-100/state-error overrides below. Kept correct anyway in
-   case either class is ever used outside that context. */
+   its own amber-800/state-error overrides below. Kept correct anyway in
+   case either class is ever used outside that context. amber-600/rose-600
+   are the same values amber-300/rose-300 verified here before the
+   2026-08-05 primitive renumbering (#e6a745/#e28d8e respectively) — the
+   step numbers moved, not the colors, so the original contrast figures
+   still apply unchanged. */
 .cell-links a {
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: underline;
 }
 
 .cell-warn,
 .cell-warn-badge {
-  color: var(--color-amber-300);
+  color: var(--color-amber-600);
   font-weight: 700;
 }
 
 .cell-fail {
-  color: var(--color-rose-300);
+  color: var(--color-rose-600);
   font-weight: 700;
 }
 
@@ -221,7 +229,13 @@
    table nested inside it. */
 .table-card .dashboard-table > thead th {
   background: var(--color-surface-inverse);
-  color: var(--color-text-inverse);
+  /* text-on-state, not text-primary — this header row's own fill
+     (surface-inverse) is mode-invariant, always dark, regardless of this
+     card's own data-mode="light". text-on-state is the mode-invariant
+     partner made for exactly this "small fixed-dark-fill inside an
+     otherwise light context" case (same reasoning as Badge's fills) —
+     13.47:1 against surface-inverse, verified. */
+  color: var(--color-text-on-state);
   font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: normal;
@@ -240,22 +254,27 @@
 }
 
 .table-card .row-odd {
-  background: var(--color-cream-50);
+  background: var(--color-cream-100);
 }
 
 .table-card .cell-links a,
 .table-card .cell-warn,
 .table-card .cell-warn-badge {
-  color: var(--color-amber-100);
+  /* amber-800 is amber-100's same value pre-2026-08-05 renumbering
+     (#df8e10) — step number moved, color didn't. */
+  color: var(--color-amber-800);
 }
 
-/* state-error, not rose-300 — rose-300's dark-canvas WCAG carve-out
-   (19px/bold to legally hit the large-text 3:1 minimum) doesn't apply
-   here. state-error was darkened (#dc2626 -> #b91c1c) in the 2026-07-19
-   token sync, which resolves what used to be a real, checked, small AA
-   miss on the darker zebra row: it now clears normal-text AA on both rows
-   outright (6.28:1 on surface-tertiary, 5.33:1 on cream-50 — was 4.68:1
-   and 3.98:1/failing respectively). */
+/* state-error, not rose-600 (rose-300 pre-renumbering) — rose's dark-canvas
+   WCAG carve-out (19px/bold to legally hit the large-text 3:1 minimum)
+   doesn't apply here. state-error was darkened (#dc2626 -> #b91c1c) in the
+   2026-07-19 token sync, which resolves what used to be a real, checked,
+   small AA miss on the darker zebra row: it now clears normal-text AA on
+   both rows outright (6.28:1 on surface-tertiary, 5.33:1 on cream-100 —
+   was 4.68:1 and 3.98:1/failing respectively). state-error is mode-variant
+   in the 2026-08-05 sync (On Light #b91c1c, same as this always-checked
+   value) — resolves correctly here specifically because this card carries
+   data-mode="light". */
 .table-card .cell-fail {
   color: var(--color-state-error);
   font-size: var(--text-label);
@@ -266,17 +285,18 @@
   cursor: pointer;
 }
 
-/* action-primary-hover background, as asked in an earlier pass. text-inverse
-   for all row text/icons on hover, as asked here — flagging a real,
-   already-computed contrast problem rather than quietly shipping it:
-   text-inverse only reaches 2.23:1 against this background (checked),
-   under both the 4.5:1 normal-text and even the 3:1 large-text/UI
-   thresholds. Applied exactly as requested — text-primary (5.30:1, passes)
-   was the deliberate choice in the previous pass specifically to avoid
-   this, so this is a real step back on contrast, not a rounding error. */
+/* action-primary-hover inverted in the 2026-08-05 sync — this card's
+   data-mode="light" resolves it to a dark grey (#464340) now, not the old
+   bright amber. text-on-state (not text-primary, and not the old
+   text-inverse, which is retired) is the mode-invariant partner made for
+   exactly this "small fixed-dark-fill" case (same reasoning as the header
+   row above and Badge's fills) — 9.53:1 against this new background,
+   verified, which also resolves the long-standing 2.23:1 contrast
+   complaint the previous text-inverse choice had against the old amber
+   hover fill. */
 .component-row:hover {
   background: var(--color-action-primary-hover);
-  color: var(--color-text-inverse);
+  color: var(--color-text-on-state);
 }
 
 .component-row:hover .cell-warn,
@@ -287,7 +307,7 @@
 .component-row:hover .status-pass,
 .component-row:hover .status-warn,
 .component-row:hover .status-fail {
-  color: var(--color-text-inverse);
+  color: var(--color-text-on-state);
 }
 
 .cell-expand-toggle {
@@ -420,7 +440,7 @@
 }
 
 .severity-warn {
-  color: var(--color-amber-100);
+  color: var(--color-amber-800);
 }
 
 .severity-fixed {
@@ -428,7 +448,7 @@
 }
 
 /* Component status's Overall column — light-safe colors since this table's
-   rows are the zebra surface-tertiary/cream-50 treatment, not the dark
+   rows are the zebra surface-tertiary/cream-100 treatment, not the dark
    canvas. Three states, not two: pass-with-warnings gets its own amber
    between clean-pass green and blocking-fail red. */
 .status-badge {
@@ -443,7 +463,7 @@
 }
 
 .status-warn {
-  color: var(--color-amber-100);
+  color: var(--color-amber-800);
 }
 
 .status-fail {
