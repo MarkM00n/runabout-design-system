@@ -84,14 +84,14 @@ const variantStyles: Record<ButtonVariant, string> = {
   ),
   link: clsx(
     'bg-transparent text-text-button',
-    // Hover/Focused's brighter amber has no successor in the 2026-08-05
-    // mode architecture — text-button-inverse (the old token for this) was
-    // deleted, and modes model surface context (On Light/Dark/Feature), not
-    // a same-page hover-brighten effect. Kept as the old literal value
-    // rather than inventing a token mapping that doesn't exist; revisit if
-    // design ever defines a real replacement.
-    'hover:text-[#eab460] hover:underline',
-    'focus-visible:ring-border-focus focus-visible:text-[#eab460] focus-visible:underline',
+    // Confirmed live in Figma (2026-08-05): Default/Hover/Focused/Disabled
+    // all bind the label to the same text-button token now — there's no
+    // separate brighter hover/focus color anymore (the old text-button-
+    // inverse token this used to use is retired). The underline alone
+    // carries hover/focus feedback, matching the component's own Figma
+    // description.
+    'hover:underline',
+    'focus-visible:ring-border-focus focus-visible:underline',
     'disabled:opacity-disabled',
   ),
 };
