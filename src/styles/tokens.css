@@ -320,17 +320,6 @@
   /* Overrides Tailwind's default radius scale — see radius-none's comment above for why. */
   --radius-full: 9999px;
 
-  /* New 2026-08-05, added while building Tab. Figma's opacity/disabled
-     variable (mode-based token architecture, see design-system-rules.md
-     §2/§7) — 38%, MD3-pattern disabled treatment: default appearance at
-     reduced opacity, never a separate disabled colour set. Registered
-     under Tailwind v4's --opacity-* namespace, generating opacity-disabled.
-     Not part of the broader code-side token sync (still pending — see
-     CLAUDE.md); added narrowly here because §2's disabled rule can't be
-     honestly followed without it existing at all, unlike the name-only
-     mismatches elsewhere in this file that are safe to leave stale. */
-  --opacity-disabled: 38%;
-
   --font-manrope: 'Manrope', system-ui, sans-serif;
   --font-recoleta: 'Recoleta', Georgia, serif;
 

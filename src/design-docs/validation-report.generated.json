@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T04:26:59.609Z",
+  "generatedAt": "2026-08-05T04:36:29.465Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -423,6 +423,63 @@
         "spacing-03",
         "text-h6",
         "text-paragraph-small"
+      ]
+    },
+    {
+      "component": "Tab",
+      "lastValidated": "2026-08-05",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "history": [
+        {
+          "checkType": "accessibility",
+          "file": "src/components/Tab/Tab.tsx",
+          "line": null,
+          "message": "text-text-primary on bg-text-highlight measures 1.9:1 in the default (On Light) context — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).",
+          "fix": "Use a text or background token here that clears 4.5:1 against its pair in this context, or ask design to rebind one of these tokens.",
+          "resolvedAt": "2026-08-05"
+        }
+      ],
+      "overall": true,
+      "status": "pass",
+      "tokensUsed": [
+        "color-border-focus",
+        "color-text-highlight",
+        "color-text-primary",
+        "font-manrope",
+        "radius-sm",
+        "radius-xs",
+        "spacing-01",
+        "spacing-02",
+        "text-label"
       ]
     },
     {

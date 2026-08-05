@@ -136,6 +136,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -165,6 +166,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -202,7 +204,8 @@
       "usage": "Checkbox's checkmark glyph.",
       "documented": true,
       "consumedBy": [
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1396,7 +1399,8 @@
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Button"
+        "Button",
+        "Tab"
       ]
     },
     {
@@ -1489,7 +1493,8 @@
         "Badge",
         "Button",
         "Card",
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1505,6 +1510,7 @@
         "Card",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -1598,7 +1604,9 @@
       "value": "2px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Tab"
+      ]
     },
     {
       "type": "Radius",
@@ -1609,7 +1617,8 @@
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1684,6 +1693,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     }

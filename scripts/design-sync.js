@@ -675,13 +675,18 @@ export function checkContrastPairings(name, source, colorHex, modeOverrides, pai
   const mode = modeMatch ? modeMatch[1] : 'light';
   const hexMap = mode === 'light' ? colorHex : modeOverrides[mode];
 
-  // border-* is excluded even though it resolves a real hex — a border/
-  // divider is never a fill a block of text sits on (e.g. Card's 1px
-  // aria-hidden divider dash, bg-border-default), so pairing it against
-  // whatever the file's one text token happens to be produces a false
-  // positive, not a real accessibility finding.
+  // Only surface-/action-/state- prefixed tokens are checked as
+  // text-bearing backgrounds — the same three namespaces the old §7 table's
+  // rows were always drawn from (surface-primary, action-primary,
+  // state-warning, etc.). text-*/icon-*/border-* tokens getting reused as a
+  // bg-* fill (Tab's 2px aria-hidden indicator bar uses bg-text-highlight;
+  // Card's 1px aria-hidden divider dash uses bg-border-default) are
+  // decorative accents, not a surface a block of text renders on — pairing
+  // either against whatever the file's one text token happens to be
+  // produces a false positive, not a real accessibility finding.
+  const SURFACE_BG_PREFIXES = ['surface-', 'action-', 'state-'];
   const bgTokens = [...new Set([...codeOnly.matchAll(/\bbg-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
-    (t) => !t.startsWith('border-') && (hexMap.has(t) || colorHex.has(t)),
+    (t) => SURFACE_BG_PREFIXES.some((p) => t.startsWith(p)) && (hexMap.has(t) || colorHex.has(t)),
   );
   const textTokens = [...new Set([...codeOnly.matchAll(/\btext-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
     (t) => hexMap.has(t) || colorHex.has(t),
