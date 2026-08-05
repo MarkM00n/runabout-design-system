@@ -46,3 +46,4 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 );
 
 Badge.displayName = 'Badge';
+// dry-run marker for slack-pr-notification.yml verification — reverted before merge
