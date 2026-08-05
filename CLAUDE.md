@@ -178,7 +178,31 @@ all — and without this rule, nothing said so at the moment it mattered.
   that catches anyone reading the PR later; this rule catches the person
   watching live, at the moment they'd otherwise be left waiting.
 
-## Generated files never get hand-merged
+## Verify the deploy actually fired after a merge to main
+
+`.github/workflows/deploy-storybook.yml` is `on: push: branches: [main]` —
+it should fire automatically on every merge, rebuilding and redeploying
+both Storybook and the dashboard. It doesn't always: GitHub Actions has, on
+this repo, silently failed to trigger the `push` event at least twice in
+one session while `workflow_dispatch` (manual trigger) worked instantly
+both times — so the gap is in event delivery, not the workflow itself.
+
+- **After merging to main, confirm a new `deploy-storybook.yml` run
+  actually started** — `gh run list --workflow deploy-storybook.yml
+  --limit 3` and check the timestamp is newer than the merge, not just
+  that some earlier run once succeeded.
+- **If nothing fired within a couple of minutes**, don't just wait
+  indefinitely: run `gh workflow run deploy-storybook.yml` to trigger it
+  manually. This rebuilds from current `main` and redeploys; it does not
+  re-fire the Slack merge notification, since `notify-merge` is gated to
+  `if: github.event_name == 'push'` and a manual dispatch is a
+  `workflow_dispatch` event.
+- **Real incident (2026-08-05):** PR #66 merged cleanly but its push never
+  triggered a deploy. The live Storybook and dashboard kept serving the
+  pre-merge build for 20+ minutes — showing 2 stale validation warnings on
+  Button that were already fixed and merged — until the user noticed and a
+  manual `workflow_dispatch` cleared it. Nothing about the merge itself was
+  wrong; the deployed site was just silently out of date.
 
 `src/design-docs/*.generated.json` and every component's
 `*.validation.json` are fully derived from `tokens.css`/`tokens.json` (and,
