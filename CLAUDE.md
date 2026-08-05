@@ -113,6 +113,31 @@ drift out of sync with it.
 - **Before writing it anywhere, confirm which file it's going into** — ask,
   don't assume.
 
+## Say what Slack will and won't do
+
+`.github/workflows/slack-pr-notification.yml` only posts to Slack when a PR
+is marked ready for review (or gets new commits while already ready) *and*
+two gates both clear: `design-sync` isn't failing on the PR's touched
+component(s), and the PR actually touches something design-relevant
+(`src/components/`, or a changed validation-report entry — see the
+workflow's own header comment for the exact three gates). A draft PR, or
+one that only touches docs/CI/unrelated files, produces no Slack message at
+all — and without this rule, nothing said so at the moment it mattered.
+
+- **State it in the same message as the action, every time** — opening a
+  PR, pushing to one, flipping it to ready-for-review, or merging. Say
+  plainly whether Slack will fire.
+- **If it will skip, say why**, using the workflow's actual gates (draft
+  state, a failing check, or no design-relevant files touched) — never
+  leave someone watching a channel for a ping that was never coming.
+- **Derive the reason from the workflow's real conditions, don't guess.**
+  Check `slack-pr-notification.yml` (and, if relevant,
+  `scripts/format-slack-notification.js`'s `should_post`/`status` outputs)
+  for the gate that actually applies. The workflow also posts its own
+  sticky PR comment when it skips ("Post or update Slack-skip notice") —
+  that catches anyone reading the PR later; this rule catches the person
+  watching live, at the moment they'd otherwise be left waiting.
+
 ## Generated files never get hand-merged
 
 `src/design-docs/*.generated.json` and every component's
