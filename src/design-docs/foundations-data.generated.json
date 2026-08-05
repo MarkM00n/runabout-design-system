@@ -100,6 +100,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -174,6 +175,7 @@
         "Button",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -226,7 +228,8 @@
       "usage": "Checkbox's checkmark glyph. Aliases Amber/25 in Figma — changed from #df8e10 (Amber/100) in the 2026-07-19 token sync, so it no longer matches action-highlight/border-focus-hover the way it used to. Still kept as a distinct token from border-focus/state-focus even though the value is identical, per this file's own alias-not-collapse convention.",
       "documented": true,
       "consumedBy": [
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1342,7 +1345,8 @@
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Button"
+        "Button",
+        "Tab"
       ]
     },
     {
@@ -1435,7 +1439,8 @@
         "Badge",
         "Button",
         "Card",
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1451,6 +1456,7 @@
         "Card",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -1544,7 +1550,9 @@
       "value": "2px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Tab"
+      ]
     },
     {
       "type": "Radius",
@@ -1555,7 +1563,8 @@
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Checkbox"
+        "Checkbox",
+        "Tab"
       ]
     },
     {
@@ -1630,6 +1639,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     }
