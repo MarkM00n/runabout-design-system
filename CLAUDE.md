@@ -100,6 +100,46 @@ locally is strictly better than catching it there.
 exists, including edge cases this summary doesn't spell out — read it, not
 just this file, before making a judgment call it might already cover.
 
+## Token/design-system changes must also sweep the dashboard app
+
+`src/App.tsx`/`src/App.css` (the DesignOps pilot dashboard, `npm run
+build:dashboard`) consumes `tokens.css` directly — the same
+`--color-*`/`--spacing-*`/etc. custom properties every component uses —
+but it lives outside `src/components/`, so `npm run design-sync` **never
+checks it**. A token rename, retirement, or value change that's fully
+handled across every component can still silently break the dashboard,
+and nothing in the normal workflow catches it.
+
+- **Whenever a change touches `tokens.css`/`tokens.json`** (a rename, a
+  retired token, a new mode, a re-numbered primitive — not just a normal
+  component build), grep `src/App.tsx` and `src/App.css` for every
+  `--color-*`/`--spacing-*`/etc. reference and Tailwind color-token
+  utility class, and check each one still resolves to something real and
+  correctly toned. Don't assume "design-sync passed" covers this file —
+  it structurally can't.
+- **Verify visually, not just by grep.** A token can still exist and
+  still be *wrong for its context* — e.g. inheriting the wrong
+  `data-mode` from an ancestor that scopes more broadly than the element
+  visually sits within. Load the dashboard (`npm run dev`) and actually
+  look at it before calling a token sync done; don't rely on the token
+  merely existing.
+- **Real incident (2026-08-05):** the mode-based token architecture sync
+  retired `text-inverse` (no successor) and left several dashboard
+  elements referencing it directly — missed entirely by `design-sync`,
+  caught only when the user reported it. The fix that followed
+  (`data-mode="dark"` on the dashboard's root, `data-mode="light"`
+  overrides for its two light-content tables) then shipped its own bug:
+  `data-mode="light"` was scoped to the whole `<section>` instead of just
+  the light-colored table inside it, pulling `.section-title` — which
+  sits visually on the dark canvas, not inside the light table — into
+  the wrong mode too. Rendered near-black text on a dark green
+  background. Caught only because the user looked at the live deployed
+  site and reported it; nothing automated flagged either bug. When
+  scoping a `data-mode` override, scope it to the narrowest element that
+  actually needs it, not the nearest convenient wrapper — check what the
+  element visually contains, not just what's structurally nested inside
+  it in the JSX.
+
 ## Durable instructions go in project files, not memory
 
 Never save a durable rule, instruction, or behaviour for this project to
