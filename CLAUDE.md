@@ -53,6 +53,20 @@ see that file's intro). Apply all of it: token compliance (§1),
 accessibility (§2), Storybook coverage (§3), design parity (§4),
 documentation (§5), and foundations (§6) where relevant to the change.
 
+**Token architecture changed 2026-08-05** — semantic variables now resolve
+per surface mode (On Light / On Dark / On Feature), primitives were
+renumbered, and several old tokens were deleted. Three build rules that
+changed with it (full detail in `docs/design-system-rules.md` §§1–2, 7):
+
+- **Disabled = Default appearance at 38% opacity** via the
+  `opacity-disabled` token — never separate disabled colours.
+- **Focus = 2px outline offset 2px outside the control** (`outline` +
+  `outline-offset` on `:focus-visible`), colour from `border-focus`.
+- **`tokens.css`/`tokens.json` and design-sync's pairings check are stale**
+  against the new Figma names until the code-side token sync lands —
+  don't treat a name mismatch there as a design error; §7's table in the
+  rules doc is current.
+
 ## Every component request must include
 
 Alongside the component code itself, produce or update:
