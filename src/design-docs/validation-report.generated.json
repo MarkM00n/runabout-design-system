@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T11:11:53.763Z",
+  "generatedAt": "2026-08-05T21:10:12.834Z",
   "overallStatus": true,
   "status": "pass",
   "categoryPass": {
@@ -7,7 +7,8 @@
     "Accessibility": true,
     "Storybook Coverage": true,
     "Documentation Coverage": true,
-    "Foundation Coverage": true
+    "Foundation Coverage": true,
+    "Dashboard Coverage": true
   },
   "components": [
     {
