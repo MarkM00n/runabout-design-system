@@ -30,7 +30,7 @@ on:
     types: [ready_for_review, synchronize]
 
 permissions:
-  pull-requests: read
+  pull-requests: write
   contents: read
 
 jobs:
@@ -97,6 +97,75 @@ jobs:
       - name: No design components touched — skipping
         if: steps.build_payload.outputs.should_post != 'true'
         run: echo "::notice::This PR doesn't touch any design system component, directly or via its validation report entry — not posting to Slack. Nothing design-relevant to report."
+
+      # The two notice steps above only ever show up in the Actions log —
+      # invisible to anyone waiting on the Slack ping itself. This mirrors
+      # that same reasoning as a PR comment instead, so a skip is visible
+      # right where the author or reviewer is actually looking. Scoped
+      # narrowly: only fires when a skip happens, never touches the
+      # ready_for_review trigger or the conditions the real Slack post
+      # above (or below) fires on.
+      - name: Determine Slack skip reason
+        id: skip_reason
+        run: |
+          if [ "${{ steps.build_payload.outputs.should_post }}" != "true" ]; then
+            reason="This PR doesn't touch any design system component, directly or via its validation report entry — nothing design-relevant to announce in Slack."
+          elif [ "${{ steps.build_payload.outputs.status }}" == "fail" ]; then
+            reason="design-sync is failing for this PR's touched component(s) — the Slack notification stays held until it's green."
+          else
+            reason=""
+          fi
+          {
+            echo "reason<<SKIP_REASON_EOF"
+            echo "$reason"
+            echo "SKIP_REASON_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Content-marker lookup, not `gh pr comment --edit-last` — that
+      # shortcut finds the *authenticated actor's* last comment on the PR
+      # regardless of which workflow posted it, and validation-report-
+      # comment.yml posts its own sticky comment as the same bot identity.
+      # This was `--edit-last` originally and verifiably clobbered
+      # validation-report-comment.yml's comment on 2026-08-05 when both
+      # workflows fired on the same push — see that workflow's own
+      # "Find existing validation report comment" step, fixed the same way
+      # once the collision was caught live. Searching by our own marker is
+      # what keeps the two sticky comments independent.
+      - name: Find existing Slack-skip comment
+        id: skip_comment
+        if: steps.skip_reason.outputs.reason != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          id=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '[.[] | select(.body | test("<!-- slack-notification-skip -->"))] | last | .id // empty')
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - name: Post or update Slack-skip notice
+        if: steps.skip_reason.outputs.reason != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKIP_REASON: ${{ steps.skip_reason.outputs.reason }}
+          COMMENT_ID: ${{ steps.skip_comment.outputs.id }}
+        # Built line-by-line via echo, not a multi-line quoted string — the
+        # latter keeps this script's own YAML indentation as literal leading
+        # spaces on lines 2+, which GitHub Markdown reads as a code block.
+        # `-F` (typed field), not `-f` (raw-field) — only `-F` reads `@file`
+        # as file content; `-f` treats "@/tmp/skip-comment.md" as a literal
+        # string value, which is what an earlier version of this step
+        # actually posted as the comment body.
+        run: |
+          {
+            echo "<!-- slack-notification-skip -->"
+            echo "**Slack notification skipped**"
+            echo ""
+            echo "$SKIP_REASON"
+          } > /tmp/skip-comment.md
+          if [ -n "$COMMENT_ID" ]; then
+            gh api "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" -X PATCH -F body=@/tmp/skip-comment.md
+          else
+            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -X POST -F body=@/tmp/skip-comment.md
+          fi
 
       - name: Post to Slack
         if: steps.build_payload.outputs.status != 'fail' && steps.build_payload.outputs.should_post == 'true'

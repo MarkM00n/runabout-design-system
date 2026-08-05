@@ -108,10 +108,27 @@ value ever changes.
   directly, no variable bound — one shade off the real `state-error`
   variable and indistinguishable from it by eye. Or, more subtly: a fixed
   colour that's pixel-identical to a real variable's current value (e.g.
-  `#88570a` matching `state-warning` exactly) on one variant while every
-  sibling variant is properly bound to that variable — invisible in a
-  screenshot and invisible in a merged code summary, only caught by
-  reading that variant's own `boundVariables` directly.
+  `#7a4e09` matching `state-warning`'s On Light value exactly) on one
+  variant while every sibling variant is properly bound to that variable —
+  invisible in a screenshot and invisible in a merged code summary, only
+  caught by reading that variant's own `boundVariables` directly.
+- **Modes note (2026-08-05):** semantic variables now resolve per mode
+  (On Light / On Dark / On Feature). A bound colour whose *rendered*
+  value looks "wrong" for the current sheet may simply be resolving a
+  different mode via an explicit mode on an ancestor — check
+  `explicitVariableModes` up the chain before reporting a binding
+  problem. The binding check itself is unchanged: bound is bound,
+  whatever mode resolves it.
+- **Structural frames in state variants (2026-08-05 architecture):**
+  Focused variants are a transparent wrapper root containing the visual
+  control frame plus an absolutely-positioned `focus-ring` overlay child.
+  The ring's stroke is bound to `border-focus` *on that child* — variant
+  roots don't render paint bindings in Figma, so a bound stroke sitting
+  on the root itself is a defect, not a pass. Disabled variants are the
+  Default variant's bindings with layer `opacity` bound to the
+  `opacity/disabled` variable — a fixed 0.38 opacity with no variable
+  bound, or swapped-out disabled fill colours, both fail the system's
+  intent even when every individual colour is bound.
 
 ## 3. Text styles applied
 
@@ -243,12 +260,18 @@ input borders — must clear 3:1 against its adjacent colour(s).
 - **Check:** resolve the actual RGB values of the boundary/graphic and
   whatever's immediately adjacent to it (via variable bindings or a live
   `use_figma` read), then compute the real contrast ratio the same way as
-  text contrast. Report the exact ratio.
-- **Fail looks like:** a focus ring that measures `2.3:1` against the
-  surface it sits on, short of the `3:1` minimum (SC 1.4.11) — a real,
-  previously-flagged gap in this system (`border-focus`/`state-focus`
-  against `surface-inverse`/`surface-secondary`, see
-  `docs/design-system-rules.md` §7).
+  text contrast. Since 2026-08-05, resolve *in the node's mode context*
+  (walk `explicitVariableModes` up the ancestor chain) — `border-focus`
+  deliberately resolves to different values on light vs dark surfaces,
+  and computing the wrong mode's value produces a false failure.
+- **Fail looks like:** a state indicator or focus ring that measures
+  `2.3:1` against the surface it sits on, short of the `3:1` minimum
+  (SC 1.4.11). (The system's own historical example: the old tab
+  indicator bound to `action-highlight` measured `1.97:1` on light
+  surfaces — fixed 2026-08-05 by rebinding to `icon-interactive`. The old
+  `border-focus` ~2.3:1 gap on dark surfaces is also resolved by the mode
+  system; `docs/design-system-rules.md` §7 has current focus-ring
+  ratios.)
 
 **Approved pairings** (a design-system rule, not itself a WCAG criterion).
 The text token used must be one of the surface's approved partners in the
@@ -263,10 +286,12 @@ combination that happens to clear contrast on its own.
   surface's row in §7's table. If the text token isn't listed for that
   surface, it fails this check even if its measured contrast would
   independently clear AA.
-- **Fail looks like:** text bound to `text-highlight` sitting on
-  `surface-secondary`, which might measure a passing ratio but isn't one
-  of `surface-secondary`'s three approved partners (`text-inverse`,
-  `text-link-inverse`, `text-button-inverse`) in the table.
+- **Fail looks like (post-2026-08-05 mode architecture):** a dark-surface
+  container missing its explicit **On Dark** mode, so nested text resolves
+  its On Light values — or text hard-pinned to a mode that contradicts its
+  surface. §7's table is now per-mode: the "approved partner" question is
+  "does this container carry the right mode for its surface," not "which
+  `-inverse` token was picked" (those tokens no longer exist).
 
 **Touch targets (SC 2.5.8, AA — Target Size Minimum).** Every interactive
 component's touch target must be at least 24×24px, even when its visual

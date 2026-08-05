@@ -38,11 +38,18 @@ below, and `scripts/design-sync.js` for the implementation.
   (the structured source-of-truth record). A token that exists in one but
   not the other is a bug.
 - **Don't collapse two tokens into one just because their values currently
-  match.** `sand-400` and `surface-primary` are the same hex today but are
+  match.** `sand-800` and `surface-primary` are the same hex today but are
   bound to different Figma variables — aliasing them assumes that
   coincidence is permanent. Keep distinct Figma bindings as distinct tokens,
   and say so in a comment if the duplication looks like a mistake to a
   future reader.
+- **Primitive ramps were renumbered on 2026-08-05** to the standard
+  light→dark convention (50 = lightest; e.g. old `Sand/400` is now
+  `Sand/500`, old `Amber/25` is now `Amber/950` at a darker value
+  `#7a4e09`). Any code, comment, or doc referencing pre-2026-08-05
+  primitive names is stale — resolve against live Figma bindings, never
+  against remembered names. `tokens.css`/`tokens.json` still carry the
+  old names until the pending code-side sync lands (see §7's warning).
 - **The root-font-size trap:** `src/index.css` sets the page's root
   font-size to `18px`, not the browser default `16px`. Every one of
   Tailwind's `rem`-based utilities (`h-12`, `w-6`, `rounded-2xl`, `gap-4`,
@@ -88,12 +95,35 @@ below, and `scripts/design-sync.js` for the implementation.
   attribute (blocks focus and interaction for free) and pair it with
   `disabled:cursor-not-allowed disabled:pointer-events-none` so hover states
   can't visually "leak" through on a disabled control.
-- **Dark-backdrop tokens must be flagged, not silently shipped illegible.**
-  If a component's tokens include something like `text-inverse` or
-  `border-default` that's clearly meant for a dark/colored surface, that's
-  fine — Figma does this deliberately — but the component (or its story,
-  see below) must make that assumption legible rather than rendering
-  near-invisible pale-on-white by default.
+- **Disabled visuals are opacity, not colour swaps (rule changed
+  2026-08-05, MD3 pattern).** A disabled control renders its Default
+  appearance at reduced opacity via the `opacity-disabled` token (Figma:
+  `opacity/disabled`, value 38%) — `disabled:opacity-[38%]` sourced from
+  the token, never a hardcoded number and never a separate set of
+  disabled fill/text colours. In Figma, every Disabled variant is the
+  Default variant's exact bindings with layer opacity bound to
+  `opacity/disabled` — generated code must mirror that: same colour
+  tokens as the enabled state, opacity applied at the control's root.
+  The old `action-disabled`/`state-disabled` fill-swap treatment is
+  retired for components (those tokens remain only for standalone
+  disabled text outside components). Disabled contrast is exempt under
+  SC 1.4.3 — don't "fix" a disabled state's ratio by deviating from
+  this rule.
+- **Focus visuals are an offset outer ring (rule changed 2026-08-05).**
+  Figma's Focused variants carry a `focus-ring` overlay: a 2px
+  `border-focus` ring offset 2px outside the control's bounds, with the
+  control's footprint unchanged. In code that's an `outline` (2px,
+  `outline-offset: 2px`, colour from `border-focus`) on
+  `:focus-visible` — not a box-shadow hack and not an inset border that
+  changes layout. `border-focus` resolves per surface mode (deep blue on
+  light, pale blue on dark/feature) — see §7.
+- **Mode-context tokens must be flagged, not silently shipped illegible.**
+  Since 2026-08-05 the Figma variables resolve per surface mode
+  (On Light / On Dark / On Feature — see §7). A component whose Figma
+  source sits on a dark or feature surface carries that context in its
+  token *values*; the component (or its story, see below) must make that
+  assumption legible — supply the matching backdrop in the story rather
+  than rendering near-invisible pale-on-white by default.
 - **Spot-check contrast, don't assume it.** The default state passing
   contrast doesn't mean the hover or disabled state does — check text-on-fill
   contrast for every state that changes color, especially anything using a
@@ -300,59 +330,79 @@ the pages render that, they don't hand-list token values.
   explicitly aliases into (e.g. `sand-400`, consumed directly by `Card`)
   carry a real per-token comment on top of that fallback.
 
-## 7. Surface pairings
+## 7. Surface pairings — mode-based (regenerated 2026-08-05)
 
-Every text/link/button token pairs with exactly one surface — components
-never choose text colours freely; the surface decides. Sourced from Figma's
-"Surface Pairings" spec (`Design System` file, node `235:14`) and
-cross-checked against a real WCAG 2.1 contrast calculation for every pairing
-below, not eyeballed. Regenerated 2026-07-19 from a token sync that darkened
-`border-focus`/`text-highlight`/`state-focus` (Amber/100 → Amber/25,
-`#df8e10` → `#88570a`) and `surface-feature` (Terracotta/100 darkened,
-`#c4582a` → `#a74b24`, specifically so `text-inverse` clears AA on that
-surface).
+**The architecture changed on 2026-08-05.** The old per-surface partner
+tokens (`text-inverse`, `text-link-inverse`, `text-on-feature`,
+`text-highlight-inverse`, `border-focus-inverse` — all deleted in Figma)
+are replaced by **variable modes**: Figma's *Semantic* collection now has
+three modes — **On Light**, **On Dark**, **On Feature** — and every
+text/icon/border/action/state token resolves per mode. Components never
+choose text colours freely; the *surface's mode* decides. A container
+frame filled with a dark surface carries mode On Dark; every nested
+`text/primary`, `border/focus`, etc. resolves to its dark-context value
+automatically. There is no longer a "which partner token do I pick"
+question — there is one token per role, and the mode answers the rest.
 
-| Surface | Text tokens · contrast ratio |
-|---|---|
-| `surface-primary` (`#f7e7d2`) | text-primary · 11.5:1 · text-secondary · 5.1:1 · text-muted · 5.6:1 · text-link · 5.1:1 · text-button · 5.1:1 · text-highlight · 5.1:1 · state-error · 5.3:1 · state-success · 5.9:1 |
-| `surface-secondary` (`#3d4a2e`) | text-inverse · 8.1:1 · text-link-inverse · 5.0:1 · text-button-inverse · 5.0:1 |
-| `surface-tertiary` (`#fefbf8`) | text-primary · 13.5:1 · text-secondary · 6.1:1 · text-muted · 6.6:1 · text-link · 6.0:1 · text-button · 6.0:1 · text-highlight · 6.0:1 · state-error · 6.3:1 · state-success · 6.9:1 |
-| `surface-inverse` (`#2f2c28`) | text-inverse · 11.8:1 · text-highlight-inverse · 5.3:1 · text-link-inverse · 7.4:1 · text-button-inverse · 7.4:1 |
-| `surface-feature` (`#a74b24`) | text-on-feature · 4.9:1 · text-inverse · 4.9:1 |
-| `surface-emphasis` (`#2a2d1e`) | text-inverse · 12.0:1 · text-highlight-inverse · 5.4:1 · text-link-inverse · 7.5:1 · text-button-inverse · 7.5:1 |
-| `action-primary` (`#f8ebda`) | text-on-action · 11.8:1 · text-link · 5.2:1 · text-button · 5.2:1 · text-highlight · 5.2:1 |
-| `action-highlight` (`#df8e10`) | text-on-highlight · 5.3:1 |
-| `state-success` (`#166534`) | text-inverse · 6.1:1 |
-| `state-warning` (`#88570a`) | text-inverse · 5.2:1 |
-| `state-error` (`#b91c1c`) | text-inverse · 5.5:1 |
+Surfaces by mode context (surface values are constant across modes):
 
-- **`surface-feature` has no amber primitive that clears AA against it** — it
-  sits at mid-luminance, so no shade of amber (the interactive-text family)
-  gets there. That's why it gets its own dedicated `text-on-feature` token
-  (aliasing the same value as `text-inverse`, `#f8ebda`) instead of
-  `text-link`/`text-button`/`text-highlight`. Links on `surface-feature`
-  additionally get an underline for distinction from body copy, since colour
-  alone can't separate them here — see Checkbox-style patterns for how a
-  non-colour affordance substitutes when contrast rules out a colour one.
-- **This table covers text contrast, not border contrast** —
-  `border-focus`/`state-focus` (both `#88570a`, Amber/25) aren't in it, but
-  the same darkening that produced Amber/25 drops their contrast to ~2.3:1
-  against `surface-inverse`/`surface-secondary` — under the WCAG 1.4.11 3:1
-  minimum a focus indicator needs against its surroundings.
-  `border-focus-inverse` (`#df8e10`, Amber/100 — confirmed by the token's
-  creator during PR cross-review, correcting an initial pattern-matched
-  guess of Amber/400) exists in the token set as a partial fix: it clears
-  3:1 on `surface-inverse`/`surface-secondary`/`surface-emphasis`, but still
-  falls short on `surface-feature` (2.18:1 — the Card CTA case). Deliberately
-  **not** wired into any component by the 2026-07-19 sync — see that sync's
-  validation report before adopting it.
-- **`text-on-action`, `text-on-highlight`, `text-on-feature`, and
-  `text-highlight-inverse` had no live Figma node binding to confirm their
-  hex against at sync time** — Figma's own documentation pages hadn't
-  caught up to these tokens yet. Their values were back-solved from the
-  ratios in this table against the confirmed primitive ramp (see the
-  corresponding `tokens.css` comments for the exact derivation), then
-  confirmed exactly right during PR cross-review.
+- **On Light:** `surface-primary` `#f3dbbc` · `surface-tertiary` `#fefbf8`
+  · `surface-subtle` `#faefe1`
+- **On Dark:** `surface-secondary` `#3d4a2e` · `surface-inverse` `#2f2c28`
+  (absorbed the deleted `surface-emphasis`) · `surface-card` `#4a5435` ·
+  `surface-scrim` `#1d1b19`
+- **On Feature:** `surface-feature` `#a74b24`
+
+Per-mode resolved values and their **worst-case** ratio in that mode
+(every pairing ≥ the figure shown; all cross-checked with the WCAG
+relative-luminance formula on 2026-08-05):
+
+| Token | On Light | On Dark | On Feature |
+|---|---|---|---|
+| `text-primary` / `icon-primary` | `#2f2c28` · ≥10.4:1 | `#f7e7d2` · ≥6.6:1 | `#fefbf8` · 5.5:1 |
+| `text-secondary` | `#4a5435` · ≥6.0:1 | `#c9cbbf` · ≥4.9:1 | `#faefe1` · 5.0:1 |
+| `text-muted` | `#5d5b58` · ≥5.0:1 | `#d1d0cf` · ≥5.2:1 | `#f8ebda` · 4.9:1 |
+| `text-link` / `text-button` / `text-highlight` | `#7a4e09` · ≥5.4:1 | `#edc07a` · ≥4.8:1 | `#fbf2e4` · ≥5.2:1 |
+| `state-error` | `#b91c1c` · ≥4.8:1 | `#fecaca` · ≥5.6:1 | `#fee2e2` · 4.7:1 |
+| `state-success` | `#166534` · ≥5.3:1 | `#4ade80` · ≥4.6:1 | `#bbf7d0` · 4.7:1 |
+| `border-focus` (SC 1.4.11, 3:1) | `#2563eb` · ≥3.9:1 | `#b3d1ff` · ≥5.2:1 | `#b3d1ff` · 3.7:1 |
+
+Component-internal pairings (independent of surface mode):
+
+- `action-primary` + `text-on-action` flip together per mode (dark button
+  on light surfaces, cream on dark/feature) — always `11.4:1`.
+- `action-highlight` (`#df8e10`, constant) + `text-on-highlight`
+  (`#2f2c28`, constant) — `5.3:1`.
+- Status badge fills (`state-success`/`warning`/`error` pinned to their
+  On Light dark-chip values) + `text-on-state` (constant `#fefbf8`) —
+  ≥6.2:1.
+
+Rules that fall out of the mode architecture:
+
+- **`surface-feature` no longer needs dedicated tokens** — the old
+  "no amber clears AA on terracotta" problem is solved by the On Feature
+  mode resolving links/buttons to near-white values. `text-on-feature` is
+  gone; use `text-primary`/`text-link` and let the mode resolve them.
+  Links on `surface-feature` still get an underline for distinction from
+  body copy, since colour alone can't separate them there.
+- **Focus indicators are covered** — `border-focus` resolves per mode and
+  clears 3:1 (SC 1.4.11) against every surface in that mode. The old
+  ~2.3:1 gap (and its partial fix `border-focus-inverse`) is resolved and
+  both old tokens are gone.
+- **`border-default` is decorative-only on light surfaces** (2.2:1 —
+  confirmed policy, 2026-08-05): dividers only. Any meaningful boundary
+  (inputs, cards that need separation) uses `border-strong` (≥5.5:1
+  everywhere).
+- **Disabled is exempt and opacity-based** — see §2. Disabled pairings
+  don't appear in this table because SC 1.4.3 exempts inactive controls,
+  and the disabled treatment is the default appearance at 38% opacity,
+  not a separate colour pairing.
+- **⚠️ Code-side sync pending:** `tokens.css`/`tokens.json` and
+  `checkContrastPairings` in `scripts/design-sync.js` still reflect the
+  pre-2026-08-05 token names and this section's old table. Until that
+  sync lands, treat *this section* as the source of truth for pairings
+  and expect design-sync's pairing check to be stale — regenerating those
+  is the next scheduled code task.
 
 ## 8. Where fixes belong
 
