@@ -146,6 +146,10 @@ jobs:
         # Built line-by-line via echo, not a multi-line quoted string — the
         # latter keeps this script's own YAML indentation as literal leading
         # spaces on lines 2+, which GitHub Markdown reads as a code block.
+        # `-F` (typed field), not `-f` (raw-field) — only `-F` reads `@file`
+        # as file content; `-f` treats "@/tmp/skip-comment.md" as a literal
+        # string value, which is what an earlier version of this step
+        # actually posted as the comment body.
         run: |
           {
             echo "<!-- slack-notification-skip -->"
@@ -154,9 +158,9 @@ jobs:
             echo "$SKIP_REASON"
           } > /tmp/skip-comment.md
           if [ -n "$COMMENT_ID" ]; then
-            gh api "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" -X PATCH -f body=@/tmp/skip-comment.md
+            gh api "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" -X PATCH -F body=@/tmp/skip-comment.md
           else
-            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -X POST -f body=@/tmp/skip-comment.md
+            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -X POST -F body=@/tmp/skip-comment.md
           fi
 
       - name: Post to Slack
