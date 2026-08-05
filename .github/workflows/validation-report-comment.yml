@@ -29,11 +29,31 @@ jobs:
         # script\n> node ..." banner to stdout ahead of the script's real
         # output, which would land inside the PR comment body verbatim.
         run: node scripts/format-validation-comment.js > /tmp/validation-comment.md
-      - name: Post or update PR comment
+      # Content-marker lookup, not `gh pr comment --edit-last` — that
+      # shortcut finds the *authenticated actor's* last comment on the PR
+      # regardless of which workflow posted it. slack-pr-notification.yml
+      # posts its own sticky comment as the same bot identity; `--edit-last`
+      # verifiably clobbered it on 2026-08-05 when both workflows fired on
+      # the same push (whichever ran second grabbed the other's most
+      # recently *created* comment, not its own). Searching by our own
+      # marker — the same "Design System Validation Report" text
+      # slack-pr-notification.yml already searches for to find this exact
+      # comment — is what keeps the two sticky comments independent.
+      - name: Find existing validation report comment
+        id: existing_comment
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file /tmp/validation-comment.md \
-            --edit-last \
-            --create-if-none
+          id=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '[.[] | select(.body | test("Design System Validation Report"))] | last | .id // empty')
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+      - name: Post or update PR comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_ID: ${{ steps.existing_comment.outputs.id }}
+        run: |
+          if [ -n "$COMMENT_ID" ]; then
+            gh api "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" -X PATCH -F body=@/tmp/validation-comment.md
+          else
+            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -X POST -F body=@/tmp/validation-comment.md
+          fi

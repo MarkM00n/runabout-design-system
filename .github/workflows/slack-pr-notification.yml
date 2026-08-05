@@ -124,9 +124,13 @@ jobs:
       # Content-marker lookup, not `gh pr comment --edit-last` — that
       # shortcut finds the *authenticated actor's* last comment on the PR
       # regardless of which workflow posted it, and validation-report-
-      # comment.yml already maintains its own sticky comment as the same
-      # bot identity. Searching by our own marker is what keeps the two
-      # sticky comments from clobbering each other.
+      # comment.yml posts its own sticky comment as the same bot identity.
+      # This was `--edit-last` originally and verifiably clobbered
+      # validation-report-comment.yml's comment on 2026-08-05 when both
+      # workflows fired on the same push — see that workflow's own
+      # "Find existing validation report comment" step, fixed the same way
+      # once the collision was caught live. Searching by our own marker is
+      # what keeps the two sticky comments independent.
       - name: Find existing Slack-skip comment
         id: skip_comment
         if: steps.skip_reason.outputs.reason != ''
