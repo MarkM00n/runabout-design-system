@@ -20,11 +20,19 @@ const sizeStyles: Record<BadgeSize, string> = {
   small: 'px-01 py-00',
 };
 
+// text-on-state (not text-primary) deliberately — it's the one token in the
+// 2026-08-05 mode architecture that's constant regardless of ambient page
+// mode, matching Badge's own fills (surface-inverse/state-success/warning/
+// error), which are themselves pinned to their On Light values rather than
+// adapting to a surrounding data-mode. See design-system-rules.md §7's
+// "Component-internal pairings" note. Badge deliberately does not set its
+// own data-mode for this reason — doing so would also shift its own fill
+// colour for the mode-variant state-* tokens, not just its text.
 const variantStyles: Record<BadgeVariant, string> = {
-  neutral: 'bg-surface-inverse text-text-inverse',
-  success: 'bg-state-success text-text-inverse',
-  warning: 'bg-state-warning text-text-inverse',
-  error: 'bg-state-error text-text-inverse',
+  neutral: 'bg-surface-inverse text-text-on-state',
+  success: 'bg-state-success text-text-on-state',
+  warning: 'bg-state-warning text-text-on-state',
+  error: 'bg-state-error text-text-on-state',
 };
 
 /**

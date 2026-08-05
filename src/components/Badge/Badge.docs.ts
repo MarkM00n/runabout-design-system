@@ -22,7 +22,7 @@ export const docs: ComponentDocMeta = {
   states: ['default'],
   accessibilityNotes: [
     'Renders a <span>, since a badge conveys status, not structure or interactivity — no role or tabIndex is added.',
-    'Every variant\'s text sits on its own fill color (text-inverse on surface-inverse/state-success/state-warning/state-error) rather than relying on a shared page background, so contrast holds regardless of where the badge is placed.',
+    'Every variant\'s text sits on its own fill color (text-on-state on surface-inverse/state-success/state-warning/state-error) rather than relying on a shared page background, so contrast holds regardless of where the badge is placed.',
     'Color never carries meaning alone — the variant\'s text label ("Success", "Warning", etc.) is what actually communicates state; color reinforces it.',
   ],
   codeExample: '<Badge variant="success" size="medium">Success</Badge>',
