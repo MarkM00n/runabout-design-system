@@ -24,13 +24,17 @@ const meta = {
     label: 'Checkbox label',
     onChange: fn(),
   },
-  // Checkbox's label/box border bind to text-inverse/border-default in
-  // Figma — tokens named for use on a dark/colored surface, not a plain
-  // white canvas. Without this, every story renders near-illegible pale
-  // cream on white; this isn't a component bug, it's a missing backdrop.
+  // Checkbox's label/box border bind to text-primary/border-default, which
+  // (2026-08-05 mode architecture) resolve per data-mode — Checkbox assumes
+  // an externally dark backdrop rather than owning its own fill, so this
+  // decorator supplies both the mode (drives the actual token resolution)
+  // and a matching background (so the demo is visually legible, not just
+  // technically correct). Without data-mode="dark" here, every story would
+  // render dark-on-dark: the tokens would resolve their On Light values
+  // against this decorator's dark background.
   decorators: [
     (Story) => (
-      <div style={{ background: '#2f2c28', padding: 32, borderRadius: 12 }}>
+      <div data-mode="dark" style={{ background: '#2f2c28', padding: 32, borderRadius: 12 }}>
         <Story />
       </div>
     ),

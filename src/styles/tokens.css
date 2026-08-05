@@ -3,369 +3,271 @@
  * `@theme` both declares these as CSS custom properties and registers them with
  * Tailwind v4 so utilities are generated automatically (bg-action-primary,
  * rounded-2xl, text-h6, etc.). Raw source values also live in tokens.json.
+ *
+ * Mode-based token architecture (2026-08-05) — Figma's Semantic collection
+ * resolves every text/icon/border/action/state token per surface mode: On
+ * Light, On Dark, On Feature. The values in `@theme` below are each token's
+ * On Light value — the base/default, used when nothing overrides it, and
+ * what generates the Tailwind utility (bg-action-primary, text-text-primary,
+ * etc.). Tokens whose value actually differs by mode also get an override
+ * block further down, scoped to a `data-mode="dark"` / `data-mode="feature"`
+ * attribute on a container — e.g. Card sets `data-mode="feature"` on its own
+ * root because it always fills with surface-feature, so every `text-*`/
+ * `border-*` utility used inside it resolves to that surface's correct
+ * pairing automatically, with no change to the component's className
+ * strings for tokens whose name didn't change. See design-system-rules.md
+ * §7 for the full per-mode table and design-system-rules.md §1 for the
+ * override-block mechanics.
+ *
+ * Several pre-2026-08-05 tokens are retired by this architecture (no
+ * successor — the mode resolves what they used to hand-pick): text-inverse,
+ * text-link-inverse, text-button-inverse, text-highlight-inverse,
+ * text-on-feature, border-focus-inverse, border-focus-on-feature,
+ * surface-emphasis. Any component still referencing one of those is stale;
+ * see each affected component's own diff in this sync for its replacement.
  */
 @theme {
-  /* Button primary variant's fill (default/disabled state). */
-  --color-action-primary: #f8ebda;
-  /* Button primary variant's fill on hover. */
-  --color-action-primary-hover: #df8e10;
+  /* Button primary variant's fill. Inverted in the 2026-08-05 sync — was
+     light cream (#f8ebda), now dark (Grey/800) on Light mode; light on
+     Dark/Feature (see override blocks below). A real visual redesign, not
+     a rename — verified against a live Figma screenshot before shipping. */
+  --color-action-primary: #2f2c28;
+  /* Button primary variant's fill on hover — mode-variant, see override blocks. */
+  --color-action-primary-hover: #464340;
   /* Button secondary variant's fill in its default state (transparent).
-     Aliases Alpha/White-0 in Figma (confirmed 2026-07-19 — the Alpha scale
-     is a real primitive collection in the file, just bound to no canvas
-     node, which is why the original token sync's node-binding search
-     missed it). Not yet wired to a component via this token name —
-     Secondary uses a literal bg-transparent — included for completeness of
-     the Figma semantic layer. */
+     Mode-invariant. Aliases Alpha/White-0 in Figma. */
   --color-action-secondary: rgba(255, 255, 255, 0);
-  /* Button secondary variant's fill on hover — a white overlay at 10%
-     opacity, not a solid color, so it reads correctly over any background.
-     Aliases Alpha/White-10 in Figma (confirmed 2026-07-19) — the one alpha
-     step with a real component consumer. */
-  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
-  /* Button accent variant's fill in its default and focused states. */
+  /* Button secondary variant's fill on hover — mode-variant (Alpha/Olive-10
+     on Light, Alpha/White-10 on Dark/Feature), see override blocks. */
+  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  /* Button accent variant's fill. Mode-invariant — always Amber/800. */
   --color-action-highlight: #df8e10;
-  /* Button accent variant's fill on hover. Aliases Amber/200 in Figma —
-     rebound from Amber/50 (#c07b0e) in the 2026-07-21 re-check found while
-     building Button; this was also the fix for a real WCAG failure —
-     Amber/50 measured only 4.02:1 against Accent's text-primary label,
-     under the 4.5:1 minimum (SC 1.4.3). Amber/200 clears it at 5.95:1. */
+  /* Button accent variant's fill on hover. Mode-invariant — always Amber/700. */
   --color-action-highlight-hover: #e39b2b;
+  /* Mode-variant, see override blocks. Not yet used by any built component. */
+  --color-action-disabled: #f4dfc3;
 
   /* Button secondary variant's resting border; also the resting border for
-     every Input-family control (Input/Select/Textarea/Checkbox). */
-  --color-border-default: #f8ebda;
-  /* Focus-ring border for Button primary/secondary/link and every
-     Input-family control. Aliases Blue/100 in Figma — rebound from Amber/25
-     (#88570a) in a 2026-07-21 re-check found while building Button; this
-     moved in lockstep with state-focus's own Amber/25 -> Blue/100 rebind
-     earlier that day. Button accent's focus ring does NOT use this token —
-     it binds its own dedicated border-focus-on-highlight below, since
-     Blue/100 measures only 1.47:1 against accent's action-highlight fill
-     (fails WCAG 1.4.11's 3:1 non-text minimum; see that token's comment). */
-  --color-border-focus: #307cff;
-  /* Hover-state border color for every Input-family control. */
-  --color-border-subtle: #f6e3cb;
-  /* Aliases Olive/50 in Figma. Not yet used by any built component. */
+     every Input-family control. Mode-variant, see override blocks. */
+  --color-border-default: #939880;
+  /* Hover-state border color for every Input-family control. Mode-variant,
+     see override blocks. */
+  --color-border-subtle: #f4dfc3;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
   --color-border-strong: #3d4a2e;
-  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma —
-     confirmed directly by the token's creator during PR cross-review
-     (2026-07-19), correcting an initial pattern-matched guess of Amber/400
-     (#eab460). Same value as action-highlight/action-primary-hover/
-     text-highlight-inverse, kept distinct per convention. On the surfaces
-     it was meant to fix: clears WCAG 1.4.11's 3:1 minimum on
-     surface-inverse (5.3:1), surface-secondary (3.61:1), and
-     surface-emphasis (5.37:1) — but still falls short on surface-feature
-     (2.18:1, the Card CTA case). Not wired into Checkbox or Button by this
-     sync, left for design review. */
-  --color-border-focus-inverse: #df8e10;
-  /* New 2026-07-21. Aliases Blue/25 in Figma. Button accent's Focused-state
-     ring only — border-focus (Blue/100, #307cff) measures 1.47:1 against
-     accent's action-highlight fill (#df8e10), well short of WCAG 1.4.11's
-     3:1 non-text minimum. This darker blue clears it at 3.96:1, and still
-     clears 8.83:1 against action-primary if ever reused there. Scoped to
-     accent specifically — border-focus is unchanged and still what every
-     other Button variant and every Input-family control uses. */
+  /* Focus-ring border for Button primary/secondary/link and every
+     Input-family control. Mode-variant (Blue/500 on Light, Blue/200 on
+     Dark/Feature) — resolves correctly wherever a container sets the right
+     data-mode, replacing the old fixed-value + separate -inverse/-on-feature
+     token pattern. See override blocks below. */
+  --color-border-focus: #2563eb;
+  /* Button accent's Focused-state ring only — border-focus (Blue/500 on
+     Light) measures short of WCAG 1.4.11's 3:1 against accent's
+     action-highlight fill. Mode-invariant — always Blue/900. */
   --color-border-focus-on-highlight: #1e3a8a;
-  /* New 2026-07-23, added while building Card. None of border-focus (~1.5:1),
-     border-focus-inverse (2.18:1), or border-focus-on-highlight (~1.8:1)
-     clear WCAG 1.4.11's 3:1 non-text minimum against surface-feature — the
-     "Card CTA case" flagged in the Surface pairings notes never actually got
-     a compliant token. Card's Focus state (the clickable image/title/
-     metadata region) needs its own ring here. Aliases the new Blue/50
-     primitive, which clears ~3.70:1 against surface-feature. Scoped to
-     surface-feature specifically, same convention as
-     border-focus-on-highlight's accent-only scoping. */
-  --color-border-focus-on-feature: #b3d1ff;
 
   /* Default body text color; also the typed-value color for Input-family
-     controls when focused (see Input's placeholder-vs-value reconstruction). */
+     controls when focused. Mode-variant, see override blocks. */
   --color-text-primary: #2f2c28;
-  /* Aliases Olive/100 in Figma. Not yet used by any built component. */
-  --color-text-secondary: #5d6440;
-  /* Text/border color for content meant to sit on a dark or colored surface
-     (Button secondary variant, Checkbox's label) — assumes a dark backdrop,
-     see Checkbox's Storybook decorator for why. Also Card's title/date/time/
-     description text as of 2026-07-23 — rebound from sand-400 in Figma once
-     that binding was flagged as not being one of surface-feature's approved
-     §7 pairing partners (text-inverse and text-on-feature are; sand-400 is
-     neither, despite its value nearly matching). */
-  --color-text-inverse: #f8ebda;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-text-secondary: #4a5435;
   /* Placeholder text color for Input-family controls; also Checkbox's
-     disabled-state checkmark/label color. */
-  --color-text-muted: #8b8a88;
-  /* Checkbox's checkmark glyph binds to this rather than border-focus/
-     action-highlight — same value, distinct token, kept separate per the
-     established convention. Changed from #df8e10 (Amber/100) to #88570a
-     (Amber/25) in the 2026-07-19 token sync — moved in lockstep with
-     border-focus/state-focus, so it no longer matches action-highlight's
-     value the way it used to. */
-  --color-text-highlight: #88570a;
-  /* New in the 2026-07-19 token sync. Aliases Amber/25 in Figma. Not yet
-     used by any built component — Button's link variant currently binds to
-     action-highlight instead; that's a pre-existing divergence, not
-     something this sync changed. */
-  --color-text-link: #88570a;
-  /* Aliases Amber/25 in Figma. Went through two rebinds the same day while
-     building Button: Amber/25 (#88570a) originally -> Amber/100 (#df8e10),
-     which measured only 2.62:1 against white (and worse, ~2.2:1, against
-     the system's actual light surfaces action-primary/surface-primary) —
-     under WCAG 1.4.3's 4.5:1 minimum. Rebound back to Amber/25 once that
-     was flagged, which clears AA everywhere checked (~5.1-6.2:1). Button
-     link's Default state binds to this directly. */
-  --color-text-button: #88570a;
-  /* New in the 2026-07-19 token sync. Aliases Amber/400 in Figma — the
-     dark-surface counterpart of text-link. Not yet used by any built
-     component. */
-  --color-text-link-inverse: #eab460;
-  /* Aliases Amber/400 in Figma. Went through two rebinds the same day while
-     building Button: Amber/400 (#eab460) originally -> Amber/300
-     (#e6a745), then back to Amber/400 alongside text-button's own
-     Amber/100 -> Amber/25 revert. Button link's Hover and Focused states
-     both bind to this directly. */
-  --color-text-button-inverse: #eab460;
-  /* New in the 2026-07-19 token sync. Aliases Amber/100 in Figma —
-     originally back-solved by matching the Figma "Surface Pairings" spec's
-     stated contrast ratios (5.3:1 on surface-inverse, 5.4:1 on
-     surface-emphasis) against the primitive ramp, since no node in the
-     file had this token bound directly. Confirmed exactly right during PR
-     cross-review (2026-07-19). Same value as action-highlight/
-     action-primary-hover, kept distinct per convention. Not yet used by
-     any built component. */
-  --color-text-highlight-inverse: #df8e10;
-  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma —
-     originally back-solved by matching the Figma "Surface Pairings" spec's
-     stated 11.8:1 ratio on action-primary against the primitive ramp,
-     since no node in the file had this token bound directly. Confirmed
-     exactly right during PR cross-review (2026-07-19). Same value as
-     text-primary, kept distinct per convention. Button primary's Default,
-     Hover, and Focused label text binds to this directly (Disabled keeps
-     text-primary — confirmed as two genuinely separate bindings, not
-     collapsed just because the value matches). */
-  --color-text-on-action: #2f2c28;
-  /* New in the 2026-07-19 token sync. Aliases Grey/100 in Figma —
-     originally back-solved by matching the Figma "Surface Pairings" spec's
-     stated 5.3:1 ratio on action-highlight against the primitive ramp,
-     since no node in the file had this token bound directly. Confirmed
-     exactly right during PR cross-review (2026-07-19). Button accent's
-     Default, Hover, and Focused label text binds to this directly (Disabled
-     keeps text-primary, same distinction as text-on-action above). */
+     disabled-state checkmark/label color. Mode-variant, see override blocks. */
+  --color-text-muted: #5d5b58;
+  /* Checkbox's checkmark glyph. Mode-variant, see override blocks. */
+  --color-text-highlight: #7a4e09;
+  /* Not yet used by any built component — Button's link variant binds to
+     text-button instead, a pre-existing divergence. Mode-variant, see
+     override blocks. */
+  --color-text-link: #7a4e09;
+  /* Button link's Default state. Mode-variant, see override blocks. Link's
+     Hover/Focused state does NOT use this — see Button.tsx's own comment:
+     the old text-button-inverse "brighter on hover" token has no successor
+     in the mode system (modes model surface context, not same-page hover
+     state), so it stays a literal hex value pending a design-side decision. */
+  --color-text-button: #7a4e09;
+  /* Button primary's label text. Inverted in lockstep with action-primary —
+     was dark (#2f2c28), now light (Sand/500) on Light mode. Mode-variant,
+     see override blocks. */
+  --color-text-on-action: #f7e7d2;
+  /* Button accent's label text. Mode-invariant — always Grey/800. */
   --color-text-on-highlight: #2f2c28;
-  /* New in the 2026-07-19 token sync. Aliases Sand/500 in Figma —
-     originally back-solved by matching the Figma "Surface Pairings" spec's
-     stated 4.9:1 ratio on surface-feature against the primitive ramp,
-     since no node in the file had this token bound directly. Confirmed
-     exactly right during PR cross-review (2026-07-19). Same value as
-     text-inverse, kept distinct per convention (this is the dedicated
-     feature-surface text token). Not yet used by any built component. */
-  --color-text-on-feature: #f8ebda;
+  /* Text that sits on a state-colored fill (Badge's success/warning/error
+     variants) — mode-invariant by design, so a badge's fixed dark/saturated
+     fill always pairs with the same light text regardless of the page's
+     ambient mode. Badge deliberately does NOT set its own data-mode; see
+     Badge.tsx's comment. */
+  --color-text-on-state: #fefbf8;
 
-  /* Default background fill for every Input-family control. */
-  --color-surface-primary: #f7e7d2;
-  /* Aliases Olive/50 in Figma. Not yet used by any built component. */
+  /* Aliases Grey/800 in Figma. Mode-invariant. Badge's neutral variant fill;
+     not yet used elsewhere. */
+  --color-surface-primary: #f3dbbc;
+  /* Mode-invariant. Not yet used by any built component. */
   --color-surface-secondary: #3d4a2e;
-  /* Aliases Sand/900 in Figma. Not yet used by any built component. */
+  /* Mode-invariant. Not yet used by any built component. */
   --color-surface-tertiary: #fefbf8;
-  /* Aliases Grey/100 in Figma. Not yet used by any built component. */
+  /* Badge's neutral variant fill. Mode-invariant — always Grey/800. */
   --color-surface-inverse: #2f2c28;
-  /* Bound to Card's background in Figma; distinct token from surface-primary
-     even though unrelated in value. Darkened from #c4582a to #a74b24 in the
-     2026-07-19 token sync (Terracotta/100 darkened) so text-inverse reaches
-     AA contrast on this surface. */
+  /* Card's fill — always this exact terracotta regardless of page mode,
+     which is why Card sets data-mode="feature" on its own root (see
+     Card.tsx) so everything nested inside resolves the correct pairing.
+     Mode-invariant — always Terracotta/800. */
   --color-surface-feature: #a74b24;
-  /* Aliases Olive/25 in Figma. Not yet used by any built component. */
-  --color-surface-emphasis: #2a2d1e;
-  /* Aliases Grey/50 in Figma — for modal/overlay backdrops. Not yet used
-     by any built component (no Modal built yet). */
+  /* For modal/overlay backdrops. Not yet used by any built component
+     (no Modal built yet). Mode-invariant — always Grey/900. */
   --color-surface-scrim: #1d1b19;
-  /* New in the 2026-07-19 token sync. Confirmed via a live Figma variable
-     binding. Aliases Olive/75 (VariableID 242:2) — confirmed to exist
-     during PR cross-review (2026-07-19); the initial sync had correctly
-     inferred both the value and the ramp-step name from #4a5435 sitting
-     almost exactly at the linear midpoint of Olive/50 (#3d4a2e) and
-     Olive/100 (#5d6440), but had flagged it as unconfirmed pending
-     designer sign-off. Not yet used by any built component. */
-  --color-surface-card: #4a5435;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-surface-card: #fefbf8;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-surface-subtle: #faefe1;
 
-  /* Background fill for Input-family controls on hover. */
+  /* Aliases Sand/600 in Figma. Mode-invariant. Not yet used by any built
+     component directly (state-based hover treatments use component-specific
+     tokens instead). */
   --color-state-hover: #f6e3cb;
   /* Border color for Input-family controls in the disabled state; also
-     Button link's disabled-state label text. Aliases Olive/400 in Figma —
-     rebound from Grey/500 (#8b8a88) in a 2026-07-21 re-check found while
-     building Button. */
-  --color-state-disabled: #939880;
-  /* Aliases the new Blue/100 primitive in Figma — rebound 2026-07-21 from
-     Amber/25 (#88570a), which state-focus previously shared with
-     state-warning/border-focus by coincidence rather than real relation.
-     This gives "focus" its own distinct color now that Badge's Warning
-     variant has its own dedicated state-warning token. Not yet used by any
-     built component — border-focus (unchanged, still Amber/25) is what
-     components currently reference for focus-ring styling. */
-  --color-state-focus: #307cff;
-  /* Aliases Amber/25 in Figma. Badge's Warning variant background — Figma
-     rebound this from state-focus to its own dedicated variable on
-     2026-07-20. Briefly moved to #c07b0e/Amber/50 in a 2026-07-21 re-check,
-     which failed WCAG AA against text-inverse (2.94:1, needs 4.5:1,
-     confirmed via Storybook's a11y addon on the Warning story); rebound
-     back to Amber/25 in Figma the same day once that was flagged. */
-  --color-state-warning: #88570a;
-  /* Aliases Green/100 in Figma — changed from the previously-unaliased
-     #16a34a in the 2026-07-19 token sync, which also formalized Green/100
-     as a primitive. Not yet used by any built component. */
+     Button link's disabled-state label text. Mode-variant, see override
+     blocks. */
+  --color-state-disabled: #747270;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-state-focus: #2563eb;
+  /* Badge's Warning variant background — pinned to its On Light value
+     regardless of ambient mode, same convention as Badge's other state
+     fills; paired with the mode-invariant text-on-state. Mode-variant, see
+     override blocks (only relevant if a future component explicitly
+     opts into a different mode for this token). */
+  --color-state-warning: #7a4e09;
+  /* Badge's Success variant background. Mode-variant, see override blocks;
+     same pinned-to-On-Light convention as state-warning. */
   --color-state-success: #166534;
-  /* Aliases Red/100 in Figma — changed from the previously-unaliased
-     #dc2626 in the 2026-07-19 token sync, which also formalized Red/100 as
-     a primitive. Not yet used by any built component. */
+  /* Badge's Error variant background. Mode-variant, see override blocks;
+     same pinned-to-On-Light convention as state-warning. */
   --color-state-error: #b91c1c;
 
-  /* Full primitive-tier palette ramps (Figma's "Primitives" variable
-     collection, 81 variables total as of the 2026-07-19 token sync — was
-     71, +Amber/25, +Olive/75, +Green/100, +Red/100, +6 Alpha steps). These
-     sit underneath the semantic tokens above — some semantic tokens alias
-     directly into these ramps (documented in the comments above), most of
-     the ramp is not consumed by any built component yet. sand-400 is the
-     one primitive with an existing, real consumer (Card). */
-  --color-sand-100: #f3dbbc;
-  --color-sand-200: #f4dfc3;
-  --color-sand-300: #f6e3cb;
-  /* Card's title/date/description text used to bind directly to this
-     primitive rather than a semantic text-* token in Figma. Rebound to
-     text-inverse on 2026-07-23 once that direct binding was flagged as an
-     Approved Pairings gap (§7) — sand-400 isn't one of surface-feature's
-     approved partners, even though its value nearly matched text-inverse's.
-     No remaining component consumer; kept in the ramp as a real primitive
-     step regardless. */
-  --color-sand-400: #f7e7d2;
-  --color-sand-500: #f8ebda;
-  --color-sand-600: #faefe1;
-  --color-sand-700: #fbf3e9;
-  --color-sand-800: #fcf7f0;
-  --color-sand-900: #fefbf8;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-icon-primary: #2f2c28;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-icon-secondary: #4a5435;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-icon-muted: #5d5b58;
+  /* Tab's Active/Hover indicator (confirmed against a live Figma
+     screenshot — renders as a dark muted amber, not action-highlight's
+     bright orange). Mode-variant, see override blocks. */
+  --color-icon-interactive: #7a4e09;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-icon-on-action: #f7e7d2;
+  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  --color-icon-disabled: #747270;
 
-  /* Darkened from #c4582a in the 2026-07-19 token sync so surface-feature
-     keeps AA text contrast. Steps 200-900 are unchanged. */
-  --color-terracotta-100: #a74b24;
-  --color-terracotta-200: #cb6c43;
-  --color-terracotta-300: #d2805c;
-  --color-terracotta-400: #d99375;
-  --color-terracotta-500: #e0a78f;
-  --color-terracotta-600: #e7bba8;
-  --color-terracotta-700: #eecfc1;
-  --color-terracotta-800: #f5e2da;
-  --color-terracotta-900: #fcf6f3;
+  /* New 2026-08-05, added while building Tab. Figma's opacity/disabled
+     variable — 38%, MD3-pattern disabled treatment: default appearance at
+     reduced opacity, never a separate disabled colour set. Mode-invariant
+     (always 38%). Registered under Tailwind v4's --opacity-* namespace,
+     generating opacity-disabled. */
+  --opacity-disabled: 38%;
 
-  --color-rose-100: #da6c6e;
-  --color-rose-200: #de7c7e;
-  --color-rose-300: #e28d8e;
-  --color-rose-400: #e69d9e;
-  --color-rose-500: #eaadae;
-  --color-rose-600: #efbebf;
-  --color-rose-700: #f3cecf;
-  --color-rose-800: #f7dedf;
-  --color-rose-900: #fbefef;
+  /* Primitive ramp, renumbered 2026-08-05 to the standard light->dark
+     convention (50 = lightest, ...950 = darkest). Consumed only via the
+     semantic tokens above — no component binds a primitive directly. */
+  --color-sand-50: #fefbf8;
+  --color-sand-100: #fcf7f0;
+  --color-sand-200: #fbf3e9;
+  --color-sand-300: #faefe1;
+  --color-sand-400: #f8ebda;
+  --color-sand-500: #f7e7d2;
+  --color-sand-600: #f6e3cb;
+  --color-sand-700: #f4dfc3;
+  --color-sand-800: #f3dbbc;
 
-  --color-burgundy-100: #341012;
-  --color-burgundy-150: #4d0707;
-  --color-burgundy-200: #4b2b2c;
-  --color-burgundy-300: #614547;
-  --color-burgundy-400: #786061;
-  --color-burgundy-500: #8e7a7b;
-  --color-burgundy-600: #a59596;
-  --color-burgundy-700: #bbafb0;
-  --color-burgundy-800: #d2caca;
-  --color-burgundy-900: #e8e4e5;
+  --color-terracotta-50: #fcf6f3;
+  --color-terracotta-100: #f5e2da;
+  --color-terracotta-200: #eecfc1;
+  --color-terracotta-300: #e7bba8;
+  --color-terracotta-400: #e0a78f;
+  --color-terracotta-500: #d99375;
+  --color-terracotta-600: #d2805c;
+  --color-terracotta-700: #cb6c43;
+  --color-terracotta-800: #a74b24;
 
-  /* New in the 2026-07-19 token sync — a darker amber step added so
-     text-highlight/border-focus/state-focus/text-link/text-button reach AA
-     contrast on light surfaces. Named "Amber/25" in Figma's own Full Token
-     Registry documentation. */
-  --color-amber-25: #88570a;
-  --color-amber-50: #c07b0e;
-  --color-amber-100: #df8e10;
-  --color-amber-200: #e39b2b;
-  --color-amber-300: #e6a745;
-  --color-amber-400: #eab460;
-  --color-amber-500: #edc07a;
-  --color-amber-600: #f1cd95;
-  --color-amber-700: #f4d9af;
-  --color-amber-800: #f8e6ca;
-  --color-amber-900: #fbf2e4;
+  --color-rose-50: #fbefef;
+  --color-rose-100: #f7dedf;
+  --color-rose-200: #f3cecf;
+  --color-rose-300: #efbebf;
+  --color-rose-400: #eaadae;
+  --color-rose-500: #e69d9e;
+  --color-rose-600: #e28d8e;
+  --color-rose-700: #de7c7e;
+  --color-rose-800: #da6c6e;
 
-  --color-olive-25: #2a2d1e;
-  --color-olive-50: #3d4a2e;
-  /* New in the 2026-07-19 token sync. VariableID 242:2, confirmed during
-     PR cross-review (2026-07-19) — see --color-surface-card above for how
-     the value was originally derived, ahead of that confirmation. */
-  --color-olive-75: #4a5435;
-  --color-olive-100: #5d6440;
-  --color-olive-200: #6f7555;
-  --color-olive-300: #81866a;
-  --color-olive-400: #939880;
-  --color-olive-500: #a5a995;
-  --color-olive-600: #b7baaa;
-  --color-olive-700: #c9cbbf;
-  --color-olive-800: #dbddd5;
-  --color-olive-900: #edeeea;
+  --color-burgundy-50: #e8e4e5;
+  --color-burgundy-100: #d2caca;
+  --color-burgundy-200: #bbafb0;
+  --color-burgundy-300: #a59596;
+  --color-burgundy-400: #8e7a7b;
+  --color-burgundy-500: #786061;
+  --color-burgundy-600: #614547;
+  --color-burgundy-700: #4b2b2c;
+  --color-burgundy-800: #4d0707;
+  --color-burgundy-900: #341012;
 
-  --color-grey-50: #1d1b19;
-  --color-grey-100: #2f2c28;
-  --color-grey-200: #464340;
-  --color-grey-300: #5d5b58;
-  --color-grey-400: #747270;
-  --color-grey-500: #8b8a88;
-  --color-grey-600: #a3a19f;
-  --color-grey-700: #bab9b7;
-  --color-grey-800: #d1d0cf;
-  --color-grey-900: #e8e8e7;
-  --color-grey-1000: #ffffff;
+  --color-amber-50: #fbf2e4;
+  --color-amber-100: #f8e6ca;
+  --color-amber-200: #f4d9af;
+  --color-amber-300: #f1cd95;
+  --color-amber-400: #edc07a;
+  --color-amber-500: #eab460;
+  --color-amber-600: #e6a745;
+  --color-amber-700: #e39b2b;
+  --color-amber-800: #df8e10;
+  --color-amber-900: #c07b0e;
+  --color-amber-950: #7a4e09;
 
-  --color-cream-100: #f9ecd2;
-  /* Renamed from --color-cream-200 in the 2026-07-19 token sync — same
-     value (#ebe9e3), Figma re-numbered the ramp step. */
-  --color-cream-50: #ebe9e3;
+  --color-olive-50: #edeeea;
+  --color-olive-100: #dbddd5;
+  --color-olive-200: #c9cbbf;
+  --color-olive-300: #b7baaa;
+  --color-olive-400: #a5a995;
+  --color-olive-500: #939880;
+  --color-olive-600: #81866a;
+  --color-olive-700: #6f7555;
+  --color-olive-800: #5d6440;
+  --color-olive-850: #4a5435;
+  --color-olive-900: #3d4a2e;
+  --color-olive-950: #2a2d1e;
 
-  /* New primitive family in the 2026-07-19 token sync. Aliased by
-     state-success. */
-  --color-green-100: #166534;
-  /* New primitive family in the 2026-07-19 token sync. Aliased by
-     state-error. */
-  --color-red-100: #b91c1c;
-  /* New primitive family, added 2026-07-21. Aliased by state-focus and, as
-     of a same-day re-check, border-focus too (border-focus had moved off
-     Amber/25 in lockstep with state-focus's own rebind). */
-  --color-blue-100: #307cff;
-  /* New 2026-07-21. A darker blue step, same motivation as Amber/25's own
-     history — added specifically because Blue/100 fails WCAG 1.4.11 (3:1
-     non-text contrast) against mid-luminance fills like action-highlight.
-     Aliased by border-focus-on-highlight. */
-  --color-blue-25: #1e3a8a;
-  /* New 2026-07-23, added while building Card. A lighter blue step —
-     border-focus-on-highlight (Blue/25) and border-focus (Blue/100) both
-     fail WCAG 1.4.11's 3:1 non-text minimum against surface-feature
-     (~1.8:1 / ~1.5:1); this clears it at ~3.70:1. Aliased by the new
-     border-focus-on-feature semantic token. */
-  --color-blue-50: #b3d1ff;
+  --color-grey-0: #ffffff;
+  --color-grey-50: #e8e8e7;
+  --color-grey-100: #d1d0cf;
+  --color-grey-200: #bab9b7;
+  --color-grey-300: #a3a19f;
+  --color-grey-400: #8b8a88;
+  --color-grey-500: #747270;
+  --color-grey-600: #5d5b58;
+  --color-grey-700: #464340;
+  --color-grey-800: #2f2c28;
+  --color-grey-900: #1d1b19;
 
-  /* Figma's Alpha primitive scale — added after the initial 2026-07-19
-     sync, since it's bound to no canvas node and only readable directly
-     from the Primitives variable collection, not any node-binding search.
-     Olive/100 (#5d6440) at 10% opacity. Defined-but-unused: reserved for
-     overlays and scrims, not text-bearing surfaces. */
+  --color-cream-50: #f9ecd2;
+  --color-cream-100: #ebe9e3;
+
+  --color-green-200: #bbf7d0;
+  --color-green-300: #4ade80;
+  --color-green-800: #166534;
+
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #f87171;
+  --color-red-700: #b91c1c;
+
+  --color-blue-200: #b3d1ff;
+  --color-blue-500: #2563eb;
+  --color-blue-900: #1e3a8a;
+
   --color-alpha-olive-10: rgba(93, 100, 64, 0.1);
-  /* Olive/100 (#5d6440) at 20% opacity. Defined-but-unused: reserved for
-     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-20: rgba(93, 100, 64, 0.2);
-  /* Olive/100 (#5d6440) at 40% opacity. Defined-but-unused: reserved for
-     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-40: rgba(93, 100, 64, 0.4);
-  /* Olive/100 (#5d6440) at 60% opacity. Defined-but-unused: reserved for
-     overlays and scrims, not text-bearing surfaces. */
   --color-alpha-olive-60: rgba(93, 100, 64, 0.6);
-  /* White at 0% opacity. Aliased by action-secondary — see that token's
-     comment above. */
   --color-alpha-white-0: rgba(255, 255, 255, 0);
-  /* White at 10% opacity. Aliased by action-secondary-hover — see that
-     token's comment above. The one alpha step with a real component
-     consumer. */
   --color-alpha-white-10: rgba(255, 255, 255, 0.1);
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
@@ -459,4 +361,91 @@
      responsive variant. Tailwind's own default scale (sm/md/lg/xl/2xl) is
      available but not customized or formally adopted by this system. */
   --breakpoint-tablet: 1024px;
+}
+
+/*
+ * Mode overrides — a container that carries data-mode="dark" or
+ * data-mode="feature" gets these values instead of the On Light defaults
+ * above, for every mode-variant token. Tailwind utilities (text-text-primary,
+ * bg-action-primary, etc.) reference these custom properties at use time via
+ * var(--color-*), so overriding the property here is enough — no utility
+ * class or component code needs to change for a token whose name is
+ * unchanged, only for the retired -inverse/-on-feature tokens (see the
+ * header comment above and each affected component's own diff).
+ *
+ * Mode-invariant tokens (identical across all three modes — the majority of
+ * surface/* tokens, action-highlight(-hover), text-on-highlight,
+ * text-on-state, state-hover, border-focus-on-highlight, opacity-disabled)
+ * have no entry here; there is nothing to override.
+ */
+[data-mode='dark'] {
+  --color-action-primary: #f7e7d2;
+  --color-action-primary-hover: #df8e10;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-disabled: #464340;
+
+  --color-border-default: #a5a995;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-strong: #f7e7d2;
+  --color-border-focus: #b3d1ff;
+
+  --color-text-primary: #f7e7d2;
+  --color-text-secondary: #c9cbbf;
+  --color-text-muted: #d1d0cf;
+  --color-text-highlight: #edc07a;
+  --color-text-link: #edc07a;
+  --color-text-button: #edc07a;
+  --color-text-on-action: #2f2c28;
+
+  --color-surface-card: #4a5435;
+  --color-surface-subtle: #4a5435;
+
+  --color-state-disabled: #a3a19f;
+  --color-state-focus: #b3d1ff;
+  --color-state-warning: #edc07a;
+  --color-state-success: #4ade80;
+  --color-state-error: #fecaca;
+
+  --color-icon-primary: #f7e7d2;
+  --color-icon-secondary: #c9cbbf;
+  --color-icon-muted: #d1d0cf;
+  --color-icon-interactive: #e6a745;
+  --color-icon-on-action: #2f2c28;
+  --color-icon-disabled: #a3a19f;
+}
+
+[data-mode='feature'] {
+  --color-action-primary: #f7e7d2;
+  --color-action-primary-hover: #df8e10;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-disabled: #cb6c43;
+
+  --color-border-default: #f7e7d2;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-strong: #fefbf8;
+  --color-border-focus: #b3d1ff;
+
+  --color-text-primary: #fefbf8;
+  --color-text-secondary: #faefe1;
+  --color-text-muted: #f8ebda;
+  --color-text-highlight: #fbf2e4;
+  --color-text-link: #fbf2e4;
+  --color-text-button: #fefbf8;
+  --color-text-on-action: #2f2c28;
+
+  --color-surface-card: #fefbf8;
+  --color-surface-subtle: #faefe1;
+
+  --color-state-disabled: #f8ebda;
+  --color-state-focus: #b3d1ff;
+  --color-state-warning: #fbf2e4;
+  --color-state-success: #bbf7d0;
+  --color-state-error: #fee2e2;
+
+  --color-icon-primary: #fefbf8;
+  --color-icon-secondary: #faefe1;
+  --color-icon-muted: #f8ebda;
+  --color-icon-interactive: #fbf2e4;
+  --color-icon-on-action: #2f2c28;
+  --color-icon-disabled: #f8ebda;
 }

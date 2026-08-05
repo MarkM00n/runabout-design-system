@@ -5,9 +5,28 @@
     "tokenCompliance": {
       "pass": true,
       "fail": 0,
-      "warn": 0,
-      "status": "pass",
-      "open": []
+      "warn": 2,
+      "status": "pass-with-warnings",
+      "open": [
+        {
+          "level": "warn",
+          "file": "src/components/Button/Button.tsx",
+          "line": 93,
+          "code": "raw-hex:#eab460:93",
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "checkType": "tokenCompliance"
+        },
+        {
+          "level": "warn",
+          "file": "src/components/Button/Button.tsx",
+          "line": 94,
+          "code": "raw-hex:#eab460:94",
+          "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+          "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+          "checkType": "tokenCompliance"
+        }
+      ]
     },
     "accessibility": {
       "pass": true,
@@ -33,7 +52,7 @@
   },
   "history": [],
   "overall": true,
-  "status": "pass",
+  "status": "pass-with-warnings",
   "tokensUsed": [
     "color-action-highlight",
     "color-action-highlight-hover",
@@ -43,11 +62,7 @@
     "color-border-default",
     "color-border-focus",
     "color-border-focus-on-highlight",
-    "color-state-disabled",
-    "color-surface-primary",
     "color-text-button",
-    "color-text-button-inverse",
-    "color-text-inverse",
     "color-text-on-action",
     "color-text-on-highlight",
     "color-text-primary",

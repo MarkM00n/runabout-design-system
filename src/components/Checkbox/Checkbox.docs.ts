@@ -6,7 +6,7 @@ export const docs: ComponentDocMeta = {
     'A labeled checkbox for binary or multi-select choices. Renders a visually-hidden native input driving a custom-styled box and checkmark, so it looks fully custom while staying keyboard- and screen-reader-operable.',
   usageGuidelines: [
     'Always pass a label — it is required, not optional, so every checkbox has a discoverable accessible name.',
-    'Its label/border tokens (text-inverse, border-default) are designed for a dark or colored surface. If placing it directly on a plain light page, wrap it with an appropriate background rather than expecting it to read clearly on white.',
+    'Its label/border tokens (text-primary, border-default) resolve for a dark surface via data-mode="dark" on an ancestor. If placing it directly on a plain light page, wrap it with a data-mode="dark" container and a matching background rather than expecting it to read clearly on white.',
     'Use the size prop to match the surrounding form density (large for standalone forms, small for compact lists/tables).',
   ],
   dos: [

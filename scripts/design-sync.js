@@ -535,49 +535,87 @@ export function checkAccessibility(name, rawSource) {
 // does a manual gut-check.
 // ---------------------------------------------------------------------------
 
-// Pulls every --color-{text,surface,state,action}-* value out of
-// tokens.css, keyed by the suffix that also appears as a Surface Pairings
-// row/column key (e.g. "surface-inverse", "state-warning", "text-inverse")
-// — the same suffix Tailwind uses in bg-{suffix}/text-{suffix}. rgba()
-// values (e.g. action-secondary's transparent fill) can't be reduced to a
-// single contrast figure against an unknown backdrop, so they're kept out
-// of the map entirely rather than guessed at.
-export function parseColorHexTokens(cssRaw) {
+// Pulls every --color-{text,surface,state,action,icon,border}-* value out of
+// one CSS block (the `@theme` base block, or a `[data-mode="..."]` override
+// block), keyed by the suffix Tailwind uses in bg-{suffix}/text-{suffix}.
+// rgba() values (e.g. action-secondary's transparent fill) can't be reduced
+// to a single contrast figure against an unknown backdrop, so they're kept
+// out of the map entirely rather than guessed at.
+function parseColorHexTokensFromBlock(blockRaw) {
   const map = new Map();
-  const re = /--color-((?:text|surface|state|action)-[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g;
+  const re = /--color-((?:text|surface|state|action|icon|border)-[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g;
   let match;
-  while ((match = re.exec(cssRaw))) {
+  while ((match = re.exec(blockRaw))) {
     map.set(match[1], match[2]);
   }
   return map;
 }
 
-// Parses design-system-rules.md §7's Surface Pairings table into
-// { rows: Map<surfaceKey, Map<textKey, ratioLabel>>, textUniverse: Set<textKey> }.
-// `rows`' keys double as the only valid bg-{key} tokens to check (anything
-// not in this table was never meant to be a text-pairing surface); textUniverse
-// is every token ever listed as an approved text partner across all rows,
-// which is also the only valid text-{key} tokens to check — this is what
-// lets `bg-state-hover` (a real Tailwind class, but not a documented surface)
-// and `text-label` (a typography token, not a colour) get ignored automatically
-// rather than needing their own exclusion list.
+// Extracts the raw text of a top-level `selector { ... }` block by brace
+// matching — needed because tokens.css declares the same custom property
+// name more than once (the @theme base value, then a data-mode override),
+// and a global regex over the whole file would silently let whichever
+// block comes last in the file win, rather than the intended one.
+function extractBlock(cssRaw, selectorRe) {
+  const m = selectorRe.exec(cssRaw);
+  if (!m) return '';
+  let depth = 0;
+  let start = -1;
+  for (let i = m.index; i < cssRaw.length; i++) {
+    if (cssRaw[i] === '{') {
+      if (depth === 0) start = i + 1;
+      depth++;
+    } else if (cssRaw[i] === '}') {
+      depth--;
+      if (depth === 0) return cssRaw.slice(start, i);
+    }
+  }
+  return '';
+}
+
+// tokens.css's On Light base values (the `@theme` block) — the default
+// resolution for any component that doesn't declare its own data-mode.
+export function parseColorHexTokens(cssRaw) {
+  return parseColorHexTokensFromBlock(extractBlock(cssRaw, /@theme\s*/));
+}
+
+// tokens.css's On Dark / On Feature override values — what a component's
+// tokens actually resolve to inside a `data-mode="dark"`/`data-mode="feature"`
+// container (Card, Button's secondary variant, etc). Returns
+// { dark: Map, feature: Map }.
+export function parseModeOverrideHexTokens(cssRaw) {
+  return {
+    dark: parseColorHexTokensFromBlock(extractBlock(cssRaw, /\[data-mode=['"]dark['"]\]\s*/)),
+    feature: parseColorHexTokensFromBlock(extractBlock(cssRaw, /\[data-mode=['"]feature['"]\]\s*/)),
+  };
+}
+
+// Parses design-system-rules.md §7's mode-based Surface Pairings table
+// (`| Token | On Light | On Dark | On Feature |`) into
+// Map<tokenKey, { light: hex, dark: hex, feature: hex }>. A row's Token
+// cell can list more than one token sharing the same values (e.g.
+// "`text-primary` / `icon-primary`"), split on " / " and registered under
+// each key. Cells look like `` `#2f2c28` · ≥10.4:1 `` (ratio prefixed with
+// `≥` for an aggregated worst-case figure) or plain `` `#2f2c28` · 10.4:1 ``
+// — only the hex is parsed out; this checker computes its own real ratio
+// rather than trusting the doc's rendered one, same rationale as before.
 export function parseSurfacePairingsTable(rulesRaw) {
-  const rows = new Map();
-  const textUniverse = new Set();
-  const rowRe = /^\|\s*`([a-z0-9-]+)`\s*\(`#[0-9a-fA-F]{3,8}`\)\s*\|\s*(.+?)\s*\|\s*$/;
+  const tokens = new Map();
+  const rowRe =
+    /^\|\s*(.+?)\s*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*$/;
   for (const rawLine of rulesRaw.split('\n')) {
     const m = rowRe.exec(rawLine.trim());
     if (!m) continue;
-    const [, surfaceKey, cellText] = m;
-    const parts = cellText.split('·').map((s) => s.trim()).filter(Boolean);
-    const textMap = new Map();
-    for (let i = 0; i < parts.length - 1; i += 2) {
-      textMap.set(parts[i], parts[i + 1]);
-      textUniverse.add(parts[i]);
+    const [, tokenCell, light, dark, feature] = m;
+    // Token cell is one or more `` `key` `` names, optionally joined by " / "
+    // and/or trailing a parenthetical SC annotation (e.g. border-focus's
+    // "(SC 1.4.11, 3:1)") — only the backticked key names matter here.
+    const keys = [...tokenCell.matchAll(/`([a-z0-9-]+)`/g)].map((k) => k[1]);
+    for (const key of keys) {
+      tokens.set(key, { light, dark, feature });
     }
-    rows.set(surfaceKey, textMap);
   }
-  return { rows, textUniverse };
+  return tokens;
 }
 
 function hexToRgb01(hex) {
@@ -609,34 +647,58 @@ export function contrastRatio(hexA, hexB) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-// Real contrast maths + §7 cross-reference for a component's background/text
-// token pairs. Only runs when the file uses exactly one colour-token text
-// class — with more than one, which text token actually renders against
-// which background can't be told apart from source text alone (e.g.
-// Button's several variant-specific text colours), and guessing would risk
-// a false FAIL against real, working code; with zero, there's nothing to
-// pair. One shared text colour applied across several backgrounds (Badge's
-// base label colour against each variant's fill) is exactly the case this
-// can check safely.
-export function checkContrastPairings(name, source, colorHex, pairingsTable) {
+// Real contrast maths for a component's background/text token pairs, mode-
+// aware (2026-08-05 architecture). Only runs when the file uses exactly one
+// colour-token text class — with more than one, which text token actually
+// renders against which background can't be told apart from source text
+// alone (e.g. Button's several variant-specific text colours), and guessing
+// would risk a false FAIL against real, working code; with zero, there's
+// nothing to pair. One shared text colour applied across several
+// backgrounds (Badge's base label colour against each variant's fill) is
+// exactly the case this can check safely.
+//
+// Under the mode architecture there's no separate "is this pairing
+// approved" question — §7's own text: "there is one token per role, and the
+// mode answers the rest." What replaces the old undocumented-pairing WARN
+// is a drift check: if tokens.css's hex for a token disagrees with what §7
+// documents for the same mode, that's tokens.css and the docs falling out
+// of sync with each other, worth flagging on its own.
+export function checkContrastPairings(name, source, colorHex, modeOverrides, pairingsTable) {
   const issues = [];
   const file = `src/components/${name}/${name}.tsx`;
   const codeOnly = stripComments(source);
 
+  // A component's own data-mode="dark"/"feature" (Card, Button secondary,
+  // etc.) is what actually determines which hex its tokens resolve to —
+  // nothing declared means the CSS cascade's own default, On Light.
+  const modeMatch = codeOnly.match(/data-mode=['"](dark|feature)['"]/);
+  const mode = modeMatch ? modeMatch[1] : 'light';
+  const hexMap = mode === 'light' ? colorHex : modeOverrides[mode];
+
+  // border-* is excluded even though it resolves a real hex — a border/
+  // divider is never a fill a block of text sits on (e.g. Card's 1px
+  // aria-hidden divider dash, bg-border-default), so pairing it against
+  // whatever the file's one text token happens to be produces a false
+  // positive, not a real accessibility finding.
   const bgTokens = [...new Set([...codeOnly.matchAll(/\bbg-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
-    (t) => pairingsTable.rows.has(t),
+    (t) => !t.startsWith('border-') && (hexMap.has(t) || colorHex.has(t)),
   );
   const textTokens = [...new Set([...codeOnly.matchAll(/\btext-([a-z][a-z0-9-]*)\b/g)].map((m) => m[1]))].filter(
-    (t) => pairingsTable.textUniverse.has(t) && colorHex.has(t),
+    (t) => hexMap.has(t) || colorHex.has(t),
   );
 
   if (bgTokens.length === 0 || textTokens.length !== 1) return issues;
 
   const [textToken] = textTokens;
-  const textHex = colorHex.get(textToken);
+  // Mode-invariant tokens (e.g. surface-feature, action-highlight) have no
+  // entry in the override map at all — fall back to the base value, which
+  // is correct for them precisely because it never changes by mode.
+  const resolve = (token) => hexMap.get(token) ?? colorHex.get(token);
+  const textHex = resolve(textToken);
+  const modeLabel = mode === 'light' ? 'the default (On Light)' : `data-mode="${mode}"`;
 
   for (const bgToken of bgTokens) {
-    const bgHex = colorHex.get(bgToken);
+    const bgHex = resolve(bgToken);
     if (!bgHex) continue;
     const ratio = contrastRatio(bgHex, textHex);
     const ratioLabel = `${ratio.toFixed(1)}:1`;
@@ -647,17 +709,20 @@ export function checkContrastPairings(name, source, colorHex, pairingsTable) {
         file,
         line: null,
         code: `contrast-fail:${bgToken}:${textToken}`,
-        message: `text-${textToken} on bg-${bgToken} measures ${ratioLabel} — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).`,
-        fix: 'Use a text or background token here that clears 4.5:1 against its pair, or ask design to rebind one of these tokens.',
+        message: `text-${textToken} on bg-${bgToken} measures ${ratioLabel} in ${modeLabel} context — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).`,
+        fix: 'Use a text or background token here that clears 4.5:1 against its pair in this context, or ask design to rebind one of these tokens.',
       });
-    } else if (!pairingsTable.rows.get(bgToken)?.has(textToken)) {
+    }
+
+    const documented = pairingsTable.get(textToken);
+    if (documented && documented[mode] && documented[mode].toLowerCase() !== textHex.toLowerCase()) {
       issues.push({
         level: 'warn',
         file,
         line: null,
-        code: `contrast-undocumented:${bgToken}:${textToken}`,
-        message: `text-${textToken} on bg-${bgToken} clears AA (${ratioLabel}) but isn't listed as an approved pairing in docs/design-system-rules.md §7.`,
-        fix: `Add text-${textToken} to bg-${bgToken}'s row in the Surface Pairings table (§7) so this combination is documented, not just coincidentally passing.`,
+        code: `contrast-doc-drift:${textToken}:${mode}`,
+        message: `text-${textToken}'s ${modeLabel} value in tokens.css (${textHex}) doesn't match docs/design-system-rules.md §7's documented value (${documented[mode]}) for the same token/mode.`,
+        fix: 'Update whichever of tokens.css or §7 is stale so they agree — both are meant to describe the same live Figma value.',
       });
     }
   }
@@ -1263,6 +1328,7 @@ const PRIMITIVE_COLOR_FAMILIES = new Set([
   'cream',
   'green',
   'red',
+  'blue',
   'alpha',
 ]);
 
@@ -1571,6 +1637,7 @@ function run() {
   const cssTokenNames = parseThemeTokenNames(cssRaw);
   const rulesRaw = existsSync(DESIGN_RULES_PATH) ? readFileSync(DESIGN_RULES_PATH, 'utf8') : '';
   const colorHexTokens = parseColorHexTokens(cssRaw);
+  const modeOverrideHexTokens = parseModeOverrideHexTokens(cssRaw);
   const pairingsTable = parseSurfacePairingsTable(rulesRaw);
 
   console.log(`${BOLD}Token parity${RESET} (tokens.css <-> tokens.json)`);
@@ -1604,7 +1671,7 @@ function run() {
     const baseTokenIssues = checkTokenCompliance(name, componentSource);
     const a11yIssues = [
       ...checkAccessibility(name, componentSource),
-      ...checkContrastPairings(name, componentSource, colorHexTokens, pairingsTable),
+      ...checkContrastPairings(name, componentSource, colorHexTokens, modeOverrideHexTokens, pairingsTable),
     ];
     const storybookIssues = existsSync(storiesPath)
       ? checkStorybookCoverage(name, dir, componentSource, storiesSource)

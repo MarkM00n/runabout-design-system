@@ -60,15 +60,15 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         </div>
 
         <div className="flex flex-col gap-01">
-          <TitleTag className="font-recoleta text-h3 text-text-inverse m-0">{title}</TitleTag>
+          <TitleTag className="font-recoleta text-h3 text-text-primary m-0">{title}</TitleTag>
 
           <div className="flex items-center gap-02">
-            <span className="font-manrope text-paragraph-small text-text-inverse">{date}</span>
+            <span className="font-manrope text-paragraph-small text-text-primary">{date}</span>
             <span className="h-[1px] w-[24px] bg-border-default" aria-hidden="true" />
-            <span className="font-manrope text-paragraph-small text-text-inverse">{time}</span>
+            <span className="font-manrope text-paragraph-small text-text-primary">{time}</span>
           </div>
 
-          <p className="font-manrope text-paragraph-small text-text-inverse m-0">{description}</p>
+          <p className="font-manrope text-paragraph-small text-text-primary m-0">{description}</p>
         </div>
       </>
     );
@@ -76,6 +76,13 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
+        // data-mode="feature": Card's fill (surface-feature) is mode-invariant
+        // — always this terracotta, everywhere — so every text-*/border-*
+        // token nested inside needs to resolve against the On Feature column,
+        // not whatever mode (if any) the surrounding page happens to be in.
+        // Replaces the old per-token -inverse/-on-feature binding pattern;
+        // see design-system-rules.md §7.
+        data-mode="feature"
         className={clsx('flex flex-col p-06 gap-04 rounded-xl bg-surface-feature', className)}
         {...props}
       >
@@ -86,7 +93,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
             className={clsx(
               'flex flex-col gap-04 w-full text-left bg-transparent border-0 p-0',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-              'focus-visible:ring-offset-transparent focus-visible:ring-border-focus-on-feature',
+              'focus-visible:ring-offset-transparent focus-visible:ring-border-focus',
             )}
           >
             {content}

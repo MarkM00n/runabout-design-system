@@ -90,7 +90,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         </span>
         <span
           className={clsx(
-            'font-manrope font-normal text-text-inverse peer-disabled:text-text-muted',
+            // text-primary, not a self-scoped data-mode — Checkbox still
+            // assumes an externally dark backdrop (unchanged from before
+            // the 2026-08-05 sync) rather than owning its own fill; the
+            // consuming app's own data-mode="dark" ancestor is what resolves
+            // this correctly, same assumption as before, just token-driven
+            // now instead of a hardcoded value. See Checkbox.stories.tsx's
+            // decorator for how the isolated story satisfies it.
+            'font-manrope font-normal text-text-primary peer-disabled:text-text-muted',
             labelTextStyles[size],
           )}
         >

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-05T03:36:22.490Z",
+  "generatedAt": "2026-08-05T04:26:59.609Z",
   "overallStatus": true,
-  "status": "pass",
+  "status": "pass-with-warnings",
   "categoryPass": {
     "Token Compliance": true,
     "Accessibility": true,
@@ -51,7 +51,7 @@
         "color-state-success",
         "color-state-warning",
         "color-surface-inverse",
-        "color-text-inverse",
+        "color-text-on-state",
         "font-manrope",
         "radius-sm",
         "spacing-00",
@@ -67,9 +67,28 @@
         "tokenCompliance": {
           "pass": true,
           "fail": 0,
-          "warn": 0,
-          "status": "pass",
-          "open": []
+          "warn": 2,
+          "status": "pass-with-warnings",
+          "open": [
+            {
+              "level": "warn",
+              "file": "src/components/Button/Button.tsx",
+              "line": 93,
+              "code": "raw-hex:#eab460:93",
+              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+              "checkType": "tokenCompliance"
+            },
+            {
+              "level": "warn",
+              "file": "src/components/Button/Button.tsx",
+              "line": 94,
+              "code": "raw-hex:#eab460:94",
+              "message": "This colour (#eab460) isn't from the design system. There's a note next to it, but it's worth double-checking the note actually explains why this exact colour is needed.",
+              "fix": "Check the nearby note really does explain why this one-off colour is needed, not just what it does.",
+              "checkType": "tokenCompliance"
+            }
+          ]
         },
         "accessibility": {
           "pass": true,
@@ -95,7 +114,7 @@
       },
       "history": [],
       "overall": true,
-      "status": "pass",
+      "status": "pass-with-warnings",
       "tokensUsed": [
         "color-action-highlight",
         "color-action-highlight-hover",
@@ -105,11 +124,7 @@
         "color-border-default",
         "color-border-focus",
         "color-border-focus-on-highlight",
-        "color-state-disabled",
-        "color-surface-primary",
         "color-text-button",
-        "color-text-button-inverse",
-        "color-text-inverse",
         "color-text-on-action",
         "color-text-on-highlight",
         "color-text-primary",
@@ -220,6 +235,14 @@
           "message": "The class \"text-inverse\" doesn't produce any real style — Tailwind's build didn't generate a rule for it, so it silently renders as if the class weren't there at all.",
           "fix": "This class name doesn't match a real Tailwind utility or registered token. A common cause: a color token registered as --color-X generates the utility {property}-X, which duplicates X's own prefix if X already starts with the property name (e.g. --color-text-inverse becomes text-text-inverse, not text-inverse) — check tokens.css and an existing component using the same token for the exact working class name.",
           "resolvedAt": "2026-07-22"
+        },
+        {
+          "checkType": "accessibility",
+          "file": "src/components/Card/Card.tsx",
+          "line": null,
+          "message": "text-text-primary on bg-border-default measures 1.2:1 in data-mode=\"feature\" context — below the 4.5:1 AA minimum for normal text (WCAG 2.2 SC 1.4.3).",
+          "fix": "Use a text or background token here that clears 4.5:1 against its pair in this context, or ask design to rebind one of these tokens.",
+          "resolvedAt": "2026-08-05"
         }
       ],
       "overall": true,
@@ -227,9 +250,9 @@
       "tokensUsed": [
         "color-alpha-white-10",
         "color-border-default",
-        "color-border-focus-on-feature",
+        "color-border-focus",
         "color-surface-feature",
-        "color-text-inverse",
+        "color-text-primary",
         "font-manrope",
         "font-recoleta",
         "radius-md",
@@ -286,8 +309,8 @@
         "color-state-hover",
         "color-surface-primary",
         "color-text-highlight",
-        "color-text-inverse",
         "color-text-muted",
+        "color-text-primary",
         "font-manrope",
         "radius-sm",
         "spacing-00",

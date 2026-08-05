@@ -48,38 +48,51 @@ const ArrowIcon = ({ size }: { size: ButtonSize }) => (
   </svg>
 );
 
+// Disabled = Default appearance at reduced opacity (opacity-disabled, 38%),
+// never a separate colour swap — design-system-rules.md §2, 2026-08-05
+// architecture. Every variant below relies on this: no disabled:bg-*/
+// disabled:text-*/disabled:border-* override remains anywhere, since the
+// Default classes above them already carry through unchanged, just faded.
+// This also fixes a real bug the old swap pattern had: action-primary
+// inverted (light fill -> dark fill) in the same 2026-08-05 sync, and the
+// old `disabled:bg-action-primary disabled:text-text-primary` pairing
+// would have rendered dark text on action-primary's new dark fill —
+// illegible. Fading the real Default combination sidesteps that entirely.
 const variantStyles: Record<ButtonVariant, string> = {
   primary: clsx(
     'bg-action-primary text-text-on-action',
     'hover:bg-action-primary-hover',
     'focus-visible:ring-border-focus',
-    'disabled:opacity-40 disabled:bg-action-primary disabled:text-text-primary',
+    'disabled:opacity-disabled',
   ),
   secondary: clsx(
-    'bg-transparent text-text-inverse border border-border-default',
-    'hover:bg-action-secondary-hover hover:border-text-inverse',
+    'bg-transparent text-text-primary border border-border-default',
+    'hover:bg-action-secondary-hover hover:border-text-primary',
     'focus-visible:border-border-focus focus-visible:ring-border-focus',
-    // Figma's Disabled variant binds no border colour at all here (unlike
-    // every other state) — kept at text-inverse rather than guessing a new
-    // value, since that's what the border already was and nothing in the
-    // source indicates it should change.
-    'disabled:opacity-60 disabled:bg-surface-primary disabled:text-text-primary disabled:border-text-inverse',
+    'disabled:opacity-disabled',
   ),
   accent: clsx(
     'bg-action-highlight text-text-on-highlight',
     'hover:bg-action-highlight-hover',
     // Accent's Focused ring uses its own dedicated token, not border-focus —
-    // border-focus (Blue/100) measures only 1.47:1 against action-highlight,
-    // short of WCAG 1.4.11's 3:1 non-text minimum. border-focus-on-highlight
-    // (Blue/25) clears it at 3.96:1. See tokens.css for the full story.
+    // border-focus (Blue/500 on Light) measures only ~1.5:1 against
+    // accent's action-highlight fill, short of WCAG 1.4.11's 3:1 non-text
+    // minimum. border-focus-on-highlight (mode-invariant, Blue/900) clears
+    // it. See tokens.css for the full story.
     'focus-visible:ring-border-focus-on-highlight',
-    'disabled:opacity-40 disabled:bg-surface-primary disabled:text-text-primary disabled:border disabled:border-text-inverse',
+    'disabled:opacity-disabled',
   ),
   link: clsx(
     'bg-transparent text-text-button',
-    'hover:text-text-button-inverse hover:underline',
-    'focus-visible:ring-border-focus focus-visible:text-text-button-inverse focus-visible:underline',
-    'disabled:opacity-40 disabled:text-state-disabled',
+    // Hover/Focused's brighter amber has no successor in the 2026-08-05
+    // mode architecture — text-button-inverse (the old token for this) was
+    // deleted, and modes model surface context (On Light/Dark/Feature), not
+    // a same-page hover-brighten effect. Kept as the old literal value
+    // rather than inventing a token mapping that doesn't exist; revisit if
+    // design ever defines a real replacement.
+    'hover:text-[#eab460] hover:underline',
+    'focus-visible:ring-border-focus focus-visible:text-[#eab460] focus-visible:underline',
+    'disabled:opacity-disabled',
   ),
 };
 
@@ -91,6 +104,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       type={type}
+      // Secondary has no fill of its own (bg-transparent) — it assumes an
+      // externally dark backdrop, same as before the 2026-08-05 sync, just
+      // token-driven now instead of a hardcoded text-inverse value. Scoping
+      // data-mode="dark" to Secondary specifically (not the other variants,
+      // which render normally against whatever the page's own mode is)
+      // reproduces that fixed appearance regardless of the surrounding
+      // page's actual mode.
+      data-mode={variant === 'secondary' ? 'dark' : undefined}
       className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}
     >
