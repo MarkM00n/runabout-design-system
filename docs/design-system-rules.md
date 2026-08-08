@@ -515,3 +515,32 @@ a background value the design file itself didn't actually intend.
   state recoloring both the checkmark *and* the label, not just the border,
   was only caught by checking a real Disabled sample rather than assuming
   it was "the same treatment, dimmed").
+
+## 9. The prototype lane (`src/prototypes/`)
+
+`src/prototypes/` is exploratory work — spikes, one-off explorations,
+things being tried out — that is explicitly **not** part of the shipped
+design system. It's a separate lane from `src/components/`, not a relaxed
+version of it:
+
+- **Flat files, no component contract.** A prototype is a single
+  `Name.tsx` directly under `src/prototypes/` (optionally paired with a
+  `Name.stories.tsx`) — no `ComponentName/` folder, no `index.ts` barrel,
+  no `Name.docs.ts`, no `Name.validation.json`. Those exist to satisfy
+  §3 (Storybook coverage) and §5 (Documentation), which only apply to
+  `src/components/`.
+- **Token compliance and accessibility/contrast rules still run**
+  (`npm run design-sync` — see the script's own "Prototypes" section),
+  but as a report, not a gate: violations print as a checklist, never
+  fail the build or block a merge. That checklist is, by construction,
+  what would need to be true before the prototype could graduate into
+  `src/components/` and start being held to the full rule set above.
+- **Storybook sidebar:** give a prototype's story `title:
+  'Prototypes/Name'` — a separate, visually distinct top-level section
+  (see `.storybook/preview.tsx`), not nested under `Components`. Every
+  story under that title automatically gets a banner making clear it's
+  exploratory, not shipped.
+- **Graduating a prototype** means moving it into a real
+  `src/components/ComponentName/` folder and building out everything
+  this document requires — it isn't a location a component can stay in
+  once it ships.

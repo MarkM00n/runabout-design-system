@@ -74,6 +74,36 @@ const preview: Preview = {
   // rule's specificity. Runabout omits the attribute entirely (undefined),
   // matching "anything without data-brand behaves exactly as it does now."
   decorators: [
+    // Prototypes/* stories (src/prototypes/ — see docs/design-system-rules.md
+    // §9) get a short banner making clear they're exploratory, not shipped
+    // system work — applied by title match so no per-story boilerplate is
+    // needed, just the 'Prototypes/Name' title convention. Listed first
+    // (outermost) so it always renders on Storybook's plain canvas, not
+    // nested inside the mode-colored box the next decorator adds below.
+    (Story, context) => {
+      if (!context.title?.startsWith('Prototypes/')) return <Story />;
+      return (
+        <div>
+          <div
+            style={{
+              background: '#fff3cd',
+              color: '#664d03',
+              border: '1px solid #ffe69c',
+              borderRadius: 6,
+              padding: '8px 12px',
+              marginBottom: 16,
+              fontFamily: 'system-ui, sans-serif',
+              fontSize: 13,
+            }}
+          >
+            🧪 <strong>Prototype</strong> — exploratory work, not part of the
+            shipped design system. Not covered by design-sync's blocking
+            checks; see <code>src/prototypes/README.md</code>.
+          </div>
+          <Story />
+        </div>
+      );
+    },
     (Story, context) => {
       const mode = (context.globals.mode as string) ?? 'light';
       const brand = (context.globals.brand as string) ?? 'runabout';
@@ -121,10 +151,16 @@ const preview: Preview = {
 
     options: {
       storySort: {
+        // Prototypes sits after Components, kept as its own top-level
+        // section rather than nested under it — see
+        // docs/design-system-rules.md §9. Anything not listed here
+        // (Examples/*, etc.) falls after these in Storybook's default
+        // order.
         order: [
           'Foundations',
           ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Breakpoints'],
           'Components',
+          'Prototypes',
         ],
       },
     },
