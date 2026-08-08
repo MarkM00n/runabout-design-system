@@ -27,5 +27,9 @@ dist-ssr
 *storybook.log
 storybook-static
 
-# Claude Code local tooling (settings, worktrees) — not project source
-.claude/
+# Claude Code local tooling (settings, worktrees) — not project source.
+# Skills are the exception: they're project-level workflow definitions
+# meant to be shared and checked in, not local machine state.
+.claude/*
+!.claude/skills/
+!.claude/skills/**
