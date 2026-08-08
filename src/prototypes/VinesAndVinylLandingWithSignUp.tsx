@@ -207,12 +207,9 @@ export const VinesAndVinylLandingWithSignUp = () => {
       <button
         type="button"
         onClick={() => setDemoBrand((b) => (b === 'runabout' ? 'northline' : 'runabout'))}
-        className="fixed bottom-[16px] right-[16px] z-50 flex items-center gap-2 rounded-full border border-gray-700 bg-gray-900 py-01 pl-03 pr-01 font-sans shadow-lg transition-colors duration-standard ease-standard hover:bg-gray-800"
+        className="fixed bottom-[16px] right-[16px] z-50 rounded-full border border-gray-700 bg-gray-900 px-03 py-01 font-sans text-caption font-medium text-gray-50 shadow-lg transition-colors duration-standard ease-standard hover:bg-gray-800"
       >
-        <span className="text-caption text-gray-400">Brand switch</span>
-        <span className="rounded-full bg-gray-700 px-02 py-00 text-caption font-medium text-gray-50 transition-colors duration-standard ease-standard">
-          {demoBrand === 'runabout' ? 'Runabout' : 'Northline'}
-        </span>
+        {demoBrand === 'runabout' ? 'Northline' : 'Runabout'}
       </button>
     </div>
   );
