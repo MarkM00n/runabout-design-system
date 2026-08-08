@@ -14,16 +14,25 @@ export interface TextareaProps
 // only pads horizontally) and a fixed starting height matching Figma's
 // 120px/80px instances. Figma has no concept of resize behavior; `resize-y`
 // is a deliberate addition for standard textarea UX, not a Figma binding.
+//
+// Field fill is action-secondary (transparent) / action-secondary-hover (a
+// 10%-alpha tint baked into the token itself) — confirmed live against
+// Figma 2026-08-08, same verified spec as Input/Select. Border is
+// border-strong except Disabled, which binds border-default. Hover does
+// not change border weight or color, only the fill tint.
+//
+// Focus is an offset outline (border-focus, 2px, offset 2px) — the field
+// carries no border at all in Figma's Focused variant. Disabled is the
+// Default appearance at opacity-disabled (38%), not separate colors.
 const baseStyles = clsx(
   'w-full box-border resize-y',
   'font-manrope font-normal text-text-primary placeholder:text-text-muted',
-  'bg-surface-primary border border-border-default',
+  'bg-action-secondary border border-border-strong',
   'transition-colors duration-150 ease-out',
-  'hover:bg-state-hover hover:border-[1.5px] hover:border-border-subtle',
-  'focus:outline-none focus:border-2 focus:border-border-focus',
-  'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-border-focus',
-  'disabled:cursor-not-allowed disabled:pointer-events-none disabled:resize-none',
-  'disabled:bg-surface-primary disabled:border-state-disabled disabled:placeholder:text-text-muted',
+  'hover:bg-action-secondary-hover',
+  'focus:outline-none focus-visible:border-transparent',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus',
+  'disabled:cursor-not-allowed disabled:pointer-events-none disabled:resize-none disabled:opacity-disabled disabled:border-border-default',
 );
 
 const sizeStyles: Record<TextareaSize, string> = {

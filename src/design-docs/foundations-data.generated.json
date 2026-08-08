@@ -32,7 +32,12 @@
       "value": "rgba(255, 255, 255, 0)",
       "usage": "Transparent, mode-invariant. Aliases Alpha/White-0 in Figma. Button secondary variant's fill in its default state. Not yet wired to a component via this token name — Secondary uses a literal bg-transparent.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
     },
     {
       "type": "Color",
@@ -43,7 +48,11 @@
       "usage": "Button secondary variant's fill on hover. Aliases Alpha/Olive-10 on Light, Alpha/White-10 on Dark/Feature.",
       "documented": true,
       "consumedBy": [
-        "Button"
+        "Button",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
       ]
     },
     {
@@ -105,12 +114,7 @@
       "value": "#f4dfc3",
       "usage": "Hover-state border color for every Input-family control.",
       "documented": true,
-      "consumedBy": [
-        "Checkbox",
-        "Input",
-        "Select",
-        "Textarea"
-      ]
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -120,7 +124,12 @@
       "value": "#3d4a2e",
       "usage": "Not yet used by any built component.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Checkbox",
+        "Input",
+        "Select",
+        "Textarea"
+      ]
     },
     {
       "type": "Color",
@@ -189,9 +198,7 @@
       "usage": "Placeholder text color for Input-family controls; also Checkbox's disabled-state checkmark/label color.",
       "documented": true,
       "consumedBy": [
-        "Checkbox",
         "Input",
-        "Select",
         "Textarea"
       ]
     },
@@ -274,12 +281,7 @@
       "value": "#f3dbbc",
       "usage": "Mode-invariant. Not yet used by any built component.",
       "documented": true,
-      "consumedBy": [
-        "Checkbox",
-        "Input",
-        "Select",
-        "Textarea"
-      ]
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -363,12 +365,7 @@
       "value": "#f6e3cb",
       "usage": "Mode-invariant. Not yet used by any built component directly.",
       "documented": true,
-      "consumedBy": [
-        "Checkbox",
-        "Input",
-        "Select",
-        "Textarea"
-      ]
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -378,12 +375,7 @@
       "value": "#747270",
       "usage": "Border color for Input-family controls in the disabled state; also Button link's disabled-state label text.",
       "documented": true,
-      "consumedBy": [
-        "Checkbox",
-        "Input",
-        "Select",
-        "Textarea"
-      ]
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -439,7 +431,9 @@
       "value": "#2f2c28",
       "usage": "Not yet used by any built component.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Select"
+      ]
     },
     {
       "type": "Color",

@@ -15,17 +15,29 @@ export interface InputProps
 // ::placeholder pseudo-element, and the Focused variant's color (text-primary)
 // onto the input's own typed-value color — the two concepts Figma's static
 // mockup can't represent simultaneously.
+//
+// Field fill is action-secondary (transparent) / action-secondary-hover (a
+// 10%-alpha tint baked into the token itself) — confirmed live against
+// Figma 2026-08-08: it's a bordered "ghost" control with no solid
+// background, not a solid white field. Border is border-strong at every
+// state except Disabled, which verifiably binds border-default in Figma —
+// a real, consistent difference, not a one-off. Hover does NOT change
+// border weight or color, only the fill tint (contradicts this file's
+// previous assumption).
+//
+// Focus is an offset outline (border-focus, 2px, offset 2px), not an inset
+// border change — the field carries no border at all in Figma's Focused
+// variant, replaced entirely by the ring. Disabled is the Default
+// appearance at opacity-disabled (38%), not separate colors.
 const baseStyles = clsx(
   'w-full box-border',
   'font-manrope font-normal text-text-primary placeholder:text-text-muted',
-  'bg-surface-primary border border-border-default',
+  'bg-action-secondary border border-border-strong',
   'transition-colors duration-150 ease-out',
-  // Figma's Hover variant increases stroke weight from 1px to 1.5px, not just color
-  'hover:bg-state-hover hover:border-[1.5px] hover:border-border-subtle',
-  'focus:outline-none focus:border-2 focus:border-border-focus',
-  'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-border-focus',
-  'disabled:cursor-not-allowed disabled:pointer-events-none',
-  'disabled:bg-surface-primary disabled:border-state-disabled disabled:placeholder:text-text-muted',
+  'hover:bg-action-secondary-hover',
+  'focus:outline-none focus-visible:border-transparent',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus',
+  'disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-disabled disabled:border-border-default',
 );
 
 const sizeStyles: Record<InputSize, string> = {

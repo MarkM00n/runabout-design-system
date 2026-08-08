@@ -24,21 +24,12 @@ const meta = {
     label: 'Checkbox label',
     onChange: fn(),
   },
-  // Checkbox's label/box border bind to text-primary/border-default, which
-  // (2026-08-05 mode architecture) resolve per data-mode — Checkbox assumes
-  // an externally dark backdrop rather than owning its own fill, so this
-  // decorator supplies both the mode (drives the actual token resolution)
-  // and a matching background (so the demo is visually legible, not just
-  // technically correct). Without data-mode="dark" here, every story would
-  // render dark-on-dark: the tokens would resolve their On Light values
-  // against this decorator's dark background.
-  decorators: [
-    (Story) => (
-      <div data-mode="dark" style={{ background: '#2f2c28', padding: 32, borderRadius: 12 }}>
-        <Story />
-      </div>
-    ),
-  ],
+  // No decorator needed — confirmed live against Figma 2026-08-08 that
+  // Checkbox's box/label bind to border-strong/text-primary/action-secondary,
+  // all mode-aware tokens that resolve correctly under the default On Light
+  // mode (Storybook's plain canvas), same as Input/Select/Textarea. The
+  // previous assumption that Checkbox required an externally dark backdrop
+  // was stale — Figma's own reference now shows it on a light surface.
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;
