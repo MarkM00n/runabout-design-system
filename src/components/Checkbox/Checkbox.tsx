@@ -14,9 +14,28 @@ export interface CheckboxProps
 // hidden (sr-only) but stays in the DOM and keyboard/focus-operable — the
 // box and checkmark are decorative siblings driven off it via `peer-*`
 // selectors, which is how you get a custom-styled checkbox without losing
-// native semantics/accessibility. Figma's Disabled variant recolors both the
-// checkmark and the label to text-muted (not just the box), which the
-// disabled: modifiers below preserve.
+// native semantics/accessibility.
+//
+// Box fill is action-secondary (transparent) / action-secondary-hover (a
+// 10%-alpha tint baked into the token itself) — confirmed live against
+// Figma 2026-08-08, same family as Input/Select/Textarea. Box border is
+// border-strong at 1px (Default/Focused), 1.5px on Hover — Checkbox is the
+// one Input-family control that DOES thicken its border on hover, verified
+// directly, not shared with the field-based controls. Disabled binds
+// border-default, not border-strong.
+//
+// Checkmark and label stay text-highlight/text-primary in every state,
+// including Disabled — confirmed directly against Figma's Disabled+Checked
+// variant. The old assumption that Disabled recolors the checkmark/label to
+// text-muted was true pre-2026-08-05; that fill-swap pattern is retired in
+// favor of opacity-disabled (38%) on the whole control, which is what
+// actually differs now.
+//
+// Focus is an offset outline on the box itself (border-focus, 2px, offset
+// 2px) — matches the box's own border weight/color exactly, unchanged, per
+// the same offset-ring pattern Input/Select/Textarea use via their focus
+// ring overlay.
+//
 // Arbitrary px, not Tailwind's h-6/w-6 scale — rem-based utilities scale off
 // this app's 18px root font-size (see tokens.css), which would render this
 // at 27px instead of 24px.
@@ -44,7 +63,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         htmlFor={generatedId}
         className={clsx(
           'inline-flex items-center cursor-pointer select-none',
-          'has-[:disabled]:cursor-not-allowed has-[:disabled]:pointer-events-none',
+          'has-[:disabled]:cursor-not-allowed has-[:disabled]:pointer-events-none has-[:disabled]:opacity-disabled',
           gapStyles[size],
           className,
         )}
@@ -60,11 +79,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           aria-hidden="true"
           className={clsx(
             'relative inline-flex flex-none items-center justify-center box-border',
-            'border border-border-default bg-surface-primary',
+            'border border-border-strong bg-action-secondary',
             'transition-colors duration-150 ease-out',
-            'peer-hover:bg-state-hover peer-hover:border-[1.5px] peer-hover:border-border-subtle',
-            'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-transparent peer-focus-visible:ring-border-focus peer-focus-visible:border-2 peer-focus-visible:border-border-focus',
-            'peer-disabled:bg-surface-primary peer-disabled:border-state-disabled',
+            'peer-hover:bg-action-secondary-hover peer-hover:border-[1.5px]',
+            'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-border-focus',
+            'peer-disabled:border-border-default',
             boxStyles[size],
           )}
         >
@@ -77,7 +96,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             aria-hidden="true"
             viewBox="0 0 14 11"
             fill="none"
-            className="h-[65%] w-[65%] opacity-0 text-text-highlight [label:has(:checked)_&]:opacity-100 [label:has(:disabled)_&]:text-text-muted"
+            className="h-[65%] w-[65%] opacity-0 text-text-highlight [label:has(:checked)_&]:opacity-100"
           >
             <path
               d="M1 5.5L5 9.5L13 1"
@@ -90,14 +109,13 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         </span>
         <span
           className={clsx(
-            // text-primary, not a self-scoped data-mode — Checkbox still
-            // assumes an externally dark backdrop (unchanged from before
-            // the 2026-08-05 sync) rather than owning its own fill; the
-            // consuming app's own data-mode="dark" ancestor is what resolves
-            // this correctly, same assumption as before, just token-driven
-            // now instead of a hardcoded value. See Checkbox.stories.tsx's
-            // decorator for how the isolated story satisfies it.
-            'font-manrope font-normal text-text-primary peer-disabled:text-text-muted',
+            // text-primary throughout, including Disabled — confirmed
+            // directly against Figma, label doesn't recolor when disabled,
+            // opacity-disabled (applied on the outer <label>) does that work.
+            // Checkbox is mode-aware like every other Input-family control:
+            // it resolves correctly under whatever data-mode its container
+            // sets, including none (On Light default).
+            'font-manrope font-normal text-text-primary',
             labelTextStyles[size],
           )}
         >

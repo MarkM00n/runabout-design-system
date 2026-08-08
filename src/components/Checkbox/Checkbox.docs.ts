@@ -6,7 +6,7 @@ export const docs: ComponentDocMeta = {
     'A labeled checkbox for binary or multi-select choices. Renders a visually-hidden native input driving a custom-styled box and checkmark, so it looks fully custom while staying keyboard- and screen-reader-operable.',
   usageGuidelines: [
     'Always pass a label — it is required, not optional, so every checkbox has a discoverable accessible name.',
-    'Its label/border tokens (text-primary, border-default) resolve for a dark surface via data-mode="dark" on an ancestor. If placing it directly on a plain light page, wrap it with a data-mode="dark" container and a matching background rather than expecting it to read clearly on white.',
+    'Its box/label tokens (border-strong, text-primary, action-secondary) are mode-aware and resolve correctly under whatever surface mode a container sets — including no data-mode at all (On Light default). No special backdrop is required.',
     'Use the size prop to match the surrounding form density (large for standalone forms, small for compact lists/tables).',
   ],
   dos: [
@@ -22,7 +22,7 @@ export const docs: ComponentDocMeta = {
   accessibilityNotes: [
     'The real <input type="checkbox"> stays in the DOM and keyboard-focusable; the box and checkmark are aria-hidden decorative siblings driven off it.',
     'The checkmark svg is nested inside the box rather than a flat sibling of the input, so it uses explicit [label:has(:checked)_&] ancestor selectors instead of Tailwind\'s sibling-based peer-* — both are scoped correctly per-instance through the nearest label.',
-    'Figma\'s Disabled variant recolors both the checkmark and the label text to text-muted, not just the box border — the implementation preserves that rather than only dimming the box.',
+    'Disabled is the Default appearance at opacity-disabled (38%), applied on the outer label so the input, box, checkmark, and label text all dim together — confirmed against Figma that the checkmark/label keep their normal colors (text-highlight/text-primary) rather than swapping to a separate disabled palette.',
     'The label wraps both the box and the text, so clicking anywhere in the label toggles the checkbox — no separate click handler needed.',
   ],
   codeExample:

@@ -19,16 +19,30 @@ export interface SelectProps
 // split that Input reconstructs isn't replicable here without a non-native
 // listbox. Text color is text-primary throughout — pass a disabled, selected
 // placeholder <option> for the "no selection" UX instead.
+//
+// Field fill is action-secondary (transparent) / action-secondary-hover (a
+// 10%-alpha tint baked into the token itself, not a separate opacity prop) —
+// confirmed live against Figma 2026-08-08: the field has no solid
+// background, it's a bordered "ghost" control that lets its surface mode
+// show through. Border is border-strong throughout except Disabled, which
+// verifiably uses border-default in Figma (not border-strong) — a real,
+// consistent binding difference across every Input-family control, not a
+// one-off.
+//
+// Focus is an offset outline (border-focus, 2px, offset 2px), not an inset
+// border change — confirmed the field carries no border at all in Figma's
+// Focused variant, replaced entirely by the ring. Disabled is the Default
+// appearance at opacity-disabled (38%), applied on the wrapper (not the
+// select itself) so the sibling chevron icon dims with it in one paint.
 const baseStyles = clsx(
   'w-full box-border appearance-none',
   'font-manrope font-normal text-text-primary',
-  'bg-surface-primary border border-border-default',
+  'bg-action-secondary border border-border-strong',
   'transition-colors duration-150 ease-out',
-  'hover:bg-state-hover hover:border-[1.5px] hover:border-border-subtle',
-  'focus:outline-none focus:border-2 focus:border-border-focus',
-  'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-border-focus',
-  'disabled:cursor-not-allowed disabled:pointer-events-none',
-  'disabled:bg-surface-primary disabled:border-state-disabled disabled:text-text-muted',
+  'hover:bg-action-secondary-hover',
+  'focus:outline-none focus-visible:border-transparent',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus',
+  'disabled:cursor-not-allowed disabled:pointer-events-none disabled:border-border-default',
 );
 
 const sizeStyles: Record<SelectSize, string> = {
@@ -47,7 +61,7 @@ const chevronPosition: Record<SelectSize, string> = {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ size = 'large', className, children, ...props }, ref) => (
-    <div className="relative inline-block w-full">
+    <div className="relative inline-block w-full has-[:disabled]:opacity-disabled">
       <select
         ref={ref}
         className={clsx(baseStyles, sizeStyles[size], className)}
@@ -60,7 +74,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         viewBox="0 0 8 4"
         fill="none"
         className={clsx(
-          'pointer-events-none absolute top-1/2 -translate-y-1/2 text-text-primary',
+          'pointer-events-none absolute top-1/2 -translate-y-1/2 text-icon-primary',
           chevronPosition[size],
         )}
       >
