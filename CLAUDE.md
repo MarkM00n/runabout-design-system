@@ -100,15 +100,42 @@ locally is strictly better than catching it there.
 exists, including edge cases this summary doesn't spell out — read it, not
 just this file, before making a judgment call it might already cover.
 
-## Token/design-system changes must also sweep the dashboard app
+## Component changes must also sweep every consumer outside src/components/
 
-`src/App.tsx`/`src/App.css` (the DesignOps pilot dashboard, `npm run
-build:dashboard`) consumes `tokens.css` directly — the same
-`--color-*`/`--spacing-*`/etc. custom properties every component uses —
-but it lives outside `src/components/`, so `npm run design-sync` **never
-checks it**. A token rename, retirement, or value change that's fully
-handled across every component can still silently break the dashboard,
-and nothing in the normal workflow catches it.
+Anything outside `src/components/` — `src/App.tsx`/`src/App.css` (the
+DesignOps pilot dashboard), `src/examples/*` (landing pages and other
+one-off marketing pages built from these components) — consumes the
+design system directly but lives where `npm run design-sync` **never
+checks**. A change fully handled across every component can still
+silently break one of these consumers, and nothing in the normal workflow
+catches it.
+
+This isn't only a token-rename problem. A component's own *behavior*
+changing — a fill going from solid to transparent, from mode-invariant to
+mode-variant, or vice versa — breaks any consumer that added a workaround
+(most often a `data-mode` override) to compensate for the old behavior.
+The workaround doesn't get an error when the assumption it was built on
+disappears; it just quietly produces the wrong result. **Whenever a
+component's fill, mode-handling, or focus/disabled treatment changes, grep
+the whole repo for that component's imports (not just `App.tsx`) and
+re-check every usage — especially any `data-mode` override wrapping it.**
+
+- **Real incident (2026-08-08):** the Input-family mode/token sync (PR
+  #70/#71) correctly changed `Input`'s fill from a fixed, mode-invariant
+  light cream (`bg-surface-primary`) to a genuinely transparent
+  `action-secondary`. `src/examples/VinesAndVinylLanding.tsx` wraps its
+  Hero email `Input` in `data-mode="light"` — load-bearing against the
+  *old* fill, since forcing On Light was the only way to get a readable
+  pairing against a fixed light backdrop. Once the fill went transparent,
+  that same override put dark ink/olive text and border directly on
+  Hero's terracotta background showing through the field: measured
+  1.18:1 (placeholder) and 1.66:1 (border), both far under AA. Neither
+  `design-sync` nor the component-level Ready-for-AI work touched this
+  file — same blind spot as the dashboard, a second real instance of it.
+
+The dashboard specifically also has this additional wrinkle: it consumes
+`tokens.css`/`tokens.json` directly — the same `--color-*`/`--spacing-*`/etc.
+custom properties every component uses.
 
 - **Whenever a change touches `tokens.css`/`tokens.json`** (a rename, a
   retired token, a new mode, a re-numbered primitive — not just a normal

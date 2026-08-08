@@ -91,6 +91,20 @@ below, and `scripts/design-sync.js` for the implementation.
 - **Focus must be visible and must use `:focus-visible`, not `:focus`.**
   `:focus` also matches mouse clicks, which shows a keyboard-only focus ring
   to mouse users and doesn't match what Figma's "Focused" variant depicts.
+- **Never pair `outline-none` with `focus-visible:outline-*` on the same
+  element, even scoped to `focus:`.** Tailwind v4 composes every outline
+  utility through one shared custom property (`--tw-outline-style`). Any
+  class that sets it to `none` — `outline-none`, or `focus:outline-none` —
+  permanently wins over `focus-visible:outline`'s attempt to set it back
+  to `solid`, regardless of source order or CSS specificity: `outline-width`
+  and `outline-color` still compute correctly, but `outline-style` stays
+  stuck at `none` and nothing paints. Real incident (2026-08-08): shipped
+  in PR #70 with `design-sync` passing clean, only caught by clicking into
+  a live Storybook instance and reading `getComputedStyle` — a static
+  token-name check cannot see this class of bug. The fix is to not
+  suppress the outline at all; `focus-visible:` already scopes correctly
+  on its own (see `Tab.tsx`, which never had a suppression utility and
+  never had this bug).
 - **Disabled is a real attribute, not a style.** Use the native `disabled`
   attribute (blocks focus and interaction for free) and pair it with
   `disabled:cursor-not-allowed disabled:pointer-events-none` so hover states
@@ -181,6 +195,17 @@ whenever someone actually wants it.
   connected) for at least: background/border/text color, border-radius,
   height, padding, and font-size — across every size and state variant —
   and diff them against the literal values extracted from Figma.
+- **If the component touches a mode-variant token, verify all three modes
+  (On Light, On Dark, On Feature) live, not just whichever one Figma's
+  reference happens to show at the time.** Checking token values against
+  Figma is necessary but not sufficient — the values can be correct in
+  `tokens.css` for every mode and the component can still render wrong at
+  runtime for reasons no token diff would catch (the `outline-none`
+  footgun above is exactly this: right tokens, wrong computed output).
+  Drive Storybook's mode-switcher decorator directly via URL globals
+  (`?globals=mode:dark`) and re-check computed styles, not just Light.
+  This session only did this after being asked a second time — it should
+  be routine, not a follow-up question.
 - **Don't assume sibling components share a rule.** `Button`'s radius steps
   down at the `small` size; `Input`, `Select`, and `Textarea` all stay pill
   at both sizes. Assuming "it's probably the same as the last component"
@@ -455,6 +480,21 @@ a background value the design file itself didn't actually intend.
   visually-matching hex value — two Figma colors can be identical by
   coincidence while being bound to different variables (see the
   token-compliance rule on not collapsing tokens above).
+- **Check `paint.opacity`, not just `paint.color`, on every fill and
+  stroke.** A fill can be correctly bound to the right variable and still
+  render nothing, because its own paint opacity is `0` — a fully
+  legitimate, deliberate pattern (a bordered "ghost" control with no real
+  background) that looks identical to a bug if you only read `.color`.
+  Real incident (2026-08-08): `Input`/`Select`/`Textarea`/`Checkbox`'s
+  field fill (`action/secondary`) was read as `#ffffff` and assumed solid,
+  which led to "fixing" a contrast problem that didn't exist by forcing an
+  explicit variable mode onto the field — the fill was actually
+  `rgba(255,255,255,0)`, and the real backdrop showing through it was
+  what needed to be read correctly, not overridden. The forced mode then
+  produced a real, different bug (dark-on-dark) that had to be reverted.
+  Always compute contrast against the *composited* result
+  (`opacity × fill.color + (1 − opacity) × whatever's actually behind
+  it`), never against `fill.color` alone.
 - When a component has multiple variants (size × state, or more), sample
   enough of them to confirm the pattern holds — don't inspect one variant
   and assume the rest follow the same rule linearly (Checkbox's Disabled
