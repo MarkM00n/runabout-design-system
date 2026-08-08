@@ -339,6 +339,45 @@
   --text-h3: 36px;
   --text-h3--line-height: 1.15;
 
+  /* Figma text style "Manrope/Label SemiBold" — confirmed 2026-08-08 via a
+     live Plugin API read (font-size + rendered node height), added while
+     building the "Vines & Vinyl" landing page story. AUTO line-height in
+     Figma, not a fixed ratio — "normal" matches both Figma's own setting
+     and get_design_context's own generated `leading-[normal]` hint, rather
+     than hand-computing a ratio off one rendered sample. Weight (600) isn't
+     encoded here, same convention as every other --text-* token — apply
+     font-semibold alongside, as get_design_context's reference code does.
+     Landing page's Hero eyebrow and the floating date card's time line. */
+  --text-label-strong: 13px;
+  --text-label-strong--line-height: normal;
+  /* Figma text style "Manrope/Paragraph Large" — confirmed 2026-08-08 (see
+     text-label-strong's comment above for method). Landing page's Hero
+     description paragraph. */
+  --text-paragraph-large: 18px;
+  --text-paragraph-large--line-height: 1.65;
+  /* Figma text style "Manrope/Caption" — confirmed 2026-08-08 (see
+     text-label-strong's comment above for method). Landing page's Footer
+     tagline. */
+  --text-caption: 12px;
+  --text-caption--line-height: 1.55;
+  /* Figma text style "Manrope/Overline Compact" — confirmed 2026-08-08 (see
+     text-label-strong's comment above for the AUTO/"normal" line-height
+     reasoning). Also carries a real 3px letter-spacing, unlike every other
+     --text-* token here — Tailwind v4 supports a --text-*--letter-spacing
+     companion the same way it supports --line-height, so it's captured as
+     a token property rather than left to an ad hoc tracking-[3px] utility
+     wherever this style is used. Weight (600) still isn't encoded here,
+     same convention as every other --text-* token. Landing page's floating
+     date card "SATURDAY" label. */
+  --text-overline: 10px;
+  --text-overline--line-height: normal;
+  --text-overline--letter-spacing: 3px;
+  /* Figma text style "Recoleta/H4" — confirmed 2026-08-08 (see
+     text-label-strong's comment above for method). Landing page's floating
+     date card's date line. */
+  --text-h4: 28px;
+  --text-h4--line-height: 1.2;
+
   /* Not Figma-sourced — the Figma file has no motion/duration/easing
      variables at all (confirmed via getLocalVariablesAsync). Formalizes a
      de facto value already used identically in Button, Input, Select,
@@ -513,7 +552,7 @@
  * same Semantic mode are listed below (onLight: 38, onDark: 36, onFeature: 36).
  */
 
-[data-brand='northline'], [data-brand='northline'][data-mode='light'] {
+[data-brand='northline'], [data-brand='northline'][data-mode='light'], [data-brand='northline'] [data-mode='light'] {
   --color-action-disabled: #e0e8f2;
   --color-action-highlight: #2b7fd4;
   --color-action-highlight-hover: #5797e7;
@@ -554,7 +593,7 @@
   --color-text-secondary: #3b5069;
 }
 
-[data-brand='northline'][data-mode='dark'] {
+[data-brand='northline'][data-mode='dark'], [data-brand='northline'] [data-mode='dark'] {
   --color-action-disabled: #3c4551;
   --color-action-highlight: #2b7fd4;
   --color-action-highlight-hover: #5797e7;
@@ -593,7 +632,7 @@
   --color-text-secondary: #ccd5e1;
 }
 
-[data-brand='northline'][data-mode='feature'] {
+[data-brand='northline'][data-mode='feature'], [data-brand='northline'] [data-mode='feature'] {
   --color-action-disabled: #58b4c3;
   --color-action-highlight: #2b7fd4;
   --color-action-highlight-hover: #5797e7;

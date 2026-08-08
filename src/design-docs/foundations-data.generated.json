@@ -1458,6 +1458,76 @@
       "consumedBy": [
         "Card"
       ]
+    },
+    {
+      "type": "Typography",
+      "name": "--text-label-strong",
+      "tokenPath": "typography.label-strong",
+      "value": "13px / normal / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "13px",
+      "lineHeight": "normal",
+      "fontWeight": 600,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Manrope/Label SemiBold\" — confirmed 2026-08-08 via a live Plugin API read (font-size + rendered node height), added while building the \"Vines & Vinyl\" landing page story. AUTO line-height in Figma, not a fixed ratio — \"normal\" matches both Figma's own setting and get_design_context's own generated `leading-[normal]` hint, rather than hand-computing a ratio off one rendered sample. Weight (600) isn't encoded here, same convention as every other --text-* token — apply font-semibold alongside, as get_design_context's reference code does. Landing page's Hero eyebrow and the floating date card's time line.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-paragraph-large",
+      "tokenPath": "typography.paragraph-large",
+      "value": "18px / 1.65 / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "18px",
+      "lineHeight": 1.65,
+      "fontWeight": 400,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Manrope/Paragraph Large\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's Hero description paragraph.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-caption",
+      "tokenPath": "typography.caption",
+      "value": "12px / 1.55 / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "12px",
+      "lineHeight": 1.55,
+      "fontWeight": 400,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Manrope/Caption\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's Footer tagline.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-overline",
+      "tokenPath": "typography.overline",
+      "value": "10px / normal / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "10px",
+      "lineHeight": "normal",
+      "fontWeight": 600,
+      "letterSpacing": "3px",
+      "usage": "Figma text style \"Manrope/Overline Compact\" — confirmed 2026-08-08 (see text-label-strong's comment above for the AUTO/\"normal\" line-height reasoning). Also carries a real 3px letter-spacing, unlike every other --text-* token here — Tailwind v4 supports a --text-*--letter-spacing companion the same way it supports --line-height, so it's captured as a token property rather than left to an ad hoc tracking-[3px] utility wherever this style is used. Weight (600) still isn't encoded here, same convention as every other --text-* token. Landing page's floating date card \"SATURDAY\" label.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-h4",
+      "tokenPath": "typography.h4",
+      "value": "28px / 1.2 / Recoleta",
+      "fontFamily": "Recoleta",
+      "fontSize": "28px",
+      "lineHeight": 1.2,
+      "fontWeight": 400,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Recoleta/H4\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's floating date card's date line.",
+      "documented": true,
+      "consumedBy": []
     }
   ],
   "spacing": [

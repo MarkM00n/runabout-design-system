@@ -42,17 +42,51 @@ const TOKENS_CSS_PATH = join(ROOT, 'src', 'styles', 'tokens.css');
 const START_MARKER = '/* BRAND OVERRIDES — GENERATED, DO NOT EDIT */';
 const END_MARKER = '/* END BRAND OVERRIDES */';
 
-// On Light's selector also explicitly matches [data-mode='light'], not just
-// the bare [data-brand='northline'] — the same gap tokens.css's own header
+// Each mode gets TWO selector forms, not one:
+//
+// 1. The same-element compound form, [data-brand='northline'][data-mode='dark']
+//    — for the common case where one element (usually the Storybook decorator
+//    root, or any app shell that sets both attributes together) carries both
+//    attributes itself.
+//
+// 2. The descendant form, [data-brand='northline'] [data-mode='dark'] — for
+//    components that set their own data-mode directly on their root without
+//    also setting data-brand (Card -> data-mode="feature", Button's secondary
+//    variant -> data-mode="dark"; see each component's own comment). Without
+//    this form, such a component's root matches Runabout's plain, unscoped
+//    [data-mode='dark'] rule in tokens.css directly, and a rule matching an
+//    element itself always overrides a value merely inherited from an
+//    ancestor — regardless of specificity. That silently reverts every
+//    mode-variant token inside the component back to Runabout no matter what
+//    brand is selected, since the compound form alone never matches an
+//    element that only carries data-mode, not data-brand.
+//
+// Both forms carry the same two-attribute-selector specificity, which beats
+// Runabout's own one-attribute-selector [data-mode='dark'] block regardless
+// of which one (or both) match a given element — so this fixes self-scoping
+// components without either of them needing to know about brand at all.
+//
+// On Light's forms also explicitly match [data-mode='light'], not just the
+// bare [data-brand='northline'] — the same gap tokens.css's own header
 // comment documents for why [data-mode='light'] exists despite duplicating
 // @theme's values: custom properties don't reset themselves just because a
 // new attribute value appears. Without the explicit pairing, a Northline
 // element set back to data-mode="light" inside an ancestor carrying
 // data-mode="dark"/"feature" would keep inheriting the darker values.
 const MODE_CONFIG = [
-  { dataKey: 'onLight', selector: "[data-brand='northline'], [data-brand='northline'][data-mode='light']" },
-  { dataKey: 'onDark', selector: "[data-brand='northline'][data-mode='dark']" },
-  { dataKey: 'onFeature', selector: "[data-brand='northline'][data-mode='feature']" },
+  {
+    dataKey: 'onLight',
+    selector:
+      "[data-brand='northline'], [data-brand='northline'][data-mode='light'], [data-brand='northline'] [data-mode='light']",
+  },
+  {
+    dataKey: 'onDark',
+    selector: "[data-brand='northline'][data-mode='dark'], [data-brand='northline'] [data-mode='dark']",
+  },
+  {
+    dataKey: 'onFeature',
+    selector: "[data-brand='northline'][data-mode='feature'], [data-brand='northline'] [data-mode='feature']",
+  },
 ];
 
 // Semantic variable names come out of Figma as "category/name" (e.g.
