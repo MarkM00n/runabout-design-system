@@ -48,8 +48,13 @@ below, and `scripts/design-sync.js` for the implementation.
   `Sand/500`, old `Amber/25` is now `Amber/950` at a darker value
   `#7a4e09`). Any code, comment, or doc referencing pre-2026-08-05
   primitive names is stale — resolve against live Figma bindings, never
-  against remembered names. `tokens.css`/`tokens.json` still carry the
-  old names until the pending code-side sync lands (see §7's warning).
+  against remembered names. **`tokens.css`/`tokens.json` already carry
+  the new numbering** (confirmed 2026-08-08: `--color-amber-950:
+  #7a4e09` is present, matching this bullet's own example exactly) — the
+  "still carries the old names" claim that used to sit here was itself
+  stale. Still worth a live Figma check before relying on any specific
+  primitive value; this wasn't a full re-audit of the whole ramp, just
+  confirmation the sync isn't outstanding as a default assumption.
 - **The root-font-size trap:** `src/index.css` sets the page's root
   font-size to `18px`, not the browser default `16px`. Every one of
   Tailwind's `rem`-based utilities (`h-12`, `w-6`, `rounded-2xl`, `gap-4`,
@@ -422,12 +427,21 @@ Rules that fall out of the mode architecture:
   don't appear in this table because SC 1.4.3 exempts inactive controls,
   and the disabled treatment is the default appearance at 38% opacity,
   not a separate colour pairing.
-- **⚠️ Code-side sync pending:** `tokens.css`/`tokens.json` and
-  `checkContrastPairings` in `scripts/design-sync.js` still reflect the
-  pre-2026-08-05 token names and this section's old table. Until that
-  sync lands, treat *this section* as the source of truth for pairings
-  and expect design-sync's pairing check to be stale — regenerating those
-  is the next scheduled code task.
+- **Code-side sync status (corrected 2026-08-08):** the "sync pending"
+  warning that used to sit here was itself stale. `checkContrastPairings`
+  in `scripts/design-sync.js` parses *this section's own table* at
+  runtime (`parseSurfacePairingsTable`) rather than carrying an
+  independent hardcoded copy — it cannot drift from what this section
+  says, by construction. Separately, every semantic token the Input
+  family uses (`border-strong`, `border-default`, `border-focus`,
+  `action-secondary`, `action-secondary-hover`, `text-muted`,
+  `text-primary`, `text-highlight`, `icon-primary`) was spot-verified
+  live against Figma across all three modes on 2026-08-08 and matched
+  `tokens.css` exactly. That's not an exhaustive re-check of every token
+  in the file — verify any token outside that set against live Figma
+  before trusting it, same as always — but the blanket claim that
+  `tokens.css`/`tokens.json` reflect pre-2026-08-05 names no longer
+  holds as a default assumption.
 
 ## 8. Where fixes belong
 

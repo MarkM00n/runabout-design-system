@@ -62,10 +62,16 @@ changed with it (full detail in `docs/design-system-rules.md` §§1–2, 7):
   `opacity-disabled` token — never separate disabled colours.
 - **Focus = 2px outline offset 2px outside the control** (`outline` +
   `outline-offset` on `:focus-visible`), colour from `border-focus`.
-- **`tokens.css`/`tokens.json` and design-sync's pairings check are stale**
-  against the new Figma names until the code-side token sync lands —
-  don't treat a name mismatch there as a design error; §7's table in the
-  rules doc is current.
+- **`tokens.css`/`tokens.json`'s semantic mode values were spot-verified
+  against live Figma on 2026-08-08** (every token the Input family uses,
+  across On Light/On Dark/On Feature) and matched exactly — the earlier
+  blanket "stale, sync pending" claim no longer holds as a default
+  assumption. That wasn't an exhaustive re-check of every token in the
+  file; verify anything outside that set against live Figma before
+  trusting it. `checkContrastPairings` in `scripts/design-sync.js` parses
+  §7's table directly at runtime rather than carrying its own copy, so it
+  structurally can't drift from what that section says — §7 in the rules
+  doc is still the reference, it's just not "ahead of" the code anymore.
 
 ## Every component request must include
 
