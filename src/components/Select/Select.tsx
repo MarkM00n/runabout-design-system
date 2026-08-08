@@ -65,7 +65,19 @@ const chevronPosition: Record<SelectSize, string> = {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ size = 'large', className, children, ...props }, ref) => (
-    <div className="relative inline-block w-full has-[:disabled]:opacity-disabled">
+    // has-[select:disabled], not has-[:disabled] — real bug, confirmed live
+    // 2026-08-08: :has(:disabled) matches ANY disabled descendant, which
+    // includes a completely normal `<option disabled>` placeholder (used by
+    // this component's own story, the landing page, and every other real
+    // usage found). That means every Select with a disabled placeholder
+    // option — the standard convention for this control — was silently
+    // rendering the whole wrapper (border, text, chevron) at
+    // opacity-disabled (38%) unconditionally, regardless of whether the
+    // select itself was actually disabled. Scoping the :has() to the
+    // select element specifically fixes it: verified opacity is 1 on a
+    // non-disabled select with a disabled placeholder option, and still
+    // correctly 0.38 on a genuinely disabled select.
+    <div className="relative inline-block w-full has-[select:disabled]:opacity-disabled">
       <select
         ref={ref}
         className={clsx(baseStyles, sizeStyles[size], className)}

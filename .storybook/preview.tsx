@@ -81,25 +81,40 @@ const preview: Preview = {
     // (outermost) so it always renders on Storybook's plain canvas, not
     // nested inside the mode-colored box the next decorator adds below.
     (Story, context) => {
-      if (!context.title?.startsWith('Prototypes/')) return <Story />;
+      const title = context.title ?? '';
+      const isPrototype = title.startsWith('Prototypes/');
+      const isExample = title.startsWith('Examples/');
+      if (!isPrototype && !isExample) return <Story />;
+
+      const bannerStyle = {
+        background: '#fff3cd',
+        color: '#664d03',
+        border: '1px solid #ffe69c',
+        borderRadius: 6,
+        padding: '8px 12px',
+        marginBottom: 16,
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: 13,
+      } as const;
+
       return (
         <div>
-          <div
-            style={{
-              background: '#fff3cd',
-              color: '#664d03',
-              border: '1px solid #ffe69c',
-              borderRadius: 6,
-              padding: '8px 12px',
-              marginBottom: 16,
-              fontFamily: 'system-ui, sans-serif',
-              fontSize: 13,
-            }}
-          >
-            🧪 <strong>Prototype</strong> — exploratory work, not part of the
-            shipped design system. Not covered by design-sync's blocking
-            checks; see <code>src/prototypes/README.md</code>.
-          </div>
+          {isPrototype && (
+            <div style={bannerStyle}>
+              🧪 <strong>Prototype</strong> — exploratory work, not part of the
+              shipped design system. Not covered by design-sync's blocking
+              checks; see <code>src/prototypes/README.md</code>. The
+              toolbar's Mode control has no effect here — every section sets
+              its own data-mode (see below).
+            </div>
+          )}
+          {isExample && (
+            <div style={bannerStyle}>
+              The toolbar's Mode control has no effect on this page — every
+              section sets its own data-mode explicitly, the same
+              self-scoping pattern Card.tsx uses for data-mode="feature".
+            </div>
+          )}
           <Story />
         </div>
       );
@@ -107,6 +122,24 @@ const preview: Preview = {
     (Story, context) => {
       const mode = (context.globals.mode as string) ?? 'light';
       const brand = (context.globals.brand as string) ?? 'runabout';
+      const title = context.title ?? '';
+      // Examples/* and Prototypes/* stories are full pages, not single
+      // components — every section already sets its own data-mode (see the
+      // banner above), so an outer ambient data-mode here would be inert at
+      // best and misleading at worst (implying the Mode control does
+      // something it doesn't). Brand still has to flow through unconditionally
+      // — it's the axis these full-page stories actually exist to exercise,
+      // per VinesAndVinylLanding.stories.tsx's own header comment — so this
+      // still wraps with data-brand, just without the mode-driven
+      // background/padding shell meant for previewing a single component
+      // under different ambient modes.
+      if (title.startsWith('Examples/') || title.startsWith('Prototypes/')) {
+        return (
+          <div data-brand={brand === 'northline' ? 'northline' : undefined}>
+            <Story />
+          </div>
+        );
+      }
       return (
         <div
           data-mode={mode}

@@ -62,7 +62,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       <label
         htmlFor={generatedId}
         className={clsx(
-          'inline-flex items-center cursor-pointer select-none',
+          // items-start, not items-center — real gap, found 2026-08-08 via
+          // a prototype using a genuinely long label for the first time.
+          // items-center mathematically centers the box against the
+          // label's FULL height (verified: box center landed exactly on
+          // the midpoint of a 2-line block), which is correct per the flex
+          // spec but reads as top-heavy/unbalanced once a label wraps — the
+          // box ends up beside line 1 with line 2 floating underneath it.
+          // items-start aligns the box with the first line's cap-height
+          // instead, the conventional checkbox treatment for wrapping
+          // labels. Every existing Checkbox story/doc uses a short,
+          // single-line label, where the two produce a visually identical
+          // result (line-height 24.3px vs. box height 24px, a ~0.15px
+          // difference) — this never had a case to expose the gap before.
+          'inline-flex items-start cursor-pointer select-none',
           'has-[:disabled]:cursor-not-allowed has-[:disabled]:pointer-events-none has-[:disabled]:opacity-disabled',
           gapStyles[size],
           className,
