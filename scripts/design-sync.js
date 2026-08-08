@@ -35,6 +35,12 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = join(ROOT, 'src', 'components');
+// Exploratory work, explicitly not part of the shipped design system — see
+// docs/design-system-rules.md §9 and src/prototypes/README.md. Same
+// token/accessibility/contrast checks run against files here as against
+// src/components/, but only as a report; see the "Prototypes" section
+// near the end of run() for why this never affects overallStatus.
+const PROTOTYPES_DIR = join(ROOT, 'src', 'prototypes');
 const TOKENS_CSS_PATH = join(ROOT, 'src', 'styles', 'tokens.css');
 const TOKENS_JSON_PATH = join(ROOT, 'src', 'tokens', 'tokens.json');
 const DESIGN_RULES_PATH = join(ROOT, 'docs', 'design-system-rules.md');
@@ -64,6 +70,19 @@ export function discoverComponents() {
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .filter((name) => existsSync(join(COMPONENTS_DIR, name, `${name}.tsx`)))
+    .sort();
+}
+
+// Prototypes are flat files (no ComponentName/ folder, no docs.ts/index.ts/
+// validation.json — see docs/design-system-rules.md §9): any Name.tsx
+// directly under src/prototypes/ that isn't itself a .stories.tsx file. A
+// matching Name.stories.tsx is optional and not required for discovery — a
+// prototype with no story yet still gets its checks run.
+export function discoverPrototypes() {
+  if (!existsSync(PROTOTYPES_DIR)) return [];
+  return readdirSync(PROTOTYPES_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.tsx') && !entry.name.endsWith('.stories.tsx'))
+    .map((entry) => entry.name.slice(0, -'.tsx'.length))
     .sort();
 }
 
@@ -218,9 +237,8 @@ function lineOf(source, index) {
   return source.slice(0, index).split('\n').length;
 }
 
-export function checkTokenCompliance(name, source) {
+export function checkTokenCompliance(name, source, file = `src/components/${name}/${name}.tsx`) {
   const issues = [];
-  const file = `src/components/${name}/${name}.tsx`;
   const codeOnly = stripComments(source);
 
   DANGEROUS_SCALE_RE.lastIndex = 0;
@@ -469,8 +487,8 @@ function findDeadClasses(file, source, compiledCss) {
   return issues;
 }
 
-export function checkCompiledClassesExist(name, source, compiledCss) {
-  return findDeadClasses(`src/components/${name}/${name}.tsx`, source, compiledCss);
+export function checkCompiledClassesExist(name, source, compiledCss, file = `src/components/${name}/${name}.tsx`) {
+  return findDeadClasses(file, source, compiledCss);
 }
 
 // Dashboard-specific: src/App.tsx (Tailwind utility classes) checked the
@@ -539,9 +557,8 @@ export function checkDashboardCssVariables(appCssSource, compiledCss) {
 // 1b. Accessibility (heuristic — see docs/design-system-rules.md § Accessibility)
 // ---------------------------------------------------------------------------
 
-export function checkAccessibility(name, rawSource) {
+export function checkAccessibility(name, rawSource, file = `src/components/${name}/${name}.tsx`) {
   const issues = [];
-  const file = `src/components/${name}/${name}.tsx`;
   const source = stripComments(rawSource);
 
   const divOnClick = source.search(/<div[^>]*\bonClick\b/);
@@ -747,9 +764,15 @@ export function contrastRatio(hexA, hexB) {
 // is a drift check: if tokens.css's hex for a token disagrees with what §7
 // documents for the same mode, that's tokens.css and the docs falling out
 // of sync with each other, worth flagging on its own.
-export function checkContrastPairings(name, source, colorHex, modeOverrides, pairingsTable) {
+export function checkContrastPairings(
+  name,
+  source,
+  colorHex,
+  modeOverrides,
+  pairingsTable,
+  file = `src/components/${name}/${name}.tsx`,
+) {
   const issues = [];
-  const file = `src/components/${name}/${name}.tsx`;
   const codeOnly = stripComments(source);
 
   // A component's own data-mode="dark"/"feature" (Card, Button secondary,
@@ -1949,6 +1972,43 @@ function run() {
     console.log(
       `${YELLOW}Note: one or more ComponentName.docs.ts files were auto-generated this run with TODO placeholders — see Documentation findings above.${RESET}\n`,
     );
+  }
+
+  // Prototypes: src/prototypes/ (see docs/design-system-rules.md §9) gets
+  // the same token-compliance and accessibility/contrast checks as
+  // src/components/, run for real — but only reported, never gated. A
+  // prototype's whole point is that it doesn't yet meet the full
+  // component contract, so its issues print as an informational
+  // checklist — what it would need before it could graduate — rather
+  // than folding into categoryPass/overallStatus below. Storybook
+  // coverage and documentation checks deliberately don't run here at
+  // all: those enforce the src/components/ contract (index.ts,
+  // Name.docs.ts, etc.) this lane explicitly opts out of.
+  console.log(
+    `${BOLD}Prototypes${RESET} ${DIM}(src/prototypes/ — informational, does not affect Overall Status)${RESET}`,
+  );
+  const prototypes = discoverPrototypes();
+  if (prototypes.length === 0) {
+    console.log(`  ${DIM}No prototypes found.${RESET}\n`);
+  } else {
+    for (const name of prototypes) {
+      const file = `src/prototypes/${name}.tsx`;
+      const source = readFileSync(join(PROTOTYPES_DIR, `${name}.tsx`), 'utf8');
+      const issues = [
+        ...checkTokenCompliance(name, source, file),
+        ...checkCompiledClassesExist(name, source, compiledCss, file),
+        ...checkAccessibility(name, source, file),
+        ...checkContrastPairings(name, source, colorHexTokens, modeOverrideHexTokens, pairingsTable, file),
+      ];
+      console.log(`${BOLD}${name}${RESET} ${DIM}(${file})${RESET}`);
+      if (issues.length === 0) {
+        console.log(`  ${GREEN}PASS${RESET}  no issues found on these checks`);
+      } else {
+        console.log(`  ${DIM}Checklist — what this would need before it could graduate to src/components/:${RESET}`);
+        printIssues(issues);
+      }
+      console.log('');
+    }
   }
 
   // Step 5: report PASS / FAIL
