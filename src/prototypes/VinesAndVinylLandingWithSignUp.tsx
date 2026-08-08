@@ -1,22 +1,17 @@
-import { useId, useState } from 'react';
-import type { FormEvent } from 'react';
+import { useState } from 'react';
 
-import { Input } from '../components/Input';
-import { Select } from '../components/Select';
-import { Checkbox } from '../components/Checkbox';
-import { Textarea } from '../components/Textarea';
-import { Button } from '../components/Button';
+import { SignUpFormCard } from './VinesAndVinylSignUp';
 
 // PROTOTYPE — src/prototypes/, not part of the shipped design system. See
 // src/prototypes/README.md / docs/design-system-rules.md §9.
 //
 // This is the Vines & Vinyl landing page (src/examples/VinesAndVinylLanding.tsx)
-// with its inline email-capture form swapped for a full sign-up form built
-// from existing components + tokens (name, email, ticket-type select,
-// mailing-list checkbox, dietary textarea, validation on blur, a success
-// state). src/examples/VinesAndVinylLanding.tsx only exports the single
-// composed `VinesAndVinylLanding` component — not its section pieces or
-// icon subcomponents — so there's no clean way to import just "everything
+// with its inline email-capture form swapped for the full sign-up form
+// prototype (VinesAndVinylSignUp.tsx's SignUpFormCard — shared with that
+// standalone prototype rather than duplicated, so the two stay in sync).
+// src/examples/VinesAndVinylLanding.tsx only exports the single composed
+// `VinesAndVinylLanding` component — not its section pieces or icon
+// subcomponents — so there's no clean way to import just "everything
 // except the form" from it without first refactoring that file, and it's
 // explicitly off-limits to edit for this prototype. The Nav/Hero-chrome/
 // floating-date-card/Info/Footer markup and the NavLogo/FooterLogo/
@@ -40,25 +35,10 @@ import { Button } from '../components/Button';
 // section's tokens resolve correctly regardless of whatever ambient mode
 // the page around it (or Storybook's Mode toolbar) happens to be set to.
 //
-// Two things below are real gaps, not oversights, in the sign-up form
-// itself:
-//
-// 1. No invalid/error variant exists on Input/Select/Textarea yet. Their
-//    Figma descriptions *mention* one ("Error state: state-error message
-//    below the field, error border...") but no Error variant was ever
-//    actually built, in Figma or in code. This form invents the treatment
-//    in userland via each component's existing `className` prop —
-//    border-state-error is a real, already-registered token (state-* is
-//    explicitly sanctioned for boundary/status borders per
-//    design-system-rules.md's namespace convention), so this isn't a
-//    system gap, just a first real usage of an existing token in a role
-//    nothing has needed yet.
-// 2. The success confirmation's panel tint IS a real gap — there is no
-//    pale/success-tinted surface token in the system (surface-* only has
-//    primary/secondary/tertiary/inverse/feature/scrim/card/subtle, none
-//    success-toned; state-success itself is a saturated badge-chip fill,
-//    not a soft panel background). Flagged inline below with a raw hex,
-//    on purpose, so `npm run design-sync`'s Prototypes report catches it.
+// The sign-up form itself has two real gaps, not oversights — see
+// VinesAndVinylSignUp.tsx's own header comment for the full explanation of
+// both (the invented Input/Select/Textarea error treatment, and the
+// success panel's un-tokenized tint).
 
 // Real vector data exported from Figma via get_design_context (asset URLs
 // downloaded and committed per the figma-design-to-code skill, since the
@@ -98,230 +78,23 @@ const HeroIllustration = ({ className }: { className?: string }) => (
   </svg>
 );
 
-interface FormValues {
-  name: string;
-  email: string;
-  ticketType: 'general' | 'vip' | 'driver' | '';
-  mailingList: boolean;
-  dietary: string;
-}
-
-const EMPTY_VALUES: FormValues = {
-  name: '',
-  email: '',
-  ticketType: '',
-  mailingList: false,
-  dietary: '',
-};
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-type RequiredField = 'name' | 'email' | 'ticketType';
-type FieldErrors = Partial<Record<RequiredField, string>>;
-
-function validate(values: FormValues): FieldErrors {
-  const errors: FieldErrors = {};
-  if (!values.name.trim()) errors.name = 'Name is required.';
-  if (!values.email.trim()) errors.email = 'Email is required.';
-  else if (!EMAIL_RE.test(values.email.trim())) errors.email = 'Enter a valid email address.';
-  if (!values.ticketType) errors.ticketType = 'Select a ticket type.';
-  return errors;
-}
-
-// Overrides border-border-strong with border-state-error when invalid.
-// Tailwind v4 resolves two same-property utility classes by *compiled*
-// stylesheet order, not source order in the className string — the exact
-// footgun that shipped a broken focus ring in PR #70 (see
-// design-system-rules.md §2's outline-none note). Using the `!` important
-// modifier here makes the override unconditionally win instead of relying
-// on Tailwind's internal build order between border-state-error and
-// border-border-strong.
-const invalidFieldClass = '!border-state-error';
-
-function FieldLabel({ htmlFor, children }: { htmlFor: string; children: string }) {
-  return (
-    <label htmlFor={htmlFor} className="font-manrope text-label font-semibold text-text-primary">
-      {children}
-    </label>
-  );
-}
-
-function FieldError({ id, message }: { id: string; message?: string }) {
-  if (!message) return null;
-  return (
-    <p id={id} role="alert" className="font-manrope text-caption text-state-error">
-      {message}
-    </p>
-  );
-}
-
-// Local to this file — nothing else imports it now that the standalone
-// VinesAndVinylSignUp prototype has been retired in favour of this combined
-// page. See file header for the two real system gaps it surfaces.
-const SignUpFormCard = () => {
-  const [values, setValues] = useState<FormValues>(EMPTY_VALUES);
-  const [touched, setTouched] = useState<Record<RequiredField, boolean>>({
-    name: false,
-    email: false,
-    ticketType: false,
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const nameId = useId();
-  const emailId = useId();
-  const ticketId = useId();
-  const dietaryId = useId();
-
-  // Computed every render off current values — this is what gates the
-  // submit button, deliberately NOT gated by `touched`. Button-gating and
-  // error-*display* are different concerns: the button needs to know "is
-  // this valid right now" continuously, but a field's error text should
-  // only appear once the person has actually left that field (validate on
-  // blur, not on every keystroke). Once a field HAS been touched, its
-  // error text does update live as the value changes — that's the
-  // standard "blur to trigger, then live-clear as you fix it" pattern,
-  // not a re-litigation of "not on every keystroke" (which is about the
-  // first, untouched pass through a field).
-  const errors = validate(values);
-  const isValid = Object.keys(errors).length === 0;
-
-  const handleBlur = (field: RequiredField) => () => setTouched((t) => ({ ...t, [field]: true }));
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!isValid) return;
-    setSubmitted(true);
-  };
-
-  const content = submitted ? (
-    <div
-      role="status"
-      className="flex flex-col items-center gap-03 rounded-2xl p-06 text-center"
-      // No pale/success-tinted surface token exists in the system (see
-      // file header note #2) — every surface-* token is either neutral or
-      // a specific brand surface, and state-success is a saturated
-      // badge-chip fill, not a soft panel tint. Raw value, flagged on
-      // purpose so design-sync's Prototypes report records the gap.
-      style={{ backgroundColor: '#f0faf3' }}
-    >
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-[48px] w-[48px] text-state-success">
-        <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="1.5" />
-        <path
-          d="M7 12.5L10.5 16L17 8.5"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <h2 className="font-recoleta text-h3 text-text-primary">You&rsquo;re on the list!</h2>
-      <p className="font-manrope text-paragraph-small text-text-muted">
-        We&rsquo;ll email <span className="text-text-primary">{values.email}</span> with tickets and the maker
-        lineup before anyone else hears.
-      </p>
-    </div>
-  ) : (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-04">
-      <div className="flex flex-col gap-01">
-        <h2 className="font-recoleta text-h3 text-text-primary">Join the list</h2>
-        <p className="font-manrope text-paragraph-small text-text-muted">
-          150 tickets, tastings included. First access goes to the list.
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-01">
-        <FieldLabel htmlFor={nameId}>Name</FieldLabel>
-        <Input
-          id={nameId}
-          size="large"
-          placeholder="Your name"
-          value={values.name}
-          onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
-          onBlur={handleBlur('name')}
-          aria-invalid={touched.name && Boolean(errors.name)}
-          aria-describedby={touched.name && errors.name ? `${nameId}-error` : undefined}
-          className={touched.name && errors.name ? invalidFieldClass : undefined}
-        />
-        {touched.name && <FieldError id={`${nameId}-error`} message={errors.name} />}
-      </div>
-
-      <div className="flex flex-col gap-01">
-        <FieldLabel htmlFor={emailId}>Email</FieldLabel>
-        <Input
-          id={emailId}
-          type="email"
-          size="large"
-          placeholder="you@email.com"
-          value={values.email}
-          onChange={(e) => setValues((v) => ({ ...v, email: e.target.value }))}
-          onBlur={handleBlur('email')}
-          aria-invalid={touched.email && Boolean(errors.email)}
-          aria-describedby={touched.email && errors.email ? `${emailId}-error` : undefined}
-          className={touched.email && errors.email ? invalidFieldClass : undefined}
-        />
-        {touched.email && <FieldError id={`${emailId}-error`} message={errors.email} />}
-      </div>
-
-      <div className="flex flex-col gap-01">
-        <FieldLabel htmlFor={ticketId}>Ticket type</FieldLabel>
-        <Select
-          id={ticketId}
-          size="large"
-          value={values.ticketType}
-          onChange={(e) => setValues((v) => ({ ...v, ticketType: e.target.value as FormValues['ticketType'] }))}
-          onBlur={handleBlur('ticketType')}
-          aria-invalid={touched.ticketType && Boolean(errors.ticketType)}
-          aria-describedby={touched.ticketType && errors.ticketType ? `${ticketId}-error` : undefined}
-          className={touched.ticketType && errors.ticketType ? invalidFieldClass : undefined}
-        >
-          <option value="" disabled hidden>
-            Select an option...
-          </option>
-          <option value="general">General admission</option>
-          <option value="vip">VIP — early entry + extra tasting</option>
-          <option value="driver">Designated driver — free</option>
-        </Select>
-        {touched.ticketType && <FieldError id={`${ticketId}-error`} message={errors.ticketType} />}
-      </div>
-
-      <Checkbox
-        size="large"
-        label="Keep me on the mailing list for future events"
-        checked={values.mailingList}
-        onChange={(e) => setValues((v) => ({ ...v, mailingList: e.target.checked }))}
-      />
-
-      <div className="flex flex-col gap-01">
-        <FieldLabel htmlFor={dietaryId}>Dietary requirements (optional)</FieldLabel>
-        <Textarea
-          id={dietaryId}
-          size="large"
-          placeholder="Let us know about any allergies or dietary needs..."
-          value={values.dietary}
-          onChange={(e) => setValues((v) => ({ ...v, dietary: e.target.value }))}
-        />
-      </div>
-
-      <Button type="submit" variant="primary" size="large" disabled={!isValid} className="w-full justify-center">
-        Join the list
-      </Button>
-    </form>
-  );
-
-  // Light because the form fields (bordered "ghost" controls, see PR
-  // #70/#71/#72's incident history) need an explicit On Light scope to
-  // read correctly regardless of whatever mode the page around this card
-  // happens to be in.
-  return (
-    <div data-mode="light" className="w-full max-w-[480px] rounded-2xl bg-surface-primary p-06">
-      {content}
-    </div>
-  );
-};
-
 export const VinesAndVinylLandingWithSignUp = () => {
+  // Demo-only control, not part of the design — see the floating button
+  // near the bottom of this component for why it's deliberately styled
+  // outside the token system instead of using action-*/surface-*. This
+  // local override sits closer to the page content than the Storybook
+  // toolbar decorator's own wrapping div, so it wins the same
+  // nearest-ancestor-wins cascade every data-mode override in this file
+  // already relies on — meaning it overrides the toolbar's Brand global
+  // when used, which is the point: brand is explorable on the rendered
+  // page itself, independent of Storybook's chrome.
+  const [demoBrand, setDemoBrand] = useState<'runabout' | 'northline'>('runabout');
+
   return (
-    <div className="flex w-full flex-col items-start bg-surface-primary">
+    <div
+      data-brand={demoBrand === 'northline' ? 'northline' : undefined}
+      className="flex w-full flex-col items-start bg-surface-primary"
+    >
       {/* Nav — On Dark (surface-inverse fill) */}
       <header
         data-mode="dark"
@@ -350,10 +123,11 @@ export const VinesAndVinylLandingWithSignUp = () => {
 
         {/* Inline email capture replaced with the full sign-up form
             prototype — this is the point of this page. SignUpFormCard sets
-            its own data-mode="light" (see above), so it reads correctly
-            sitting on Hero's feature-mode terracotta background regardless
-            of the ambient mode around it, the same reasoning the original
-            inline Input relied on the ambient feature mode for. */}
+            its own data-mode="light" (see VinesAndVinylSignUp.tsx), so it
+            reads correctly sitting on Hero's feature-mode terracotta
+            background regardless of the ambient mode around it, the same
+            reasoning the original inline Input relied on the ambient
+            feature mode for. */}
         <SignUpFormCard />
 
         {/* Floating date card — On Dark (surface-inverse fill), sibling of
@@ -420,6 +194,26 @@ export const VinesAndVinylLandingWithSignUp = () => {
           </p>
         </div>
       </footer>
+
+      {/* Demo-only brand toggle — not part of the page design, deliberately
+          styled to look like tooling rather than a design-system element:
+          plain system-ui font, a neutral slate palette with no relation to
+          this system's semantic surface/action/text tokens, fixed position
+          so it follows scroll. duration-standard and ease-standard ARE real
+          registered tokens (tokens.css) though, used here for exactly the
+          purpose they were formalized for — the same de facto 150ms ease-out
+          transition Button, Input, Select, Textarea, and Checkbox already
+          share. */}
+      <button
+        type="button"
+        onClick={() => setDemoBrand((b) => (b === 'runabout' ? 'northline' : 'runabout'))}
+        className="fixed bottom-[16px] right-[16px] z-50 flex items-center gap-2 rounded-full border border-gray-700 bg-gray-900 py-01 pl-03 pr-01 font-sans shadow-lg transition-colors duration-standard ease-standard hover:bg-gray-800"
+      >
+        <span className="text-caption text-gray-400">Brand switch</span>
+        <span className="rounded-full bg-gray-700 px-02 py-00 text-caption font-medium text-gray-50 transition-colors duration-standard ease-standard">
+          {demoBrand === 'runabout' ? 'Runabout' : 'Northline'}
+        </span>
+      </button>
     </div>
   );
 };
