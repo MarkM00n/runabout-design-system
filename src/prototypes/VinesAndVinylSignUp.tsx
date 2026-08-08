@@ -12,25 +12,25 @@ import { Button } from '../components/Button';
 //
 // Built without a Figma reference, deliberately: the point is to see what
 // the system produces on its own from existing components + tokens, and
-// to surface what's genuinely missing along the way. Two things below are
-// real gaps, not oversights:
+// to surface what's genuinely missing along the way.
 //
-// 1. No invalid/error variant exists on Input/Select/Textarea yet. Their
-//    Figma descriptions *mention* one ("Error state: state-error message
-//    below the field, error border...") but no Error variant was ever
-//    actually built, in Figma or in code. This prototype invents the
-//    treatment in userland via each component's existing `className`
-//    prop — border-state-error is a real, already-registered token
-//    (state-* is explicitly sanctioned for boundary/status borders per
-//    design-system-rules.md's namespace convention), so this isn't a
-//    system gap, just a first real usage of an existing token in a role
-//    nothing has needed yet.
-// 2. The success confirmation's panel tint IS a real gap — there is no
-//    pale/success-tinted surface token in the system (surface-* only has
-//    primary/secondary/tertiary/inverse/feature/scrim/card/subtle, none
-//    success-toned; state-success itself is a saturated badge-chip fill,
-//    not a soft panel background). Flagged inline below with a raw hex,
-//    on purpose, so `npm run design-sync`'s Prototypes report catches it.
+// No invalid/error variant exists on Input/Select/Textarea yet. Their
+// Figma descriptions *mention* one ("Error state: state-error message
+// below the field, error border...") but no Error variant was ever
+// actually built, in Figma or in code. This prototype invents the
+// treatment in userland via each component's existing `className`
+// prop — border-state-error is a real, already-registered token
+// (state-* is explicitly sanctioned for boundary/status borders per
+// design-system-rules.md's namespace convention), so this isn't a
+// system gap, just a first real usage of an existing token in a role
+// nothing has needed yet.
+//
+// The success confirmation deliberately does NOT use a pale/success-
+// tinted panel — no such surface token exists in the system (surface-*
+// only has primary/secondary/tertiary/inverse/feature/scrim/card/subtle,
+// none success-toned), so rather than inventing a one-off raw-hex tint,
+// the panel just matches its container's own bg-surface-primary. The
+// checkmark icon (text-state-success) is what communicates success.
 
 export type TicketType = 'general' | 'vip' | 'driver';
 
@@ -165,13 +165,7 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   const content = submitted ? (
     <div
       role="status"
-      className="flex flex-col items-center gap-03 rounded-2xl p-06 text-center"
-      // No pale/success-tinted surface token exists in the system (see
-      // file header note #2) — every surface-* token is either neutral or
-      // a specific brand surface, and state-success is a saturated
-      // badge-chip fill, not a soft panel tint. Raw value, flagged on
-      // purpose so design-sync's Prototypes report records the gap.
-      style={{ backgroundColor: '#f0faf3' }}
+      className="flex flex-col items-center gap-03 rounded-2xl bg-surface-primary p-06 text-center"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-[48px] w-[48px] text-state-success">
         <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="1.5" />
