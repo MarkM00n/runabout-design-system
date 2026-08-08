@@ -6,15 +6,18 @@ import { VinesAndVinylLandingWithSignUp } from './VinesAndVinylLandingWithSignUp
 // src/prototypes/README.md / docs/design-system-rules.md §9.
 //
 // src/examples/VinesAndVinylLanding.tsx's own inline email-capture form
-// swapped for the full VinesAndVinylSignUp prototype's SignUpFormCard — see
+// swapped for a full sign-up form built from existing components — see
 // VinesAndVinylLandingWithSignUp.tsx's header comment for why this page
-// duplicates rather than imports the landing page's sections.
+// duplicates rather than imports the landing page's sections. The
+// standalone sign-up-only prototype this form was originally built and
+// tested in isolation as has been retired now that this combined page is
+// the one worth keeping.
 //
 // Every section sets its own data-mode, same as the Examples landing page
 // story — the toolbar's Mode global isn't meaningful here for the same
 // reason it isn't there. Brand global still applies globally.
 const meta = {
-  title: 'Prototypes/VinesAndVinylLandingWithSignUp',
+  title: 'Prototypes/Landing page - sign up form',
   component: VinesAndVinylLandingWithSignUp,
   parameters: {
     layout: 'fullscreen',
