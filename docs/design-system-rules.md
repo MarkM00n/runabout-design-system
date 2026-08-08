@@ -48,8 +48,13 @@ below, and `scripts/design-sync.js` for the implementation.
   `Sand/500`, old `Amber/25` is now `Amber/950` at a darker value
   `#7a4e09`). Any code, comment, or doc referencing pre-2026-08-05
   primitive names is stale — resolve against live Figma bindings, never
-  against remembered names. `tokens.css`/`tokens.json` still carry the
-  old names until the pending code-side sync lands (see §7's warning).
+  against remembered names. **`tokens.css`/`tokens.json` already carry
+  the new numbering** (confirmed 2026-08-08: `--color-amber-950:
+  #7a4e09` is present, matching this bullet's own example exactly) — the
+  "still carries the old names" claim that used to sit here was itself
+  stale. Still worth a live Figma check before relying on any specific
+  primitive value; this wasn't a full re-audit of the whole ramp, just
+  confirmation the sync isn't outstanding as a default assumption.
 - **The root-font-size trap:** `src/index.css` sets the page's root
   font-size to `18px`, not the browser default `16px`. Every one of
   Tailwind's `rem`-based utilities (`h-12`, `w-6`, `rounded-2xl`, `gap-4`,
@@ -91,6 +96,20 @@ below, and `scripts/design-sync.js` for the implementation.
 - **Focus must be visible and must use `:focus-visible`, not `:focus`.**
   `:focus` also matches mouse clicks, which shows a keyboard-only focus ring
   to mouse users and doesn't match what Figma's "Focused" variant depicts.
+- **Never pair `outline-none` with `focus-visible:outline-*` on the same
+  element, even scoped to `focus:`.** Tailwind v4 composes every outline
+  utility through one shared custom property (`--tw-outline-style`). Any
+  class that sets it to `none` — `outline-none`, or `focus:outline-none` —
+  permanently wins over `focus-visible:outline`'s attempt to set it back
+  to `solid`, regardless of source order or CSS specificity: `outline-width`
+  and `outline-color` still compute correctly, but `outline-style` stays
+  stuck at `none` and nothing paints. Real incident (2026-08-08): shipped
+  in PR #70 with `design-sync` passing clean, only caught by clicking into
+  a live Storybook instance and reading `getComputedStyle` — a static
+  token-name check cannot see this class of bug. The fix is to not
+  suppress the outline at all; `focus-visible:` already scopes correctly
+  on its own (see `Tab.tsx`, which never had a suppression utility and
+  never had this bug).
 - **Disabled is a real attribute, not a style.** Use the native `disabled`
   attribute (blocks focus and interaction for free) and pair it with
   `disabled:cursor-not-allowed disabled:pointer-events-none` so hover states
@@ -181,6 +200,17 @@ whenever someone actually wants it.
   connected) for at least: background/border/text color, border-radius,
   height, padding, and font-size — across every size and state variant —
   and diff them against the literal values extracted from Figma.
+- **If the component touches a mode-variant token, verify all three modes
+  (On Light, On Dark, On Feature) live, not just whichever one Figma's
+  reference happens to show at the time.** Checking token values against
+  Figma is necessary but not sufficient — the values can be correct in
+  `tokens.css` for every mode and the component can still render wrong at
+  runtime for reasons no token diff would catch (the `outline-none`
+  footgun above is exactly this: right tokens, wrong computed output).
+  Drive Storybook's mode-switcher decorator directly via URL globals
+  (`?globals=mode:dark`) and re-check computed styles, not just Light.
+  This session only did this after being asked a second time — it should
+  be routine, not a follow-up question.
 - **Don't assume sibling components share a rule.** `Button`'s radius steps
   down at the `small` size; `Input`, `Select`, and `Textarea` all stay pill
   at both sizes. Assuming "it's probably the same as the last component"
@@ -397,12 +427,21 @@ Rules that fall out of the mode architecture:
   don't appear in this table because SC 1.4.3 exempts inactive controls,
   and the disabled treatment is the default appearance at 38% opacity,
   not a separate colour pairing.
-- **⚠️ Code-side sync pending:** `tokens.css`/`tokens.json` and
-  `checkContrastPairings` in `scripts/design-sync.js` still reflect the
-  pre-2026-08-05 token names and this section's old table. Until that
-  sync lands, treat *this section* as the source of truth for pairings
-  and expect design-sync's pairing check to be stale — regenerating those
-  is the next scheduled code task.
+- **Code-side sync status (corrected 2026-08-08):** the "sync pending"
+  warning that used to sit here was itself stale. `checkContrastPairings`
+  in `scripts/design-sync.js` parses *this section's own table* at
+  runtime (`parseSurfacePairingsTable`) rather than carrying an
+  independent hardcoded copy — it cannot drift from what this section
+  says, by construction. Separately, every semantic token the Input
+  family uses (`border-strong`, `border-default`, `border-focus`,
+  `action-secondary`, `action-secondary-hover`, `text-muted`,
+  `text-primary`, `text-highlight`, `icon-primary`) was spot-verified
+  live against Figma across all three modes on 2026-08-08 and matched
+  `tokens.css` exactly. That's not an exhaustive re-check of every token
+  in the file — verify any token outside that set against live Figma
+  before trusting it, same as always — but the blanket claim that
+  `tokens.css`/`tokens.json` reflect pre-2026-08-05 names no longer
+  holds as a default assumption.
 
 ## 8. Where fixes belong
 
@@ -455,6 +494,21 @@ a background value the design file itself didn't actually intend.
   visually-matching hex value — two Figma colors can be identical by
   coincidence while being bound to different variables (see the
   token-compliance rule on not collapsing tokens above).
+- **Check `paint.opacity`, not just `paint.color`, on every fill and
+  stroke.** A fill can be correctly bound to the right variable and still
+  render nothing, because its own paint opacity is `0` — a fully
+  legitimate, deliberate pattern (a bordered "ghost" control with no real
+  background) that looks identical to a bug if you only read `.color`.
+  Real incident (2026-08-08): `Input`/`Select`/`Textarea`/`Checkbox`'s
+  field fill (`action/secondary`) was read as `#ffffff` and assumed solid,
+  which led to "fixing" a contrast problem that didn't exist by forcing an
+  explicit variable mode onto the field — the fill was actually
+  `rgba(255,255,255,0)`, and the real backdrop showing through it was
+  what needed to be read correctly, not overridden. The forced mode then
+  produced a real, different bug (dark-on-dark) that had to be reverted.
+  Always compute contrast against the *composited* result
+  (`opacity × fill.color + (1 − opacity) × whatever's actually behind
+  it`), never against `fill.color` alone.
 - When a component has multiple variants (size × state, or more), sample
   enough of them to confirm the pattern holds — don't inspect one variant
   and assume the rest follow the same rule linearly (Checkbox's Disabled

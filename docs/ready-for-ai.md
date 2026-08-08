@@ -396,6 +396,20 @@ at fault, or reports a gap that was never really there.
   empty page, or a missing component as a system-level gap, cross-check
   with a live `use_figma` read (`figma.root.children`) rather than
   trusting a single `get_metadata` call.
+- **A `screenshot()` call without `contentsOnly:false` composites against
+  a false white/transparent matte, not the node's real backdrop.** Any
+  node whose own fill isn't fully opaque — a transparent "ghost" control,
+  a wrapper with no fill of its own, anything sitting inside a parent
+  whose fill provides the real visible background — will render its true
+  light-on-dark (or dark-on-light) colours looking washed out or wrong in
+  an isolated screenshot, even when the node's actual properties are
+  completely correct. This cost real time twice in one session (2026-08-08):
+  once nearly leading to reporting a correct fix as broken, once briefly
+  reading `Checkbox`'s already-correct colours as a defect. Before citing
+  a screenshot as evidence something looks wrong, re-take it with
+  `contentsOnly:false` (or check the node's real ancestor fill directly)
+  and confirm the discrepancy survives — a washed-out isolated screenshot
+  is not itself a finding.
 
 ## How to report results
 
