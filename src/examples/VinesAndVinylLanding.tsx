@@ -104,21 +104,25 @@ export const VinesAndVinylLanding = () => {
               both Input and its flex-sibling Button down to ~a quarter of
               their intended width.
 
-              data-mode="light" here is load-bearing, not decorative: Input's
-              own fill (bg-surface-primary) is a fixed light cream by design
-              — unlike Card/Button-secondary, Input doesn't self-scope its
-              own mode — so its text-primary/text-muted tokens were
-              inheriting Hero's ambient data-mode="feature" and resolving to
-              near-white, landing at a measured 1.06:1 against Input's own
-              background (axe: "Color contrast", serious). Re-scoping back
-              to light matches Figma's own rendered Input exactly and
-              restores the real On Light pairing this fixed-light surface
-              actually needs, regardless of what ambient mode surrounds it.
-              Button is deliberately left OUT of this wrapper: its Figma
-              instance here genuinely resolves the On Feature pairing (cream
-              fill, dark label) via the ambient mode, not On Light — wrapping
-              it too would flip it to the wrong (inverted) pairing. */}
-          <div data-mode="light" className="w-[400px] shrink-0">
+              No data-mode override here (removed 2026-08-08) — the previous
+              data-mode="light" was load-bearing against an Input that no
+              longer exists: Input's fill used to be a fixed light cream
+              (bg-surface-primary, mode-invariant), so forcing its
+              text/border back to On Light was the only way to get a
+              readable pairing against that fixed backdrop. Input's fill is
+              now action-secondary — genuinely transparent in every mode, a
+              bordered "ghost" control matching its real Figma binding — so
+              forcing On Light here now sits dark ink/olive text and border
+              directly on Hero's terracotta background showing through:
+              measured 1.18:1 (placeholder) / 1.66:1 (border), both far
+              under AA. Removing the override lets Input correctly inherit
+              Hero's ambient data-mode="feature" instead, the same
+              self-scoping pattern Checkbox already relies on — verified
+              5.54:1 (border) / 4.87:1 (placeholder) / 5.54:1 (value text)
+              against surface-feature. Button is unaffected either way: its
+              Figma instance here has always resolved the On Feature pairing
+              via the ambient mode, not On Light. */}
+          <div className="w-[400px] shrink-0">
             <Input type="email" size="large" placeholder="you@email.com" aria-label="Email address" />
           </div>
           <Button type="submit" variant="primary" size="large" className="shrink-0">
