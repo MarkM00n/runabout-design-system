@@ -102,8 +102,23 @@ export const VinesAndVinylLanding = () => {
               wins the cascade regardless of class order in the JSX. Passing
               w-[400px] directly to Input silently lost to it here, crushing
               both Input and its flex-sibling Button down to ~a quarter of
-              their intended width. */}
-          <div className="w-[400px] shrink-0">
+              their intended width.
+
+              data-mode="light" here is load-bearing, not decorative: Input's
+              own fill (bg-surface-primary) is a fixed light cream by design
+              — unlike Card/Button-secondary, Input doesn't self-scope its
+              own mode — so its text-primary/text-muted tokens were
+              inheriting Hero's ambient data-mode="feature" and resolving to
+              near-white, landing at a measured 1.06:1 against Input's own
+              background (axe: "Color contrast", serious). Re-scoping back
+              to light matches Figma's own rendered Input exactly and
+              restores the real On Light pairing this fixed-light surface
+              actually needs, regardless of what ambient mode surrounds it.
+              Button is deliberately left OUT of this wrapper: its Figma
+              instance here genuinely resolves the On Feature pairing (cream
+              fill, dark label) via the ambient mode, not On Light — wrapping
+              it too would flip it to the wrong (inverted) pairing. */}
+          <div data-mode="light" className="w-[400px] shrink-0">
             <Input type="email" size="large" placeholder="you@email.com" aria-label="Email address" />
           </div>
           <Button type="submit" variant="primary" size="large" className="shrink-0">
