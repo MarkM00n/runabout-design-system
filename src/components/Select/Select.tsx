@@ -40,7 +40,11 @@ const baseStyles = clsx(
   'bg-action-secondary border border-border-strong',
   'transition-colors duration-150 ease-out',
   'hover:bg-action-secondary-hover',
-  'focus:outline-none focus-visible:border-transparent',
+  // No outline-none here — see Input.tsx's comment on this exact class:
+  // Tailwind v4's outline utilities share one custom property
+  // (--tw-outline-style), so any outline-none permanently pins it to
+  // "none" and focus-visible:outline can never set it back.
+  'focus-visible:border-transparent',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus',
   'disabled:cursor-not-allowed disabled:pointer-events-none disabled:border-border-default',
 );

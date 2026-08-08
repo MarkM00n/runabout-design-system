@@ -35,7 +35,16 @@ const baseStyles = clsx(
   'bg-action-secondary border border-border-strong',
   'transition-colors duration-150 ease-out',
   'hover:bg-action-secondary-hover',
-  'focus:outline-none focus-visible:border-transparent',
+  // No outline-none here, on purpose — Tailwind v4 composes its outline
+  // utilities through a single shared custom property (--tw-outline-style),
+  // so ANY outline-none on the element (even focus:-scoped) pins that
+  // property to "none" and focus-visible:outline can never set it back,
+  // regardless of source order or specificity. Confirmed live: outline
+  // width/color computed correctly, outline-style stayed stuck at "none"
+  // until outline-none was removed entirely. Tab.tsx already gets this
+  // right — it never had an outline-none in the first place, it doesn't
+  // need one, and now neither does this.
+  'focus-visible:border-transparent',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus',
   'disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-disabled disabled:border-border-default',
 );
