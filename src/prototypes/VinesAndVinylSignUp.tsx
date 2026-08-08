@@ -98,7 +98,15 @@ export interface VinesAndVinylSignUpProps {
   startTouched?: boolean;
 }
 
-export const VinesAndVinylSignUp = ({ startTouched = false }: VinesAndVinylSignUpProps) => {
+// Exported separately from VinesAndVinylSignUp (the full standalone page,
+// below) so the combined landing+sign-up prototype can embed just the
+// form itself — including its own data-mode="light" scope, load-bearing
+// for the same reason noted below — inside a *different* page's Hero,
+// without also pulling in this page's own "RUNABOUT EVENTS PRESENTS /
+// Vines & Vinyl" chrome, which that other page already has its own copy
+// of. Pure extraction: VinesAndVinylSignUp's own rendered output is
+// unchanged, it just composes this instead of inlining it.
+export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProps) => {
   const [values, setValues] = useState<FormValues>(EMPTY_VALUES);
   const [touched, setTouched] = useState<Record<RequiredField, boolean>>({
     name: startTouched,
@@ -248,26 +256,32 @@ export const VinesAndVinylSignUp = ({ startTouched = false }: VinesAndVinylSignU
     </form>
   );
 
-  // Page chrome: an outer On Feature band (brand emphasis, matching
-  // src/examples/VinesAndVinylLanding.tsx's Hero) with a light-mode card
-  // inset for the form/success content — light because the form fields
-  // (bordered "ghost" controls, see PR #70/#71/#72's incident history)
-  // need an explicit On Light scope to read correctly, the same pattern
-  // that page's own Hero Input needed once its stale data-mode="light"
-  // override was fixed to sit at the right level: on the card, not
-  // hand-tuned per field.
+  // Light because the form fields (bordered "ghost" controls, see PR
+  // #70/#71/#72's incident history) need an explicit On Light scope to
+  // read correctly regardless of whatever mode the page around this card
+  // happens to be in — the same pattern src/examples/VinesAndVinylLanding.tsx's
+  // Hero Input needed once its stale data-mode="light" override was fixed
+  // to sit at the right level: on the card, not hand-tuned per field.
   return (
-    <div
-      data-mode="feature"
-      className="flex min-h-screen w-full flex-col items-center gap-05 bg-surface-feature px-06 py-09"
-    >
-      <div className="flex flex-col items-center gap-01 text-center">
-        <p className="font-manrope text-label-strong font-semibold text-text-primary">RUNABOUT EVENTS PRESENTS</p>
-        <p className="font-recoleta text-h4 text-text-primary">Vines &amp; Vinyl</p>
-      </div>
-      <div data-mode="light" className="w-full max-w-[480px] rounded-2xl bg-surface-primary p-06">
-        {content}
-      </div>
+    <div data-mode="light" className="w-full max-w-[480px] rounded-2xl bg-surface-primary p-06">
+      {content}
     </div>
   );
 };
+
+// The full standalone page: an outer On Feature band (brand emphasis,
+// matching src/examples/VinesAndVinylLanding.tsx's Hero) around the card
+// above. Unchanged output from before this file split SignUpFormCard out —
+// this is a pure extraction, not a behavior change.
+export const VinesAndVinylSignUp = ({ startTouched = false }: VinesAndVinylSignUpProps) => (
+  <div
+    data-mode="feature"
+    className="flex min-h-screen w-full flex-col items-center gap-05 bg-surface-feature px-06 py-09"
+  >
+    <div className="flex flex-col items-center gap-01 text-center">
+      <p className="font-manrope text-label-strong font-semibold text-text-primary">RUNABOUT EVENTS PRESENTS</p>
+      <p className="font-recoleta text-h4 text-text-primary">Vines &amp; Vinyl</p>
+    </div>
+    <SignUpFormCard startTouched={startTouched} />
+  </div>
+);
