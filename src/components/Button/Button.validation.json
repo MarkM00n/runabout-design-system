@@ -1,6 +1,6 @@
 {
   "component": "Button",
-  "lastValidated": "2026-08-08",
+  "lastValidated": "2026-08-09",
   "checks": {
     "tokenCompliance": {
       "pass": true,
