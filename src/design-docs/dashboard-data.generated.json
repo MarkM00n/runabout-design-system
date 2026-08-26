@@ -1,16 +1,20 @@
 {
-  "generatedAt": "2026-08-09T00:10:13.687Z",
+  "generatedAt": "2026-08-26T23:33:49.994Z",
   "validationReportGeneratedAt": "2026-08-09T00:10:12.861Z",
   "status": "pass",
   "methodologyNotes": {
-    "cycleTime": "Per component: time from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time — from local git history (merge commits + first-parent walk), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time.",
+    "cycleTime": "Wall-clock elapsed time, first commit to merge — not working hours, and not an estimate of effort. Per component: from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time. Read from local git history (a first-parent walk over both merge commits and squash commits, with squash-merged branches recovered from their permanent refs/pull/N/head ref), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time. Both figures cover the same sample: components with no recoverable start time are excluded outright, never counted as a zero — see cycleTimeSampleSize for how many of the components are actually in it. Read the two figures together, and read them as a summary of a bimodal sample rather than as a typical PR. The components split cleanly into two clusters — four shipped in well under an hour (PR #2 landed three at once in 36 minutes; Tab took 41), and four sat open overnight (16–19 hours, PR #1 and Badge). With the sample split evenly between them, the median falls in the empty gap between the clusters and lands close to the mean, so it is NOT doing its usual job of resisting the outliers here — no component in the set actually took anywhere near either figure. The per-component cycleTimeSeconds values below are the honest read.",
     "firstTimePassRate": "Omitted: no historical validation run log exists from before this repo tracked issue-level detail. ComponentName.validation.json only stored pass/fail booleans (no history) until this dashboard shipped, and didn't exist at all until PR #5 — added after all 6 original components were already merged. \"Caught & fixed\" below is the honest, forward-looking replacement: real, mechanically tracked from here on, starting at 0 for every component rather than backfilled from memory.",
     "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
   },
   "totals": {
     "totalComponents": 8,
-    "averageCycleTimeSeconds": 36429,
-    "averageCycleTimeLabel": "10h 7m",
+    "averageCycleTimeSeconds": 32185,
+    "averageCycleTimeLabel": "8h 56m",
+    "medianCycleTimeSeconds": 31478,
+    "medianCycleTimeLabel": "8h 45m",
+    "cycleTimeSampleSize": 8,
+    "cycleTimeMissingCount": 0,
     "totalOpenIssues": 0,
     "totalCaughtAndFixed": 12,
     "totalDesignTokens": 160
@@ -468,10 +472,13 @@
       ],
       "lastValidated": "2026-08-09",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-tab--docs",
-      "pr": null,
-      "firstCommitAt": null,
-      "mergedAt": null,
-      "cycleTimeSeconds": null
+      "pr": {
+        "number": 62,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/62"
+      },
+      "firstCommitAt": "2026-08-05T13:51:24+10:00",
+      "mergedAt": "2026-08-05T14:32:37+10:00",
+      "cycleTimeSeconds": 2473
     },
     {
       "name": "Textarea",

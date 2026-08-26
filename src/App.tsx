@@ -63,6 +63,8 @@ interface DashboardData {
   totals: {
     totalComponents: number;
     averageCycleTimeLabel: string | null;
+    medianCycleTimeLabel: string | null;
+    cycleTimeSampleSize: number;
     totalOpenIssues: number;
     totalCaughtAndFixed: number;
     totalDesignTokens: number | null;
@@ -275,9 +277,26 @@ function App() {
           <div className="metric-label">Components in the workflow</div>
         </div>
 
+        {/* Mean and median sit side by side deliberately. The sample is 8
+            components and genuinely bimodal — PR #2 shipped three of them in
+            36 minutes, while PR #1 and Badge sat open overnight — so the mean
+            alone reads as a typical PR when it isn't one. Both tiles say
+            "wall-clock, first commit → merge" so neither can be mistaken for
+            hands-on-keyboard effort. */}
+        <div className="metric-tile" data-mode="feature">
+          <div className="metric-number">{data.totals.medianCycleTimeLabel ?? '—'}</div>
+          <div className="metric-label">
+            Median wall-clock, first commit → merge
+            <span className="metric-note">across {data.totals.cycleTimeSampleSize} components</span>
+          </div>
+        </div>
+
         <div className="metric-tile" data-mode="feature">
           <div className="metric-number">{data.totals.averageCycleTimeLabel ?? '—'}</div>
-          <div className="metric-label">Avg. commit → merged PR</div>
+          <div className="metric-label">
+            Mean wall-clock, first commit → merge
+            <span className="metric-note">across {data.totals.cycleTimeSampleSize} components</span>
+          </div>
         </div>
 
         <div className="metric-tile" data-mode="feature">
