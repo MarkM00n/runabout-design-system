@@ -1,6 +1,6 @@
 {
   "component": "Checkbox",
-  "lastValidated": "2026-08-09",
+  "lastValidated": "2026-08-26",
   "checks": {
     "tokenCompliance": {
       "pass": true,
