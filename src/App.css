@@ -63,14 +63,18 @@
   gap: var(--spacing-01);
 }
 
+/* Six tiles since cycle time reports median and mean side by side. Their
+   labels are the longest on the row ("Median wall-clock, first commit →
+   merge"), so six across only stays readable on a genuinely wide viewport —
+   below 1500px they drop to three per row rather than squeezing. */
 .dashboard-metrics {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: var(--spacing-04);
   margin-bottom: var(--spacing-06);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1500px) {
   .dashboard-metrics {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -114,6 +118,16 @@
   font-size: 13px;
   color: var(--color-text-primary);
   line-height: 1.4;
+}
+
+/* Sample-size qualifier under the cycle-time labels. text-secondary On
+   Feature resolves to #faefe1 — 5.0:1 on surface-feature, an officially
+   verified pairing in design-system-rules.md §7, so it stays AA at this
+   size while still reading as secondary to the label above it. */
+.metric-note {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .dashboard-section {
