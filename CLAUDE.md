@@ -237,6 +237,59 @@ both times — so the gap is in event delivery, not the workflow itself.
   manual `workflow_dispatch` cleared it. Nothing about the merge itself was
   wrong; the deployed site was just silently out of date.
 
+## This repo's history has two merge strategies — assume neither
+
+`main` is not uniform. **PRs #1–#45 landed as merge commits** (`Merge pull
+request #N`, two parents, the branch's own commits present in history).
+**PR #46 onward are squash merges** — a single-parent commit whose subject
+ends `(#N)`, with the branch's individual commits *not* in `main` at all.
+Any tool, script, or command that reasons about branch commits has to
+handle both, or it silently produces wrong answers for one era of the repo
+and gives no error while doing it. Two different things broke on this in
+one session (2026-08-26):
+
+- **`git log --merges` misses every squash-merged PR.** The dashboard's
+  cycle-time walk in `scripts/generate-dashboard-data.js` only collected
+  merge commits, so everything shipped after 2026-07-22 fell out of the
+  data entirely. Tab (PR #62) came out with `firstCommitAt: null`,
+  `mergedAt: null`, `cycleTimeSeconds: null` and no PR link — and the
+  headline "average cycle time" quietly became an average over 7 of 8
+  components, with nothing on screen saying a component was missing.
+- **`git branch --merged main` reports squash-merged branches as
+  unmerged.** A squash merge never makes the branch tip an ancestor of
+  `main`, so `--merged` listed *none* of 12 fully-merged local branches
+  and `--no-merged` listed all of them. Taken at face value, that reads
+  as "nothing is safe to delete" — the exact opposite of the truth.
+
+The rules that follow:
+
+- **To recover a squash-merged PR's branch commits, use
+  `refs/pull/N/head`.** GitHub keeps that ref permanently, even after the
+  branch is deleted. Fetch it with plain git — `git fetch origin
+  +refs/pull/N/head:refs/dashboard-pr/N` — which needs no `gh` and no API
+  token, just the same credentials as the clone, so it doesn't break the
+  "regenerates without auth" property these scripts are built on. Cache
+  under `refs/dashboard-pr/N` so repeat runs and offline runs resolve
+  without the network, and resolve lazily so only the PRs you actually
+  need cost a fetch.
+- **Never read a start time off the squash commit itself.** GitHub stamps
+  the squash commit's *author* date with the merge time, not the branch's
+  first commit — for PR #62 that's `04:32:37Z` against a real first commit
+  at `03:51:24Z`. It looks like a plausible timestamp and is silently
+  wrong, which is worse than null. Derive the fork point
+  (`merge-base <prHead> <squashCommit>^`) and take the oldest commit in
+  `forkPoint..prHead`.
+- **If a PR ref can't be resolved, emit null and say so** — exclude it
+  from any aggregate rather than substituting a zero, and log a warning.
+  A zero silently drags an average toward "instant" and claims a
+  measurement that was never taken.
+- **For branch cleanup, classify by PR state, not by `--merged`.** Use
+  `gh pr list --state all --json number,headRefName,state,mergedAt` and
+  match on `headRefName`; delete only branches whose PR is `MERGED`, and
+  list anything with no PR or an open one rather than deleting it. `-D`
+  (not `-d`) is required, since git itself won't agree the branch is
+  merged.
+
 `src/design-docs/*.generated.json` and every component's
 `*.validation.json` are fully derived from `tokens.css`/`tokens.json` (and,
 for dashboard-data, git history) — never hand-edit them, and never resolve
