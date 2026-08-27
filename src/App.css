@@ -99,38 +99,38 @@
   }
 }
 
-/* Shared tile skin. Quiet by construction: a light surface token, a
-   hairline, no fill that competes with the numbers. Terracotta
-   (surface-feature) is deliberately absent here — it's an accent colour,
-   and a panel-sized field of it turns every stat into a headline and
-   flattens the hierarchy this layout exists to create. Same rule as
-   "action tokens are never panel fills": the accent marks something, it
-   doesn't upholster it.
+/* Shared tile skin. Quiet by construction: a light surface token and
+   nothing that competes with the numbers. Terracotta (surface-feature) is
+   deliberately absent here — it's an accent colour, and a panel-sized
+   field of it turns every stat into a headline and flattens the hierarchy
+   this layout exists to create. Same rule as "action tokens are never
+   panel fills": the accent marks something, it doesn't upholster it.
 
-   border-default is 2.89:1 on surface-card and 2.63:1 on surface-subtle —
-   below 3:1, which §7 permits for exactly this use ("decorative-only on
-   light surfaces: dividers only"). It isn't carrying the tile boundary on
-   its own: the tile-to-canvas step is 9.19:1 (surface-card) and 8.34:1
-   (surface-subtle) against surface-secondary, so the edge is unmistakable
-   with the hairline doing nothing but softening it. */
+   One surface token across all five tiles: surface-subtle. The hero used
+   to sit on surface-card (#fefbf8) a half-step brighter than the
+   secondaries, which made it a second surface doing hierarchy work that
+   size, position and its label block already do — and read as an
+   inconsistency rather than an emphasis. Hierarchy now comes from those
+   three alone, and the header has one card treatment instead of two.
+
+   No border. The hairline that was here was only ever softening an edge
+   the surface already draws on its own: the tile-to-canvas step is 8.34:1
+   against surface-secondary, so each tile stays a distinctly bounded shape
+   with the border gone. Nothing about the boundary depended on it, which
+   is why removing it costs no legibility. */
 .stat-hero,
 .stat-tile {
   min-width: 0;
   box-sizing: border-box;
   border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border-default);
   padding: var(--spacing-04);
+  background: var(--color-surface-subtle);
 }
 
 .stat-hero {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--color-surface-card);
-}
-
-.stat-tile {
-  background: var(--color-surface-subtle);
 }
 
 /* Body sans, not the serif. Recoleta is reserved for the page title and
@@ -165,10 +165,11 @@
 }
 
 /* The one place terracotta appears: a spacing-00 x spacing-02 (4x16)
-   marker against the hero label, 5.54:1 on surface-card — comfortably past
-   the 3:1 non-text minimum (SC 1.4.11), though it's decorative here and
-   carries no meaning the label doesn't already state. Dimensions come off
-   the spacing scale rather than the 3x14 picked by eye that was here. */
+   marker against the hero label, 5.03:1 on surface-subtle — comfortably
+   past the 3:1 non-text minimum (SC 1.4.11), though it's decorative here
+   and carries no meaning the label doesn't already state. Dimensions come
+   off the spacing scale rather than the 3x14 picked by eye that was
+   here. */
 .stat-accent {
   flex: none;
   width: var(--spacing-00);
@@ -184,19 +185,18 @@
   color: var(--color-text-muted);
 }
 
-/* text-h6 (18px), not text-h4 (28px, the exact match for the old literal).
-   With the hero capped at the scale's 36px ceiling, holding the tiles at
-   28px would leave a 1.29x step between headline and supporting stat —
-   near-flat, and the opposite of the "one hero, four quiet secondaries"
-   this layout is for. h6 keeps the ~2x ratio the design was built around,
-   using a real token at both ends. */
+/* text-h4 (28px) — the next step up from h6, and the only one the scale
+   offers between 18px and the hero's 36px ceiling. That puts the headline
+   and the supporting stats 1.29x apart rather than 2x, so the hero now
+   leads on position, surface and its label block rather than on size
+   alone. A larger gap isn't available without a display token above h3. */
 .stat-value {
   display: flex;
   align-items: baseline;
   gap: var(--spacing-01);
   font-family: var(--font-manrope);
-  font-size: var(--text-h6);
-  line-height: var(--text-h6--line-height);
+  font-size: var(--text-h4);
+  line-height: var(--text-h4--line-height);
   font-weight: 600;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
@@ -210,9 +210,11 @@
   color: var(--color-state-success);
 }
 
+/* Scales with the number it sits beside — at text-label (13px) against a
+   28px value it read as a stray mark rather than part of the figure. */
 .stat-tick {
-  font-size: var(--text-label);
-  line-height: var(--text-label--line-height);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
 }
 
 .stat-label {

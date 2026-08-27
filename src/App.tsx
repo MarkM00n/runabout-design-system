@@ -279,15 +279,16 @@ function App() {
           .section-title incident, applied up front rather than after the
           fact.
 
-          The fills are surface-card / surface-subtle, NOT surface-tertiary.
-          All three are cream under On Light, but only the first two are
-          redefined by [data-mode='dark'] — surface-tertiary is a fixed
-          #fefbf8 in every mode. Pairing a mode-invariant light fill with
-          mode-resolved text is exactly how the VinesAndVinyl Hero Input
-          went to 1.18:1 (2026-08-08): the fill stayed put while the ink
-          moved. With surface-card, losing this data-mode="light" would
-          degrade to a dark card with cream text — quiet and legible —
-          instead of dark-on-cream or cream-on-cream. */}
+          All five tiles share one fill, surface-subtle — NOT
+          surface-tertiary. Both are cream under On Light, but only
+          surface-subtle is redefined by [data-mode='dark'];
+          surface-tertiary is a fixed #fefbf8 in every mode. Pairing a
+          mode-invariant light fill with mode-resolved text is exactly how
+          the VinesAndVinyl Hero Input went to 1.18:1 (2026-08-08): the
+          fill stayed put while the ink moved. With surface-subtle, losing
+          this data-mode="light" would degrade to a dark card with cream
+          text — quiet and legible — instead of dark-on-cream or
+          cream-on-cream. */}
       <section className="stat-header" aria-label="Headline metrics">
         {/* Median leads, mean is demoted to the caption. The sample is 8
             components and splits 4/4 — three shipped in 36 minutes plus Tab
