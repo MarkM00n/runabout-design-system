@@ -63,70 +63,151 @@
   gap: var(--spacing-01);
 }
 
-/* Six tiles since cycle time reports median and mean side by side. Their
-   labels are the longest on the row ("Median wall-clock, first commit →
-   merge"), so six across only stays readable on a genuinely wide viewport —
-   below 1500px they drop to three per row rather than squeezing. */
-.dashboard-metrics {
+/* One hero (median cycle time) plus four quiet secondaries. On a wide
+   viewport the hero takes a 2x2 block and the four tiles fill the
+   remaining two columns beside it; the hero's value is the largest type on
+   the page after the title, so it needs the height as much as the width.
+   Below 1000px the hero goes full width with the four tiles in a 2x2
+   underneath, which keeps the reading order (headline, then supporting)
+   intact at every size. */
+.stat-header {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: 1.5fr 1fr 1fr;
   gap: var(--spacing-04);
   margin-bottom: var(--spacing-06);
 }
 
-@media (max-width: 1500px) {
-  .dashboard-metrics {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* One column wide, two rows tall — wide enough that "8h 45m" and its label
+   never wrap, without the half-row of dead space a 2-column hero left to
+   the right of a six-character value. */
+.stat-hero {
+  grid-column: span 1;
+  grid-row: span 2;
 }
 
-@media (max-width: 640px) {
-  .dashboard-metrics {
+@media (max-width: 1000px) {
+  .stat-header {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .stat-hero {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
 }
 
-/* Card style per stat, same warm accent Card itself uses for its
-   background (surface-feature, mode-invariant #a74b24). The tile carries
-   its own data-mode="feature" (App.tsx) rather than inheriting the page's
-   ambient data-mode="dark" — same reasoning as Card itself: a surface's
-   own fixed color should resolve its nested text against its own matching
-   mode, not whatever the surrounding page happens to be. text-primary On
-   Feature (#fefbf8) is design-system-rules.md §7's officially-verified
-   pairing for this surface at 5.5:1 — clears normal-text AA outright. */
-.metric-tile {
+/* Shared tile skin. Quiet by construction: a light surface token, a
+   hairline, no fill that competes with the numbers. Terracotta
+   (surface-feature) is deliberately absent here — it's an accent colour,
+   and a panel-sized field of it turns every stat into a headline and
+   flattens the hierarchy this layout exists to create. Same rule as
+   "action tokens are never panel fills": the accent marks something, it
+   doesn't upholster it.
+
+   border-default is 2.89:1 on surface-card and 2.63:1 on surface-subtle —
+   below 3:1, which §7 permits for exactly this use ("decorative-only on
+   light surfaces: dividers only"). It isn't carrying the tile boundary on
+   its own: the tile-to-canvas step is 9.19:1 (surface-card) and 8.34:1
+   (surface-subtle) against surface-secondary, so the edge is unmistakable
+   with the hairline doing nothing but softening it. */
+.stat-hero,
+.stat-tile {
   min-width: 0;
   box-sizing: border-box;
-  background: var(--color-surface-feature);
   border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-default);
   padding: var(--spacing-04);
 }
 
-/* Arbitrary display size — no token in this system was built for a
-   metric-tile headline number, so this stays a literal value rather than
-   forcing a fit onto text-h3 (36px, sized for Card's title, not this). */
-.metric-number {
-  font-size: 40px;
-  line-height: 1;
-  font-weight: 700;
-  font-family: var(--font-recoleta);
-  color: var(--color-text-primary);
+.stat-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-surface-card);
 }
 
-.metric-label {
+.stat-tile {
+  background: var(--color-surface-subtle);
+}
+
+/* Body sans, not the serif. Recoleta is reserved for the page title and
+   section headings — one serif voice per page keeps the hierarchy legible,
+   and a serif at this size competes with the h1 instead of sitting under
+   it. Manrope 600 is imported in index.css alongside 400/700; without that
+   import the browser would synthesise or snap to 700, which is a heavier,
+   blunter shape than intended.
+
+   Sizes stay literal: the type scale tops out at text-h1 (48px, sized for
+   the page title), and nothing in it was built for a hero metric. Forcing
+   a fit would misuse a token rather than honour one. */
+.stat-hero-value {
+  font-family: var(--font-manrope);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-hero-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-02);
+  margin-top: var(--spacing-03);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+/* The one place terracotta appears: a 3x14 marker against the hero label,
+   5.54:1 on surface-card — comfortably past the 3:1 non-text minimum
+   (SC 1.4.11), though it's decorative here and carries no meaning the
+   label doesn't already state. */
+.stat-accent {
+  flex: none;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-feature);
+}
+
+.stat-hero-caption {
+  margin-top: var(--spacing-02);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.stat-value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-01);
+  font-family: var(--font-manrope);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zero open issues reads as a cleared state, not a measurement. 6.28:1 on
+   surface-subtle. The tick is aria-hidden and the colour is redundant with
+   the number and label, so nothing here depends on colour alone (SC 1.4.1)
+   or on a glyph a screen reader would have to interpret. */
+.stat-value-good {
+  color: var(--color-state-success);
+}
+
+.stat-tick {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.stat-label {
   margin-top: var(--spacing-01);
   font-size: 13px;
-  color: var(--color-text-primary);
   line-height: 1.4;
-}
-
-/* Sample-size qualifier under the cycle-time labels. text-secondary On
-   Feature resolves to #faefe1 — 5.0:1 on surface-feature, an officially
-   verified pairing in design-system-rules.md §7, so it stays AA at this
-   size while still reading as secondary to the label above it. */
-.metric-note {
-  display: block;
-  font-size: 12px;
   color: var(--color-text-secondary);
 }
 

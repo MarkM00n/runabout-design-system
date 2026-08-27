@@ -1,9 +1,13 @@
 /* Self-hosted via @fontsource/manrope (SIL OFL 1.1) rather than a Google
    Fonts <link> — this repo deploys publicly (GitHub Pages) and self-hosting
-   avoids a third-party request/CLS on every page load. Only 400 and 700 are
-   imported: the only weights any component actually uses (see
-   --font-manrope in styles/tokens.css). */
+   avoids a third-party request/CLS on every page load. 400 and 700 are the
+   weights components use (see --font-manrope in styles/tokens.css); 600 is
+   here for the dashboard's hero metric (.stat-hero-value in App.css), which
+   is set in the body sans rather than the serif. Without the real 600 the
+   browser snaps to 700 or synthesises one — both visibly blunter than the
+   drawn semibold at 56px. */
 @import '@fontsource/manrope/400.css';
+@import '@fontsource/manrope/600.css';
 @import '@fontsource/manrope/700.css';
 
 @import 'tailwindcss';
