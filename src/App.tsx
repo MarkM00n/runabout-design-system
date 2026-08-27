@@ -271,47 +271,70 @@ function App() {
         </nav>
       </header>
 
-      <section className="dashboard-metrics" aria-label="Headline metrics">
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.totalComponents}</div>
-          <div className="metric-label">Components in the workflow</div>
-        </div>
+      {/* data-mode="light" is on each tile, never on the <section>. The
+          section is only a grid container — it has no text and no fill of
+          its own, so it stays on the page's ambient dark canvas, and the
+          override reaches exactly the elements whose surface is actually
+          light. This is the narrowest-element rule from the 2026-08-05
+          .section-title incident, applied up front rather than after the
+          fact.
 
-        {/* Mean and median sit side by side deliberately. The sample is 8
-            components and genuinely bimodal — PR #2 shipped three of them in
-            36 minutes, while PR #1 and Badge sat open overnight — so the mean
-            alone reads as a typical PR when it isn't one. Both tiles say
-            "wall-clock, first commit → merge" so neither can be mistaken for
-            hands-on-keyboard effort. */}
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.medianCycleTimeLabel ?? '—'}</div>
-          <div className="metric-label">
-            Median wall-clock, first commit → merge
-            <span className="metric-note">across {data.totals.cycleTimeSampleSize} components</span>
+          The fills are surface-card / surface-subtle, NOT surface-tertiary.
+          All three are cream under On Light, but only the first two are
+          redefined by [data-mode='dark'] — surface-tertiary is a fixed
+          #fefbf8 in every mode. Pairing a mode-invariant light fill with
+          mode-resolved text is exactly how the VinesAndVinyl Hero Input
+          went to 1.18:1 (2026-08-08): the fill stayed put while the ink
+          moved. With surface-card, losing this data-mode="light" would
+          degrade to a dark card with cream text — quiet and legible —
+          instead of dark-on-cream or cream-on-cream. */}
+      <section className="stat-header" aria-label="Headline metrics">
+        {/* Median leads, mean is demoted to the caption. The sample is 8
+            components and splits 4/4 — three shipped in 36 minutes plus Tab
+            at 41, against four that sat open overnight — so neither figure
+            describes a typical PR, and showing them as two equal-weight
+            tiles implied a precision the data doesn't have. One hero with
+            the mean alongside reads as "here is the number, and here is its
+            spread", which is what the data actually supports. */}
+        <div className="stat-hero" data-mode="light">
+          <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
+          <div className="stat-hero-label">
+            <span className="stat-accent" aria-hidden="true" />
+            Median cycle time, first commit → merged
+          </div>
+          <div className="stat-hero-caption">
+            mean {data.totals.averageCycleTimeLabel ?? '—'} · across {data.totals.cycleTimeSampleSize} components
           </div>
         </div>
 
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.averageCycleTimeLabel ?? '—'}</div>
-          <div className="metric-label">
-            Mean wall-clock, first commit → merge
-            <span className="metric-note">across {data.totals.cycleTimeSampleSize} components</span>
+        <div className="stat-tile" data-mode="light">
+          <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
+          <div className="stat-label">Caught &amp; fixed</div>
+        </div>
+
+        {/* Zero open issues is a result, not a measurement — it reads as a
+            status line rather than a stat. The tick carries state-success
+            (6.28:1 on surface-subtle) and is aria-hidden, so the meaning
+            still comes from the number and its label for a screen reader
+            rather than from colour or a glyph alone. */}
+        <div className="stat-tile" data-mode="light">
+          <div className="stat-value stat-value-good">
+            <span className="stat-tick" aria-hidden="true">
+              ✓
+            </span>
+            {data.totals.totalOpenIssues}
           </div>
+          <div className="stat-label">Open issues</div>
         </div>
 
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.totalOpenIssues}</div>
-          <div className="metric-label">Open issues right now</div>
+        <div className="stat-tile" data-mode="light">
+          <div className="stat-value">{data.totals.totalComponents}</div>
+          <div className="stat-label">Components</div>
         </div>
 
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.totalCaughtAndFixed}</div>
-          <div className="metric-label">Caught &amp; fixed to date</div>
-        </div>
-
-        <div className="metric-tile" data-mode="feature">
-          <div className="metric-number">{data.totals.totalDesignTokens ?? '—'}</div>
-          <div className="metric-label">Design tokens documented</div>
+        <div className="stat-tile" data-mode="light">
+          <div className="stat-value">{data.totals.totalDesignTokens ?? '—'}</div>
+          <div className="stat-label">Tokens documented</div>
         </div>
       </section>
 
