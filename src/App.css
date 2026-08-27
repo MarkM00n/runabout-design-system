@@ -13,12 +13,15 @@
      .table-card treatment: a dark surface-inverse header row over zebra
      surface-tertiary/cream-100 body rows, so — unlike the raw canvas —
      their content uses LIGHT-surface-safe colors (text-primary resolved
-     On Light, amber-800 for warn, state-error for fail), scoped in below
-     via .table-card, which carries data-mode="light" to override the
-     page's ambient dark mode back for its own subtree. Nothing
-     table-related is styled for the dark canvas directly anymore.
-     cream-100 was renumbered from cream-50 in the 2026-08-05 primitive
-     renumbering (same value, #ebe9e3) — see tokens.css. */
+     On Light, state-warning for warn, state-error for fail, text-link for
+     links), scoped in below via .table-card, which carries
+     data-mode="light" to override the page's ambient dark mode back for
+     its own subtree. Nothing table-related is styled for the dark canvas
+     directly anymore. cream-100 was renumbered from cream-50 in the
+     2026-08-05 primitive renumbering (same value, #ebe9e3) — see
+     tokens.css; it's the one primitive left in this file, holding the
+     zebra odd row, because the table's Figma reference frame specifies
+     that ramp step directly and no semantic surface token carries it. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -46,14 +49,15 @@
 
 .dashboard-title {
   font-family: var(--font-recoleta);
-  font-size: 26px;
-  line-height: 1.15;
+  font-size: var(--text-h4);
+  line-height: var(--text-h4--line-height);
   margin: 0 0 var(--spacing-00);
   color: var(--color-text-primary);
 }
 
 .dashboard-subtitle {
-  font-size: 13px;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -64,12 +68,11 @@
 }
 
 /* One hero (median cycle time) plus four quiet secondaries. On a wide
-   viewport the hero takes a 2x2 block and the four tiles fill the
-   remaining two columns beside it; the hero's value is the largest type on
-   the page after the title, so it needs the height as much as the width.
-   Below 1000px the hero goes full width with the four tiles in a 2x2
-   underneath, which keeps the reading order (headline, then supporting)
-   intact at every size. */
+   viewport the hero takes the first (wider) column across both rows and
+   the four tiles fill the remaining two columns beside it. Below 1000px
+   the hero goes full width with the four tiles in a 2x2 underneath, which
+   keeps the reading order (headline, then supporting) intact at every
+   size. */
 .stat-header {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
@@ -132,20 +135,21 @@
 
 /* Body sans, not the serif. Recoleta is reserved for the page title and
    section headings — one serif voice per page keeps the hierarchy legible,
-   and a serif at this size competes with the h1 instead of sitting under
-   it. Manrope 600 is imported in index.css alongside 400/700; without that
-   import the browser would synthesise or snap to 700, which is a heavier,
-   blunter shape than intended.
+   and a serif at this size competes with the title instead of sitting
+   under it. Manrope 600 is imported in index.css alongside 400/700;
+   without that import the browser would synthesise or snap to 700, which
+   is a heavier, blunter shape than intended.
 
-   Sizes stay literal: the type scale tops out at text-h1 (48px, sized for
-   the page title), and nothing in it was built for a hero metric. Forcing
-   a fit would misuse a token rather than honour one. */
+   text-h3 (36px) is the largest step the type scale has — there is no
+   display token in this system, so this is the ceiling, not a preference.
+   The optical-tightening letter-spacing that sat here is gone too: no
+   tracking token covers body sans, and an em value picked by eye is
+   exactly the kind of made-up number this pass exists to remove. */
 .stat-hero-value {
   font-family: var(--font-manrope);
-  font-size: 56px;
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -155,38 +159,45 @@
   align-items: center;
   gap: var(--spacing-02);
   margin-top: var(--spacing-03);
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
   color: var(--color-text-secondary);
 }
 
-/* The one place terracotta appears: a 3x14 marker against the hero label,
-   5.54:1 on surface-card — comfortably past the 3:1 non-text minimum
-   (SC 1.4.11), though it's decorative here and carries no meaning the
-   label doesn't already state. */
+/* The one place terracotta appears: a spacing-00 x spacing-02 (4x16)
+   marker against the hero label, 5.54:1 on surface-card — comfortably past
+   the 3:1 non-text minimum (SC 1.4.11), though it's decorative here and
+   carries no meaning the label doesn't already state. Dimensions come off
+   the spacing scale rather than the 3x14 picked by eye that was here. */
 .stat-accent {
   flex: none;
-  width: 3px;
-  height: 14px;
+  width: var(--spacing-00);
+  height: var(--spacing-02);
   border-radius: var(--radius-sm);
   background: var(--color-surface-feature);
 }
 
 .stat-hero-caption {
   margin-top: var(--spacing-02);
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   color: var(--color-text-muted);
 }
 
+/* text-h6 (18px), not text-h4 (28px, the exact match for the old literal).
+   With the hero capped at the scale's 36px ceiling, holding the tiles at
+   28px would leave a 1.29x step between headline and supporting stat —
+   near-flat, and the opposite of the "one hero, four quiet secondaries"
+   this layout is for. h6 keeps the ~2x ratio the design was built around,
+   using a real token at both ends. */
 .stat-value {
   display: flex;
   align-items: baseline;
   gap: var(--spacing-01);
   font-family: var(--font-manrope);
-  font-size: 28px;
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
   font-weight: 600;
-  line-height: 1.1;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -200,14 +211,14 @@
 }
 
 .stat-tick {
-  font-size: 18px;
-  line-height: 1;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
 }
 
 .stat-label {
   margin-top: var(--spacing-01);
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
   color: var(--color-text-secondary);
 }
 
@@ -217,7 +228,8 @@
 
 .section-title {
   font-family: var(--font-recoleta);
-  font-size: 15px;
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
   font-weight: 700;
   margin: 0 0 var(--spacing-02);
   color: var(--color-text-primary);
@@ -240,19 +252,31 @@
   line-height: var(--text-label--line-height);
 }
 
+/* border-subtle, not a hand-mixed cream alpha. The two literals that were
+   here (rgba(248,235,218,.16) and .1) were a faint light hairline hand-made
+   for the dark table this used to be — a value with no token behind it, and
+   fixed, so it stayed light-on-light once these tables moved to the
+   data-mode="light" treatment. border-subtle is the token for exactly this
+   role and resolves per mode: rgba(255,255,255,.1) On Dark (what the
+   literals were approximating) and #f4dfc3 On Light. */
+/* No uppercase/letter-spacing treatment. The 0.04em that was here was the
+   file's last hand-picked value (no tracking token covers 13px text), and
+   it rendered in exactly one place: leaked onto the nested .issue-table's
+   headers, which declare "no uppercase header treatment" in their own
+   comment below. The real headers never saw it — .table-card resets both
+   to none/normal — so dropping it removes a made-up value and a
+   contradiction at the same time. */
 .dashboard-table th {
   text-align: left;
   font-size: var(--text-label);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--color-text-primary);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.16);
+  border-bottom: 1px solid var(--color-border-subtle);
   padding: var(--spacing-00) var(--spacing-02);
 }
 
 .dashboard-table td {
   padding: var(--spacing-01) var(--spacing-02);
-  border-bottom: 1px solid rgba(248, 235, 218, 0.1);
+  border-bottom: 1px solid var(--color-border-subtle);
   vertical-align: middle;
 }
 
@@ -263,12 +287,14 @@
 /* Base/fallback colors — not reachable in practice today since both
    .cell-links and .cell-warn only ever render inside a .table-card now
    (both tables moved onto the shared light-row treatment), which scopes
-   its own amber-800/state-error overrides below. Kept correct anyway in
-   case either class is ever used outside that context. amber-600/rose-600
-   are the same values amber-300/rose-300 verified here before the
-   2026-08-05 primitive renumbering (#e6a745/#e28d8e respectively) — the
-   step numbers moved, not the colors, so the original contrast figures
-   still apply unchanged. */
+   its own overrides below. Kept correct anyway in case either class is
+   ever used outside that context.
+
+   Semantic tokens, not the amber-600/rose-600 primitives that were here:
+   these mean "warning" and "failure", and state-warning/state-error are
+   the tokens for that. They also resolve per mode, so this fallback stays
+   correct on the dark canvas as well as inside a light card — which a
+   fixed primitive never did. */
 .cell-links a {
   color: var(--color-text-primary);
   text-decoration: underline;
@@ -276,12 +302,12 @@
 
 .cell-warn,
 .cell-warn-badge {
-  color: var(--color-amber-600);
+  color: var(--color-state-warning);
   font-weight: 700;
 }
 
 .cell-fail {
-  color: var(--color-rose-600);
+  color: var(--color-state-error);
   font-weight: 700;
 }
 
@@ -352,12 +378,23 @@
   background: var(--color-cream-100);
 }
 
-.table-card .cell-links a,
+/* Was the amber-800 primitive (#df8e10) for all three. That failed AA
+   outright as body text on these rows — 2.54:1 on surface-tertiary and
+   2.16:1 on cream-100, against a 4.5:1 minimum. It was a bright fill
+   colour being used as small text, carried through the 2026-08-05
+   renumbering without the pairing being re-checked.
+
+   Split by what each one means, and both land on #7a4e09 On Light:
+   text-link for the link, state-warning for the warning cells — 6.97:1
+   and 5.92:1 on the two zebra rows. Mode-variant too, so they stay
+   correct if this table is ever read on the dark canvas. */
+.table-card .cell-links a {
+  color: var(--color-text-link);
+}
+
 .table-card .cell-warn,
 .table-card .cell-warn-badge {
-  /* amber-800 is amber-100's same value pre-2026-08-05 renumbering
-     (#df8e10) — step number moved, color didn't. */
-  color: var(--color-amber-800);
+  color: var(--color-state-warning);
 }
 
 /* state-error, not rose-600 (rose-300 pre-renumbering) — rose's dark-canvas
@@ -411,8 +448,13 @@
   width: var(--spacing-04);
 }
 
+/* Same inheritance as .issue-table td above — the accordion panel's own
+   cell is excluded from the .table-card border reset, so it would pick up
+   .dashboard-table td's now-tokenised row border. It never had a visible
+   one; keep it that way. */
 .detail-row td {
   padding: 0;
+  border-bottom: none;
 }
 
 /* Stacked, not side-by-side: the two tables aren't meant to be compared
@@ -482,18 +524,27 @@
   color: var(--color-text-muted);
   font-size: var(--text-label);
   font-weight: 400;
-  /* border-strong, dulled 60% (40% opacity) per follow-up feedback — full
-     strength (9.19:1 on this light backdrop) read as too heavy for a
-     single divider line. rgba literal, not the token directly: tokens.css
-     has no opacity variant of border-strong, and CSS custom properties
-     can't be partially blended with transparent via var() alone. */
-  border-bottom: 1px solid rgba(61, 74, 46, 0.4);
+  /* border-default, replacing a hand-mixed rgba(61,74,46,.4) — that was
+     border-strong dulled by eye because full strength (9.19:1 here) read
+     too heavy for a single divider. border-default is the token for that
+     exact intent: §7 designates it decorative-only on light surfaces,
+     dividers only. It lands at 2.89:1 against this backdrop where the
+     hand-mixed value composited to 2.05:1 — a shade firmer, still a
+     hairline, and nowhere near the weight that was rejected. */
+  border-bottom: 1px solid var(--color-border-default);
 }
 
+/* Explicitly none: .dashboard-table td matches at any depth, so this
+   nested table was inheriting that rule's row border. It was invisible
+   before (a light hairline on a light row) and so never noticed; now that
+   the same rule carries a real token it would show up as per-row lines,
+   which this table's design deliberately doesn't have — rows are separated
+   by padding, not rules. */
 .issue-table td {
   padding: var(--spacing-02) var(--spacing-03) var(--spacing-02) 0;
   vertical-align: top;
   word-break: break-word;
+  border-bottom: none;
 }
 
 /* Fixed-width columns; the remaining (unset) columns — What failed,
@@ -535,7 +586,7 @@
 }
 
 .severity-warn {
-  color: var(--color-amber-800);
+  color: var(--color-state-warning);
 }
 
 .severity-fixed {
@@ -558,7 +609,7 @@
 }
 
 .status-warn {
-  color: var(--color-amber-800);
+  color: var(--color-state-warning);
 }
 
 .status-fail {
