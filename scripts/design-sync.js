@@ -636,15 +636,27 @@ export function checkAccessibility(name, rawSource, file = `src/components/${nam
 // does a manual gut-check.
 // ---------------------------------------------------------------------------
 
-// Pulls every --color-{text,surface,state,action,icon,border}-* value out of
-// one CSS block (the `@theme` base block, or a `[data-mode="..."]` override
-// block), keyed by the suffix Tailwind uses in bg-{suffix}/text-{suffix}.
-// rgba() values (e.g. action-secondary's transparent fill) can't be reduced
-// to a single contrast figure against an unknown backdrop, so they're kept
-// out of the map entirely rather than guessed at.
+// Pulls every --color-{text,surface,state,action,border}-* SEMANTIC value out
+// of one CSS block (the `@theme` base block, or a `[data-mode="..."]`
+// override block), keyed by the suffix Tailwind uses in
+// bg-{suffix}/text-{suffix}. rgba() values (e.g. action-secondary's
+// transparent fill) can't be reduced to a single contrast figure against an
+// unknown backdrop, so they're kept out of the map entirely rather than
+// guessed at.
+//
+// The `(?![0-9])` guard is what keeps primitives out. Since the 2026-09-07
+// rename, Figma's primitive family `Surface/400` and its semantic token
+// `surface/section` both land in the `--color-surface-*` namespace, exactly
+// as they sit in Figma. A primitive's final segment is always numeric and a
+// semantic token's never is, so that one lookahead separates the two tiers
+// without renaming either away from its Figma source. Without it every
+// `--color-surface-50..800` step would be treated as a text-bearing surface
+// and paired against whatever text token a component happens to use.
+// `icon-*` is gone entirely — the group was retired in the same sync, with
+// icons binding the matching `text-*` token instead.
 function parseColorHexTokensFromBlock(blockRaw) {
   const map = new Map();
-  const re = /--color-((?:text|surface|state|action|icon|border)-[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g;
+  const re = /--color-((?:text|surface|state|action|border)-(?![0-9])[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g;
   let match;
   while ((match = re.exec(blockRaw))) {
     map.set(match[1], match[2]);
@@ -674,46 +686,62 @@ function extractBlock(cssRaw, selectorRe) {
   return '';
 }
 
-// tokens.css's On Light base values (the `@theme` block) — the default
+// tokens.css's On Cream base values (the `@theme` block) — the default
 // resolution for any component that doesn't declare its own data-mode.
 export function parseColorHexTokens(cssRaw) {
   return parseColorHexTokensFromBlock(extractBlock(cssRaw, /@theme\s*/));
 }
 
-// tokens.css's On Dark / On Feature override values — what a component's
-// tokens actually resolve to inside a `data-mode="dark"`/`data-mode="feature"`
-// container (Card, Button's secondary variant, etc). Returns
-// { dark: Map, feature: Map }.
+// The four surface modes, in the order §7's table columns run. `cream` is
+// both a real override block and the @theme base — see tokens.css's own
+// comment for why the block exists despite duplicating the base.
+export const SURFACE_MODES = ['cream', 'olive', 'dark', 'terracotta'];
+export const DEFAULT_SURFACE_MODE = 'cream';
+
+// tokens.css's per-mode override values — what a component's tokens actually
+// resolve to inside a `data-mode="..."` container (Modal -> cream,
+// Card/Producer -> dark, a Card instance -> whatever the page gives it).
+// Returns { cream: Map, olive: Map, dark: Map, terracotta: Map }.
 export function parseModeOverrideHexTokens(cssRaw) {
-  return {
-    dark: parseColorHexTokensFromBlock(extractBlock(cssRaw, /\[data-mode=['"]dark['"]\]\s*/)),
-    feature: parseColorHexTokensFromBlock(extractBlock(cssRaw, /\[data-mode=['"]feature['"]\]\s*/)),
-  };
+  const out = {};
+  for (const mode of SURFACE_MODES) {
+    out[mode] = parseColorHexTokensFromBlock(
+      extractBlock(cssRaw, new RegExp(`\\[data-mode=['"]${mode}['"]\\]\\s*`)),
+    );
+  }
+  return out;
 }
 
-// Parses design-system-rules.md §7's mode-based Surface Pairings table
-// (`| Token | On Light | On Dark | On Feature |`) into
-// Map<tokenKey, { light: hex, dark: hex, feature: hex }>. A row's Token
-// cell can list more than one token sharing the same values (e.g.
-// "`text-primary` / `icon-primary`"), split on " / " and registered under
-// each key. Cells look like `` `#2f2c28` · ≥10.4:1 `` (ratio prefixed with
-// `≥` for an aggregated worst-case figure) or plain `` `#2f2c28` · 10.4:1 ``
-// — only the hex is parsed out; this checker computes its own real ratio
-// rather than trusting the doc's rendered one, same rationale as before.
+// Parses design-system-rules.md §7's Surface pairings table
+// (`| Token | On Cream | On Olive | On Dark | On Terracotta |`) into
+// Map<tokenKey, { cream, olive, dark, terracotta }>. A row's Token cell can
+// list more than one token sharing the same values (e.g.
+// "`border-default` / `text-secondary`"), and every backticked name in the
+// cell is registered under the same values. Cells look like
+// `` `#2a2d1e` · ≥11.9:1 `` (ratio prefixed with `≥` for an aggregated
+// worst-case figure) or plain `` `#2a2d1e` · 11.9:1 `` — only the hex is
+// parsed out; this checker computes its own real ratio rather than trusting
+// the doc's rendered one.
+//
+// Reading §7 at runtime rather than carrying a second copy of it is what
+// makes drift between the doc and this script structurally impossible; the
+// column count is the one thing that has to move in lockstep when the mode
+// architecture changes, as it did on 2026-09-07 (three columns to four).
 export function parseSurfacePairingsTable(rulesRaw) {
   const tokens = new Map();
-  const rowRe =
-    /^\|\s*(.+?)\s*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*`(#[0-9a-fA-F]{3,8})`[^|]*\|\s*$/;
+  const cell = String.raw`\s*\`(#[0-9a-fA-F]{3,8})\`[^|]*\|`;
+  const rowRe = new RegExp(String.raw`^\|\s*(.+?)\s*\|` + cell.repeat(SURFACE_MODES.length) + String.raw`\s*$`);
   for (const rawLine of rulesRaw.split('\n')) {
     const m = rowRe.exec(rawLine.trim());
     if (!m) continue;
-    const [, tokenCell, light, dark, feature] = m;
+    const [, tokenCell, ...hexes] = m;
     // Token cell is one or more `` `key` `` names, optionally joined by " / "
-    // and/or trailing a parenthetical SC annotation (e.g. border-focus's
+    // and/or trailing a parenthetical SC annotation (e.g. state-focus's
     // "(SC 1.4.11, 3:1)") — only the backticked key names matter here.
     const keys = [...tokenCell.matchAll(/`([a-z0-9-]+)`/g)].map((k) => k[1]);
+    const values = Object.fromEntries(SURFACE_MODES.map((mode, i) => [mode, hexes[i]]));
     for (const key of keys) {
-      tokens.set(key, { light, dark, feature });
+      tokens.set(key, values);
     }
   }
   return tokens;
@@ -775,12 +803,17 @@ export function checkContrastPairings(
   const issues = [];
   const codeOnly = stripComments(source);
 
-  // A component's own data-mode="dark"/"feature" (Card, Button secondary,
-  // etc.) is what actually determines which hex its tokens resolve to —
-  // nothing declared means the CSS cascade's own default, On Light.
-  const modeMatch = codeOnly.match(/data-mode=['"](dark|feature)['"]/);
-  const mode = modeMatch ? modeMatch[1] : 'light';
-  const hexMap = mode === 'light' ? colorHex : modeOverrides[mode];
+  // A component's own data-mode (Modal -> cream, Card/Producer -> dark) is
+  // what determines which hex its tokens resolve to. Nothing declared means
+  // the CSS cascade's own default, On Cream — which is also the honest
+  // reading for the majority of components, since under the 2026-09-07
+  // architecture only surfaces own a mode and everything else inherits.
+  // A literal, non-interpolated attribute is required: a component that
+  // computes its mode from a prop (Card's `surface`) has no single answer
+  // to check statically, and gets the base resolution rather than a guess.
+  const modeMatch = codeOnly.match(new RegExp(`data-mode=['"](${SURFACE_MODES.join('|')})['"]`));
+  const mode = modeMatch ? modeMatch[1] : DEFAULT_SURFACE_MODE;
+  const hexMap = modeOverrides[mode] ?? colorHex;
 
   // Only surface-/action-/state- prefixed tokens are checked as
   // text-bearing backgrounds — the same three namespaces the old §7 table's
@@ -807,7 +840,8 @@ export function checkContrastPairings(
   // is correct for them precisely because it never changes by mode.
   const resolve = (token) => hexMap.get(token) ?? colorHex.get(token);
   const textHex = resolve(textToken);
-  const modeLabel = mode === 'light' ? 'the default (On Light)' : `data-mode="${mode}"`;
+  const modeLabel =
+    mode === DEFAULT_SURFACE_MODE ? 'the default (On Cream)' : `data-mode="${mode}"`;
 
   for (const bgToken of bgTokens) {
     const bgHex = resolve(bgToken);
@@ -1329,7 +1363,13 @@ function buildDashboardApp() {
 
 const FOUNDATIONS_DATA_PATH = join(ROOT, 'src', 'design-docs', 'foundations-data.generated.json');
 const FOUNDATIONS_MDX_DIR = join(ROOT, 'src', 'design-docs', 'foundations');
-const REQUIRED_FOUNDATION_PAGES = ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Breakpoints'];
+// Shadows was retired on 2026-09-07. It had been this system's canonical
+// "honest empty category" page, but an empty page is only honest while
+// something might one day fill it: the Figma file has never had an effect
+// style (re-confirmed against the 2026-09-07 export, which carries no effect
+// group at all) and no component uses box-shadow. Breakpoints is now the
+// example rules §6 points at for a category that's real but nearly empty.
+const REQUIRED_FOUNDATION_PAGES = ['Colours', 'Typography', 'Spacing', 'Radius', 'Motion', 'Breakpoints'];
 // Maps a required page name to the foundationData category key it renders —
 // needed because "Colours" (UK spelling, matches the page title) isn't the
 // same string as "color" (the internal/tokens.json category key).
@@ -1338,7 +1378,6 @@ const FOUNDATION_PAGE_CATEGORY = {
   Typography: 'typography',
   Spacing: 'spacing',
   Radius: 'radius',
-  Shadows: 'shadow',
   Motion: 'motion',
   Breakpoints: 'breakpoint',
 };
@@ -1434,37 +1473,40 @@ function genericUsageFor(category, group) {
   return defaults[category] ?? 'Design token.';
 }
 
-// Figma's "Primitives" collection (71 raw palette colors) vs. "Semantic"
-// collection (26 purpose-named tokens, several of which alias directly into
-// these ramps) — two different tiers with two different documentation
-// needs. A primitive's correct, complete "usage" description is its
-// position in the ramp; nothing more specific is meaningful to say about
-// "Sand, step 700" the way there is for a purpose-named token like
-// action-primary. Distinguishing tier is what lets the "No undocumented
-// tokens" check treat a primitive's ramp-position description as real
-// documentation rather than flagging all 71 as needing individual notes.
-const PRIMITIVE_COLOR_FAMILIES = new Set([
-  'sand',
-  'terracotta',
-  'rose',
-  'burgundy',
-  'amber',
-  'olive',
-  'grey',
-  'cream',
-  'green',
-  'red',
-  'blue',
-  'alpha',
-]);
+// Figma's "Primitives" collection (95 raw palette steps) vs. "Semantic"
+// collection (26 purpose-named tokens, each of which aliases into those
+// ramps) — two tiers with two different documentation needs. A primitive's
+// correct, complete "usage" description is its position in the ramp;
+// nothing more specific is meaningful to say about "Surface, step 700" the
+// way there is for a purpose-named token like action-primary.
+// Distinguishing tier is what lets the "No undocumented tokens" check treat
+// a ramp-position description as real documentation rather than flagging
+// every primitive as needing an individual note.
+//
+// Tier is decided per TOKEN, not per group, because since the 2026-09-07
+// rename the two tiers genuinely share a group name: Figma has both
+// `Surface/400` (primitive) and `surface/section` (semantic), and
+// tokens.json mirrors that rather than inventing a distinction Figma
+// doesn't have. A numeric final segment is the primitive marker — the same
+// rule parseColorHexTokensFromBlock's `(?![0-9])` lookahead applies.
+//
+// `alpha` and `event` are the two families whose steps aren't numeric
+// (`ink-10`, `white-0`, `vinyl-pink`) and which have no semantic members at
+// all, so they're named explicitly rather than forced into the numeric rule.
+const PRIMITIVE_ONLY_FAMILIES = new Set(['alpha', 'event']);
 
-function isPrimitiveColorGroup(group) {
-  return PRIMITIVE_COLOR_FAMILIES.has(group);
+function isPrimitiveColorToken(group, key) {
+  return PRIMITIVE_ONLY_FAMILIES.has(group) || /^[0-9]+$/.test(key);
 }
 
 function rampPositionUsage(group, key, allKeysInGroup) {
   const familyLabel = group[0].toUpperCase() + group.slice(1);
-  const sorted = [...allKeysInGroup].sort((a, b) => Number(a) - Number(b));
+  // Only the primitive steps count toward ramp position — a merged group
+  // like `surface` also carries its semantic siblings (section, card, the
+  // scrim stops), and including those would report "step 400 (5 of 13)"
+  // for a nine-step ramp.
+  const steps = [...allKeysInGroup].filter((k) => isPrimitiveColorToken(group, k));
+  const sorted = steps.sort((a, b) => Number(a) - Number(b));
   const position = sorted.indexOf(key) + 1;
   return `${familyLabel} palette — step ${key} (${position} of ${sorted.length} in the ramp).`;
 }
@@ -1501,12 +1543,12 @@ function findLiteralMotionConsumers(componentSources) {
 
 function buildFoundationData(cssRaw, tokensJson, componentSources) {
   const cssComments = extractCssTokenComments(cssRaw);
-  const data = { color: [], typography: [], spacing: [], radius: [], motion: [], breakpoint: [], shadow: [] };
+  const data = { color: [], typography: [], spacing: [], radius: [], motion: [], breakpoint: [] };
 
   for (const [group, entries] of Object.entries(tokensJson.color ?? {})) {
-    const isPrimitive = isPrimitiveColorGroup(group);
     const groupKeys = Object.keys(entries);
     for (const [key, entry] of Object.entries(entries)) {
+      const isPrimitive = isPrimitiveColorToken(group, key);
       const cssName = `color-${group}-${key}`;
       const specificNote = entry.note || cssComments[cssName];
       const fallbackUsage = isPrimitive
@@ -1611,8 +1653,6 @@ function buildFoundationData(cssRaw, tokensJson, componentSources) {
     });
   }
 
-  data.shadowNote = tokensJson.shadow?.note ?? 'No shadow tokens are currently defined.';
-
   return data;
 }
 
@@ -1625,15 +1665,15 @@ function writeFoundationData(data) {
 // its Storybook page from this same generator rather than a hand-authored
 // MDX file, which is what makes new categories "generated automatically"
 // per docs/design-system-rules.md §6. Mirrors generateDocsStub's pattern
-// for component docs. The structure here matches the six pages already
-// hand-written for Colours/Typography/Spacing/Radius/Shadows/Motion
-// exactly, rather than introducing an unproven MDX pattern (e.g. inline
-// comments) into an auto-generated file.
+// for component docs. The structure here matches the pages already
+// hand-written for Colours/Typography/Spacing/Radius/Motion exactly,
+// rather than introducing an unproven MDX pattern (e.g. inline comments)
+// into an auto-generated file.
 function generateFoundationPageStub(pageName, category) {
   const mdxPath = join(FOUNDATIONS_MDX_DIR, `${pageName}.mdx`);
   if (existsSync(mdxPath)) return false;
 
-  const emptyStateProp = category === 'shadow' ? ' emptyStateNote={foundationsData.shadowNote}' : '';
+  const emptyStateProp = '';
   const stub = `import { Meta } from '@storybook/addon-docs/blocks';
 import { FoundationPage, FoundationSection } from '../FoundationPage';
 import foundationsData from '../foundations-data.generated.json';

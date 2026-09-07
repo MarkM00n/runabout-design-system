@@ -9,34 +9,57 @@ export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  /** Figma's `Icon` boolean property — the trailing arrow. On by default,
+   * matching every Default variant in the Figma set. */
+  icon?: boolean;
 }
 
+// Source: Figma Button/Primary (70:42), Button/Secondary (70:83),
+// Button/Accent (59:1985), Button/Link (70:124).
+//
+// Focus is an offset outer ring (rules §2): 2px outline, offset 2px, colour
+// from state-focus. Deliberately NOT `ring-*` — Figma models it as a
+// separate focus-ring frame sitting 2px clear of the control's own bounds,
+// which is what `outline` + `outline-offset` reproduces without touching
+// layout. And deliberately no `outline-none` anywhere on the element: any
+// outline-none, even scoped to focus:, pins Tailwind v4's shared
+// --tw-outline-style to "none" for good and focus-visible:outline can never
+// set it back (rules §2, real incident PR #70).
+//
+// That 2px gap is also why no variant needs a darker ring any more. The old
+// border-focus-on-highlight token existed because an inset ring sat directly
+// on Button accent's amber fill at 1.97:1. Measured 2026-09-07 against the
+// current geometry: the ring's adjacent colour on both sides is the surface,
+// not the fill, giving 4.40:1 on cream, 6.08:1 olive, 8.92:1 dark and
+// 3.67:1 terracotta — all clear of SC 1.4.11's 3:1, accent included. Every
+// variant now uses the one state-focus token.
 const baseStyles = clsx(
   'inline-flex items-center justify-center gap-01',
   'font-manrope font-normal select-none',
   'transition-colors duration-150 ease-out',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent',
-  'disabled:cursor-not-allowed disabled:pointer-events-none',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus',
+  'disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-disabled',
 );
 
 // Heights use arbitrary px values rather than Tailwind's h-12/h-8 scale —
 // those are rem-based and the host app's root font-size (18px, see index.css)
-// would scale them off their nominal 48px/32px.
+// would scale them off their nominal 48px/32px. Radius steps down with size
+// here (radius-2xl -> radius-xl), unlike the Input family, which stays
+// radius-2xl at both sizes — don't assume the sibling rule (rules §4).
 const sizeStyles: Record<ButtonSize, string> = {
   large: 'h-[48px] px-03 rounded-2xl text-h6',
   small: 'h-[32px] px-02 rounded-xl text-label',
 };
 
-// Figma's Button/Icon "Arrow" (node 265:550, Iconography library) — a
-// trailing arrow every Button variant now shows unconditionally. Embedded
-// as a static path rather than an image export so its colour can follow
-// currentColor like every other token-driven value in this system, instead
-// of baking one flattened raster/vector per state.
 const iconSizeStyles: Record<ButtonSize, string> = {
   large: 'size-[24px]',
   small: 'size-[16px]',
 };
 
+// Figma's Button/Icon "Arrow" (Iconography library) — embedded as a static
+// path rather than an image export so its colour follows currentColor like
+// every other token-driven value here, instead of baking one flattened
+// asset per state.
 const ArrowIcon = ({ size }: { size: ButtonSize }) => (
   <svg
     aria-hidden="true"
@@ -48,75 +71,63 @@ const ArrowIcon = ({ size }: { size: ButtonSize }) => (
   </svg>
 );
 
-// Disabled = Default appearance at reduced opacity (opacity-disabled, 38%),
-// never a separate colour swap — design-system-rules.md §2, 2026-08-05
-// architecture. Every variant below relies on this: no disabled:bg-*/
-// disabled:text-*/disabled:border-* override remains anywhere, since the
-// Default classes above them already carry through unchanged, just faded.
-// This also fixes a real bug the old swap pattern had: action-primary
-// inverted (light fill -> dark fill) in the same 2026-08-05 sync, and the
-// old `disabled:bg-action-primary disabled:text-text-primary` pairing
-// would have rendered dark text on action-primary's new dark fill —
-// illegible. Fading the real Default combination sidesteps that entirely.
+// Disabled = Default appearance at opacity-disabled (38%), never a colour
+// swap — rules §2. Applied once on the root in baseStyles above; no variant
+// carries a disabled:bg-*/text-*/border-* override, because the Default
+// classes already carry through unchanged, just faded.
+//
+// Every variant here inherits its surface rather than declaring a mode.
+// Secondary in particular no longer sets data-mode="dark" on itself: under
+// the 2026-09-07 architecture its border (border-strong) and label
+// (text-primary) resolve from whatever surface it sits on, which is exactly
+// what the old self-scoping was faking. Pinning it to dark now would render
+// a near-white outline on a cream page.
 const variantStyles: Record<ButtonVariant, string> = {
   primary: clsx(
     'bg-action-primary text-text-on-action',
     'hover:bg-action-primary-hover',
-    'focus-visible:ring-border-focus',
-    'disabled:opacity-disabled',
   ),
   secondary: clsx(
-    'bg-transparent text-text-primary border border-border-default',
-    'hover:bg-action-secondary-hover hover:border-text-primary',
-    'focus-visible:border-border-focus focus-visible:ring-border-focus',
-    'disabled:opacity-disabled',
+    'bg-action-secondary text-text-primary border border-border-strong',
+    // Hover tints the fill only — Figma keeps the border at border-strong,
+    // 1px, in every state including Hover and Disabled.
+    'hover:bg-action-secondary-hover',
   ),
   accent: clsx(
     'bg-action-highlight text-text-on-highlight',
     'hover:bg-action-highlight-hover',
-    // Accent's Focused ring uses its own dedicated token, not border-focus —
-    // border-focus (Blue/500 on Light) measures only ~1.5:1 against
-    // accent's action-highlight fill, short of WCAG 1.4.11's 3:1 non-text
-    // minimum. border-focus-on-highlight (mode-invariant, Blue/900) clears
-    // it. See tokens.css for the full story.
-    'focus-visible:ring-border-focus-on-highlight',
-    'disabled:opacity-disabled',
   ),
   link: clsx(
-    'bg-transparent text-text-button',
-    // Confirmed live in Figma (2026-08-05): Default/Hover/Focused/Disabled
-    // all bind the label to the same text-button token now — there's no
-    // separate brighter hover/focus color anymore (the old text-button-
-    // inverse token this used to use is retired). The underline alone
-    // carries hover/focus feedback, matching the component's own Figma
-    // description.
-    'hover:underline',
-    'focus-visible:ring-border-focus focus-visible:underline',
-    'disabled:opacity-disabled',
+    'bg-action-secondary text-text-link',
+    // Figma binds Default/Hover/Focused/Disabled to the same text-link
+    // token — there is no brighter hover colour. The underline alone
+    // carries hover and focus feedback, matching the component's own
+    // Figma description.
+    'hover:underline focus-visible:underline',
   ),
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = 'primary', size = 'large', type = 'button', className, children, ...props },
+    {
+      variant = 'primary',
+      size = 'large',
+      icon = true,
+      type = 'button',
+      className,
+      children,
+      ...props
+    },
     ref,
   ) => (
     <button
       ref={ref}
       type={type}
-      // Secondary has no fill of its own (bg-transparent) — it assumes an
-      // externally dark backdrop, same as before the 2026-08-05 sync, just
-      // token-driven now instead of a hardcoded text-inverse value. Scoping
-      // data-mode="dark" to Secondary specifically (not the other variants,
-      // which render normally against whatever the page's own mode is)
-      // reproduces that fixed appearance regardless of the surrounding
-      // page's actual mode.
-      data-mode={variant === 'secondary' ? 'dark' : undefined}
       className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}
     >
       {children}
-      <ArrowIcon size={size} />
+      {icon ? <ArrowIcon size={size} /> : null}
     </button>
   ),
 );

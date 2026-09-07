@@ -2,10 +2,10 @@
 /**
  * generate-brand-overrides — reads scripts/data/northline-brand-tokens.json
  * (a resolved export of the Figma Semantic collection, both Primitives brand
- * modes x all three Semantic modes — see that file's `source` field for
+ * modes x all four surface modes — see that file's `source` field for
  * provenance) and emits the CSS override blocks for the `data-brand`
- * attribute axis: [data-brand='northline'], its [data-mode='dark'] variant,
- * and its [data-mode='feature'] variant.
+ * attribute axis: [data-brand='northline'] and its cream / olive / dark /
+ * terracotta mode variants.
  *
  * Brand is independent of mode: Semantic tokens are the same names and the
  * same alias graph for every brand — only which Primitives mode (Runabout
@@ -51,8 +51,8 @@ const END_MARKER = '/* END BRAND OVERRIDES */';
 //
 // 2. The descendant form, [data-brand='northline'] [data-mode='dark'] — for
 //    components that set their own data-mode directly on their root without
-//    also setting data-brand (Card -> data-mode="feature", Button's secondary
-//    variant -> data-mode="dark"; see each component's own comment). Without
+//    also setting data-brand (Card/Producer -> data-mode="dark", Modal ->
+//    data-mode="cream"; see each component's own comment). Without
 //    this form, such a component's root matches Runabout's plain, unscoped
 //    [data-mode='dark'] rule in tokens.css directly, and a rule matching an
 //    element itself always overrides a value merely inherited from an
@@ -66,28 +66,35 @@ const END_MARKER = '/* END BRAND OVERRIDES */';
 // of which one (or both) match a given element — so this fixes self-scoping
 // components without either of them needing to know about brand at all.
 //
-// On Light's forms also explicitly match [data-mode='light'], not just the
+// On Cream's forms also explicitly match [data-mode='cream'], not just the
 // bare [data-brand='northline'] — the same gap tokens.css's own header
-// comment documents for why [data-mode='light'] exists despite duplicating
+// comment documents for why [data-mode='cream'] exists despite duplicating
 // @theme's values: custom properties don't reset themselves just because a
 // new attribute value appears. Without the explicit pairing, a Northline
-// element set back to data-mode="light" inside an ancestor carrying
-// data-mode="dark"/"feature" would keep inheriting the darker values.
+// element set back to data-mode="cream" inside an ancestor carrying
+// data-mode="olive"/"dark"/"terracotta" would keep inheriting the darker
+// values.
 const MODE_CONFIG = [
   {
-    dataKey: 'onLight',
+    dataKey: 'onCream',
     selector:
-      "[data-brand='northline'], [data-brand='northline'][data-mode='light'], [data-brand='northline'] [data-mode='light']",
+      "[data-brand='northline'], [data-brand='northline'][data-mode='cream'], [data-brand='northline'] [data-mode='cream']",
+  },
+  {
+    dataKey: 'onOlive',
+    selector: "[data-brand='northline'][data-mode='olive'], [data-brand='northline'] [data-mode='olive']",
   },
   {
     dataKey: 'onDark',
     selector: "[data-brand='northline'][data-mode='dark'], [data-brand='northline'] [data-mode='dark']",
   },
   {
-    dataKey: 'onFeature',
-    selector: "[data-brand='northline'][data-mode='feature'], [data-brand='northline'] [data-mode='feature']",
+    dataKey: 'onTerracotta',
+    selector:
+      "[data-brand='northline'][data-mode='terracotta'], [data-brand='northline'] [data-mode='terracotta']",
   },
 ];
+
 
 // Semantic variable names come out of Figma as "category/name" (e.g.
 // "text/primary"). tokens.css names the equivalent custom property
@@ -160,7 +167,7 @@ function generate() {
  * itself carries no data-brand attribute and is unaffected by this file.
  *
  * Only tokens whose resolved value actually differs from Runabout's for the
- * same Semantic mode are listed below (${summary.map((s) => `${s.mode}: ${s.count}`).join(', ')}).
+ * same surface mode are listed below (${summary.map((s) => `${s.mode}: ${s.count}`).join(', ')}).
  */`;
 
   return { css: `${header}\n\n${blocks.join('\n\n')}\n`, summary };

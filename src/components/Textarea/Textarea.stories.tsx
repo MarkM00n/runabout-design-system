@@ -14,34 +14,35 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['large', 'small'],
-    },
+    size: { control: 'select', options: ['large', 'small'] },
   },
-  args: {
-    placeholder: 'Enter details...',
-  },
+  decorators: [
+    (Story) => (
+      <div className="w-[320px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof Textarea>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Large: Story = {
-  args: {
-    size: 'large',
-  },
+  args: { size: 'large', placeholder: 'Enter details...' },
 };
 
 export const Small: Story = {
+  args: { size: 'small', placeholder: 'Enter details...' },
+};
+
+export const WithValue: Story = {
   args: {
-    size: 'small',
+    size: 'large',
+    defaultValue: 'We are coming as a group of six and one of us is gluten free.',
   },
 };
 
 export const Disabled: Story = {
-  args: {
-    size: 'large',
-    disabled: true,
-  },
+  args: { size: 'large', placeholder: 'Enter details...', disabled: true },
 };

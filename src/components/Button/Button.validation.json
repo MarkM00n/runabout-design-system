@@ -1,6 +1,6 @@
 {
   "component": "Button",
-  "lastValidated": "2026-08-27",
+  "lastValidated": "2026-09-07",
   "checks": {
     "tokenCompliance": {
       "pass": true,
@@ -56,11 +56,11 @@
     "color-action-highlight-hover",
     "color-action-primary",
     "color-action-primary-hover",
+    "color-action-secondary",
     "color-action-secondary-hover",
-    "color-border-default",
-    "color-border-focus",
-    "color-border-focus-on-highlight",
-    "color-text-button",
+    "color-border-strong",
+    "color-state-focus",
+    "color-text-link",
     "color-text-on-action",
     "color-text-on-highlight",
     "color-text-primary",

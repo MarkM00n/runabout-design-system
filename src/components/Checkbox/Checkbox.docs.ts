@@ -1,30 +1,31 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma Input/Checkbox component set (Design System, JpFA7KtVlSOrM9fIYYgOsn).
+// Source: Figma Input/Checkbox (141:449).
 export const docs: ComponentDocMeta = {
   description:
-    'A labeled checkbox for binary or multi-select choices. Renders a visually-hidden native input driving a custom-styled box and checkmark, so it looks fully custom while staying keyboard- and screen-reader-operable.',
+    'A binary choice with its label as part of the clickable area. For opting in or out of something that takes effect when the form is submitted.',
   usageGuidelines: [
-    'Always pass a label — it is required, not optional, so every checkbox has a discoverable accessible name.',
-    'Its box/label tokens (border-strong, text-primary, action-secondary) are mode-aware and resolve correctly under whatever surface mode a container sets — including no data-mode at all (On Light default). No special backdrop is required.',
-    'Use the size prop to match the surrounding form density (large for standalone forms, small for compact lists/tables).',
+    'Use a checkbox only where the choice is applied later, on submit. If the action takes effect immediately, that is a toggle, not a checkbox.',
+    'Write the label as the affirmative statement being agreed to, so the checked state reads as true.',
+    'Group related checkboxes inside a <fieldset> with a <legend> naming what they have in common.',
+    'Use size="small" in dense layouts and size="large" (the default) elsewhere.',
   ],
   dos: [
-    'Group related checkboxes with a fieldset/legend (or an equivalent labeled container) when they represent one logical question.',
-    'Rely on the component\'s own checked/defaultChecked/onChange — it forwards all native input props.',
+    'Let the label be part of the target — the whole control is one <label>, so clicking the text toggles the box.',
+    'Keep long labels readable: the box aligns to the first line\'s cap height rather than centring against the whole block, which is the conventional treatment once a label wraps.',
   ],
   donts: [
-    'Do not remove or hide the real input from the DOM (no display:none/hidden) — it is sr-only, not gone, and removing it breaks keyboard and screen-reader operation.',
-    'Do not use Checkbox for a single yes/no toggle that takes effect immediately — that is a Switch pattern, not built in this system yet.',
+    'Do not replace the native input with a styled div. The real input stays in the DOM, hidden with sr-only rather than display:none, so keyboard operation and the accessibility tree survive.',
+    'Do not apply the disabled opacity twice. Nesting a second opacity-disabled inside the first multiplies rather than replaces — Figma bound it on both the variant root and the box child until 2026-09-07, rendering the box at about 14% against its own label at 38%. Apply it once, at the control\'s root, per rules §2.',
   ],
   variants: ['large', 'small'],
   states: ['default', 'hover', 'focus', 'disabled', 'checked'],
   accessibilityNotes: [
-    'The real <input type="checkbox"> stays in the DOM and keyboard-focusable; the box and checkmark are aria-hidden decorative siblings driven off it.',
-    'The checkmark svg is nested inside the box rather than a flat sibling of the input, so it uses explicit [label:has(:checked)_&] ancestor selectors instead of Tailwind\'s sibling-based peer-* — both are scoped correctly per-instance through the nearest label.',
-    'Disabled is the Default appearance at opacity-disabled (38%), applied on the outer label so the input, box, checkmark, and label text all dim together — confirmed against Figma that the checkmark/label keep their normal colors (text-highlight/text-primary) rather than swapping to a separate disabled palette.',
-    'The label wraps both the box and the text, so clicking anywhere in the label toggles the checkbox — no separate click handler needed.',
+    'The real <input type="checkbox"> stays in the DOM and is only visually hidden (sr-only) — never display:none or visibility:hidden, which would remove it from the accessibility tree and break keyboard operation. The box and checkmark are aria-hidden decoration driven off it.',
+    'Space toggles the checkbox, straight from the native element.',
+    'Focus is a 2px state-focus outline offset 2px around the box itself, on :focus-visible only, matching Figma\'s 32x32 focus ring around the 24px box.',
+    'The label stays text-primary in every state including Disabled — it does not recolour; the whole control dims instead.',
+    'The large control is 24px tall, exactly meeting SC 2.5.8 (24x24). The clickable area extends across the label, so the real target is larger than the box.',
   ],
-  codeExample:
-    '<Checkbox\n  label="Subscribe to updates"\n  size="large"\n  onChange={(e) => setSubscribed(e.target.checked)}\n/>',
+  codeExample: '<Checkbox label="Email me about future events" name="marketing" />',
 };

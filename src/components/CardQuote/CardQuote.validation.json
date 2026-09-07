@@ -1,0 +1,49 @@
+{
+  "component": "CardQuote",
+  "lastValidated": "2026-09-07",
+  "checks": {
+    "tokenCompliance": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "accessibility": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "storybookCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "documentationCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    }
+  },
+  "history": [],
+  "overall": true,
+  "status": "pass",
+  "tokensUsed": [
+    "color-surface-section",
+    "color-text-primary",
+    "color-text-secondary",
+    "font-manrope",
+    "font-recoleta",
+    "radius-lg",
+    "spacing-01",
+    "spacing-03",
+    "text-caption",
+    "text-h3"
+  ]
+}

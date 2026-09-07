@@ -38,23 +38,29 @@ below, and `scripts/design-sync.js` for the implementation.
   (the structured source-of-truth record). A token that exists in one but
   not the other is a bug.
 - **Don't collapse two tokens into one just because their values currently
-  match.** `sand-800` and `surface-primary` are the same hex today but are
-  bound to different Figma variables — aliasing them assumes that
-  coincidence is permanent. Keep distinct Figma bindings as distinct tokens,
-  and say so in a comment if the duplication looks like a mistake to a
-  future reader.
-- **Primitive ramps were renumbered on 2026-08-05** to the standard
-  light→dark convention (50 = lightest; e.g. old `Sand/400` is now
-  `Sand/500`, old `Amber/25` is now `Amber/950` at a darker value
-  `#7a4e09`). Any code, comment, or doc referencing pre-2026-08-05
-  primitive names is stale — resolve against live Figma bindings, never
-  against remembered names. **`tokens.css`/`tokens.json` already carry
-  the new numbering** (confirmed 2026-08-08: `--color-amber-950:
-  #7a4e09` is present, matching this bullet's own example exactly) — the
-  "still carries the old names" claim that used to sit here was itself
-  stale. Still worth a live Figma check before relying on any specific
-  primitive value; this wasn't a full re-audit of the whole ramp, just
-  confirmation the sync isn't outstanding as a default assumption.
+  match.** `surface-400` and `surface-section` are the same hex on cream
+  today but are bound to different Figma variables — aliasing them assumes
+  that coincidence is permanent, and `surface-section` alone changes with
+  the mode. Keep distinct Figma bindings as distinct tokens, and say so in a
+  comment if the duplication looks like a mistake to a future reader.
+- **Primitive families were renamed on 2026-09-07** to match Figma's own:
+  Sand → **Surface**, Terracotta → **Brand**, Rose → **Soft**, Burgundy →
+  **Deep**, Amber → **Accent**, Olive → **Ink**, Grey → **Neutral**, Cream →
+  **Paper**, Blue → **Focus**. The light→dark numbering from 2026-08-05 is
+  unchanged (50 = lightest). Any code, comment or doc using the old family
+  names is stale — resolve against live Figma bindings, never against
+  remembered names.
+- **Semantic and primitive tokens share the `surface` prefix, on purpose.**
+  Figma has both `surface/section` (semantic) and `Surface/400` (primitive),
+  and `tokens.css` mirrors that rather than renaming either away from its
+  source. They're told apart by whether the final segment is numeric — the
+  rule `isPrimitiveColorToken()` and `parseColorHexTokensFromBlock()`'s
+  `(?![0-9])` lookahead both apply in `design-sync.js`. A new semantic token
+  must therefore never be named with a trailing number.
+- **Figma's `Event/*` primitives are deliberately not registered.** They're
+  print and campaign colours with no semantic role, so they're recorded in
+  `tokens.json` for traceability but kept out of `@theme` — no Tailwind
+  utility is generated for them, and no component may use one.
 - **The root-font-size trap:** `src/index.css` sets the page's root
   font-size to `18px`, not the browser default `16px`. Every one of
   Tailwind's `rem`-based utilities (`h-12`, `w-6`, `rounded-2xl`, `gap-4`,
@@ -128,21 +134,44 @@ below, and `scripts/design-sync.js` for the implementation.
   disabled text outside components). Disabled contrast is exempt under
   SC 1.4.3 — don't "fix" a disabled state's ratio by deviating from
   this rule.
-- **Focus visuals are an offset outer ring (rule changed 2026-08-05).**
+  **Apply it once, at the control's root.** Nesting a second
+  `opacity-disabled` inside multiplies rather than replaces. Real incident
+  (2026-09-07): `Input/Checkbox`'s four Disabled variants bound it on the
+  variant root *and* on the `box` child, rendering the box at ~14% against
+  its own label at 38% — a checkbox outline noticeably fainter than the text
+  beside it. Caught by reading the bindings rather than the screenshot, since
+  both layers were correctly bound to the right variable; the defect was
+  that one of them shouldn't have been bound at all. Fixed in Figma in the
+  same sync. The tell was inconsistency: the nine other component sets all
+  applied it once.
+- **Focus visuals are an offset outer ring (token renamed 2026-09-07).**
   Figma's Focused variants carry a `focus-ring` overlay: a 2px
-  `border-focus` ring offset 2px outside the control's bounds, with the
+  **`state-focus`** ring offset 2px outside the control's bounds, with the
   control's footprint unchanged. In code that's an `outline` (2px,
-  `outline-offset: 2px`, colour from `border-focus`) on
-  `:focus-visible` — not a box-shadow hack and not an inset border that
-  changes layout. `border-focus` resolves per surface mode (deep blue on
-  light, pale blue on dark/feature) — see §7.
+  `outline-offset: 2px`, colour from `state-focus`) on `:focus-visible` —
+  not a box-shadow hack, not a `ring-*` utility, and not an inset border
+  that changes layout. `state-focus` replaces `border-focus` and its three
+  retired partners (`-inverse`, `-on-feature`, `-on-highlight`); it resolves
+  per surface mode and clears 3:1 on all four — see §7.
+  **The 2px gap is load-bearing**, not just spacing: it means the ring's
+  adjacent colour is the surface rather than the control's own fill, which
+  is what lets one token work even on `Button`'s amber accent variant. An
+  inset ring there measured 1.97:1; the offset ring measures against the
+  surface at 4.4:1 or better. `Card/Event` is the one deliberate exception,
+  stroking its own root with no offset because that's what its Figma Focus
+  variant does.
+- **A component that has no background must not set `data-mode`.** Under the
+  2026-09-07 architecture only surfaces own a mode; everything else
+  inherits. Self-scoping a mode onto a control pins its text to a context
+  its real backdrop may not share — `Button`'s secondary variant did exactly
+  that and had to be unwound. See §7.
 - **Mode-context tokens must be flagged, not silently shipped illegible.**
-  Since 2026-08-05 the Figma variables resolve per surface mode
-  (On Light / On Dark / On Feature — see §7). A component whose Figma
-  source sits on a dark or feature surface carries that context in its
-  token *values*; the component (or its story, see below) must make that
-  assumption legible — supply the matching backdrop in the story rather
-  than rendering near-invisible pale-on-white by default.
+  The Figma variables resolve per surface mode (On Cream / On Olive / On
+  Dark / On Terracotta — see §7). A component that owns a surface carries
+  that context in its token *values*; a component that doesn't inherits it
+  from whatever it's placed on. Either way the assumption has to be legible
+  — supply the matching backdrop in the story rather than rendering
+  near-invisible pale-on-cream by default.
 - **Spot-check contrast, don't assume it.** The default state passing
   contrast doesn't mean the hover or disabled state does — check text-on-fill
   contrast for every state that changes color, especially anything using a
@@ -200,17 +229,18 @@ whenever someone actually wants it.
   connected) for at least: background/border/text color, border-radius,
   height, padding, and font-size — across every size and state variant —
   and diff them against the literal values extracted from Figma.
-- **If the component touches a mode-variant token, verify all three modes
-  (On Light, On Dark, On Feature) live, not just whichever one Figma's
-  reference happens to show at the time.** Checking token values against
+- **If the component touches a mode-variant token, verify all four modes
+  (On Cream, On Olive, On Dark, On Terracotta) live, not just whichever one
+  Figma's reference happens to show at the time.** Checking token values against
   Figma is necessary but not sufficient — the values can be correct in
   `tokens.css` for every mode and the component can still render wrong at
   runtime for reasons no token diff would catch (the `outline-none`
   footgun above is exactly this: right tokens, wrong computed output).
   Drive Storybook's mode-switcher decorator directly via URL globals
-  (`?globals=mode:dark`) and re-check computed styles, not just Light.
-  This session only did this after being asked a second time — it should
-  be routine, not a follow-up question.
+  (`?globals=mode:olive`, `mode:dark`, `mode:terracotta`) and re-check
+  computed styles, not just the default On Cream. This was once only done
+  after being asked a second time — it should be routine, not a follow-up
+  question.
 - **Don't assume sibling components share a rule.** `Button`'s radius steps
   down at the `small` size; `Input`, `Select`, and `Textarea` all stay pill
   at both sizes. Assuming "it's probably the same as the last component"
@@ -296,7 +326,7 @@ per component.
 ## 6. Foundations
 
 Foundation pages (`src/design-docs/foundations/*.mdx`, one per category:
-Colours, Typography, Spacing, Radius, Shadows, Motion, Breakpoints) document
+Colours, Typography, Spacing, Radius, Motion, Breakpoints) document
 the token scale itself, separately from any one component. `design-sync`
 generates `src/design-docs/foundations-data.generated.json` on every run —
 the pages render that, they don't hand-list token values.
@@ -316,15 +346,24 @@ the pages render that, they don't hand-list token values.
   component's source for real usage (the same suffix-match rule
   `extractTokensUsed` already uses, inverted into a token → components map)
   — never hand-typed, so it can't silently drift from reality.
-- **An empty category is a valid, honest state — not something to fill with
-  invented values.** Shadows has zero tokens: the Figma file has no effect
-  styles (confirmed via `getLocalEffectStylesAsync`) and no component uses
-  `box-shadow`. Breakpoints has exactly one, for the same reason applied to
-  a different category: no Figma breakpoint variables exist, and only one
-  breakpoint value (`1024px`) is used anywhere in this codebase — that gets
-  formalized as a real token; a full `sm`/`md`/`lg`/`xl` scale does not get
-  invented just because Tailwind ships one by default. Pages say so plainly
-  rather than fabricating scale that doesn't exist anywhere in this system.
+- **A nearly-empty category is a valid, honest state — not something to
+  fill with invented values.** Breakpoints has exactly one token: no Figma
+  breakpoint variables exist, and only one breakpoint value (`1024px`) is
+  used anywhere in this codebase. That gets formalized as a real token; a
+  full `sm`/`md`/`lg`/`xl` scale does not get invented just because Tailwind
+  ships one by default. The page says so plainly rather than fabricating
+  scale that doesn't exist in this system.
+- **A category with nothing in it and no prospect of anything gets
+  retired, not kept as an empty page.** Shadows was this document's own
+  example of an honest empty category until 2026-09-07. An empty page is
+  honest only while something might one day fill it — and the Figma file has
+  never had an effect style (re-confirmed against the 2026-09-07 export,
+  which carries no effect group) and no component has ever used
+  `box-shadow`. The page, its `shadow` category and the `shadow` key in
+  `tokens.json` were all removed. Adding shadows back means adding effect
+  styles in Figma first, then one line to `REQUIRED_FOUNDATION_PAGES` and
+  one branch in `buildFoundationData` — the same route any new category
+  takes.
 - **A token can be real and still show zero *named* consumers.** Motion's
   `duration-standard`/`ease-standard` aren't Figma-sourced — they formalize
   a value already used identically via Tailwind's literal
@@ -340,108 +379,157 @@ the pages render that, they don't hand-list token values.
   write a real one, not a FAIL — a token is never silently blank.
 - **Color tokens split into two tiers, mirroring Figma's own two variable
   collections.** "Semantic" tokens (`action`, `border`, `text`, `surface`,
-  `state` — Figma's *Semantic* collection) are purpose-named and get the
+  `state` — Figma's *Semantic* collection, 26 purpose-named tokens) get the
   full detailed table, same as every other category. "Primitive" tokens
-  (`sand`, `terracotta`, `rose`, `burgundy`, `amber`, `olive`, `grey`,
-  `cream` — Figma's *Primitives* collection, 71 raw palette steps) render as
-  a compact swatch grid grouped by family instead (`PrimitivePaletteGrid` in
-  `FoundationPage.tsx`) — 71 individual table rows would be unusable, and a
-  raw palette step doesn't carry the kind of purpose-specific usage note a
-  semantic token does. `isPrimitiveColorGroup()` in `design-sync.js` is what
-  decides which tier a color group belongs to.
+  (Figma's *Primitives* collection, 95 raw palette steps across Surface,
+  Brand, Soft, Deep, Accent, Ink, Neutral, Paper, Green, Red, Focus, Alpha
+  and Event) render as a compact swatch grid grouped by family instead
+  (`PrimitivePaletteGrid` in `FoundationPage.tsx`) — 95 individual table
+  rows would be unusable, and a raw palette step doesn't carry the kind of
+  purpose-specific usage note a semantic token does.
+  **Tier is decided per token, not per group**, because since the
+  2026-09-07 rename the two tiers genuinely share a group name (`surface`
+  holds both `section` and `400`). `isPrimitiveColorToken()` in
+  `design-sync.js` treats a numeric final segment as the primitive marker,
+  plus `alpha` and `event`, whose steps aren't numeric and which have no
+  semantic members.
 - **A primitive's ramp position counts as real documentation, not a
-  generic fallback.** Writing 71 individual "this is step 3 of 9" comments
+  generic fallback.** Writing 95 individual "this is step 3 of 9" comments
   by hand would be pure busywork — a primitive's position in its ramp *is*
   its complete, honest description. `rampPositionUsage()` generates that
-  string automatically ("Sand palette — step 400 (4 of 9 in the ramp).") and
+  string automatically ("Surface palette — step 400 (5 of 9 in the ramp).")
+  — counting only the group's numeric steps, so a merged group's semantic
+  siblings don't inflate the denominator — and
   it's treated as `documented: true`, exempting primitives from the
   otherwise-correct "no undocumented tokens" WARN that semantic tokens still
-  get nudged by. Only a handful of primitives that a semantic token
-  explicitly aliases into (e.g. `sand-400`, consumed directly by `Card`)
-  carry a real per-token comment on top of that fallback.
+  get nudged by. Only a handful of primitives carry a real per-token comment
+  on top of that fallback — the alpha and scrim steps a semantic token
+  aliases into, `Focus/900`, and the `Event/*` group, whose note is the one
+  place the "print only, never registered in `@theme`" rule is recorded
+  against the tokens themselves.
 
-## 7. Surface pairings — mode-based (regenerated 2026-08-05)
+## 7. Surface pairings — surface modes (regenerated 2026-09-07)
 
-**The architecture changed on 2026-08-05.** The old per-surface partner
-tokens (`text-inverse`, `text-link-inverse`, `text-on-feature`,
-`text-highlight-inverse`, `border-focus-inverse` — all deleted in Figma)
-are replaced by **variable modes**: Figma's *Semantic* collection now has
-three modes — **On Light**, **On Dark**, **On Feature** — and every
-text/icon/border/action/state token resolves per mode. Components never
-choose text colours freely; the *surface's mode* decides. A container
-frame filled with a dark surface carries mode On Dark; every nested
-`text/primary`, `border/focus`, etc. resolves to its dark-context value
-automatically. There is no longer a "which partner token do I pick"
-question — there is one token per role, and the mode answers the rest.
+**The architecture changed again on 2026-09-07.** The three-mode system
+(On Light / On Dark / On Feature, 44 tokens) is replaced by **four surface
+modes and 26 tokens**, under one rule:
 
-Surfaces by mode context (surface values are constant across modes):
+> **Anything with a background owns a mode. Everything else inherits.**
 
-- **On Light:** `surface-primary` `#f3dbbc` · `surface-tertiary` `#fefbf8`
-  · `surface-subtle` `#faefe1`
-- **On Dark:** `surface-secondary` `#3d4a2e` · `surface-inverse` `#2f2c28`
-  (absorbed the deleted `surface-emphasis`) · `surface-card` `#4a5435` ·
-  `surface-scrim` `#1d1b19`
-- **On Feature:** `surface-feature` `#a74b24`
+A surface — a section, card, modal or panel — fills with `surface-section`
+and picks its colour by setting its `data-mode`. Buttons, inputs, tabs,
+badges, text and icons never carry a mode; they resolve from whatever they
+sit on. There is no "which partner token do I pick" question and no
+per-surface token family: there is one token per role, and the surface's
+mode answers the rest.
 
-Per-mode resolved values and their **worst-case** ratio in that mode
-(every pairing ≥ the figure shown; all cross-checked with the WCAG
-relative-luminance formula on 2026-08-05):
+The four modes and the surface each one means:
 
-| Token | On Light | On Dark | On Feature |
+| `data-mode` | Figma mode | `surface-section` |
+|---|---|---|
+| `cream` | On Cream | `#f8ebda` Surface/400 |
+| `olive` | On Olive | `#3d4a2e` Ink/900 |
+| `dark` | On Dark | `#2f2c28` Neutral/800 |
+| `terracotta` | On Terracotta | `#a74b24` Brand/800 |
+
+`surface-card` (`#fefbf8`, Surface/50) is the one other surface token. It is
+**mode-invariant** — the same near-white in all four columns — which is why
+the only component that uses it, `Modal`, also pins itself to `cream`. See
+the "mode-invariant fill" warning below.
+
+### Text and boundary tokens, per mode
+
+Resolved value and its measured ratio against `surface-section` in that
+mode. Every figure below was computed with the WCAG relative-luminance
+formula against the 2026-09-07 export, not carried over.
+
+| Token | On Cream | On Olive | On Dark | On Terracotta |
+|---|---|---|---|---|
+| `text-primary` | `#2a2d1e` · 12.0:1 | `#faefe1` · 8.3:1 | `#faefe1` · 12.2:1 | `#faefe1` · 5.0:1 |
+| `text-secondary` / `border-default` | `#4a5435` · 6.9:1 | `#c9cbbf` · 5.8:1 | `#c9cbbf` · 8.5:1 | `#f6e3cb` · 4.6:1 |
+| `text-link` | `#7a4e09` · 6.1:1 | `#edc07a` · 5.6:1 | `#edc07a` · 8.2:1 | `#fbf2e4` · 5.1:1 |
+| `border-strong` | `#2a2d1e` · 12.0:1 | `#fbf3e9` · 8.6:1 | `#fbf3e9` · 12.6:1 | `#fbf3e9` · 5.2:1 |
+| `state-focus` (SC 1.4.11, 3:1) | `#2563eb` · 4.4:1 | `#b3d1ff` · 6.1:1 | `#b3d1ff` · 8.9:1 | `#b3d1ff` · 3.7:1 |
+
+Every text row clears 4.5:1 (SC 1.4.3) in every mode; every boundary row
+clears 3:1 (SC 1.4.11). `text-secondary` on terracotta at 4.6:1 is the
+tightest pairing in the system — it was identical to `text-primary` until
+2026-09-07 and was rebound to Surface/600 to fix that, so treat it as
+having no headroom and re-measure if either token moves.
+
+### Component-internal pairings (a fill and the text on it)
+
+These don't depend on the surrounding surface, because the fill travels with
+the text:
+
+- `action-primary` + `text-on-action` flip together per mode — **11.45:1 in
+  all four**, by construction.
+- `action-highlight` + `text-on-highlight` — 5.3:1 cream, 6.6:1 olive and
+  dark, 8.2:1 terracotta.
+- `state-*` fills + `text-on-state` — 6.28:1 error, 6.92:1 success, 6.97:1
+  warning, identical in every mode.
+
+### The status colours are fills, not text
+
+`state-error`, `state-success` and `state-warning` became **mode-invariant**
+in this sync — one value on every surface, so a status colour keeps meaning
+the same thing wherever it appears. That is correct for a `Badge` fill, and
+it is a trap for text:
+
+| Used as text on… | `state-error` | `state-success` | `state-warning` |
 |---|---|---|---|
-| `text-primary` / `icon-primary` | `#2f2c28` · ≥10.4:1 | `#f7e7d2` · ≥6.6:1 | `#fefbf8` · 5.5:1 |
-| `text-secondary` | `#4a5435` · ≥6.0:1 | `#c9cbbf` · ≥4.9:1 | `#faefe1` · 5.0:1 |
-| `text-muted` | `#5d5b58` · ≥5.0:1 | `#d1d0cf` · ≥5.2:1 | `#f8ebda` · 4.9:1 |
-| `text-link` / `text-button` / `text-highlight` | `#7a4e09` · ≥5.4:1 | `#edc07a` · ≥4.8:1 | `#fbf2e4` · ≥5.2:1 |
-| `state-error` | `#b91c1c` · ≥4.8:1 | `#fecaca` · ≥5.6:1 | `#fee2e2` · 4.7:1 |
-| `state-success` | `#166534` · ≥5.3:1 | `#4ade80` · ≥4.6:1 | `#bbf7d0` · 4.7:1 |
-| `border-focus` (SC 1.4.11, 3:1) | `#2563eb` · ≥3.9:1 | `#b3d1ff` · ≥5.2:1 | `#b3d1ff` · 3.7:1 |
+| cream | 5.5:1 | 6.1:1 | 6.1:1 |
+| olive | **1.5:1** | **1.3:1** | **1.3:1** |
+| dark | **2.1:1** | **1.9:1** | **1.9:1** |
+| terracotta | **1.1:1** | **1.2:1** | **1.3:1** |
 
-Component-internal pairings (independent of surface mode):
+**Use a `state-*` token as a fill, paired with `text-on-state`. Only put it
+on text on a cream surface.** Under the previous architecture these were
+mode-variant and coloured text safely on any surface; they no longer do.
+Error text on a dark form is the obvious way to get bitten — put the message
+on `text-primary` and carry the error meaning with an icon, a border, or a
+`Badge`, not with the colour of the words.
 
-- `action-primary` + `text-on-action` flip together per mode (dark button
-  on light surfaces, cream on dark/feature) — always `11.4:1`.
-- `action-highlight` (`#df8e10`, constant) + `text-on-highlight`
-  (`#2f2c28`, constant) — `5.3:1`.
-- Status badge fills (`state-success`/`warning`/`error` pinned to their
-  On Light dark-chip values) + `text-on-state` (constant `#fefbf8`) —
-  ≥6.2:1.
+### A mode-invariant fill under mode-resolved ink is the standing hazard
 
-Rules that fall out of the mode architecture:
+`surface-card`, the `state-*` fills and `action-secondary` do not change
+with the mode. Every text token does. Pair one of the first group with the
+second and the ink can walk out from under the fill while the fill stays put
+— which is exactly how the Vines & Vinyl Hero input reached 1.18:1
+(2026-08-08) and why `Modal` and the dashboard's stat tiles both pin
+`data-mode="cream"` alongside their `surface-card` fill. Whenever you set a
+fill that doesn't vary, ask what the mode is doing for the text on top of
+it, and pin the mode if the answer is "nothing".
 
-- **`surface-feature` no longer needs dedicated tokens** — the old
-  "no amber clears AA on terracotta" problem is solved by the On Feature
-  mode resolving links/buttons to near-white values. `text-on-feature` is
-  gone; use `text-primary`/`text-link` and let the mode resolve them.
-  Links on `surface-feature` still get an underline for distinction from
-  body copy, since colour alone can't separate them there.
-- **Focus indicators are covered** — `border-focus` resolves per mode and
-  clears 3:1 (SC 1.4.11) against every surface in that mode. The old
-  ~2.3:1 gap (and its partial fix `border-focus-inverse`) is resolved and
-  both old tokens are gone.
-- **`border-default` is decorative-only on light surfaces** (2.2:1 —
-  confirmed policy, 2026-08-05): dividers only. Any meaningful boundary
-  (inputs, cards that need separation) uses `border-strong` (≥5.5:1
-  everywhere).
-- **Disabled is exempt and opacity-based** — see §2. Disabled pairings
-  don't appear in this table because SC 1.4.3 exempts inactive controls,
-  and the disabled treatment is the default appearance at 38% opacity,
-  not a separate colour pairing.
-- **Code-side sync status (corrected 2026-08-08):** the "sync pending"
-  warning that used to sit here was itself stale. `checkContrastPairings`
-  in `scripts/design-sync.js` parses *this section's own table* at
-  runtime (`parseSurfacePairingsTable`) rather than carrying an
-  independent hardcoded copy — it cannot drift from what this section
-  says, by construction. Separately, every semantic token the Input
-  family uses (`border-strong`, `border-default`, `border-focus`,
-  `action-secondary`, `action-secondary-hover`, `text-muted`,
-  `text-primary`, `text-highlight`, `icon-primary`) was spot-verified
-  live against Figma across all three modes on 2026-08-08 and matched
-  `tokens.css` exactly. That's not an exhaustive re-check of every token
-  in the file — verify any token outside that set against live Figma
-  before trusting it, same as always — but the blanket claim that
-  `tokens.css`/`tokens.json` reflect pre-2026-08-05 names no longer
-  holds as a default assumption.
+### Rules that fall out of the architecture
+
+- **A surface declares its mode; nothing else does.** If a component has no
+  background, it must not set `data-mode` — doing so pins its text to a
+  context its actual backdrop may not share. `Button`'s secondary variant
+  used to self-scope to dark and no longer does; `Badge` never has.
+- **Scope a mode to the narrowest element that owns the background.** Not
+  the nearest convenient wrapper. Setting it on a `<section>` sweeps in
+  descendants that sit visually outside the coloured box — that shipped once
+  and rendered `.section-title` near-black on dark green (2026-08-05).
+- **Focus is covered everywhere.** `state-focus` clears 3:1 against all four
+  surfaces. Because the ring is drawn 2px outside the control with a 2px
+  gap, its adjacent colour is the surface rather than the control's own
+  fill — which is why `Button`'s accent variant no longer needs the darker
+  ring it once did (`border-focus-on-highlight`, retired; `Focus/900`
+  survives in the primitives, unused, for any future case that does need it).
+- **`border-default` is no longer decorative-only.** It was 2.2:1 on light
+  surfaces under the old architecture and restricted to dividers. It is now
+  the same colour as `text-secondary` and clears 3:1 in every mode, so it is
+  a legitimate boundary — which is why the whole Input family rests on it in
+  Figma.
+- **Disabled is exempt and opacity-based** — see §2. Disabled pairings don't
+  appear above because SC 1.4.3 exempts inactive controls, and the treatment
+  is the default appearance at 38% opacity rather than a separate colour.
+- **This table is read at runtime, not duplicated.** `checkContrastPairings`
+  in `scripts/design-sync.js` parses this section directly
+  (`parseSurfacePairingsTable`), so it cannot drift from what is written
+  here. The column count moves in lockstep with the mode architecture; it
+  went from three to four in this sync.
 
 ## 8. Where fixes belong
 

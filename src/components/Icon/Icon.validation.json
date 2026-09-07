@@ -1,0 +1,48 @@
+{
+  "component": "Icon",
+  "lastValidated": "2026-09-07",
+  "checks": {
+    "tokenCompliance": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "accessibility": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "storybookCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "documentationCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 1,
+      "status": "pass-with-warnings",
+      "open": [
+        {
+          "level": "warn",
+          "file": "src/components/Icon/Icon.tsx",
+          "line": null,
+          "code": "no-tokens-used",
+          "message": "This component doesn't appear to use any colours, spacing, or sizing from the design system.",
+          "fix": "Double check this is intentional — if the component should be using design system values, update it to reference them.",
+          "checkType": "documentationCoverage"
+        }
+      ]
+    }
+  },
+  "history": [],
+  "overall": true,
+  "status": "pass-with-warnings",
+  "tokensUsed": []
+}

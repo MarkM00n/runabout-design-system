@@ -1,28 +1,34 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma Input/Text component set (Design System, JpFA7KtVlSOrM9fIYYgOsn).
+// Source: Figma Input/Text (141:375).
 export const docs: ComponentDocMeta = {
   description:
-    'A single-line text field for free-form input — names, emails, search terms, and similar short values. A thin styled wrapper around a native <input>, not a reimplementation.',
+    'A single-line text field. The base of the Input family — Select, Textarea and Checkbox share its colour, border and state behaviour.',
   usageGuidelines: [
-    'Use for any single-line text entry; use Textarea instead when the expected answer is multi-line.',
-    'Pass a placeholder to show example/hint text — do not rely on a separate visible label overlapping the field.',
-    'Corner radius stays a full pill (24px) at both sizes; do not expect it to step down at small the way Button\'s does — the two components do not share a radius rule.',
+    'Always give the field a visible label above it. A placeholder is not a label: it disappears the moment someone types.',
+    'Mark required fields in the label text, not by colour or an asterisk alone.',
+    'Put helper text below the field, and error text in the same place so the two never fight for the same spot.',
+    'Announce error text to screen readers by wiring aria-describedby and aria-invalid on the input.',
   ],
   dos: [
-    'Forward standard input attributes (type, name, required, maxLength, etc.) — they all pass through.',
-    'Use size="small" in dense forms or inline filter bars; size="large" is the default for standalone forms.',
+    'Use size="small" in dense layouts and size="large" (the default) elsewhere. Both keep the same pill radius — unlike Button, the radius does not step down with size.',
+    'Let the field stay transparent. It is a bordered ghost control by design, so it picks up whatever surface it sits on.',
   ],
   donts: [
-    'Do not use Input for multi-line content — it renders a single-line native input regardless of content length.',
-    'Do not style over the placeholder/typed-value color split by hand; the component already reconstructs it (Figma\'s single static mockup cannot show both).',
+    'Do not wrap the field in a data-mode to force a readable pairing. That was load-bearing when the fill was an opaque cream; now the fill is genuinely transparent, and forcing a mode paints the wrong ink over the real backdrop. This shipped as a real bug once — see CLAUDE.md\'s 2026-08-08 incident.',
+    'Do not add outline-none alongside the focus styles. Tailwind v4 shares one custom property across every outline utility, so any outline-none stops the focus ring painting at all.',
+    'Do not swap the border colour when disabled. Figma binds border-strong in every state including Disabled; the only difference is opacity.',
   ],
   variants: ['large', 'small'],
   states: ['default', 'hover', 'focus', 'disabled'],
   accessibilityNotes: [
-    'Renders a real native <input>, so browser autofill, form validation, and assistive-technology behavior all work without extra wiring.',
-    'Figma shows one static "Enter text..." mockup, which cannot represent a real typed value and a placeholder at once. The Default/Hover/Disabled muted color maps onto the real ::placeholder pseudo-element, and the Focused variant\'s color maps onto the input\'s actual typed-value color — a deliberate reconstruction, not a literal 1:1 copy of the mockup.',
-    'Focus uses a visible :focus-visible ring in addition to the border-color change, so keyboard users get a clear indicator beyond color alone.',
+    'Renders a real <input>, so keyboard behaviour, form participation and autofill all come from the platform.',
+    'Focus replaces the border with a 2px state-focus outline offset 2px outside the field, matching Figma\'s Focused variant, which draws no border at all. On :focus-visible only.',
+    'The placeholder uses text-secondary and the typed value uses text-primary — Figma\'s static mockup shows one string for both, so the two concepts are split here along the real pseudo-element boundary.',
+    'Contrast has to be computed against the composited result, not the fill token: action-secondary is fully transparent, so whatever surface sits behind the field is the real background.',
+    'Disabled uses the native attribute plus pointer-events-none, rendering the default appearance at 38% opacity. Disabled contrast is exempt under SC 1.4.3.',
+    'The small size is 32px tall, which clears SC 2.5.8 (24x24) but not SC 2.5.5 (44x44, AAA).',
   ],
-  codeExample: '<Input size="large" placeholder="Enter your name" onChange={handleChange} />',
+  codeExample:
+    '<label htmlFor="email">Email address</label>\n<Input id="email" type="email" placeholder="you@example.com" />',
 };

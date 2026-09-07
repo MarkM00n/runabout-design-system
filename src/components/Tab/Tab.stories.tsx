@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
 
 import { Tab } from './Tab';
 import { docs } from './Tab.docs';
@@ -14,46 +13,36 @@ const meta = {
     designSystemValidation: validation,
   },
   tags: ['autodocs'],
-  argTypes: {
-    selected: {
-      control: 'boolean',
-    },
-  },
-  args: { onClick: fn() },
-  // role="tab" requires an ancestor role="tablist" to be valid — real usage
-  // gets this from the TabList/Tabs composite that owns roving tabindex
-  // (out of scope for this atomic component, see Tab.docs.ts). Applied here
-  // so the isolated story stays accessibility-valid on its own.
-  decorators: [
-    (Story) => (
-      <div role="tablist">
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof Tab>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    selected: false,
-    children: 'Tab label',
-  },
+  args: { children: 'Tab label', selected: false },
 };
 
+/** The Active state — the indicator is the only visual difference, so it
+ *  needs its own story rather than being left to a pseudo-class. */
 export const Selected: Story = {
-  args: {
-    selected: true,
-    children: 'Tab label',
-  },
+  args: { children: 'Tab label', selected: true },
 };
 
 export const Disabled: Story = {
-  args: {
-    selected: false,
-    children: 'Tab label',
-    disabled: true,
-  },
+  args: { children: 'Tab label', disabled: true },
+};
+
+/** A realistic set, with the tablist wiring Tab expects around it. */
+export const InATabList: Story = {
+  args: { children: 'Events' },
+  render: (args) => (
+    <div role="tablist" aria-label="Programme" className="flex items-end gap-01">
+      <Tab {...args} selected>
+        Events
+      </Tab>
+      <Tab>Producers</Tab>
+      <Tab>Tickets</Tab>
+      <Tab disabled>Archive</Tab>
+    </div>
+  ),
 };

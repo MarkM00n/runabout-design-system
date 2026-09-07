@@ -53,25 +53,40 @@ see that file's intro). Apply all of it: token compliance (§1),
 accessibility (§2), Storybook coverage (§3), design parity (§4),
 documentation (§5), and foundations (§6) where relevant to the change.
 
-**Token architecture changed 2026-08-05** — semantic variables now resolve
-per surface mode (On Light / On Dark / On Feature), primitives were
-renumbered, and several old tokens were deleted. Three build rules that
-changed with it (full detail in `docs/design-system-rules.md` §§1–2, 7):
+**Token architecture changed 2026-09-07** — 26 semantic tokens resolving
+across four surface modes (On Cream / On Olive / On Dark / On Terracotta),
+primitive families renamed, and the whole `icon-*` group plus every
+`-inverse`/`-on-feature` partner token deleted. One rule governs all of it:
 
+> **Anything with a background owns a mode. Everything else inherits.**
+
+Build rules that follow (full detail in `docs/design-system-rules.md`
+§§1–2, 7):
+
+- **A surface fills with `surface-section` and sets its own `data-mode`**
+  (`cream` / `olive` / `dark` / `terracotta`). One fill token, four
+  resolutions. A component with no background must NOT set a mode —
+  `Button`'s secondary variant used to self-scope to dark and had to be
+  unwound.
 - **Disabled = Default appearance at 38% opacity** via the
-  `opacity-disabled` token — never separate disabled colours.
+  `opacity-disabled` token — never separate disabled colours, and applied
+  **once**, at the control's root. Nesting a second one multiplies.
 - **Focus = 2px outline offset 2px outside the control** (`outline` +
-  `outline-offset` on `:focus-visible`), colour from `border-focus`.
-- **`tokens.css`/`tokens.json`'s semantic mode values were spot-verified
-  against live Figma on 2026-08-08** (every token the Input family uses,
-  across On Light/On Dark/On Feature) and matched exactly — the earlier
-  blanket "stale, sync pending" claim no longer holds as a default
-  assumption. That wasn't an exhaustive re-check of every token in the
-  file; verify anything outside that set against live Figma before
-  trusting it. `checkContrastPairings` in `scripts/design-sync.js` parses
-  §7's table directly at runtime rather than carrying its own copy, so it
-  structurally can't drift from what that section says — §7 in the rules
-  doc is still the reference, it's just not "ahead of" the code anymore.
+  `outline-offset` on `:focus-visible`, never `ring-*`), colour from
+  **`state-focus`** (renamed from `border-focus`). The 2px gap is
+  load-bearing: it puts the surface, not the control's fill, next to the
+  ring, which is why one token now works even on `Button`'s accent variant.
+- **Status colours (`state-error`/`success`/`warning`) are now
+  mode-invariant** — correct as a `Badge` fill paired with `text-on-state`,
+  and a trap as text: 1.1–2.1:1 on olive, dark and terracotta. Colour error
+  text with `text-primary` and carry the meaning some other way.
+- **`tokens.css`/`tokens.json` were regenerated from
+  `src/tokens/figma-export-2026-09-07.json`**, itself a live Plugin API
+  read, and all 209 values were verified against it programmatically — not
+  transcribed. Re-export from Figma before trusting the file if it is more
+  than a day old. `checkContrastPairings` in `scripts/design-sync.js`
+  parses §7's table directly at runtime rather than carrying its own copy,
+  so it structurally can't drift from what that section says.
 
 ## Every component request must include
 
@@ -128,27 +143,37 @@ re-check every usage — especially any `data-mode` override wrapping it.**
 
 - **Real incident (2026-08-08):** the Input-family mode/token sync (PR
   #70/#71) correctly changed `Input`'s fill from a fixed, mode-invariant
-  light cream (`bg-surface-primary`) to a genuinely transparent
-  `action-secondary`. `src/examples/VinesAndVinylLanding.tsx` wraps its
-  Hero email `Input` in `data-mode="light"` — load-bearing against the
-  *old* fill, since forcing On Light was the only way to get a readable
-  pairing against a fixed light backdrop. Once the fill went transparent,
-  that same override put dark ink/olive text and border directly on
-  Hero's terracotta background showing through the field: measured
-  1.18:1 (placeholder) and 1.66:1 (border), both far under AA. Neither
-  `design-sync` nor the component-level Ready-for-AI work touched this
-  file — same blind spot as the dashboard, a second real instance of it.
+  light cream to a genuinely transparent `action-secondary`.
+  `src/examples/VinesAndVinylLanding.tsx` wrapped its Hero email `Input` in
+  a mode override — load-bearing against the *old* fill, since forcing a
+  light context was the only way to get a readable pairing against a fixed
+  light backdrop. Once the fill went transparent, that same override put
+  dark ink and border directly on Hero's terracotta background showing
+  through the field: measured 1.18:1 (placeholder) and 1.66:1 (border),
+  both far under AA. Neither `design-sync` nor the component-level
+  Ready-for-AI work touched this file — same blind spot as the dashboard, a
+  second real instance of it.
+- **The general shape of that bug outlives the specific tokens:** a
+  mode-invariant fill under mode-resolved ink. `surface-card`, the `state-*`
+  fills and `action-secondary` don't change with the mode; every `text-*`
+  token does. Pair them and the ink can walk out from under the fill. Where
+  that pairing is deliberate — `Modal`, the dashboard's stat tiles — the
+  element pins `data-mode="cream"` alongside the fill, and that pin is
+  load-bearing, not decoration.
 
 The dashboard specifically also has this additional wrinkle: it consumes
 `tokens.css`/`tokens.json` directly — the same `--color-*`/`--spacing-*`/etc.
 custom properties every component uses.
 
 - **Whenever a change touches `tokens.css`/`tokens.json`** (a rename, a
-  retired token, a new mode, a re-numbered primitive — not just a normal
+  retired token, a new mode, a renamed primitive family — not just a normal
   component build), grep `src/App.tsx` and `src/App.css` for every
   `--color-*`/`--spacing-*`/etc. reference and Tailwind color-token
   utility class, and check each one still resolves to something real and
-  correctly toned. Don't assume "design-sync passed" covers this file —
+  correctly toned. A cheap mechanical version of that check: parse every
+  `var(--…)` out of `App.css` and diff it against the custom properties
+  `tokens.css` actually declares — that catches a retired token instantly,
+  though it can't catch one that survived with the wrong tone. Don't assume "design-sync passed" covers this file —
   it structurally can't.
 - **Verify visually, not just by grep.** A token can still exist and
   still be *wrong for its context* — e.g. inheriting the wrong
@@ -160,10 +185,10 @@ custom properties every component uses.
   retired `text-inverse` (no successor) and left several dashboard
   elements referencing it directly — missed entirely by `design-sync`,
   caught only when the user reported it. The fix that followed
-  (`data-mode="dark"` on the dashboard's root, `data-mode="light"`
-  overrides for its two light-content tables) then shipped its own bug:
-  `data-mode="light"` was scoped to the whole `<section>` instead of just
-  the light-colored table inside it, pulling `.section-title` — which
+  (a mode on the dashboard's root, light-mode overrides for its two
+  light-content tables) then shipped its own bug: the override was scoped
+  to the whole `<section>` instead of just the light-colored table inside
+  it, pulling `.section-title` — which
   sits visually on the dark canvas, not inside the light table — into
   the wrong mode too. Rendered near-black text on a dark green
   background. Caught only because the user looked at the live deployed

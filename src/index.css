@@ -81,46 +81,69 @@ body {
   margin: 0;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+/*
+ * These bare element rules are app-shell chrome, inherited from the original
+ * Vite starter page. They MUST stay inside `@layer base`.
+ *
+ * Tailwind v4 emits `@layer theme, base, components, utilities` and puts
+ * every utility in the `utilities` layer. Unlayered CSS beats layered CSS
+ * outright, regardless of specificity — so while these rules sat unlayered,
+ * a bare `h1`/`h2` element selector silently won against `text-h4`,
+ * `font-recoleta` and `text-text-primary` on any component heading. Real
+ * incident (2026-09-07): Modal's `<h2>` title rendered at 24px system-ui in
+ * #08060d — the app shell's own palette — instead of 28px Recoleta in
+ * text-primary, with every one of its type tokens ignored and nothing
+ * flagging it. `design-sync` cannot catch this: the class names are all
+ * present and correct in the source, and only the computed output disagrees.
+ *
+ * Inside `base`, these still supply the shell's defaults everywhere no
+ * utility is applied, and lose to any component that sets its own token —
+ * which is the intended relationship. The dashboard is unaffected either
+ * way: `.dashboard-title`/`.section-title` live in App.css, which is
+ * unlayered and already won.
+ */
+@layer base {
+  h1,
+  h2 {
+    font-family: var(--heading);
+    font-weight: 500;
+    color: var(--text-h);
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+  h1 {
+    font-size: 56px;
+    letter-spacing: -1.68px;
+    margin: 32px 0;
+    @media (max-width: 1024px) {
+      font-size: 36px;
+      margin: 20px 0;
+    }
   }
-}
-p {
-  margin: 0;
-}
+  h2 {
+    font-size: 24px;
+    line-height: 118%;
+    letter-spacing: -0.24px;
+    margin: 0 0 8px;
+    @media (max-width: 1024px) {
+      font-size: 20px;
+    }
+  }
+  p {
+    margin: 0;
+  }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  code,
+  .counter {
+    font-family: var(--mono);
+    display: inline-flex;
+    border-radius: 4px;
+    color: var(--text-h);
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  code {
+    font-size: 15px;
+    line-height: 135%;
+    padding: 4px 8px;
+    background: var(--code-bg);
+  }
 }

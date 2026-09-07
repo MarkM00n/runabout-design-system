@@ -1,38 +1,36 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma Button/Primary, Button/Secondary, Button/Accent, and
-// Button/Link component sets (Design System, JpFA7KtVlSOrM9fIYYgOsn), plus
-// the Arrow icon component (node 265:550, Iconography library) each one
-// now includes as a trailing icon.
+// Source: Figma Button/Primary (70:42), Button/Secondary (70:83),
+// Button/Accent (59:1985), Button/Link (70:124).
 export const docs: ComponentDocMeta = {
   description:
-    'The primary interactive control for triggering an action. Four visual variants share one component so callers pick intent (primary/secondary/accent/link), not colors.',
+    'The system\'s action control, in four emphasis levels. Primary is the main call to action, secondary supports it, accent is reserved for conversion moments, and link is a text-weight action for tertiary choices.',
   usageGuidelines: [
-    'Use primary for the single main action on a screen or within a section.',
-    'Use secondary for supporting actions alongside a primary action.',
-    'Use accent to draw extra attention to a promotional or highlighted action.',
-    'Use link for the lowest-emphasis action, visually closer to inline text than a button.',
-    'Pass content via children, not a label prop — the button always pairs it with a trailing arrow icon, matching Figma\'s Arrow icon component (Iconography library), shown unconditionally on every variant and size.',
+    'One primary button per view or section — if two things look equally important, neither reads as the main action.',
+    'Secondary is a supporting action shown alongside a primary one, never the only action in a view.',
+    'Accent is for conversion moments (Reserve, Book) at most once per section — it is not a louder primary, and it does not belong in forms or flows.',
+    'Labels are sentence case, verb first, one to three words.',
+    'Buttons inherit their surface. Put one on an olive or terracotta section and its fill, label and border resolve to that surface automatically — never wrap it in a data-mode to force an appearance.',
   ],
   dos: [
-    'Use one primary button per view so the main action stays unambiguous.',
-    'Let the button size its own width to its content — do not force full-width unless the surrounding layout specifically calls for it.',
-    'Pass a type explicitly (submit/reset) when the button lives inside a form and is not a plain action button.',
+    'Use size="small" where the surrounding content is dense and size="large" (the default) elsewhere; the radius steps down with the size, matching Figma.',
+    'Set icon={false} when the trailing arrow would be misleading — it implies forward movement, so it suits "Book now" better than "Cancel".',
+    'Let the native disabled attribute do the work: it blocks focus and pointer events for free, and the visual treatment follows from it.',
   ],
   donts: [
-    'Do not use accent as a second primary button — it competes for attention rather than supporting the main action.',
-    'Do not disable a button without also explaining why elsewhere in the UI — a disabled control with no context reads as broken.',
-    'Do not nest interactive elements (links, other buttons) inside a Button — screen readers cannot represent nested controls.',
+    'Do not wrap a secondary button in data-mode="dark" to get a light outline. It used to need that; since the 2026-09-07 sync its border and label resolve per surface, and forcing the mode now produces a near-white outline on a cream page.',
+    'Do not add outline-none alongside the focus styles, even scoped to focus:. Tailwind v4 routes every outline utility through one shared custom property, so any outline-none permanently prevents the focus ring from painting.',
+    'Do not use the link variant for destructive or primary actions — it carries the least visual weight in the set.',
   ],
   variants: ['primary', 'secondary', 'accent', 'link'],
   states: ['default', 'hover', 'focus', 'disabled'],
   accessibilityNotes: [
-    'Renders a real <button>, never a styled div — keyboard activation (Enter/Space) and the button role come from the native element for free.',
-    'Focus uses :focus-visible so the ring only appears for keyboard users, matching Figma\'s Focused variant rather than showing on every mouse click.',
-    'Disabled uses the native disabled attribute plus disabled:pointer-events-none, not just a visual dimming.',
-    'Accent\'s focus ring binds to its own dedicated token (border-focus-on-highlight) rather than the border-focus every other variant uses — a real, deliberate difference in the source file. border-focus (Blue/100) measures only 1.47:1 against Accent\'s action-highlight fill, short of WCAG 2.2 SC 1.4.11\'s 3:1 non-text contrast minimum; border-focus-on-highlight (Blue/25) clears it at 3.96:1.',
-    'The trailing arrow icon is aria-hidden and decorative — the button\'s accessible name comes entirely from its text content, so the icon never needs (and never gets) its own label.',
+    'Renders a real <button> with an explicit type, so keyboard activation, form semantics and focus order all come from the platform.',
+    'Focus is a 2px state-focus outline offset 2px outside the control, on :focus-visible only — so the ring shows for keyboard users without appearing on every mouse click.',
+    'The focus ring clears WCAG 2.2 SC 1.4.11 (3:1) on all four surfaces — measured 4.40:1 on cream, 6.08:1 olive, 8.92:1 dark, 3.67:1 terracotta. Because the ring sits in a 2px gap of bare surface, it is measured against the surface rather than the button fill, which is why the accent variant no longer needs a darker ring of its own.',
+    'Disabled renders the default appearance at 38% opacity and pairs the native attribute with pointer-events-none, so hover states cannot leak through. Disabled contrast is exempt under SC 1.4.3.',
+    'The trailing arrow is aria-hidden — it is decoration, and the label carries the meaning.',
+    'The small size is 32px tall. That clears SC 2.5.8 (24x24) but not SC 2.5.5 (44x44, AAA) — worth a look if a given button is a primary touch target.',
   ],
-  codeExample:
-    '<Button variant="primary" size="large" onClick={handleSubmit}>\n  Continue\n</Button>',
+  codeExample: '<Button variant="primary" size="large" onClick={book}>Book now</Button>',
 };

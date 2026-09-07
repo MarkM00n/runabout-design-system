@@ -1,27 +1,33 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma Input/TextBox component set (Design System, JpFA7KtVlSOrM9fIYYgOsn).
+// Source: Figma Input/TextBox (141:392). Named Textarea in code after the
+// native element it wraps, per design-system-rules.md §1.
 export const docs: ComponentDocMeta = {
   description:
-    'A multi-line text field for longer free-form content — messages, descriptions, comments. Shares Input\'s color/border/state pattern but pads on all four sides and starts at a taller fixed height.',
+    'A multi-line text field for longer content. Same label, helper, focus and error behaviour as Input, with padding on all four sides and a taller default height.',
   usageGuidelines: [
-    'Use for any answer expected to span more than one line; use Input for single-line values.',
-    'The starting height (120px large / 80px small) matches the Figma source; the field can be resized vertically by the user by default.',
+    'Reach for it when the expected answer runs past a single line — an address, a note, a message. Anything shorter belongs in an Input.',
+    'Give it a visible label above the field, the same as Input.',
+    'If there is a character limit, show the remaining count and announce it when it is exceeded.',
+    'Size the field to the answer you expect. A box far taller than the content invites more than you want.',
   ],
   dos: [
-    'Pass rows or a CSS height override if a specific starting height is needed beyond the two built-in sizes.',
-    'Forward standard textarea attributes (maxLength, required, name, etc.) — they all pass through.',
+    'Leave vertical resizing on — it is a deliberate addition for standard textarea UX, not a Figma binding, and it lets someone see their own long answer.',
+    'Use size="small" in dense layouts; both sizes keep the same pill radius.',
   ],
   donts: [
-    'Do not assume the height is fixed — resize-y is a deliberate UX addition in this implementation, not something sourced from Figma (Figma has no concept of resize behavior). Pass a resize-none override if a fixed height is actually required.',
-    'Do not use Textarea for single-line values just to get more visual weight — use Input at the large size instead.',
+    'Do not use it as a rich-text editor stand-in. It holds plain text.',
+    'Do not add outline-none alongside the focus styles — see Input for why the ring stops painting entirely.',
   ],
   variants: ['large', 'small'],
   states: ['default', 'hover', 'focus', 'disabled'],
   accessibilityNotes: [
-    'Renders a real native <textarea>, so browser spellcheck, resize handles, and assistive-technology behavior all work without extra wiring.',
-    'Placeholder and typed-value colors follow the same real ::placeholder vs. typed-text-color pattern as Input.',
-    'Focus uses a visible :focus-visible ring in addition to the border-color change.',
+    'Renders a real <textarea>, so line breaks, scrolling and form participation all behave natively.',
+    'Focus replaces the border with a 2px state-focus outline offset 2px, on :focus-visible only.',
+    'Resizing is disabled when the field is, so a disabled control cannot be dragged around.',
+    'The transparent action-secondary fill means contrast must be computed against whatever surface shows through, never against the fill token.',
+    'Disabled renders the default appearance at 38% opacity via the native attribute.',
   ],
-  codeExample: '<Textarea size="large" placeholder="Enter details..." onChange={handleChange} />',
+  codeExample:
+    '<label htmlFor="notes">Anything we should know?</label>\n<Textarea id="notes" placeholder="Enter details..." />',
 };

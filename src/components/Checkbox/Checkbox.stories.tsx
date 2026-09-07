@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
 
 import { Checkbox } from './Checkbox';
 import { docs } from './Checkbox.docs';
@@ -15,50 +14,53 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['large', 'small'],
-    },
+    size: { control: 'select', options: ['large', 'small'] },
   },
-  args: {
-    label: 'Checkbox label',
-    onChange: fn(),
-  },
-  // No decorator needed — confirmed live against Figma 2026-08-08 that
-  // Checkbox's box/label bind to border-strong/text-primary/action-secondary,
-  // all mode-aware tokens that resolve correctly under the default On Light
-  // mode (Storybook's plain canvas), same as Input/Select/Textarea. The
-  // previous assumption that Checkbox required an externally dark backdrop
-  // was stale — Figma's own reference now shows it on a light surface.
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Unchecked: Story = {
-  args: {
-    size: 'large',
-  },
-};
-
-export const Checked: Story = {
-  args: {
-    size: 'large',
-    defaultChecked: true,
-  },
+export const Large: Story = {
+  args: { size: 'large', label: 'Email me about future events' },
 };
 
 export const Small: Story = {
+  args: { size: 'small', label: 'Email me about future events' },
+};
+
+/** `checked` is a real state Storybook can't demonstrate via a pseudo-class,
+ *  so it gets its own story (rules §3). */
+export const Checked: Story = {
+  args: { size: 'large', label: 'Email me about future events', defaultChecked: true },
+};
+
+export const Disabled: Story = {
+  args: { size: 'large', label: 'Email me about future events', disabled: true },
+};
+
+export const DisabledChecked: Story = {
   args: {
-    size: 'small',
+    size: 'large',
+    label: 'Email me about future events',
+    disabled: true,
     defaultChecked: true,
   },
 };
 
-export const Disabled: Story = {
+/** The wrapping-label case that exposed the items-start alignment fix — the
+ *  box aligns to the first line, not the centre of the whole block. */
+export const WithLongLabel: Story = {
   args: {
     size: 'large',
-    defaultChecked: true,
-    disabled: true,
+    label:
+      'Email me about future events, tastings and producer visits, and share my details with the producers taking part',
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[320px]">
+        <Story />
+      </div>
+    ),
+  ],
 };

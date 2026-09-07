@@ -29,7 +29,7 @@ import { Button } from '../components/Button';
 // tinted panel — no such surface token exists in the system (surface-*
 // only has primary/secondary/tertiary/inverse/feature/scrim/card/subtle,
 // none success-toned), so rather than inventing a one-off raw-hex tint,
-// the panel just matches its container's own bg-surface-primary. The
+// the panel just matches its container's own bg-surface-section. The
 // checkmark icon (text-state-success) is what communicates success.
 
 export type TicketType = 'general' | 'vip' | 'driver';
@@ -101,7 +101,7 @@ export interface VinesAndVinylSignUpProps {
 // Exported separately from VinesAndVinylSignUp (the full standalone page,
 // below) so the combined landing+sign-up prototype
 // (VinesAndVinylLandingWithSignUp.tsx) can embed just the form itself —
-// including its own data-mode="light" scope, load-bearing for the same
+// including its own data-mode="cream" scope, load-bearing for the same
 // reason noted below — inside a *different* page's Hero, without also
 // pulling in this page's own "RUNABOUT EVENTS PRESENTS / Vines & Vinyl"
 // chrome, which that other page already has its own copy of.
@@ -165,7 +165,8 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   const content = submitted ? (
     <div
       role="status"
-      className="flex flex-col items-center gap-03 rounded-2xl bg-surface-primary p-06 text-center"
+      data-mode="cream"
+      className="flex flex-col items-center gap-03 rounded-2xl bg-surface-section p-06 text-center"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-[48px] w-[48px] text-state-success">
         <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="1.5" />
@@ -177,8 +178,8 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
           strokeLinejoin="round"
         />
       </svg>
-      <h2 className="font-recoleta text-h3 text-text-primary">You&rsquo;re on the list!</h2>
-      <p className="font-manrope text-paragraph-small text-text-muted">
+      <h2 className="font-recoleta font-normal tracking-normal text-h3 text-text-primary">You&rsquo;re on the list!</h2>
+      <p className="font-manrope text-paragraph-small text-text-secondary">
         We&rsquo;ll email <span className="text-text-primary">{values.email}</span> with tickets and the maker
         lineup before anyone else hears.
       </p>
@@ -186,8 +187,8 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   ) : (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-04">
       <div className="flex flex-col gap-01">
-        <h2 className="font-recoleta text-h3 text-text-primary">Join the list</h2>
-        <p className="font-manrope text-paragraph-small text-text-muted">
+        <h2 className="font-recoleta font-normal tracking-normal text-h3 text-text-primary">Join the list</h2>
+        <p className="font-manrope text-paragraph-small text-text-secondary">
           150 tickets, tastings included. First access goes to the list.
         </p>
       </div>
@@ -281,25 +282,25 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   );
 
   // Light because the form fields (bordered "ghost" controls, see PR
-  // #70/#71/#72's incident history) need an explicit On Light scope to
+  // #70/#71/#72's incident history) need an explicit On Cream scope to
   // read correctly regardless of whatever mode the page around this card
   // happens to be in — the same pattern src/examples/VinesAndVinylLanding.tsx's
-  // Hero Input needed once its stale data-mode="light" override was fixed
+  // Hero Input needed once its stale data-mode="cream" override was fixed
   // to sit at the right level: on the card, not hand-tuned per field.
   return (
-    <div data-mode="light" className="w-full max-w-[480px] rounded-2xl bg-surface-primary p-06">
+    <div data-mode="cream" className="w-full max-w-[480px] rounded-2xl bg-surface-section p-06">
       {content}
     </div>
   );
 };
 
-// The full standalone page: an outer On Feature band (brand emphasis,
+// The full standalone page: an outer On Terracotta band (brand emphasis,
 // matching src/examples/VinesAndVinylLanding.tsx's Hero) around the card
 // above.
 export const VinesAndVinylSignUp = ({ startTouched = false }: VinesAndVinylSignUpProps) => (
   <div
-    data-mode="feature"
-    className="flex min-h-screen w-full flex-col items-center gap-05 bg-surface-feature px-06 py-09"
+    data-mode="terracotta"
+    className="flex min-h-screen w-full flex-col items-center gap-05 bg-surface-section px-06 py-09"
   >
     <div className="flex flex-col items-center gap-01 text-center">
       <p className="font-manrope text-label-strong font-semibold text-text-primary">RUNABOUT EVENTS PRESENTS</p>

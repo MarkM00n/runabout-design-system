@@ -1,33 +1,31 @@
 import type { ComponentDocMeta } from '../../design-docs/types';
 
-// Source: Figma Tab component set (Design System, JpFA7KtVlSOrM9fIYYgOsn,
-// node 288:609). Atomic Tab only — the roving-tabindex keyboard behaviour
-// described below is a TabList/Tabs composite's responsibility, not
-// something this component owns; see its own description for the full
-// behaviour note.
+// Source: Figma Tab (288:609).
 export const docs: ComponentDocMeta = {
   description:
-    'A single tab in a set of peer views within a page — one tab is always selected. Not for page navigation; use Tab for switching between views the user stays on the same page for.',
+    'One tab in a set that switches between peer views inside a page. One tab is always active. Not for page navigation — use links for that.',
   usageGuidelines: [
-    'Compose a set of at least 3 and at most 7 Tabs — overflow handling beyond that range is out of scope for this component.',
-    'Exactly one Tab in a set should have selected set at any time.',
-    'The parent composing a Tab set owns roving tabIndex and arrow-key/Home/End keyboard navigation across the set — Tab itself only renders one tab\'s markup and visual states.',
-    'Keep labels short — they truncate at one line rather than wrapping.',
+    'Use between three and seven tabs. Fewer reads as arbitrary; more needs an overflow pattern, which is out of scope for v1.',
+    'Keep one tab selected at all times — a tab set with nothing active has no meaning.',
+    'Labels truncate at one line rather than wrapping, so keep them short.',
+    'Render the set inside an element with role="tablist" and wire each tab to its panel; Tab itself supplies role="tab" and aria-selected.',
   ],
   dos: [
-    'Set selected on exactly one Tab per set, and keep it in sync with whatever view is currently showing.',
-    'Wire Enter/Space activation and roving tabIndex at the parent level so keyboard users can reach and activate every tab.',
+    'Implement roving tabindex across the set: arrow keys move focus between tabs, Home and End jump to first and last, Enter or Space activates.',
+    'Let the active indicator carry selection alongside aria-selected, so the state is available both visually and programmatically.',
   ],
   donts: [
-    'Do not use Tab for page-to-page navigation — reach for a link/nav pattern instead.',
-    'Do not render a Tab set with fewer than 3 or more than 7 tabs without a separate overflow pattern.',
+    'Do not use tabs to navigate between pages — that is a link, and it breaks the back button.',
+    'Do not disable the active tab. Disable a tab only when its panel genuinely has nothing to show.',
   ],
-  variants: ['default'],
-  states: ['default', 'hover', 'selected', 'disabled', 'focus'],
+  variants: [],
+  states: ['default', 'hover', 'focus', 'disabled'],
   accessibilityNotes: [
-    'Renders role="tab" with aria-selected reflecting the selected prop — the parent composing a full tablist is responsible for the surrounding role="tablist" and each panel\'s role="tabpanel"/aria-controls.',
-    'Disabled renders the Default appearance at 38% opacity (opacity-disabled) rather than a separate colour set, and is exempt from text-contrast requirements under WCAG SC 1.4.3\'s inactive-component exception.',
-    'Focus renders a 2px outline offset 2px outside the control (outline-border-focus), not a colour or background change — verified live against Figma to clear WCAG 1.4.11\'s 3:1 non-text contrast minimum.',
+    'Renders a real <button> with role="tab" and aria-selected, so assistive tech announces both what it is and whether it is the current one.',
+    'The active indicator binds border-strong — the same ink as the label — rather than an accent colour. It reads as an emphasised rule, and it resolves per surface.',
+    'Selection is never carried by the indicator alone: aria-selected is what communicates it to a screen reader.',
+    'Focus is a 2px state-focus outline offset 2px, on :focus-visible only. This component has never carried an outline-none and does not need one.',
+    'Disabled renders the default appearance at 38% opacity and blocks pointer events; the indicator is suppressed so a disabled tab cannot read as selected.',
   ],
-  codeExample: '<Tab selected onClick={() => setActiveTab(\'overview\')}>Overview</Tab>',
+  codeExample: '<Tab selected onClick={() => select("events")}>Events</Tab>',
 };

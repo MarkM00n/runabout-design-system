@@ -1,6 +1,6 @@
 {
   "component": "Textarea",
-  "lastValidated": "2026-08-27",
+  "lastValidated": "2026-09-07",
   "checks": {
     "tokenCompliance": {
       "pass": true,
@@ -37,11 +37,10 @@
   "tokensUsed": [
     "color-action-secondary",
     "color-action-secondary-hover",
-    "color-border-default",
-    "color-border-focus",
     "color-border-strong",
-    "color-text-muted",
+    "color-state-focus",
     "color-text-primary",
+    "color-text-secondary",
     "font-manrope",
     "radius-2xl",
     "spacing-02",

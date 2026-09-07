@@ -2,32 +2,33 @@ import type { Preview } from '@storybook/react-vite'
 
 import '../src/index.css'
 import { DocsPage } from '../src/design-docs/DocsPage'
+import { RunaboutTheme } from './RunaboutTheme'
 
-// Mirrors Figma's own Variables panel mode switcher (On Light/On Dark/On
-// Feature) — see tokens.css's [data-mode] override blocks and
-// design-system-rules.md §7. Surface tokens are mode-invariant by design
-// (a surface's own color never changes), so the matching canvas background
-// per mode has to be picked here explicitly rather than resolved from a
-// single token the way text-*/border-*/action-*/icon-*/state-* are.
-const MODE_BACKGROUNDS: Record<string, string> = {
-  light: 'var(--color-surface-primary)',
-  dark: 'var(--color-surface-secondary)',
-  feature: 'var(--color-surface-feature)',
-};
+// The canvas background for every mode is now one token. Under the
+// 2026-09-07 architecture `surface-section` IS the surface, and its own
+// value resolves per mode — so the map that used to name a different token
+// per mode (surface-primary / surface-secondary / surface-feature) collapses
+// to a single var() that the wrapper's own data-mode resolves. See
+// tokens.css's [data-mode] override blocks and design-system-rules.md §7.
+const CANVAS_BACKGROUND = 'var(--color-surface-section)';
+
+// Figma's four Semantic modes, in the order its Variables panel lists them.
+const MODES = [
+  { value: 'cream', title: 'On Cream' },
+  { value: 'olive', title: 'On Olive' },
+  { value: 'dark', title: 'On Dark' },
+  { value: 'terracotta', title: 'On Terracotta' },
+] as const;
 
 const preview: Preview = {
   globalTypes: {
     mode: {
       name: 'Mode',
-      description: "Figma variable mode this story's canvas resolves tokens against",
-      defaultValue: 'light',
+      description: "Surface mode this story's canvas resolves tokens against",
+      defaultValue: 'cream',
       toolbar: {
         icon: 'mirror',
-        items: [
-          { value: 'light', title: 'On Light' },
-          { value: 'dark', title: 'On Dark' },
-          { value: 'feature', title: 'On Feature' },
-        ],
+        items: [...MODES],
         dynamicTitle: true,
       },
     },
@@ -51,20 +52,21 @@ const preview: Preview = {
       },
     },
   },
-  // A component that sets its own data-mode (Card -> feature, Button's
-  // secondary variant -> dark) always wins over this for its own subtree —
+  // A component that owns a surface (Modal -> cream, Card/Producer -> dark,
+  // Card via its `surface` prop) always wins over this for its own subtree —
   // CSS custom property scoping means the innermost override applies,
   // exactly matching Figma: a frame with its own explicit mode override
-  // stays that mode regardless of what the file/page around it is set to.
-  // This decorator is for every component that doesn't self-scope and
-  // instead depends on ambient context (the majority — Badge, Checkbox,
-  // Input/Select/Textarea, Tab, Button's other three variants), so their
-  // stories can actually be previewed under all three modes the way a
-  // designer would in Figma, not just their one hardcoded demo context.
+  // stays that mode regardless of what the file or page around it is set to.
+  // This decorator supplies the ambient surface every other component
+  // inherits from — which, under the 2026-09-07 rule ("anything with a
+  // background owns a mode, everything else inherits"), is most of them:
+  // Badge, Button, Checkbox, Input/Select/Textarea, Tab. Their stories can
+  // then be previewed on all four surfaces the way a designer would in
+  // Figma, rather than against one hardcoded demo context.
   //
   // data-brand is set on this SAME element, not a separate wrapping div —
   // tokens.css's dark/feature brand overrides are written as a compound
-  // selector, [data-brand='northline'][data-mode='dark'], which only
+  // selector, [data-brand='northline'][data-mode='olive'], which only
   // matches an element carrying both attributes at once. Split across two
   // nested divs, that selector would never match anything: the inner div's
   // own [data-mode='dark'] rule would still directly override every
@@ -112,7 +114,7 @@ const preview: Preview = {
             <div style={bannerStyle}>
               The toolbar's Mode control has no effect on this page — every
               section sets its own data-mode explicitly, the same
-              self-scoping pattern Card.tsx uses for data-mode="feature".
+              self-scoping pattern Modal and Card/Producer use.
             </div>
           )}
           <Story />
@@ -120,7 +122,7 @@ const preview: Preview = {
       );
     },
     (Story, context) => {
-      const mode = (context.globals.mode as string) ?? 'light';
+      const mode = (context.globals.mode as string) ?? 'cream';
       const brand = (context.globals.brand as string) ?? 'runabout';
       const title = context.title ?? '';
       // Examples/* and Prototypes/* stories are full pages, not single
@@ -145,7 +147,7 @@ const preview: Preview = {
           data-mode={mode}
           data-brand={brand === 'northline' ? 'northline' : undefined}
           style={{
-            background: MODE_BACKGROUNDS[mode] ?? MODE_BACKGROUNDS.light,
+            background: CANVAS_BACKGROUND,
             padding: '2rem',
             minHeight: '100%',
             boxSizing: 'border-box',
@@ -180,6 +182,11 @@ const preview: Preview = {
     // not synthesized autodocs pages.
     docs: {
       page: DocsPage,
+      // Same object the manager chrome uses, so the docs shell (headings,
+      // code blocks, table borders) reads as one brand with the sidebar
+      // rather than reverting to Storybook's default blue-grey inside the
+      // preview iframe.
+      theme: RunaboutTheme,
     },
 
     options: {
@@ -191,7 +198,7 @@ const preview: Preview = {
         // order.
         order: [
           'Foundations',
-          ['Colours', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Breakpoints'],
+          ['Colours', 'Typography', 'Spacing', 'Radius', 'Motion', 'Breakpoints'],
           'Components',
           'Prototypes',
         ],

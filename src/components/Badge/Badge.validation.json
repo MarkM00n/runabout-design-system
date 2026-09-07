@@ -1,6 +1,6 @@
 {
   "component": "Badge",
-  "lastValidated": "2026-08-27",
+  "lastValidated": "2026-09-07",
   "checks": {
     "tokenCompliance": {
       "pass": true,
@@ -35,11 +35,13 @@
   "overall": true,
   "status": "pass",
   "tokensUsed": [
+    "color-action-secondary",
+    "color-border-strong",
     "color-state-error",
     "color-state-success",
     "color-state-warning",
-    "color-surface-inverse",
     "color-text-on-state",
+    "color-text-primary",
     "font-manrope",
     "radius-sm",
     "spacing-00",
