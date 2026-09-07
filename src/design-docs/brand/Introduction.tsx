@@ -10,8 +10,11 @@ const LINKS: Array<{ label: string; to: string; blurb: string; external?: boolea
 
 /**
  * Storybook's landing page. Cream, the wordmark, one paragraph, four doors.
- * Links use Storybook's own ?path= form and target the top window so they
- * navigate the manager, not the docs iframe.
+ *
+ * Internal links have to escape the docs iframe: the page renders inside
+ * iframe.html, so a bare "?path=" would resolve against that file and open
+ * the raw preview. "./?path=" resolves to the manager index next to it,
+ * and target="_top" makes the manager (not the iframe) navigate.
  */
 export function IntroductionPage() {
   return (
@@ -44,7 +47,7 @@ export function IntroductionPage() {
           {LINKS.map((l) => (
             <a
               key={l.label}
-              href={l.to}
+              href={l.external ? l.to : `./${l.to}`}
               target={l.external ? '_blank' : '_top'}
               rel={l.external ? 'noreferrer' : undefined}
               style={{
