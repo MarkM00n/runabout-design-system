@@ -32,8 +32,8 @@ export const RunaboutTheme = create({
   colorPrimary: '#a74b24', //   Brand/800 — terracotta
   colorSecondary: '#3d4a2e', // Ink/900 — olive; active nav item, selected state
 
-  appBg: '#f8ebda', //                        Surface/400 — the cream the product sits on
-  appContentBg: '#fefbf8', //                 Surface/50
+  appBg: '#fbf3e9', //                        Surface/200 — chrome sits one step lighter than the product cream (Surface/400), so panels lift off it
+  appContentBg: '#f8ebda', //                 Surface/400 — the docs pages paint the product cream
   appPreviewBg: '#f8ebda', //                 Surface/400
   appBorderColor: 'rgba(93, 100, 64, 0.1)', // Alpha/Ink-10 — border-subtle on cream
   appBorderRadius: 8, //                      radius-md

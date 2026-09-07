@@ -197,8 +197,9 @@ const preview: Preview = {
         // (Examples/*, etc.) falls after these in Storybook's default
         // order.
         order: [
+          'Introduction',
           'Foundations',
-          ['Colours', 'Typography', 'Spacing', 'Radius', 'Motion', 'Breakpoints'],
+          ['Brand', 'Colours', 'Typography', 'Spacing', 'Radius', 'Motion', 'Breakpoints'],
           'Components',
           'Prototypes',
         ],
