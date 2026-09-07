@@ -31,7 +31,7 @@ import { SignUpFormCard } from './VinesAndVinylSignUp';
 // Each section sets its own data-mode explicitly, matching what the Figma
 // frame's own explicitVariableModes actually specify per section (Nav/
 // Footer/date card -> dark, Hero -> feature, Info -> light) — the same
-// self-scoping pattern Card.tsx uses for data-mode="feature", so each
+// self-scoping pattern Card.tsx uses for data-mode="terracotta", so each
 // section's tokens resolve correctly regardless of whatever ambient mode
 // the page around it (or Storybook's Mode toolbar) happens to be set to.
 //
@@ -93,21 +93,22 @@ export const VinesAndVinylLandingWithSignUp = () => {
   return (
     <div
       data-brand={demoBrand === 'northline' ? 'northline' : undefined}
-      className="flex w-full flex-col items-start bg-surface-primary"
+      data-mode="cream"
+      className="flex w-full flex-col items-start bg-surface-section"
     >
-      {/* Nav — On Dark (surface-inverse fill) */}
+      {/* Nav — On Dark */}
       <header
         data-mode="dark"
-        className="flex w-full items-center justify-center gap-03 bg-surface-inverse px-07 py-04"
+        className="flex w-full items-center justify-center gap-03 bg-surface-section px-07 py-04"
       >
         <NavLogo className="h-[28.0972px] w-[148px] text-text-primary" />
       </header>
 
-      {/* Hero — On Feature (surface-feature fill); relative so the floating
+      {/* Hero — On Terracotta; relative so the floating
           date card can position against it. */}
       <section
-        data-mode="feature"
-        className="relative flex w-full flex-col items-center gap-04 bg-surface-feature px-10 pb-10 pt-09"
+        data-mode="terracotta"
+        className="relative flex w-full flex-col items-center gap-04 bg-surface-section px-10 pb-10 pt-09"
       >
         <p className="font-manrope text-label-strong font-semibold text-text-primary">
           RUNABOUT EVENTS PRESENTS
@@ -123,21 +124,21 @@ export const VinesAndVinylLandingWithSignUp = () => {
 
         {/* Inline email capture replaced with the full sign-up form
             prototype — this is the point of this page. SignUpFormCard sets
-            its own data-mode="light" (see VinesAndVinylSignUp.tsx), so it
+            its own data-mode="cream" (see VinesAndVinylSignUp.tsx), so it
             reads correctly sitting on Hero's feature-mode terracotta
             background regardless of the ambient mode around it, the same
             reasoning the original inline Input relied on the ambient
             feature mode for. */}
         <SignUpFormCard />
 
-        {/* Floating date card — On Dark (surface-inverse fill), sibling of
+        {/* Floating date card — On Dark, sibling of
             Hero's content in Figma, positioned to sit over Hero's top-right
             corner. Figma's absolute coordinates (page-relative x:1193/y:112
             against an 1440-wide page, Hero starting at y:80) translate to
             roughly right-6/top-8 within Hero's own box. */}
         <div
           data-mode="dark"
-          className="absolute right-6 top-8 flex flex-col items-start rounded-full bg-surface-inverse px-02 py-06"
+          className="absolute right-6 top-8 flex flex-col items-start rounded-full bg-surface-section px-02 py-06"
         >
           <div className="flex w-[191px] flex-col items-center gap-00 rounded-sm px-01 py-03 text-text-primary">
             <p className="w-full text-center font-manrope text-overline font-semibold">
@@ -151,10 +152,10 @@ export const VinesAndVinylLandingWithSignUp = () => {
         </div>
       </section>
 
-      {/* Info — On Light (surface-primary fill) */}
+      {/* Info — On Cream */}
       <section
-        data-mode="light"
-        className="flex w-full items-start justify-center gap-07 bg-surface-primary px-10 py-09"
+        data-mode="cream"
+        className="flex w-full items-start justify-center gap-07 bg-surface-section px-10 py-09"
       >
         <div className="flex min-w-0 flex-1 flex-col items-start gap-01">
           <h3 className="m-0 font-recoleta text-h3 text-text-primary">14 makers</h3>
@@ -179,10 +180,10 @@ export const VinesAndVinylLandingWithSignUp = () => {
         </div>
       </section>
 
-      {/* Footer — On Dark (surface-inverse fill) */}
+      {/* Footer — On Dark */}
       <footer
         data-mode="dark"
-        className="flex w-full items-center justify-between gap-03 bg-surface-inverse px-07 py-05"
+        className="flex w-full items-center justify-between gap-03 bg-surface-section px-07 py-05"
       >
         <FooterLogo className="h-[22.7815px] w-[120px] text-text-primary" />
         <div className="flex flex-col items-end gap-01 text-text-primary">

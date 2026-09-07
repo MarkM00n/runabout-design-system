@@ -1,0 +1,33 @@
+<!--
+  The manager renders outside the preview iframe and so never loads
+  src/index.css — Manrope has to be pulled in again here or RunaboutTheme's
+  fontBase silently falls back to system-ui. Served from the same
+  @fontsource package the app uses (self-hosted, no third-party request),
+  copied into the manager's static dir by main.ts's staticDirs mapping.
+-->
+<link rel="preload" href="/brand/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/brand/fonts/manrope-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+<style>
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/brand/fonts/manrope-latin-400-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/brand/fonts/manrope-latin-600-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/brand/fonts/manrope-latin-700-normal.woff2') format('woff2');
+  }
+</style>
+<link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />

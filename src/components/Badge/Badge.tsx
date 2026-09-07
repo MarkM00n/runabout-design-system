@@ -20,26 +20,33 @@ const sizeStyles: Record<BadgeSize, string> = {
   small: 'px-01 py-00',
 };
 
-// text-on-state (not text-primary) deliberately — it's the one token in the
-// 2026-08-05 mode architecture that's constant regardless of ambient page
-// mode, matching Badge's own fills (surface-inverse/state-success/warning/
-// error), which are themselves pinned to their On Light values rather than
-// adapting to a surrounding data-mode. See design-system-rules.md §7's
-// "Component-internal pairings" note. Badge deliberately does not set its
-// own data-mode for this reason — doing so would also shift its own fill
-// colour for the mode-variant state-* tokens, not just its text.
+// Source: Figma Badge (248:437). Two different colour strategies in one
+// component set, and the split is deliberate:
+//
+// - `neutral` is an OUTLINED badge as of 2026-09-07 (it used to be a solid
+//   dark chip). Transparent fill, border-strong outline, text-primary label
+//   — all three mode-variant, so a neutral badge inherits whatever surface
+//   it sits on and stays legible on all four without any mode of its own.
+// - The three status variants are solid state-* fills paired with
+//   text-on-state. Those four tokens are mode-INVARIANT in Figma: a "success"
+//   chip is the same green on cream as on terracotta, because a status
+//   colour that shifted per surface would stop reading as a status colour.
+//   Measured: 6.92:1 success, 6.97:1 warning, 6.28:1 error against
+//   text-on-state.
+//
+// Badge never sets its own data-mode. It has a background but is not a
+// surface — the status fills don't need one (invariant), and neutral
+// specifically has to inherit to work.
 const variantStyles: Record<BadgeVariant, string> = {
-  neutral: 'bg-surface-inverse text-text-on-state',
+  neutral: 'bg-action-secondary border border-border-strong text-text-primary',
   success: 'bg-state-success text-text-on-state',
   warning: 'bg-state-warning text-text-on-state',
   error: 'bg-state-error text-text-on-state',
 };
 
 /**
- * Source: Figma Badge component set (Design System, JpFA7KtVlSOrM9fIYYgOsn,
- * node 248:437). Status label only — never wire onClick/interactive
- * behaviour onto it, per the component's own Figma description ("Use for
- * state, not actions").
+ * Status label only — never wire onClick or interactive behaviour onto it,
+ * per the component's own Figma description ("Use for state, not actions").
  */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ variant = 'neutral', size = 'medium', className, children, ...props }, ref) => (

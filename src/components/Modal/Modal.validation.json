@@ -1,0 +1,51 @@
+{
+  "component": "Modal",
+  "lastValidated": "2026-09-07",
+  "checks": {
+    "tokenCompliance": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "accessibility": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "storybookCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "documentationCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    }
+  },
+  "history": [],
+  "overall": true,
+  "status": "pass",
+  "tokensUsed": [
+    "color-border-default",
+    "color-surface-card",
+    "color-text-primary",
+    "font-manrope",
+    "font-recoleta",
+    "radius-xl",
+    "spacing-02",
+    "spacing-03",
+    "spacing-04",
+    "spacing-05",
+    "text-caption",
+    "text-h4"
+  ]
+}

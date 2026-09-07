@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
 
 import { Button } from './Button';
 import { docs } from './Button.docs';
@@ -15,79 +14,68 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['primary', 'secondary', 'accent', 'link'],
-    },
-    size: {
-      control: 'select',
-      options: ['large', 'small'],
-    },
+    variant: { control: 'select', options: ['primary', 'secondary', 'accent', 'link'] },
+    size: { control: 'select', options: ['large', 'small'] },
+    icon: { control: 'boolean' },
   },
-  args: { onClick: fn() },
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    size: 'large',
-    children: 'Button',
-  },
+export const PrimaryLarge: Story = {
+  args: { variant: 'primary', size: 'large', children: 'Book now' },
 };
 
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    size: 'large',
-    children: 'Button',
-  },
-  // Button.tsx sets data-mode="dark" on Secondary's own root, so its tokens
-  // resolve correctly regardless of this decorator — this is purely a
-  // visual backdrop now (Secondary has no fill of its own, bg-transparent),
-  // not what drives the token resolution. Scoped to this one story rather
-  // than the whole meta, since Primary/Accent are self-contained and Link's
-  // amber tokens already clear AA on a light surface.
-  decorators: [
-    (Story) => (
-      <div style={{ background: '#2f2c28', padding: 32, borderRadius: 12 }}>
-        <Story />
-      </div>
-    ),
-  ],
+export const SecondaryLarge: Story = {
+  args: { variant: 'secondary', size: 'large', children: 'Book now' },
 };
 
-export const Accent: Story = {
-  args: {
-    variant: 'accent',
-    size: 'large',
-    children: 'Button',
-  },
+export const AccentLarge: Story = {
+  args: { variant: 'accent', size: 'large', children: 'Reserve' },
 };
 
-export const Link: Story = {
-  args: {
-    variant: 'link',
-    size: 'large',
-    children: 'Button',
-  },
+export const LinkLarge: Story = {
+  args: { variant: 'link', size: 'large', children: 'Read more' },
 };
 
-export const Small: Story = {
-  args: {
-    variant: 'primary',
-    size: 'small',
-    children: 'Button',
-  },
+export const PrimarySmall: Story = {
+  args: { variant: 'primary', size: 'small', children: 'Book now' },
+};
+
+export const SecondarySmall: Story = {
+  args: { variant: 'secondary', size: 'small', children: 'Book now' },
+};
+
+export const AccentSmall: Story = {
+  args: { variant: 'accent', size: 'small', children: 'Reserve' },
+};
+
+export const LinkSmall: Story = {
+  args: { variant: 'link', size: 'small', children: 'Read more' },
+};
+
+/** Figma's `Icon` boolean, off. The arrow implies forward movement, so it
+ *  suits "Book now" better than a neutral or cancelling action. */
+export const WithoutIcon: Story = {
+  args: { variant: 'secondary', size: 'large', icon: false, children: 'Cancel' },
 };
 
 export const Disabled: Story = {
-  args: {
-    variant: 'primary',
-    size: 'large',
-    children: 'Button',
-    disabled: true,
-  },
+  args: { variant: 'primary', size: 'large', disabled: true, children: 'Book now' },
+};
+
+/** Every variant on one row, to check that all four resolve correctly when
+ *  the toolbar's Mode control switches surface. Nothing here sets a mode of
+ *  its own — that is the point. */
+export const AllVariants: Story = {
+  args: { children: 'Book now' },
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-03">
+      <Button {...args} variant="primary" />
+      <Button {...args} variant="secondary" />
+      <Button {...args} variant="accent" />
+      <Button {...args} variant="link" />
+    </div>
+  ),
 };

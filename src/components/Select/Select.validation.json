@@ -1,6 +1,6 @@
 {
   "component": "Select",
-  "lastValidated": "2026-08-27",
+  "lastValidated": "2026-09-07",
   "checks": {
     "tokenCompliance": {
       "pass": true,
@@ -37,10 +37,8 @@
   "tokensUsed": [
     "color-action-secondary",
     "color-action-secondary-hover",
-    "color-border-default",
-    "color-border-focus",
     "color-border-strong",
-    "color-icon-primary",
+    "color-state-focus",
     "color-text-primary",
     "font-manrope",
     "radius-2xl",

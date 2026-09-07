@@ -90,18 +90,20 @@ const data = dashboardData as DashboardData;
 // rule out nesting a link inside one ("nested interactive elements —
 // screen readers cannot represent nested controls"), so these are real
 // anchors carrying the same classes instead of a wrapped Button.
-// text-inverse (used here pre-2026-08-05) is retired — no successor, the
-// mode resolves what it used to hand-pick. text-primary is the mode-aware
-// replacement; it resolves correctly here because the dashboard's root
-// element now carries data-mode="dark" (see the JSX below), same pattern
-// as Card/Button-secondary in the component sync.
+// text-primary resolves correctly here because the dashboard's root
+// element carries data-mode="olive" (see the JSX below) — the canvas is
+// Ink/900, which is what On Olive means under the 2026-09-07 architecture.
 const SECONDARY_LINK_CLASS =
   'inline-flex items-center justify-center gap-01 font-manrope font-normal select-none ' +
   'transition-colors duration-150 ease-out h-[32px] px-02 rounded-xl text-label ' +
-  'bg-transparent text-text-primary border border-border-default ' +
-  'hover:bg-action-secondary-hover hover:border-text-primary ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
-  'focus-visible:ring-offset-transparent focus-visible:border-border-focus focus-visible:ring-border-focus';
+  'bg-action-secondary text-text-primary border border-border-strong ' +
+  'hover:bg-action-secondary-hover ' +
+  // Matches Button's own recipe post-2026-09-07: a 2px state-focus outline
+  // offset 2px, and no outline-none anywhere. The old ring-based version
+  // paired outline-none with a ring, which worked only because a ring is a
+  // box-shadow — swapping to a real outline means the suppression has to go
+  // (rules §2).
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus';
 
 const CHECK_LABELS: Record<keyof DashboardData['validationSummary'], string> = {
   tokenCompliance: 'Token Compliance',
@@ -248,12 +250,14 @@ function App() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    // data-mode="dark" — this page's canvas (surface-secondary) is a
-    // permanent dark surface, same reasoning as Card's data-mode="feature":
+    // data-mode="olive" — this page's canvas is Ink/900, which is exactly
+    // what On Olive resolves surface-section to. Under the 2026-09-07 rule
+    // "anything with a background owns a mode", the dashboard root is a
+    // surface and declares one:
     // every nested text-*/border-*/action-* token needs the On Dark column,
     // not the ambient default. The two .table-card sections below override
-    // this back to data-mode="light" for their own light zebra-row content.
-    <div className="dashboard" data-mode="dark">
+    // this back to data-mode="cream" for their own light zebra-row content.
+    <div className="dashboard" data-mode="olive">
       <header className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Runabout DesignOps — Pilot Dashboard</h1>
@@ -271,7 +275,7 @@ function App() {
         </nav>
       </header>
 
-      {/* data-mode="light" is on each tile, never on the <section>. The
+      {/* data-mode="cream" is on each tile, never on the <section>. The
           section is only a grid container — it has no text and no fill of
           its own, so it stays on the page's ambient dark canvas, and the
           override reaches exactly the elements whose surface is actually
@@ -279,16 +283,14 @@ function App() {
           .section-title incident, applied up front rather than after the
           fact.
 
-          All five tiles share one fill, surface-subtle — NOT
-          surface-tertiary. Both are cream under On Light, but only
-          surface-subtle is redefined by [data-mode='dark'];
-          surface-tertiary is a fixed #fefbf8 in every mode. Pairing a
-          mode-invariant light fill with mode-resolved text is exactly how
-          the VinesAndVinyl Hero Input went to 1.18:1 (2026-08-08): the
-          fill stayed put while the ink moved. With surface-subtle, losing
-          this data-mode="light" would degrade to a dark card with cream
-          text — quiet and legible — instead of dark-on-cream or
-          cream-on-cream. */}
+          All five tiles fill with surface-card, which is Surface/50 in
+          every mode — it does not vary. That makes the data-mode="cream"
+          on each tile load-bearing rather than decorative: pairing a
+          mode-invariant light fill with mode-resolved ink is exactly how
+          the VinesAndVinyl Hero Input went to 1.18:1 (2026-08-08), the
+          fill staying put while the text moved out from under it. The
+          mode is what keeps text-primary resolving to dark ink here.
+          It is the same pairing, and the same reasoning, as Modal. */}
       <section className="stat-header" aria-label="Headline metrics">
         {/* Median leads, mean is demoted to the caption. The sample is 8
             components and splits 4/4 — three shipped in 36 minutes plus Tab
@@ -297,10 +299,10 @@ function App() {
             tiles implied a precision the data doesn't have. One hero with
             the mean alongside reads as "here is the number, and here is its
             spread", which is what the data actually supports. */}
-        <div className="stat-hero" data-mode="light">
+        <div className="stat-hero" data-mode="cream">
           <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
           <div className="stat-hero-label">
-            <span className="stat-accent" aria-hidden="true" />
+            <span className="stat-accent" data-mode="terracotta" aria-hidden="true" />
             Median cycle time, first commit → merged
           </div>
           <div className="stat-hero-caption">
@@ -308,17 +310,17 @@ function App() {
           </div>
         </div>
 
-        <div className="stat-tile" data-mode="light">
+        <div className="stat-tile" data-mode="cream">
           <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
           <div className="stat-label">Caught &amp; fixed</div>
         </div>
 
         {/* Zero open issues is a result, not a measurement — it reads as a
             status line rather than a stat. The tick carries state-success
-            (6.28:1 on surface-subtle) and is aria-hidden, so the meaning
+            (6.28:1 on surface-card) and is aria-hidden, so the meaning
             still comes from the number and its label for a screen reader
             rather than from colour or a glyph alone. */}
-        <div className="stat-tile" data-mode="light">
+        <div className="stat-tile" data-mode="cream">
           <div className="stat-value stat-value-good">
             <span className="stat-tick" aria-hidden="true">
               ✓
@@ -328,31 +330,35 @@ function App() {
           <div className="stat-label">Open issues</div>
         </div>
 
-        <div className="stat-tile" data-mode="light">
+        <div className="stat-tile" data-mode="cream">
           <div className="stat-value">{data.totals.totalComponents}</div>
           <div className="stat-label">Components</div>
         </div>
 
-        <div className="stat-tile" data-mode="light">
+        <div className="stat-tile" data-mode="cream">
           <div className="stat-value">{data.totals.totalDesignTokens ?? '—'}</div>
           <div className="stat-label">Tokens documented</div>
         </div>
       </section>
 
-      {/* data-mode="light" lives on .table-scroll specifically, not the
+      {/* data-mode="cream" lives on .table-scroll specifically, not the
           whole <section> — it overrides the page's ambient dark mode back
           to light for the table's own zebra-row content, which needs it
           (text-primary would otherwise inherit the dark-mode value and
           become nearly invisible against the light rows). .section-title
           sits visually on the dark canvas above the table box, not inside
-          it — scoping data-mode="light" to the whole section previously
+          it — scoping data-mode="cream" to the whole section previously
           pulled the heading into that override too, rendering dark text
           on the dark canvas (near-invisible, filed 2026-08-05). */}
       <section className="dashboard-section table-card" aria-label="Errors caught by validation">
         <h2 className="section-title">Errors caught by validation</h2>
-        <div className="table-scroll" data-mode="light">
+        <div className="table-scroll" data-mode="cream">
           <table className="dashboard-table">
-            <thead>
+            {/* data-mode="dark" on the header row only: it is a fixed dark
+                band inside an otherwise cream table, so it is its own
+                surface and owns its own mode. Scoped to the <thead>, not
+                the table — the narrowest element that actually needs it. */}
+            <thead data-mode="dark">
               <tr>
                 <th>Check type</th>
                 <th>Fail</th>
@@ -377,9 +383,13 @@ function App() {
 
       <section className="dashboard-section table-card" aria-label="Component status">
         <h2 className="section-title">Component status</h2>
-        <div className="table-scroll" data-mode="light">
+        <div className="table-scroll" data-mode="cream">
           <table className="dashboard-table">
-            <thead>
+            {/* data-mode="dark" on the header row only: it is a fixed dark
+                band inside an otherwise cream table, so it is its own
+                surface and owns its own mode. Scoped to the <thead>, not
+                the table — the narrowest element that actually needs it. */}
+            <thead data-mode="dark">
               <tr>
                 <th>Component</th>
                 <th>Overall</th>

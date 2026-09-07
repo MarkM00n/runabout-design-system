@@ -18,7 +18,7 @@ import { Button } from '../components/Button';
 // Each section sets its own data-mode explicitly, matching what the Figma
 // frame's own explicitVariableModes actually specify per section (Nav/
 // Footer/date card -> dark, Hero -> feature, Info -> light) — the same
-// self-scoping pattern Card.tsx uses for data-mode="feature", so each
+// self-scoping pattern Card.tsx uses for data-mode="terracotta", so each
 // section's tokens resolve correctly regardless of whatever ambient mode
 // the page around it (or Storybook's Mode toolbar) happens to be set to.
 
@@ -62,20 +62,24 @@ const HeroIllustration = ({ className }: { className?: string }) => (
 
 export const VinesAndVinylLanding = () => {
   return (
-    <div className="flex w-full flex-col items-start bg-surface-primary">
-      {/* Nav — On Dark (surface-inverse fill) */}
+    // The page shell is a cream surface, and now has to say so: every fill
+    // is surface-section, so the mode is the only thing choosing its colour.
+    // Before the 2026-09-07 sync the fill token itself carried the cream
+    // (a fixed light-cream fill token) and no mode was needed here.
+    <div data-mode="cream" className="flex w-full flex-col items-start bg-surface-section">
+      {/* Nav — On Dark */}
       <header
         data-mode="dark"
-        className="flex w-full items-center justify-center gap-03 bg-surface-inverse px-07 py-04"
+        className="flex w-full items-center justify-center gap-03 bg-surface-section px-07 py-04"
       >
         <NavLogo className="h-[28.0972px] w-[148px] text-text-primary" />
       </header>
 
-      {/* Hero — On Feature (surface-feature fill); relative so the floating
+      {/* Hero — On Terracotta; relative so the floating
           date card can position against it. */}
       <section
-        data-mode="feature"
-        className="relative flex w-full flex-col items-center gap-04 bg-surface-feature px-10 pb-10 pt-09"
+        data-mode="terracotta"
+        className="relative flex w-full flex-col items-center gap-04 bg-surface-section px-10 pb-10 pt-09"
       >
         <p className="font-manrope text-label-strong font-semibold text-text-primary">
           RUNABOUT EVENTS PRESENTS
@@ -105,23 +109,23 @@ export const VinesAndVinylLanding = () => {
               their intended width.
 
               No data-mode override here (removed 2026-08-08) — the previous
-              data-mode="light" was load-bearing against an Input that no
+              data-mode="cream" was load-bearing against an Input that no
               longer exists: Input's fill used to be a fixed light cream
-              (bg-surface-primary, mode-invariant), so forcing its
-              text/border back to On Light was the only way to get a
+              (bg-surface-section, mode-invariant), so forcing its
+              text/border back to a light context was the only way to get a
               readable pairing against that fixed backdrop. Input's fill is
               now action-secondary — genuinely transparent in every mode, a
               bordered "ghost" control matching its real Figma binding — so
-              forcing On Light here now sits dark ink/olive text and border
+              forcing a light context here now sits dark ink and border
               directly on Hero's terracotta background showing through:
               measured 1.18:1 (placeholder) / 1.66:1 (border), both far
               under AA. Removing the override lets Input correctly inherit
-              Hero's ambient data-mode="feature" instead, the same
+              Hero's ambient data-mode="terracotta" instead, the same
               self-scoping pattern Checkbox already relies on — verified
               5.54:1 (border) / 4.87:1 (placeholder) / 5.54:1 (value text)
-              against surface-feature. Button is unaffected either way: its
-              Figma instance here has always resolved the On Feature pairing
-              via the ambient mode, not On Light. */}
+              against the Hero terracotta. Button is unaffected either way: its
+              Figma instance here has always resolved the On Terracotta pairing
+              via the ambient mode, not a forced light one. */}
           <div className="w-[400px] shrink-0">
             <Input type="email" size="large" placeholder="you@email.com" aria-label="Email address" />
           </div>
@@ -134,14 +138,14 @@ export const VinesAndVinylLanding = () => {
           First tickets and the maker lineup go to the list first. A few emails a year — no spam.
         </p>
 
-        {/* Floating date card — On Dark (surface-inverse fill), sibling of
+        {/* Floating date card — On Dark, sibling of
             Hero's content in Figma, positioned to sit over Hero's top-right
             corner. Figma's absolute coordinates (page-relative x:1193/y:112
             against an 1440-wide page, Hero starting at y:80) translate to
             roughly right-6/top-8 within Hero's own box. */}
         <div
           data-mode="dark"
-          className="absolute right-6 top-8 flex flex-col items-start rounded-full bg-surface-inverse px-02 py-06"
+          className="absolute right-6 top-8 flex flex-col items-start rounded-full bg-surface-section px-02 py-06"
         >
           <div className="flex w-[191px] flex-col items-center gap-00 rounded-sm px-01 py-03 text-text-primary">
             <p className="w-full text-center font-manrope text-overline font-semibold">
@@ -155,10 +159,10 @@ export const VinesAndVinylLanding = () => {
         </div>
       </section>
 
-      {/* Info — On Light (surface-primary fill) */}
+      {/* Info — On Cream */}
       <section
-        data-mode="light"
-        className="flex w-full items-start justify-center gap-07 bg-surface-primary px-10 py-09"
+        data-mode="cream"
+        className="flex w-full items-start justify-center gap-07 bg-surface-section px-10 py-09"
       >
         <div className="flex min-w-0 flex-1 flex-col items-start gap-01">
           <h3 className="m-0 font-recoleta text-h3 text-text-primary">14 makers</h3>
@@ -183,10 +187,10 @@ export const VinesAndVinylLanding = () => {
         </div>
       </section>
 
-      {/* Footer — On Dark (surface-inverse fill) */}
+      {/* Footer — On Dark */}
       <footer
         data-mode="dark"
-        className="flex w-full items-center justify-between gap-03 bg-surface-inverse px-07 py-05"
+        className="flex w-full items-center justify-between gap-03 bg-surface-section px-07 py-05"
       >
         <FooterLogo className="h-[22.7815px] w-[120px] text-text-primary" />
         <div className="flex flex-col items-end gap-01 text-text-primary">

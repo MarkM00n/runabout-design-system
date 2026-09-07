@@ -4,251 +4,224 @@
  * Tailwind v4 so utilities are generated automatically (bg-action-primary,
  * rounded-2xl, text-h6, etc.). Raw source values also live in tokens.json.
  *
- * Mode-based token architecture (2026-08-05) — Figma's Semantic collection
- * resolves every text/icon/border/action/state token per surface mode: On
- * Light, On Dark, On Feature. The values in `@theme` below are each token's
- * On Light value — the base/default, used when nothing overrides it, and
- * what generates the Tailwind utility (bg-action-primary, text-text-primary,
- * etc.). Tokens whose value actually differs by mode also get an override
- * block further down, scoped to a `data-mode="dark"` / `data-mode="feature"`
- * attribute on a container — e.g. Card sets `data-mode="feature"` on its own
- * root because it always fills with surface-feature, so every `text-*`/
- * `border-*` utility used inside it resolves to that surface's correct
- * pairing automatically, with no change to the component's className
- * strings for tokens whose name didn't change. See design-system-rules.md
- * §7 for the full per-mode table and design-system-rules.md §1 for the
- * override-block mechanics.
+ * Surface-mode token architecture (2026-09-07). Figma's Semantic collection
+ * holds 26 tokens resolving across four surface modes — On Cream, On Olive,
+ * On Dark, On Terracotta — under one rule:
  *
- * Several pre-2026-08-05 tokens are retired by this architecture (no
- * successor — the mode resolves what they used to hand-pick): text-inverse,
+ *     Anything with a background owns a mode. Everything else inherits.
+ *
+ * A surface (section, card, modal, panel) fills with `surface-section` and
+ * picks its colour by setting its mode. Buttons, inputs, tabs, badges, text
+ * and icons never carry a mode — they resolve from whatever they sit on.
+ * The values in `@theme` below are each token's On Cream value: the base
+ * used when nothing overrides it, and what generates the Tailwind utility.
+ * The 15 tokens whose value actually differs by mode also get an override
+ * block further down, scoped to `data-mode="cream|olive|dark|terracotta"`
+ * on a container. See design-system-rules.md §7 for the full per-mode table
+ * and §1 for the override-block mechanics.
+ *
+ * This replaced the 2026-08-05 architecture (44 tokens x 3 modes). Retired
+ * with no successor, because a surface's mode now resolves what they used to
+ * hand-pick: surface-primary/secondary/tertiary/inverse/feature/subtle/
+ * emphasis/scrim, text-muted, text-highlight, text-button, text-inverse,
  * text-link-inverse, text-button-inverse, text-highlight-inverse,
- * text-on-feature, border-focus-inverse, border-focus-on-feature,
- * surface-emphasis. Any component still referencing one of those is stale;
- * see each affected component's own diff in this sync for its replacement.
+ * text-on-feature, border-focus (now state-focus), border-focus-inverse,
+ * border-focus-on-highlight, border-focus-on-feature, state-hover (now
+ * action-secondary-hover), and the whole icon-* group (icons use the
+ * matching text-* token; icon-disabled becomes state-disabled).
+ *
+ * Primitive families were renamed in the same sync to match Figma:
+ * Sand -> Surface, Terracotta -> Brand, Rose -> Soft, Burgundy -> Deep,
+ * Amber -> Accent, Olive -> Ink, Grey -> Neutral, Cream -> Paper,
+ * Blue -> Focus. Semantic and primitive tokens now share the `surface`
+ * prefix (Figma has both `surface/section` and `Surface/400`); they're told
+ * apart by whether the final segment is numeric, which is the rule
+ * design-sync.js's isPrimitiveColorToken() applies.
  */
 @theme {
-  /* Button primary variant's fill. Inverted in the 2026-08-05 sync — was
-     light cream (#f8ebda), now dark (Grey/800) on Light mode; light on
-     Dark/Feature (see override blocks below). A real visual redesign, not
-     a rename — verified against a live Figma screenshot before shipping. */
-  --color-action-primary: #2f2c28;
-  /* Button primary variant's fill on hover — mode-variant, see override blocks. */
-  --color-action-primary-hover: #464340;
-  /* Button secondary variant's fill in its default state (transparent).
-     Mode-invariant. Aliases Alpha/White-0 in Figma. */
-  --color-action-secondary: rgba(255, 255, 255, 0);
-  /* Button secondary variant's fill on hover — mode-variant (Alpha/Olive-10
-     on Light, Alpha/White-10 on Dark/Feature), see override blocks. */
-  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
-  /* Button accent variant's fill. Mode-invariant — always Amber/800. */
-  --color-action-highlight: #df8e10;
-  /* Button accent variant's fill on hover. Mode-invariant — always Amber/700. */
-  --color-action-highlight-hover: #e39b2b;
-  /* Mode-variant, see override blocks. Not yet used by any built component. */
-  --color-action-disabled: #f4dfc3;
+  /* The background of anything that is a surface: sections, cards, panels.
+     Set the element's data-mode and this token becomes that surface. The
+     single successor to the old surface-primary/secondary/tertiary/inverse/
+     feature/subtle pair-of-seven — one token, four resolutions. */
+  --color-surface-section: #f8ebda;
+  /* Light cream for elevated surfaces — Modal fills with this. Mode-invariant
+     (Surface/50 in every mode), which is exactly why Modal also sets
+     data-mode="cream" on itself: text/primary only clears AA against this
+     fill in the On Cream column. Cards use surface-section instead and
+     choose their colour by mode. */
+  --color-surface-card: #fefbf8;
+  /* Top stop of a text-over-image scrim (Card/Producer). Fully transparent
+     Neutral/900 — mode-invariant. */
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  /* Bottom stop of a text-over-image scrim (Card/Producer). Neutral/900 at
+     85% — mode-invariant. */
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
 
-  /* Button secondary variant's resting border; also the resting border for
-     every Input-family control. Mode-variant, see override blocks. */
-  --color-border-default: #939880;
-  /* Hover-state border color for every Input-family control. Mode-variant,
-     see override blocks. */
-  --color-border-subtle: #f4dfc3;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-border-strong: #3d4a2e;
-  /* Focus-ring border for Button primary/secondary/link and every
-     Input-family control. Mode-variant (Blue/500 on Light, Blue/200 on
-     Dark/Feature) — resolves correctly wherever a container sets the right
-     data-mode, replacing the old fixed-value + separate -inverse/-on-feature
-     token pattern. See override blocks below. */
-  --color-border-focus: #2563eb;
-  /* Button accent's Focused-state ring only — border-focus (Blue/500 on
-     Light) measures short of WCAG 1.4.11's 3:1 against accent's
-     action-highlight fill. Mode-invariant — always Blue/900. */
-  --color-border-focus-on-highlight: #1e3a8a;
-
-  /* Default body text color; also the typed-value color for Input-family
-     controls when focused. Mode-variant, see override blocks. */
+  /* Headings, body, and icons. Icons bind this too — the old icon-primary
+     token is retired, icons use the matching text-* token. Mode-variant. */
   --color-text-primary: #2a2d1e;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  /* Supporting text, captions, metadata. Absorbed the retired text-muted.
+     Mode-variant. */
   --color-text-secondary: #4a5435;
-  /* Placeholder text color for Input-family controls; also Checkbox's
-     disabled-state checkmark/label color. Mode-variant, see override blocks. */
-  --color-text-muted: #5d5b58;
-  /* Checkbox's checkmark glyph. Mode-variant, see override blocks. */
-  --color-text-highlight: #7a4e09;
-  /* Not yet used by any built component — Button's link variant binds to
-     text-button instead, a pre-existing divergence. Mode-variant, see
-     override blocks. */
+  /* Inline links, link buttons, and interactive icons. Absorbed the retired
+     text-highlight and text-button. Mode-variant. */
   --color-text-link: #7a4e09;
-  /* Button link's Default state. Mode-variant, see override blocks. Link's
-     Hover/Focused state does NOT use this — see Button.tsx's own comment:
-     the old text-button-inverse "brighter on hover" token has no successor
-     in the mode system (modes model surface context, not same-page hover
-     state), so it stays a literal hex value pending a design-side decision. */
-  --color-text-button: #7a4e09;
-  /* Button primary's label text. Inverted in lockstep with action-primary —
-     was dark (#2f2c28), now light (Sand/500) on Light mode. Mode-variant,
-     see override blocks. */
+  /* Text and icons on an action-primary fill (Button primary's label).
+     Mode-variant, and flips in lockstep with action-primary. */
   --color-text-on-action: #f7e7d2;
-  /* Button accent's label text. Mode-invariant — always Grey/800. */
+  /* Text on an action-highlight fill (Button accent's label). Mode-invariant
+     — always Neutral/800, because every mode's accent fill is a mid-to-light
+     amber. */
   --color-text-on-highlight: #2f2c28;
-  /* Text that sits on a state-colored fill (Badge's success/warning/error
-     variants) — mode-invariant by design, so a badge's fixed dark/saturated
-     fill always pairs with the same light text regardless of the page's
-     ambient mode. Badge deliberately does NOT set its own data-mode; see
-     Badge.tsx's comment. */
+  /* Text on a state-* fill (Badge's success/warning/error variants).
+     Mode-invariant, matching those fills, which are themselves the same
+     colour on every surface. */
   --color-text-on-state: #fefbf8;
 
-  /* Aliases Grey/800 in Figma. Mode-invariant. Badge's neutral variant fill;
-     not yet used elsewhere. */
-  --color-surface-primary: #fbf3e9;
-  /* Mode-invariant. Not yet used by any built component. */
-  --color-surface-secondary: #3d4a2e;
-  /* Mode-invariant. Not yet used by any built component. */
-  --color-surface-tertiary: #fefbf8;
-  /* Badge's neutral variant fill. Mode-invariant — always Grey/800. */
-  --color-surface-inverse: #2f2c28;
-  /* Card's fill — always this exact terracotta regardless of page mode,
-     which is why Card sets data-mode="feature" on its own root (see
-     Card.tsx) so everything nested inside resolves the correct pairing.
-     Mode-invariant — always Terracotta/800. */
-  --color-surface-feature: #a74b24;
-  /* For modal/overlay backdrops. Not yet used by any built component
-     (no Modal built yet). Mode-invariant — always Grey/900. */
-  --color-surface-scrim: #1d1b19;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-surface-card: #fefbf8;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-surface-subtle: #faefe1;
+  /* Primary button fill. Mode-variant: dark on cream, light on the three
+     dark surfaces. */
+  --color-action-primary: #2f2c28;
+  /* Primary button fill on hover. Mode-variant. */
+  --color-action-primary-hover: #464340;
+  /* Secondary (outlined) button and Input-family field fill — genuinely
+     transparent (Alpha/White-0), not white. Mode-invariant: the surface
+     behind it is what shows through, which is the point. */
+  --color-action-secondary: rgba(255, 255, 255, 0);
+  /* Secondary button and Input-family hover tint — a 10%-alpha wash baked
+     into the token itself, ink-tinted on cream and white-tinted on the three
+     dark surfaces. Successor to the retired state-hover. Mode-variant. */
+  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  /* Accent button fill. Mode-variant — unlike the 2026-08-05 architecture,
+     where it was pinned to one amber regardless of surface. */
+  --color-action-highlight: #df8e10;
+  /* Accent button fill on hover. Mode-variant. */
+  --color-action-highlight-hover: #e39b2b;
+  /* Standalone disabled fill, for disabled text and surfaces outside a
+     component. Components never use this — a disabled control is its Default
+     appearance at opacity-disabled, never a colour swap (rules §2).
+     Mode-variant. */
+  --color-action-disabled: #f4dfc3;
 
-  /* Aliases Sand/600 in Figma. Mode-invariant. Not yet used by any built
-     component directly (state-based hover treatments use component-specific
-     tokens instead). */
-  --color-state-hover: #f6e3cb;
-  /* Border color for Input-family controls in the disabled state; also
-     Button link's disabled-state label text. Mode-variant, see override
-     blocks. */
-  --color-state-disabled: #747270;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
+  /* Dividers and the resting border on Input-family controls. Same colour as
+     text-secondary in every mode, by design in Figma. Mode-variant. */
+  --color-border-default: #4a5435;
+  /* Outlined buttons, Badge's neutral outline, Tab's active indicator, and
+     any emphasised rule. Same colour as text-primary in every mode.
+     Mode-variant. */
+  --color-border-strong: #2a2d1e;
+  /* 10% ink hairline for card edges, table rows and section rules.
+     Mode-variant. */
+  --color-border-subtle: rgba(93, 100, 64, 0.1);
+
+  /* Focus ring — 2px, offset 2px outside the control (rules §2). Successor
+     to border-focus and its three retired -inverse/-on-feature/-on-highlight
+     partners. Focus/500 on cream, Focus/200 on the three dark surfaces so it
+     clears WCAG 2.2 SC 1.4.11's 3:1 everywhere. Mode-variant. */
   --color-state-focus: #2563eb;
-  /* Badge's Warning variant background — pinned to its On Light value
-     regardless of ambient mode, same convention as Badge's other state
-     fills; paired with the mode-invariant text-on-state. Mode-variant, see
-     override blocks (only relevant if a future component explicitly
-     opts into a different mode for this token). */
-  --color-state-warning: #7a4e09;
-  /* Badge's Success variant background. Mode-variant, see override blocks;
-     same pinned-to-On-Light convention as state-warning. */
-  --color-state-success: #166534;
-  /* Badge's Error variant background. Mode-variant, see override blocks;
-     same pinned-to-On-Light convention as state-warning. */
+  /* Error text, borders and badge fills. Mode-invariant — a status colour
+     means the same thing on every surface, and pairs with text-on-state. */
   --color-state-error: #b91c1c;
+  /* Success text, borders and badge fills. Mode-invariant. */
+  --color-state-success: #166534;
+  /* Warning text, borders and badge fills. Mode-invariant — rebound to
+     Accent/950 in the 2026-09-07 sync (was a mode-variant amber). */
+  --color-state-warning: #7a4e09;
+  /* Disabled text and icons standing alone, outside a component. Absorbed
+     the retired icon-disabled. Mode-invariant. */
+  --color-state-disabled: #747270;
 
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-icon-primary: #2f2c28;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-icon-secondary: #4a5435;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-icon-muted: #5d5b58;
-  /* Tab's Active/Hover indicator (confirmed against a live Figma
-     screenshot — renders as a dark muted amber, not action-highlight's
-     bright orange). Mode-variant, see override blocks. */
-  --color-icon-interactive: #7a4e09;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-icon-on-action: #f7e7d2;
-  /* Not yet used by any built component. Mode-variant, see override blocks. */
-  --color-icon-disabled: #747270;
-
-  /* New 2026-08-05, added while building Tab. Figma's opacity/disabled
-     variable — 38%, MD3-pattern disabled treatment: default appearance at
-     reduced opacity, never a separate disabled colour set. Mode-invariant
-     (always 38%). Registered under Tailwind v4's --opacity-* namespace,
-     generating opacity-disabled. */
+  /* Figma's opacity/disabled variable — 38%, the MD3-pattern disabled
+     treatment: Default appearance at reduced opacity, never a separate
+     disabled colour set (rules §2). Mode-invariant. Registered under
+     Tailwind v4's --opacity-* namespace, generating opacity-disabled. */
   --opacity-disabled: 38%;
 
-  /* Primitive ramp, renumbered 2026-08-05 to the standard light->dark
-     convention (50 = lightest, ...950 = darkest). Consumed only via the
-     semantic tokens above — no component binds a primitive directly. */
-  --color-sand-50: #fefbf8;
-  --color-sand-100: #fcf7f0;
-  --color-sand-200: #fbf3e9;
-  --color-sand-300: #faefe1;
-  --color-sand-400: #f8ebda;
-  --color-sand-500: #f7e7d2;
-  --color-sand-600: #f6e3cb;
-  --color-sand-700: #f4dfc3;
-  --color-sand-800: #f3dbbc;
+  /* Primitive ramps, renamed 2026-09-07 to match Figma's own families
+     (50 = lightest). Consumed only via the semantic tokens above — no
+     component binds a primitive directly (rules §1). Figma's Event/* group
+     is deliberately absent: it's print/campaign-only, carries no semantic
+     role, and is recorded in tokens.json rather than registered here, so no
+     Tailwind utility is ever generated for it. */
+  --color-surface-50: #fefbf8;
+  --color-surface-100: #fcf7f0;
+  --color-surface-200: #fbf3e9;
+  --color-surface-300: #faefe1;
+  --color-surface-400: #f8ebda;
+  --color-surface-500: #f7e7d2;
+  --color-surface-600: #f6e3cb;
+  --color-surface-700: #f4dfc3;
+  --color-surface-800: #f3dbbc;
 
-  --color-terracotta-50: #fcf6f3;
-  --color-terracotta-100: #f5e2da;
-  --color-terracotta-200: #eecfc1;
-  --color-terracotta-300: #e7bba8;
-  --color-terracotta-400: #e0a78f;
-  --color-terracotta-500: #d99375;
-  --color-terracotta-600: #d2805c;
-  --color-terracotta-700: #cb6c43;
-  --color-terracotta-800: #a74b24;
+  --color-brand-50: #fcf6f3;
+  --color-brand-100: #f5e2da;
+  --color-brand-200: #eecfc1;
+  --color-brand-300: #e7bba8;
+  --color-brand-400: #e0a78f;
+  --color-brand-500: #d99375;
+  --color-brand-600: #d2805c;
+  --color-brand-700: #cb6c43;
+  --color-brand-800: #a74b24;
 
-  --color-rose-50: #fbefef;
-  --color-rose-100: #f7dedf;
-  --color-rose-200: #f3cecf;
-  --color-rose-300: #efbebf;
-  --color-rose-400: #eaadae;
-  --color-rose-500: #e69d9e;
-  --color-rose-600: #e28d8e;
-  --color-rose-700: #de7c7e;
-  --color-rose-800: #da6c6e;
+  --color-soft-50: #fbefef;
+  --color-soft-100: #f7dedf;
+  --color-soft-200: #f3cecf;
+  --color-soft-300: #efbebf;
+  --color-soft-400: #eaadae;
+  --color-soft-500: #e69d9e;
+  --color-soft-600: #e28d8e;
+  --color-soft-700: #de7c7e;
+  --color-soft-800: #da6c6e;
 
-  --color-burgundy-50: #e8e4e5;
-  --color-burgundy-100: #d2caca;
-  --color-burgundy-200: #bbafb0;
-  --color-burgundy-300: #a59596;
-  --color-burgundy-400: #8e7a7b;
-  --color-burgundy-500: #786061;
-  --color-burgundy-600: #614547;
-  --color-burgundy-700: #4b2b2c;
-  --color-burgundy-800: #4d0707;
-  --color-burgundy-900: #341012;
+  --color-deep-50: #e8e4e5;
+  --color-deep-100: #d2caca;
+  --color-deep-200: #bbafb0;
+  --color-deep-300: #a59596;
+  --color-deep-400: #8e7a7b;
+  --color-deep-500: #786061;
+  --color-deep-600: #614547;
+  --color-deep-700: #4b2b2c;
+  --color-deep-800: #4d0707;
+  --color-deep-900: #341012;
 
-  --color-amber-50: #fbf2e4;
-  --color-amber-100: #f8e6ca;
-  --color-amber-200: #f4d9af;
-  --color-amber-300: #f1cd95;
-  --color-amber-400: #edc07a;
-  --color-amber-500: #eab460;
-  --color-amber-600: #e6a745;
-  --color-amber-700: #e39b2b;
-  --color-amber-800: #df8e10;
-  --color-amber-900: #c07b0e;
-  --color-amber-950: #7a4e09;
+  --color-accent-50: #fbf2e4;
+  --color-accent-100: #f8e6ca;
+  --color-accent-200: #f4d9af;
+  --color-accent-300: #f1cd95;
+  --color-accent-400: #edc07a;
+  --color-accent-500: #eab460;
+  --color-accent-600: #e6a745;
+  --color-accent-700: #e39b2b;
+  --color-accent-800: #df8e10;
+  --color-accent-900: #c07b0e;
+  --color-accent-950: #7a4e09;
 
-  --color-olive-50: #edeeea;
-  --color-olive-100: #dbddd5;
-  --color-olive-200: #c9cbbf;
-  --color-olive-300: #b7baaa;
-  --color-olive-400: #a5a995;
-  --color-olive-500: #939880;
-  --color-olive-600: #81866a;
-  --color-olive-700: #6f7555;
-  --color-olive-800: #5d6440;
-  --color-olive-850: #4a5435;
-  --color-olive-900: #3d4a2e;
-  --color-olive-950: #2a2d1e;
+  --color-ink-50: #edeeea;
+  --color-ink-100: #dbddd5;
+  --color-ink-200: #c9cbbf;
+  --color-ink-300: #b7baaa;
+  --color-ink-400: #a5a995;
+  --color-ink-500: #939880;
+  --color-ink-600: #81866a;
+  --color-ink-700: #6f7555;
+  --color-ink-800: #5d6440;
+  --color-ink-850: #4a5435;
+  --color-ink-900: #3d4a2e;
+  --color-ink-950: #2a2d1e;
 
-  --color-grey-0: #ffffff;
-  --color-grey-50: #e8e8e7;
-  --color-grey-100: #d1d0cf;
-  --color-grey-200: #bab9b7;
-  --color-grey-300: #a3a19f;
-  --color-grey-400: #8b8a88;
-  --color-grey-500: #747270;
-  --color-grey-600: #5d5b58;
-  --color-grey-700: #464340;
-  --color-grey-800: #2f2c28;
-  --color-grey-900: #1d1b19;
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #e8e8e7;
+  --color-neutral-100: #d1d0cf;
+  --color-neutral-200: #bab9b7;
+  --color-neutral-300: #a3a19f;
+  --color-neutral-400: #8b8a88;
+  --color-neutral-500: #747270;
+  --color-neutral-600: #5d5b58;
+  --color-neutral-700: #464340;
+  --color-neutral-800: #2f2c28;
+  --color-neutral-900: #1d1b19;
 
-  --color-cream-50: #f9ecd2;
-  --color-cream-100: #ebe9e3;
+  --color-paper-50: #f9ecd2;
+  --color-paper-100: #ebe9e3;
 
   --color-green-200: #bbf7d0;
   --color-green-300: #4ade80;
@@ -259,16 +232,24 @@
   --color-red-300: #f87171;
   --color-red-700: #b91c1c;
 
-  --color-blue-200: #b3d1ff;
-  --color-blue-500: #2563eb;
-  --color-blue-900: #1e3a8a;
+  --color-focus-200: #b3d1ff;
+  --color-focus-500: #2563eb;
+  /* Kept for a focus ring that has to sit directly on a mid-luminance fill.
+     Nothing binds it today: the ring is drawn 2px outside the control with a
+     2px gap, so it's measured against the surface, not the control's fill —
+     which clears 3:1 on all four modes even on Button accent. Re-measure
+     before reaching for this rather than assuming the old accent-ring
+     exception still applies. */
+  --color-focus-900: #1e3a8a;
 
-  --color-alpha-olive-10: rgba(93, 100, 64, 0.1);
-  --color-alpha-olive-20: rgba(93, 100, 64, 0.2);
-  --color-alpha-olive-40: rgba(93, 100, 64, 0.4);
-  --color-alpha-olive-60: rgba(93, 100, 64, 0.6);
+  --color-alpha-ink-10: rgba(93, 100, 64, 0.1);
+  --color-alpha-ink-20: rgba(93, 100, 64, 0.2);
+  --color-alpha-ink-40: rgba(93, 100, 64, 0.4);
+  --color-alpha-ink-60: rgba(93, 100, 64, 0.6);
   --color-alpha-white-0: rgba(255, 255, 255, 0);
   --color-alpha-white-10: rgba(255, 255, 255, 0.1);
+  --color-alpha-scrim-0: rgba(29, 27, 25, 0);
+  --color-alpha-scrim-85: rgba(29, 27, 25, 0.85);
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off
@@ -321,219 +302,188 @@
   --radius-full: 9999px;
 
   --font-manrope: 'Manrope', system-ui, sans-serif;
+  /* Recoleta is the display face for headings and pull quotes. It is NOT
+     self-hosted the way Manrope is — it relies on the face being installed
+     locally, and the cut on this machine is `Recoleta-RegularDEMO.otf`, a
+     demo licence. That cut ships a partial glyph set: any accented Latin
+     character (é, à, ô …) is silently replaced by a "latinotype" watermark
+     glyph roughly 2.3x the width of a real letter, which reads as corrupted
+     text rather than as a missing font. Measured 2026-09-07 — it is why
+     Card/Producer's story uses unaccented producer names. Nothing detects
+     this automatically; check any accented copy against a real render, and
+     licence the full cut before shipping Recoleta to production.
+     Deliberately absent from the Storybook manager chrome for the same
+     reason — that is Manrope only (see .storybook/RunaboutTheme.ts). */
   --font-recoleta: 'Recoleta', Georgia, serif;
 
-  /* Button small-size label text style. */
+  /* Figma text style "Manrope/Label" — Badge's label at both sizes. */
   --text-label: 13px;
   --text-label--line-height: 1.45;
-  /* Button large-size label text; also the large-size value/label text for
-     every Input-family control (Input/Select/Textarea/Checkbox). */
+  /* Figma text style "Manrope/H6" — Button's large-size label, and the
+     large-size value/label text for every Input-family control. */
   --text-h6: 18px;
   --text-h6--line-height: 1.35;
-  /* Card's date/time/description text; also the small-size value/label
-     text for every Input-family control. */
+  /* Figma text style "Manrope/Paragraph Small" — Card/Event's date, time and
+     description, Card/Producer's location, Tab's label, and the small-size
+     value/label text for every Input-family control. */
   --text-paragraph-small: 15px;
   --text-paragraph-small--line-height: 1.65;
-  /* Card's title text style — the only place the Recoleta display face
-     is used. */
+  /* Figma text style "Recoleta/H3" — Card/Event's title and Card/Quote's
+     quote, the two places the Recoleta display face carries a block of copy. */
   --text-h3: 36px;
   --text-h3--line-height: 1.15;
-
-  /* Figma text style "Manrope/Label SemiBold" — confirmed 2026-08-08 via a
-     live Plugin API read (font-size + rendered node height), added while
-     building the "Vines & Vinyl" landing page story. AUTO line-height in
-     Figma, not a fixed ratio — "normal" matches both Figma's own setting
-     and get_design_context's own generated `leading-[normal]` hint, rather
-     than hand-computing a ratio off one rendered sample. Weight (600) isn't
+  /* Figma text style "Manrope/Label SemiBold". AUTO line-height in Figma,
+     not a fixed ratio — "normal" matches Figma's own setting rather than
+     hand-computing a ratio off one rendered sample. Weight (600) isn't
      encoded here, same convention as every other --text-* token — apply
-     font-semibold alongside, as get_design_context's reference code does.
-     Landing page's Hero eyebrow and the floating date card's time line. */
+     font-semibold alongside. Landing page's Hero eyebrow and the floating
+     date card's time line. */
   --text-label-strong: 13px;
   --text-label-strong--line-height: normal;
-  /* Figma text style "Manrope/Paragraph Large" — confirmed 2026-08-08 (see
-     text-label-strong's comment above for method). Landing page's Hero
+  /* Figma text style "Manrope/Paragraph Large" — landing page's Hero
      description paragraph. */
   --text-paragraph-large: 18px;
   --text-paragraph-large--line-height: 1.65;
-  /* Figma text style "Manrope/Caption" — confirmed 2026-08-08 (see
-     text-label-strong's comment above for method). Landing page's Footer
-     tagline. */
+  /* Figma text style "Manrope/Caption" — Card/Quote's attribution, Modal's
+     description, and the landing page's Footer tagline. */
   --text-caption: 12px;
   --text-caption--line-height: 1.55;
-  /* Figma text style "Manrope/Overline Compact" — confirmed 2026-08-08 (see
-     text-label-strong's comment above for the AUTO/"normal" line-height
-     reasoning). Also carries a real 3px letter-spacing, unlike every other
-     --text-* token here — Tailwind v4 supports a --text-*--letter-spacing
-     companion the same way it supports --line-height, so it's captured as
-     a token property rather than left to an ad hoc tracking-[3px] utility
-     wherever this style is used. Weight (600) still isn't encoded here,
-     same convention as every other --text-* token. Landing page's floating
-     date card "SATURDAY" label. */
+  /* Figma text style "Manrope/Overline Compact" — Card/Producer's category
+     label and the landing page's floating date card "SATURDAY" label. Also
+     carries a real 3px letter-spacing, unlike every other --text-* token
+     here: Tailwind v4 supports a --text-*--letter-spacing companion the same
+     way it supports --line-height, so it's captured as a token property
+     rather than left to an ad hoc tracking-[3px] utility. Weight (600) still
+     isn't encoded here, same convention as every other --text-* token. */
   --text-overline: 10px;
   --text-overline--line-height: normal;
   --text-overline--letter-spacing: 3px;
-  /* Figma text style "Recoleta/H4" — confirmed 2026-08-08 (see
-     text-label-strong's comment above for method). Landing page's floating
-     date card's date line. */
+  /* Figma text style "Recoleta/H4" — Card/Producer's name and the landing
+     page's floating date card's date line. */
   --text-h4: 28px;
   --text-h4--line-height: 1.2;
 
   /* Not Figma-sourced — the Figma file has no motion/duration/easing
-     variables at all (confirmed via getLocalVariablesAsync). Formalizes a
-     de facto value already used identically in Button, Input, Select,
-     Textarea, and Checkbox (transition-colors duration-150 ease-out) into
-     a real, named token rather than leaving it as five copies of the same
-     magic numbers. Existing components still reference the literal
-     Tailwind values (duration-150/ease-out) — they have not been migrated
-     to duration-standard/ease-standard, since that's a zero-visual-diff
-     refactor out of scope here. Foundation cross-referencing treats that
-     literal usage as equivalent, not orphaned.
-  */
+     variables at all (confirmed via getLocalVariablesAsync, re-confirmed
+     against the 2026-09-07 export, which carries no motion group).
+     Formalizes a de facto value already used identically across the
+     Input family and Button (transition-colors duration-150 ease-out) into
+     a real, named token rather than leaving it as copies of the same magic
+     numbers. Existing components still reference the literal Tailwind values
+     (duration-150/ease-out) — they have not been migrated to
+     duration-standard/ease-standard, since that's a zero-visual-diff
+     refactor. Foundation cross-referencing treats that literal usage as
+     equivalent, not orphaned. */
   --duration-standard: 150ms;
   --ease-standard: ease-out;
 
   /* Not Figma-sourced (no breakpoint variables exist in the file) and not
-     yet used by any of the 6 built components (none are responsive).
-     Formalizes the one breakpoint value already used repeatedly across the
-     pre-existing app shell (src/index.css, src/App.css). Registered under
-     Tailwind v4's --breakpoint-* namespace, which generates a `tablet:`
-     responsive variant. Tailwind's own default scale (sm/md/lg/xl/2xl) is
-     available but not customized or formally adopted by this system. */
+     used by any built component (none are responsive). Formalizes the one
+     breakpoint value already used repeatedly across the pre-existing app
+     shell (src/index.css, src/App.css). Registered under Tailwind v4's
+     --breakpoint-* namespace, which generates a `tablet:` responsive
+     variant. Tailwind's own default scale (sm/md/lg/xl/2xl) is available but
+     not customized or formally adopted by this system. */
   --breakpoint-tablet: 1024px;
 }
 
 /*
- * Mode overrides — a container that carries data-mode="dark" or
- * data-mode="feature" gets these values instead of the On Light defaults
- * above, for every mode-variant token. Tailwind utilities (text-text-primary,
- * bg-action-primary, etc.) reference these custom properties at use time via
- * var(--color-*), so overriding the property here is enough — no utility
- * class or component code needs to change for a token whose name is
- * unchanged, only for the retired -inverse/-on-feature tokens (see the
- * header comment above and each affected component's own diff).
+ * Mode overrides. An element carrying data-mode="cream|olive|dark|terracotta"
+ * gets these values instead of @theme's base for every mode-variant token.
+ * Tailwind utilities (text-text-primary, bg-surface-section, etc.) reference
+ * these custom properties at use time via var(--color-*), so overriding the
+ * property here is enough — no utility class or component code changes for a
+ * token whose name is unchanged.
  *
- * Mode-invariant tokens (identical across all three modes — the majority of
- * surface/* tokens, action-highlight(-hover), text-on-highlight,
- * text-on-state, state-hover, border-focus-on-highlight, opacity-disabled)
- * have no entry here; there is nothing to override.
+ * Only the 15 mode-variant tokens appear here. The 10 mode-invariant ones
+ * (surface-card, both scrim stops, text-on-highlight, text-on-state,
+ * action-secondary, state-error/success/warning/disabled) plus
+ * opacity-disabled have no entry — there is nothing to override.
  *
- * [data-mode='light'] exists even though its values are identical to
- * @theme's base — @theme only sets the *initial* value; it doesn't
- * override an ancestor's [data-mode="dark"/"feature"] block for a
- * descendant that needs to go back to light (e.g. a light-content card
- * nested inside an otherwise-dark page, or Storybook's mode-switcher
- * toolbar explicitly selecting Light). CSS custom properties don't reset
- * themselves just because a new attribute value is present — only an
- * explicit rule for that attribute value does that. Without this block,
- * data-mode="light" on such a descendant would silently do nothing and
- * the dark/feature values would keep inheriting straight through.
+ * [data-mode='cream'] exists even though its values are identical to
+ * @theme's base. @theme only sets the *initial* value; it doesn't override
+ * an ancestor's darker block for a descendant that needs to go back to cream
+ * (a cream card nested inside an olive section, Modal setting its own mode,
+ * or Storybook's mode switcher explicitly selecting On Cream). CSS custom
+ * properties don't reset themselves just because a new attribute value is
+ * present — only an explicit rule for that value does that.
+ *
+ * Scope a data-mode override to the narrowest element that actually needs
+ * it, never the nearest convenient wrapper: a mode set on a section pulls in
+ * every descendant, including ones that visually sit on a different surface.
+ * That exact mistake shipped once already (see CLAUDE.md's 2026-08-05
+ * incident).
  */
-[data-mode='light'] {
+[data-mode='cream'] {
+  --color-surface-section: #f8ebda;
+  --color-text-primary: #2a2d1e;
+  --color-text-secondary: #4a5435;
+  --color-text-link: #7a4e09;
+  --color-text-on-action: #f7e7d2;
   --color-action-primary: #2f2c28;
   --color-action-primary-hover: #464340;
   --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  --color-action-highlight: #df8e10;
+  --color-action-highlight-hover: #e39b2b;
   --color-action-disabled: #f4dfc3;
-
-  --color-border-default: #939880;
-  --color-border-subtle: #f4dfc3;
-  --color-border-strong: #3d4a2e;
-  --color-border-focus: #2563eb;
-
-  --color-text-primary: #2a2d1e;
-  --color-text-secondary: #4a5435;
-  --color-text-muted: #5d5b58;
-  --color-text-highlight: #7a4e09;
-  --color-text-link: #7a4e09;
-  --color-text-button: #7a4e09;
-  --color-text-on-action: #f7e7d2;
-
-  --color-surface-card: #fefbf8;
-  --color-surface-subtle: #faefe1;
-
-  --color-state-disabled: #747270;
+  --color-border-default: #4a5435;
+  --color-border-strong: #2a2d1e;
+  --color-border-subtle: rgba(93, 100, 64, 0.1);
   --color-state-focus: #2563eb;
-  --color-state-warning: #7a4e09;
-  --color-state-success: #166534;
-  --color-state-error: #b91c1c;
+}
 
-  --color-icon-primary: #2f2c28;
-  --color-icon-secondary: #4a5435;
-  --color-icon-muted: #5d5b58;
-  --color-icon-interactive: #7a4e09;
-  --color-icon-on-action: #f7e7d2;
-  --color-icon-disabled: #747270;
+[data-mode='olive'] {
+  --color-surface-section: #3d4a2e;
+  --color-text-primary: #faefe1;
+  --color-text-secondary: #c9cbbf;
+  --color-text-link: #edc07a;
+  --color-text-on-action: #2f2c28;
+  --color-action-primary: #f7e7d2;
+  --color-action-primary-hover: #f3dbbc;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-highlight: #e6a745;
+  --color-action-highlight-hover: #eab460;
+  --color-action-disabled: #464340;
+  --color-border-default: #c9cbbf;
+  --color-border-strong: #fbf3e9;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-state-focus: #b3d1ff;
 }
 
 [data-mode='dark'] {
-  --color-action-primary: #f7e7d2;
-  --color-action-primary-hover: #df8e10;
-  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
-  --color-action-disabled: #464340;
-
-  --color-border-default: #a5a995;
-  --color-border-subtle: rgba(255, 255, 255, 0.1);
-  --color-border-strong: #f7e7d2;
-  --color-border-focus: #b3d1ff;
-
-  --color-text-primary: #fefbf8;
+  --color-surface-section: #2f2c28;
+  --color-text-primary: #faefe1;
   --color-text-secondary: #c9cbbf;
-  --color-text-muted: #d1d0cf;
-  --color-text-highlight: #edc07a;
   --color-text-link: #edc07a;
-  --color-text-button: #edc07a;
   --color-text-on-action: #2f2c28;
-
-  --color-surface-card: #4a5435;
-  --color-surface-subtle: #4a5435;
-
-  --color-state-disabled: #a3a19f;
+  --color-action-primary: #f7e7d2;
+  --color-action-primary-hover: #f3dbbc;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-highlight: #e6a745;
+  --color-action-highlight-hover: #eab460;
+  --color-action-disabled: #464340;
+  --color-border-default: #c9cbbf;
+  --color-border-strong: #fbf3e9;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
   --color-state-focus: #b3d1ff;
-  --color-state-warning: #edc07a;
-  --color-state-success: #4ade80;
-  --color-state-error: #fecaca;
-
-  --color-icon-primary: #f7e7d2;
-  --color-icon-secondary: #c9cbbf;
-  --color-icon-muted: #d1d0cf;
-  --color-icon-interactive: #e6a745;
-  --color-icon-on-action: #2f2c28;
-  --color-icon-disabled: #a3a19f;
 }
 
-[data-mode='feature'] {
-  --color-action-primary: #f7e7d2;
-  --color-action-primary-hover: #df8e10;
-  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
-  --color-action-disabled: #cb6c43;
-
-  --color-border-default: #f7e7d2;
-  --color-border-subtle: rgba(255, 255, 255, 0.1);
-  --color-border-strong: #fefbf8;
-  --color-border-focus: #b3d1ff;
-
-  --color-text-primary: #fefbf8;
-  --color-text-secondary: #faefe1;
-  --color-text-muted: #f8ebda;
-  --color-text-highlight: #fbf2e4;
+[data-mode='terracotta'] {
+  --color-surface-section: #a74b24;
+  --color-text-primary: #faefe1;
+  --color-text-secondary: #f6e3cb;
   --color-text-link: #fbf2e4;
-  --color-text-button: #fefbf8;
   --color-text-on-action: #2f2c28;
-
-  --color-surface-card: #fefbf8;
-  --color-surface-subtle: #faefe1;
-
-  --color-state-disabled: #f8ebda;
+  --color-action-primary: #f7e7d2;
+  --color-action-primary-hover: #f3dbbc;
+  --color-action-secondary-hover: rgba(255, 255, 255, 0.1);
+  --color-action-highlight: #edc07a;
+  --color-action-highlight-hover: #f1cd95;
+  --color-action-disabled: #cb6c43;
+  --color-border-default: #faefe1;
+  --color-border-strong: #fbf3e9;
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
   --color-state-focus: #b3d1ff;
-  --color-state-warning: #fbf2e4;
-  --color-state-success: #bbf7d0;
-  --color-state-error: #fee2e2;
-
-  --color-icon-primary: #fefbf8;
-  --color-icon-secondary: #faefe1;
-  --color-icon-muted: #f8ebda;
-  --color-icon-interactive: #fbf2e4;
-  --color-icon-on-action: #2f2c28;
-  --color-icon-disabled: #f8ebda;
 }
 
 /* BRAND OVERRIDES — GENERATED, DO NOT EDIT */
@@ -542,50 +492,32 @@
  * Northline brand overrides — generated by scripts/generate-brand-overrides.js
  * from scripts/data/northline-brand-tokens.json (resolved from the Figma
  * Primitives/Semantic variable collections, file JpFA7KtVlSOrM9fIYYgOsn,
- * resolved 2026-08-08). Do not hand-edit: regenerate instead.
+ * resolved 2026-09-07). Do not hand-edit: regenerate instead.
  *
  * Brand is a third, independent axis from mode — every semantic token name
  * is identical to the Runabout default; only the value differs. Runabout
  * itself carries no data-brand attribute and is unaffected by this file.
  *
  * Only tokens whose resolved value actually differs from Runabout's for the
- * same Semantic mode are listed below (onLight: 38, onDark: 36, onFeature: 36).
+ * same surface mode are listed below (onCream: 20, onOlive: 18, onDark: 18, onTerracotta: 18).
  */
 
-[data-brand='northline'], [data-brand='northline'][data-mode='light'], [data-brand='northline'] [data-mode='light'] {
+[data-brand='northline'], [data-brand='northline'][data-mode='cream'], [data-brand='northline'] [data-mode='cream'] {
   --color-action-disabled: #e0e8f2;
   --color-action-highlight: #2b7fd4;
   --color-action-highlight-hover: #5797e7;
   --color-action-primary: #232a33;
   --color-action-primary-hover: #3c4551;
   --color-action-secondary-hover: rgba(75, 99, 129, 0.1);
-  --color-border-default: #99abc3;
-  --color-border-focus: #6d3fd4;
-  --color-border-focus-on-highlight: #3a1f7a;
-  --color-border-strong: #2b3d51;
-  --color-border-subtle: #e0e8f2;
-  --color-icon-disabled: #7d8896;
-  --color-icon-interactive: #123f6b;
-  --color-icon-muted: #5a6573;
-  --color-icon-on-action: #e9eff6;
-  --color-icon-primary: #232a33;
-  --color-icon-secondary: #3b5069;
+  --color-border-default: #3b5069;
+  --color-border-strong: #1b2a39;
+  --color-border-subtle: rgba(75, 99, 129, 0.1);
   --color-state-disabled: #7d8896;
   --color-state-focus: #6d3fd4;
-  --color-state-hover: #e4ecf4;
   --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
-  --color-surface-feature: #0e5f6b;
-  --color-surface-inverse: #232a33;
-  --color-surface-primary: #f5f8fc;
-  --color-surface-scrim: #141a21;
-  --color-surface-secondary: #2b3d51;
-  --color-surface-subtle: #f1f5fa;
-  --color-surface-tertiary: #fdfeff;
-  --color-text-button: #123f6b;
-  --color-text-highlight: #123f6b;
+  --color-surface-section: #edf2f8;
   --color-text-link: #123f6b;
-  --color-text-muted: #5a6573;
   --color-text-on-action: #e9eff6;
   --color-text-on-highlight: #232a33;
   --color-text-on-state: #fdfeff;
@@ -593,82 +525,67 @@
   --color-text-secondary: #3b5069;
 }
 
-[data-brand='northline'][data-mode='dark'], [data-brand='northline'] [data-mode='dark'] {
+[data-brand='northline'][data-mode='olive'], [data-brand='northline'] [data-mode='olive'] {
   --color-action-disabled: #3c4551;
-  --color-action-highlight: #2b7fd4;
-  --color-action-highlight-hover: #5797e7;
+  --color-action-highlight: #6ca4ea;
+  --color-action-highlight-hover: #81b1ed;
   --color-action-primary: #e9eff6;
-  --color-action-primary-hover: #2b7fd4;
-  --color-border-default: #aab9cd;
-  --color-border-focus: #d3c4ff;
-  --color-border-focus-on-highlight: #3a1f7a;
-  --color-border-strong: #e9eff6;
-  --color-icon-disabled: #b3bbc7;
-  --color-icon-interactive: #6ca4ea;
-  --color-icon-muted: #d9dde3;
-  --color-icon-on-action: #232a33;
-  --color-icon-primary: #e9eff6;
-  --color-icon-secondary: #ccd5e1;
-  --color-state-disabled: #b3bbc7;
+  --color-action-primary-hover: #dce5f0;
+  --color-border-default: #ccd5e1;
+  --color-border-strong: #f5f8fc;
+  --color-state-disabled: #7d8896;
   --color-state-focus: #d3c4ff;
-  --color-state-hover: #e4ecf4;
-  --color-state-warning: #96bef0;
-  --color-surface-card: #3b5069;
-  --color-surface-feature: #0e5f6b;
-  --color-surface-inverse: #232a33;
-  --color-surface-primary: #f5f8fc;
-  --color-surface-scrim: #141a21;
-  --color-surface-secondary: #2b3d51;
-  --color-surface-subtle: #3b5069;
-  --color-surface-tertiary: #fdfeff;
-  --color-text-button: #96bef0;
-  --color-text-highlight: #96bef0;
+  --color-state-warning: #123f6b;
+  --color-surface-card: #fdfeff;
+  --color-surface-section: #2b3d51;
   --color-text-link: #96bef0;
-  --color-text-muted: #d9dde3;
   --color-text-on-action: #232a33;
   --color-text-on-highlight: #232a33;
   --color-text-on-state: #fdfeff;
-  --color-text-primary: #fdfeff;
+  --color-text-primary: #f1f5fa;
   --color-text-secondary: #ccd5e1;
 }
 
-[data-brand='northline'][data-mode='feature'], [data-brand='northline'] [data-mode='feature'] {
-  --color-action-disabled: #58b4c3;
-  --color-action-highlight: #2b7fd4;
-  --color-action-highlight-hover: #5797e7;
+[data-brand='northline'][data-mode='dark'], [data-brand='northline'] [data-mode='dark'] {
+  --color-action-disabled: #3c4551;
+  --color-action-highlight: #6ca4ea;
+  --color-action-highlight-hover: #81b1ed;
   --color-action-primary: #e9eff6;
-  --color-action-primary-hover: #2b7fd4;
-  --color-border-default: #e9eff6;
-  --color-border-focus: #d3c4ff;
-  --color-border-focus-on-highlight: #3a1f7a;
-  --color-border-strong: #fdfeff;
-  --color-icon-disabled: #edf2f8;
-  --color-icon-interactive: #eaf2fc;
-  --color-icon-muted: #edf2f8;
-  --color-icon-on-action: #232a33;
-  --color-icon-primary: #fdfeff;
-  --color-icon-secondary: #f1f5fa;
-  --color-state-disabled: #edf2f8;
+  --color-action-primary-hover: #dce5f0;
+  --color-border-default: #ccd5e1;
+  --color-border-strong: #f5f8fc;
+  --color-state-disabled: #7d8896;
   --color-state-focus: #d3c4ff;
-  --color-state-hover: #e4ecf4;
-  --color-state-warning: #eaf2fc;
+  --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
-  --color-surface-feature: #0e5f6b;
-  --color-surface-inverse: #232a33;
-  --color-surface-primary: #f5f8fc;
-  --color-surface-scrim: #141a21;
-  --color-surface-secondary: #2b3d51;
-  --color-surface-subtle: #f1f5fa;
-  --color-surface-tertiary: #fdfeff;
-  --color-text-button: #fdfeff;
-  --color-text-highlight: #eaf2fc;
-  --color-text-link: #eaf2fc;
-  --color-text-muted: #edf2f8;
+  --color-surface-section: #232a33;
+  --color-text-link: #96bef0;
   --color-text-on-action: #232a33;
   --color-text-on-highlight: #232a33;
   --color-text-on-state: #fdfeff;
-  --color-text-primary: #fdfeff;
-  --color-text-secondary: #f1f5fa;
+  --color-text-primary: #f1f5fa;
+  --color-text-secondary: #ccd5e1;
+}
+
+[data-brand='northline'][data-mode='terracotta'], [data-brand='northline'] [data-mode='terracotta'] {
+  --color-action-disabled: #58b4c3;
+  --color-action-highlight: #96bef0;
+  --color-action-highlight-hover: #abcbf3;
+  --color-action-primary: #e9eff6;
+  --color-action-primary-hover: #dce5f0;
+  --color-border-default: #f1f5fa;
+  --color-border-strong: #f5f8fc;
+  --color-state-disabled: #7d8896;
+  --color-state-focus: #d3c4ff;
+  --color-state-warning: #123f6b;
+  --color-surface-card: #fdfeff;
+  --color-surface-section: #0e5f6b;
+  --color-text-link: #eaf2fc;
+  --color-text-on-action: #232a33;
+  --color-text-on-highlight: #232a33;
+  --color-text-on-state: #fdfeff;
+  --color-text-primary: #f1f5fa;
+  --color-text-secondary: #e4ecf4;
 }
 
 /* END BRAND OVERRIDES */

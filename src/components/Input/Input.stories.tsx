@@ -14,41 +14,48 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['large', 'small'],
-    },
+    size: { control: 'select', options: ['large', 'small'] },
   },
-  args: {
-    placeholder: 'Enter text...',
-  },
+  decorators: [
+    (Story) => (
+      <div className="w-[320px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Large: Story = {
-  args: {
-    size: 'large',
-  },
+  args: { size: 'large', placeholder: 'Enter text...' },
 };
 
 export const Small: Story = {
-  args: {
-    size: 'small',
-  },
+  args: { size: 'small', placeholder: 'Enter text...' },
+};
+
+/** A typed value rather than a placeholder — the two use different tokens
+ *  (text-primary vs text-secondary), which one static story can't show. */
+export const WithValue: Story = {
+  args: { size: 'large', defaultValue: 'Ada Lovelace' },
 };
 
 export const Disabled: Story = {
-  args: {
-    size: 'large',
-    disabled: true,
-  },
+  args: { size: 'large', placeholder: 'Enter text...', disabled: true },
 };
 
-export const WithValue: Story = {
-  args: {
-    size: 'large',
-    defaultValue: 'Hello world',
-  },
+/** With the label the component's own guidance requires — a placeholder is
+ *  not a label. */
+export const WithLabel: Story = {
+  args: { size: 'large', placeholder: 'you@example.com' },
+  render: (args) => (
+    <div className="flex flex-col gap-01">
+      <label htmlFor="email-demo" className="font-manrope text-label text-text-primary">
+        Email address
+      </label>
+      <Input {...args} id="email-demo" type="email" />
+    </div>
+  ),
 };

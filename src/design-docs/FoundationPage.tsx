@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 
-export type TokenCategory = 'color' | 'typography' | 'spacing' | 'radius' | 'motion' | 'shadow' | 'breakpoint';
+export type TokenCategory = 'color' | 'typography' | 'spacing' | 'radius' | 'motion' | 'breakpoint';
 
 export interface FoundationTokenRow {
   type: string;
@@ -192,7 +192,7 @@ function DetailedTokenTable({ category, tokens }: { category: TokenCategory; tok
   );
 }
 
-// 71 individual table rows would be unusable — primitives render as compact
+// 95 individual table rows would be unusable — primitives render as compact
 // swatch strips grouped by palette family instead, each swatch carrying its
 // step/hex/tokenPath/usage in a native title tooltip rather than a table row.
 function PrimitivePaletteGrid({ tokens }: { tokens: FoundationTokenRow[] }) {

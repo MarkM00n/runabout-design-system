@@ -1,27 +1,33 @@
 /* Breaks out of index.css's centered #root column (1126px, bordered) so the
    dashboard can run full-width on a projector — scoped to this component
    only, index.css itself stays untouched since Storybook also depends on it. */
-/* Color strategy (verified with a real WCAG contrast calc, not eyeballed —
-   see the PR description for the numbers):
-   - Page canvas (header, stat tiles, section titles): surface-secondary
-     (dark olive) + text-primary resolved On Dark (~7.81:1 — text-inverse,
-     the token originally verified at 8.07:1 here, was retired with no
-     successor in the 2026-08-05 mode-based token sync; text-primary is
-     its mode-aware replacement and resolves correctly here because
-     .dashboard carries data-mode="dark", see App.tsx).
-   - Both tables (Errors-caught and Component status) now share the same
-     .table-card treatment: a dark surface-inverse header row over zebra
-     surface-tertiary/cream-100 body rows, so — unlike the raw canvas —
-     their content uses LIGHT-surface-safe colors (text-primary resolved
-     On Light, state-warning for warn, state-error for fail, text-link for
-     links), scoped in below via .table-card, which carries
-     data-mode="light" to override the page's ambient dark mode back for
-     its own subtree. Nothing table-related is styled for the dark canvas
-     directly anymore. cream-100 was renumbered from cream-50 in the
-     2026-08-05 primitive renumbering (same value, #ebe9e3) — see
-     tokens.css; it's the one primitive left in this file, holding the
-     zebra odd row, because the table's Figma reference frame specifies
-     that ramp step directly and no semantic surface token carries it. */
+/* Colour strategy (verified with a real WCAG contrast calc, not eyeballed).
+   Rewritten for the 2026-09-07 surface-mode architecture, whose one rule is
+   "anything with a background owns a mode, everything else inherits" — so
+   every fill below is surface-section or surface-card, and which colour it
+   comes out as is decided by the data-mode on that element in App.tsx.
+
+   - Page canvas (header, stat tiles' backdrop, section titles):
+     surface-section resolved On Olive (Ink/900, the same dark olive as
+     before) + text-primary resolved On Olive at 8.34:1. .dashboard carries
+     data-mode="olive"; it used to say "dark" while painting an olive fill
+     from surface-secondary, which the four-mode system can now name
+     properly.
+   - The five stat tiles are surface-card (Surface/50) with their own
+     data-mode="cream" — a light elevated panel on the dark canvas, the
+     same fill-plus-pinned-mode pairing Modal uses.
+   - Both tables share the .table-card treatment: a dark header band over
+     zebra light body rows. The <thead> carries data-mode="dark" and fills
+     with surface-section (Neutral/800); the scroll container carries
+     data-mode="cream" so the body rows' text, links and status colours all
+     resolve light-surface-safe. Each mode sits on the narrowest element
+     that actually needs it, never on the enclosing <section> — that
+     mistake shipped once and put .section-title on the wrong surface
+     (2026-08-05).
+   - paper-100 (#ebe9e3, renamed from cream-100 in the 2026-09-07 primitive
+     rename) is the one primitive left in this file, holding the zebra odd
+     row, because the table's Figma reference frame specifies that ramp step
+     directly and no semantic surface token carries it. */
 .dashboard {
   width: 100vw;
   position: relative;
@@ -32,7 +38,7 @@
   min-height: 100svh;
   box-sizing: border-box;
   text-align: left;
-  background: var(--color-surface-secondary);
+  background: var(--color-surface-section);
   color: var(--color-text-primary);
   font-family: var(--font-manrope);
   padding: var(--spacing-06) var(--spacing-07);
@@ -100,13 +106,14 @@
 }
 
 /* Shared tile skin. Quiet by construction: a light surface token and
-   nothing that competes with the numbers. Terracotta (surface-feature) is
+   nothing that competes with the numbers. Terracotta (surface-section
+   resolved On Terracotta) is
    deliberately absent here — it's an accent colour, and a panel-sized
    field of it turns every stat into a headline and flattens the hierarchy
    this layout exists to create. Same rule as "action tokens are never
    panel fills": the accent marks something, it doesn't upholster it.
 
-   One surface token across all five tiles: surface-subtle. The hero used
+   One surface token across all five tiles: surface-card. The hero used
    to sit on surface-card (#fefbf8) a half-step brighter than the
    secondaries, which made it a second surface doing hierarchy work that
    size, position and its label block already do — and read as an
@@ -115,7 +122,7 @@
 
    No border. The hairline that was here was only ever softening an edge
    the surface already draws on its own: the tile-to-canvas step is 8.34:1
-   against surface-secondary, so each tile stays a distinctly bounded shape
+   against the olive canvas, so each tile stays a distinctly bounded shape
    with the border gone. Nothing about the boundary depended on it, which
    is why removing it costs no legibility. */
 .stat-hero,
@@ -124,7 +131,11 @@
   box-sizing: border-box;
   border-radius: var(--radius-xl);
   padding: var(--spacing-04);
-  background: var(--color-surface-subtle);
+  /* surface-card, the token for an elevated light surface, paired with the
+     data-mode="cream" each tile carries in App.tsx. It is Surface/50 in
+     every mode, so the mode is what keeps the ink dark — see that file's
+     comment. Replaces surface-subtle, retired in the 2026-09-07 sync. */
+  background: var(--color-surface-card);
 }
 
 .stat-hero {
@@ -165,7 +176,7 @@
 }
 
 /* The one place terracotta appears: a spacing-00 x spacing-02 (4x16)
-   marker against the hero label, 5.03:1 on surface-subtle — comfortably
+   marker against the hero label, 5.03:1 on surface-card — comfortably
    past the 3:1 non-text minimum (SC 1.4.11), though it's decorative here
    and carries no meaning the label doesn't already state. Dimensions come
    off the spacing scale rather than the 3x14 picked by eye that was
@@ -175,14 +186,18 @@
   width: var(--spacing-00);
   height: var(--spacing-02);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-feature);
+  /* surface-section resolved through the data-mode="terracotta" this span
+     carries in App.tsx — a 4x16 sliver is still a surface, and that is now
+     the only way to reach Brand/800 without binding a primitive directly.
+     Replaces surface-feature, retired in the 2026-09-07 sync. */
+  background: var(--color-surface-section);
 }
 
 .stat-hero-caption {
   margin-top: var(--spacing-02);
   font-size: var(--text-label);
   line-height: var(--text-label--line-height);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 /* text-h4 (28px) — the next step up from h6, and the only one the scale
@@ -203,7 +218,7 @@
 }
 
 /* Zero open issues reads as a cleared state, not a measurement. 6.28:1 on
-   surface-subtle. The tick is aria-hidden and the colour is redundant with
+   surface-card. The tick is aria-hidden and the colour is redundant with
    the number and label, so nothing here depends on colour alone (SC 1.4.1)
    or on a glyph a screen reader would have to interpret. */
 .stat-value-good {
@@ -258,9 +273,9 @@
    here (rgba(248,235,218,.16) and .1) were a faint light hairline hand-made
    for the dark table this used to be — a value with no token behind it, and
    fixed, so it stayed light-on-light once these tables moved to the
-   data-mode="light" treatment. border-subtle is the token for exactly this
+   data-mode="cream" treatment. border-subtle is the token for exactly this
    role and resolves per mode: rgba(255,255,255,.1) On Dark (what the
-   literals were approximating) and #f4dfc3 On Light. */
+   literals were approximating) and #f4dfc3 On Cream. */
 /* No uppercase/letter-spacing treatment. The 0.04em that was here was the
    file's last hand-picked value (no tracking token covers 13px text), and
    it rendered in exactly one place: leaked onto the nested .issue-table's
@@ -318,8 +333,8 @@
    instead, so it still reads as a defined, self-contained block. */
 
 /* Table style copied from the Figma reference frame (Design System file,
-   node 89:402, "table"): dark surface-inverse header row with text-inverse
-   labels, zebra body rows alternating surface-tertiary/cream-50, spacing-02
+   node 89:402, "table"): a dark header row over zebra body rows
+   alternating surface-card/paper-100, spacing-02
    (16px) cell padding, radius-xl clipped corners. Plain sentence-case
    headers (not the dashboard's usual uppercase/letter-spacing treatment)
    to match that frame exactly.
@@ -328,14 +343,15 @@
    it needs something to inherit text-primary from now that the white card
    that used to provide it is gone. This also correctly cascades into the
    nested .issue-table's cells below, which have the same problem. */
-/* border-strong, as asked — flagging a real conflict rather than quietly
-   picking something else: border-strong (#3d4a2e) is the exact same hex
-   as the page canvas (surface-secondary, also #3d4a2e), so this border is
-   contrast-invisible where it meets the dark canvas around the table
-   (1.00:1 — literally identical colors, not a close call). It reads fine
-   anywhere it borders the table's own light interior. */
+/* No border. The previous border-strong hairline was already flagged here
+   as contrast-invisible against the canvas, and the 2026-09-07 architecture
+   does not rescue it: the element carries data-mode="cream" for its light
+   interior, which resolves border-strong to Ink/950 — 1.19:1 against the
+   olive canvas it actually sits on. A border needs to read against what is
+   outside it, and this one never could. The light table on the dark canvas
+   is an 8:1+ boundary on its own, so nothing is lost by dropping it —
+   the same reasoning that removed the stat tiles' border. */
 .table-card .table-scroll {
-  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-xl);
   color: var(--color-text-primary);
 }
@@ -351,14 +367,13 @@
    the td rule outright, keeps this table's styling from crossing into the
    table nested inside it. */
 .table-card .dashboard-table > thead th {
-  background: var(--color-surface-inverse);
-  /* text-on-state, not text-primary — this header row's own fill
-     (surface-inverse) is mode-invariant, always dark, regardless of this
-     card's own data-mode="light". text-on-state is the mode-invariant
-     partner made for exactly this "small fixed-dark-fill inside an
-     otherwise light context" case (same reasoning as Badge's fills) —
-     13.47:1 against surface-inverse, verified. */
-  color: var(--color-text-on-state);
+  /* The <thead> carries its own data-mode="dark" (see App.tsx), so this is
+     surface-section resolved On Dark — Neutral/800, the same #2f2c28 the
+     retired surface-inverse gave. Because the row now owns its mode rather
+     than pinning a fill, text-primary resolves correctly against it on its
+     own: 12.24:1, no mode-invariant partner token needed. */
+  background: var(--color-surface-section);
+  color: var(--color-text-primary);
   font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: normal;
@@ -373,20 +388,20 @@
 }
 
 .table-card .row-even {
-  background: var(--color-surface-tertiary);
+  background: var(--color-surface-card);
 }
 
 .table-card .row-odd {
-  background: var(--color-cream-100);
+  background: var(--color-paper-100);
 }
 
 /* Was the amber-800 primitive (#df8e10) for all three. That failed AA
-   outright as body text on these rows — 2.54:1 on surface-tertiary and
-   2.16:1 on cream-100, against a 4.5:1 minimum. It was a bright fill
+   outright as body text on these rows — 2.54:1 on surface-card and
+   2.16:1 on paper-100, against a 4.5:1 minimum. It was a bright fill
    colour being used as small text, carried through the 2026-08-05
    renumbering without the pairing being re-checked.
 
-   Split by what each one means, and both land on #7a4e09 On Light:
+   Split by what each one means, and both land on #7a4e09 On Cream:
    text-link for the link, state-warning for the warning cells — 6.97:1
    and 5.92:1 on the two zebra rows. Mode-variant too, so they stay
    correct if this table is ever read on the dark canvas. */
@@ -404,11 +419,11 @@
    doesn't apply here. state-error was darkened (#dc2626 -> #b91c1c) in the
    2026-07-19 token sync, which resolves what used to be a real, checked,
    small AA miss on the darker zebra row: it now clears normal-text AA on
-   both rows outright (6.28:1 on surface-tertiary, 5.33:1 on cream-100 —
+   both rows outright (6.28:1 on surface-card, 5.33:1 on paper-100 —
    was 4.68:1 and 3.98:1/failing respectively). state-error is mode-variant
-   in the 2026-08-05 sync (On Light #b91c1c, same as this always-checked
+   in the 2026-08-05 sync (On Cream #b91c1c, same as this always-checked
    value) — resolves correctly here specifically because this card carries
-   data-mode="light". */
+   data-mode="cream". */
 .table-card .cell-fail {
   color: var(--color-state-error);
   font-size: var(--text-label);
@@ -420,7 +435,7 @@
 }
 
 /* action-primary-hover inverted in the 2026-08-05 sync — this card's
-   data-mode="light" resolves it to a dark grey (#464340) now, not the old
+   data-mode="cream" resolves it to a dark grey (#464340) now, not the old
    bright amber. text-on-state (not text-primary, and not the old
    text-inverse, which is retired) is the mode-invariant partner made for
    exactly this "small fixed-dark-fill" case (same reasoning as the header
@@ -445,7 +460,7 @@
 }
 
 .cell-expand-toggle {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-align: right;
   width: var(--spacing-04);
 }
@@ -473,7 +488,7 @@
   flex-direction: column;
   gap: var(--spacing-04);
   padding: var(--spacing-04);
-  background: var(--color-surface-tertiary);
+  background: var(--color-surface-card);
 }
 
 .detail-block {
@@ -496,7 +511,7 @@
 .issue-empty {
   font-size: var(--text-label);
   line-height: var(--text-label--line-height);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -523,7 +538,7 @@
 .issue-table th {
   text-align: left;
   padding: 0 var(--spacing-03) var(--spacing-01) 0;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-size: var(--text-label);
   font-weight: 400;
   /* border-default, replacing a hand-mixed rgba(61,74,46,.4) — that was
@@ -596,7 +611,7 @@
 }
 
 /* Component status's Overall column — light-safe colors since this table's
-   rows are the zebra surface-tertiary/cream-100 treatment, not the dark
+   rows are the zebra surface-card/paper-100 treatment, not the dark
    canvas. Three states, not two: pass-with-warnings gets its own amber
    between clean-pass green and blocking-fail red. */
 .status-badge {

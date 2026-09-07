@@ -14,11 +14,15 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['large', 'small'],
-    },
+    size: { control: 'select', options: ['large', 'small'] },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[320px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof Select>;
 
 export default meta;
@@ -26,36 +30,30 @@ type Story = StoryObj<typeof meta>;
 
 const options = (
   <>
-    <option value="" disabled hidden>
+    <option value="" disabled>
       Select an option...
     </option>
-    <option value="natural-wine">Natural wine</option>
-    <option value="orange-wine">Orange wine</option>
-    <option value="pet-nat">Pét-nat</option>
+    <option value="natural-wine">Natural Wine Session</option>
+    <option value="cellar-tour">Cellar Tour</option>
+    <option value="harvest">Harvest Day</option>
   </>
 );
 
 export const Large: Story = {
-  args: {
-    size: 'large',
-    defaultValue: '',
-  },
-  render: (args) => <Select {...args}>{options}</Select>,
+  args: { size: 'large', defaultValue: '', children: options },
 };
 
 export const Small: Story = {
-  args: {
-    size: 'small',
-    defaultValue: '',
-  },
-  render: (args) => <Select {...args}>{options}</Select>,
+  args: { size: 'small', defaultValue: '', children: options },
+};
+
+/** A real selection rather than the placeholder. Also the regression case
+ *  for the has-[select:disabled] scoping: the disabled placeholder option
+ *  must not dim the whole control. */
+export const WithSelection: Story = {
+  args: { size: 'large', defaultValue: 'cellar-tour', children: options },
 };
 
 export const Disabled: Story = {
-  args: {
-    size: 'large',
-    defaultValue: '',
-    disabled: true,
-  },
-  render: (args) => <Select {...args}>{options}</Select>,
+  args: { size: 'large', defaultValue: '', disabled: true, children: options },
 };

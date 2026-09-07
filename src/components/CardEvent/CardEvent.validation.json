@@ -1,0 +1,54 @@
+{
+  "component": "CardEvent",
+  "lastValidated": "2026-09-07",
+  "checks": {
+    "tokenCompliance": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "accessibility": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "storybookCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    },
+    "documentationCoverage": {
+      "pass": true,
+      "fail": 0,
+      "warn": 0,
+      "status": "pass",
+      "open": []
+    }
+  },
+  "history": [],
+  "overall": true,
+  "status": "pass",
+  "tokensUsed": [
+    "color-border-default",
+    "color-border-subtle",
+    "color-state-focus",
+    "color-surface-section",
+    "color-text-primary",
+    "font-manrope",
+    "font-recoleta",
+    "radius-md",
+    "radius-xl",
+    "spacing-01",
+    "spacing-02",
+    "spacing-04",
+    "spacing-06",
+    "text-h3",
+    "text-paragraph-small"
+  ]
+}

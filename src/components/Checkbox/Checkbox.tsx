@@ -10,36 +10,31 @@ export interface CheckboxProps
   label: string;
 }
 
-// Source: Figma `Input/Checkbox` component set. The real <input> is visually
-// hidden (sr-only) but stays in the DOM and keyboard/focus-operable — the
-// box and checkmark are decorative siblings driven off it via `peer-*`
-// selectors, which is how you get a custom-styled checkbox without losing
-// native semantics/accessibility.
+// Source: Figma Input/Checkbox (141:449). The real <input> is visually hidden
+// (sr-only) but stays in the DOM and keyboard-operable — the box and
+// checkmark are decorative siblings driven off it via `peer-*`, which is how
+// you get a custom-styled checkbox without losing native semantics.
 //
-// Box fill is action-secondary (transparent) / action-secondary-hover (a
-// 10%-alpha tint baked into the token itself) — confirmed live against
-// Figma 2026-08-08, same family as Input/Select/Textarea. Box border is
-// border-strong at 1px (Default/Focused), 1.5px on Hover — Checkbox is the
-// one Input-family control that DOES thicken its border on hover, verified
-// directly, not shared with the field-based controls. Disabled binds
-// border-default, not border-strong.
+// Box fill is action-secondary (transparent) / action-secondary-hover on
+// hover. Border is border-strong at 1px, thickening to 1.5px on hover —
+// Checkbox is the one Input-family control that does change border weight on
+// hover, verified directly rather than assumed from its siblings (rules §4).
 //
-// Checkmark and label stay text-highlight/text-primary in every state,
-// including Disabled — confirmed directly against Figma's Disabled+Checked
-// variant. The old assumption that Disabled recolors the checkmark/label to
-// text-muted was true pre-2026-08-05; that fill-swap pattern is retired in
-// favor of opacity-disabled (38%) on the whole control, which is what
-// actually differs now.
+// The checkmark binds text-link (Figma: text/link on the ✓ glyph), which
+// absorbed the retired text-highlight. The label is text-primary in every
+// state including Disabled — the control dims as a whole, the label doesn't
+// recolour.
 //
-// Focus is an offset outline on the box itself (border-focus, 2px, offset
-// 2px) — matches the box's own border weight/color exactly, unchanged, per
-// the same offset-ring pattern Input/Select/Textarea use via their focus
-// ring overlay.
-//
-// Arbitrary px, not Tailwind's h-6/w-6 scale — rem-based utilities scale off
-// this app's 18px root font-size (see tokens.css), which would render this
-// at 27px instead of 24px.
+// Disabled applies opacity-disabled ONCE, on the outer label. Figma's four
+// Disabled variants currently bind opacity/disabled on the variant root AND
+// again on the `box` child, which multiplies to ~14% on the box while its
+// own label sits at 38%. That's a design-side defect (reported 2026-09-07,
+// nodes 141:415 / 141:418 / 141:443 / 141:446); the single application here
+// follows the documented rule in rules §2 — "Default appearance at 38%
+// opacity" — rather than mirroring the compounding.
 const boxStyles: Record<CheckboxSize, string> = {
+  // Arbitrary px, not Tailwind's size-6 scale — rem-based utilities scale off
+  // this app's 18px root font-size and would render 24px as 27px.
   large: 'h-[24px] w-[24px] rounded-sm',
   small: 'h-[18px] w-[18px] rounded-sm',
 };
@@ -62,19 +57,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       <label
         htmlFor={generatedId}
         className={clsx(
-          // items-start, not items-center — real gap, found 2026-08-08 via
-          // a prototype using a genuinely long label for the first time.
-          // items-center mathematically centers the box against the
-          // label's FULL height (verified: box center landed exactly on
-          // the midpoint of a 2-line block), which is correct per the flex
-          // spec but reads as top-heavy/unbalanced once a label wraps — the
-          // box ends up beside line 1 with line 2 floating underneath it.
-          // items-start aligns the box with the first line's cap-height
-          // instead, the conventional checkbox treatment for wrapping
-          // labels. Every existing Checkbox story/doc uses a short,
-          // single-line label, where the two produce a visually identical
-          // result (line-height 24.3px vs. box height 24px, a ~0.15px
-          // difference) — this never had a case to expose the gap before.
+          // items-start, not items-center — found 2026-08-08 with a genuinely
+          // long label. items-center centres the box against the label's FULL
+          // height, correct per the flex spec but top-heavy once a label
+          // wraps: the box lands beside line 1 with line 2 floating under it.
+          // items-start aligns it to the first line's cap-height instead.
           'inline-flex items-start cursor-pointer select-none',
           'has-[:disabled]:cursor-not-allowed has-[:disabled]:pointer-events-none has-[:disabled]:opacity-disabled',
           gapStyles[size],
@@ -95,21 +82,22 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             'border border-border-strong bg-action-secondary',
             'transition-colors duration-150 ease-out',
             'peer-hover:bg-action-secondary-hover peer-hover:border-[1.5px]',
-            'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-border-focus',
-            'peer-disabled:border-border-default',
+            // Figma's focus-ring is 32x32 around the 24px box with a
+            // radius-md corner — a 2px outline offset 2px, same recipe as
+            // every other control (rules §2).
+            'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-state-focus',
             boxStyles[size],
           )}
         >
-          {/* This svg is nested inside the box span, not a direct sibling of
-              the input, so Tailwind's sibling-based `peer-*` can't reach it —
-              using explicit ancestor-`:has()` arbitrary variants instead,
-              scoped per-instance via normal DOM ancestry through the nearest
-              <label>. */}
+          {/* This svg is nested inside the box span rather than being a
+              direct sibling of the input, so Tailwind's sibling-based peer-*
+              can't reach it — an explicit ancestor :has() variant scoped
+              through the nearest <label> does the job instead. */}
           <svg
             aria-hidden="true"
             viewBox="0 0 14 11"
             fill="none"
-            className="h-[65%] w-[65%] opacity-0 text-text-highlight [label:has(:checked)_&]:opacity-100"
+            className="h-[65%] w-[65%] opacity-0 text-text-link [label:has(:checked)_&]:opacity-100"
           >
             <path
               d="M1 5.5L5 9.5L13 1"
@@ -122,12 +110,10 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         </span>
         <span
           className={clsx(
-            // text-primary throughout, including Disabled — confirmed
-            // directly against Figma, label doesn't recolor when disabled,
-            // opacity-disabled (applied on the outer <label>) does that work.
-            // Checkbox is mode-aware like every other Input-family control:
-            // it resolves correctly under whatever data-mode its container
-            // sets, including none (On Light default).
+            // text-primary throughout, Disabled included — the label doesn't
+            // recolour; opacity-disabled on the outer <label> does that work.
+            // Like every other Input-family control, Checkbox inherits its
+            // surface and never declares a mode of its own.
             'font-manrope font-normal text-text-primary',
             labelTextStyles[size],
           )}

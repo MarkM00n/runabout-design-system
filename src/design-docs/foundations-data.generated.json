@@ -2,11 +2,237 @@
   "color": [
     {
       "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-50",
+      "tokenPath": "color.surface.50",
+      "value": "#fefbf8",
+      "usage": "Primitive ramps, renamed 2026-09-07 to match Figma's own families (50 = lightest). Consumed only via the semantic tokens above — no component binds a primitive directly (rules §1). Figma's Event group is deliberately absent: it's print/campaign-only, carries no semantic role, and is recorded in tokens.json rather than registered here, so no Tailwind utility is ever generated for it.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-100",
+      "tokenPath": "color.surface.100",
+      "value": "#fcf7f0",
+      "usage": "Surface palette — step 100 (2 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-200",
+      "tokenPath": "color.surface.200",
+      "value": "#fbf3e9",
+      "usage": "Surface palette — step 200 (3 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-300",
+      "tokenPath": "color.surface.300",
+      "value": "#faefe1",
+      "usage": "Surface palette — step 300 (4 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-400",
+      "tokenPath": "color.surface.400",
+      "value": "#f8ebda",
+      "usage": "Surface palette — step 400 (5 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-500",
+      "tokenPath": "color.surface.500",
+      "value": "#f7e7d2",
+      "usage": "Surface palette — step 500 (6 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-600",
+      "tokenPath": "color.surface.600",
+      "value": "#f6e3cb",
+      "usage": "Surface palette — step 600 (7 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-700",
+      "tokenPath": "color.surface.700",
+      "value": "#f4dfc3",
+      "usage": "Surface palette — step 700 (8 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-surface-800",
+      "tokenPath": "color.surface.800",
+      "value": "#f3dbbc",
+      "usage": "Surface palette — step 800 (9 of 9 in the ramp).",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-surface-section",
+      "tokenPath": "color.surface.section",
+      "value": "#f8ebda",
+      "usage": "The background of anything that is a surface: sections, cards, panels. Set the element's data-mode and this token becomes that surface. Single successor to the retired surface-primary/secondary/tertiary/inverse/feature/subtle/emphasis set — one token, four resolutions.",
+      "documented": true,
+      "consumedBy": [
+        "CardEvent",
+        "CardQuote"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-surface-card",
+      "tokenPath": "color.surface.card",
+      "value": "#fefbf8",
+      "usage": "Light cream for elevated surfaces — Modal fills with this. Mode-invariant (Surface/50 in every mode), which is why Modal also sets data-mode=\"cream\" on itself: text-primary only clears AA against this fill in the On Cream column. Cards use surface-section and choose their colour by mode instead.",
+      "documented": true,
+      "consumedBy": [
+        "Modal"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-surface-scrim-start",
+      "tokenPath": "color.surface.scrim-start",
+      "value": "rgba(29, 27, 25, 0)",
+      "usage": "Top stop of a text-over-image scrim (Card/Producer). Neutral/900 at 0%. Mode-invariant.",
+      "documented": true,
+      "consumedBy": [
+        "CardProducer"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-surface-scrim-end",
+      "tokenPath": "color.surface.scrim-end",
+      "value": "rgba(29, 27, 25, 0.85)",
+      "usage": "Bottom stop of a text-over-image scrim (Card/Producer). Neutral/900 at 85%. Mode-invariant.",
+      "documented": true,
+      "consumedBy": [
+        "CardProducer"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-primary",
+      "tokenPath": "color.text.primary",
+      "value": "#2a2d1e",
+      "usage": "Headings, body and icons. Icons bind this too — the icon-* group is retired and icons use the matching text-* token.",
+      "documented": true,
+      "consumedBy": [
+        "Badge",
+        "Button",
+        "ButtonClose",
+        "CardEvent",
+        "CardProducer",
+        "CardQuote",
+        "Checkbox",
+        "Input",
+        "Modal",
+        "Select",
+        "Tab",
+        "Textarea"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-secondary",
+      "tokenPath": "color.text.secondary",
+      "value": "#4a5435",
+      "usage": "Supporting text, captions and metadata. Absorbed the retired text-muted.",
+      "documented": true,
+      "consumedBy": [
+        "CardProducer",
+        "CardQuote",
+        "Input",
+        "Textarea"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-link",
+      "tokenPath": "color.text.link",
+      "value": "#7a4e09",
+      "usage": "Inline links, link buttons and interactive icons. Absorbed the retired text-highlight and text-button.",
+      "documented": true,
+      "consumedBy": [
+        "Button",
+        "Checkbox"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-on-action",
+      "tokenPath": "color.text.on-action",
+      "value": "#f7e7d2",
+      "usage": "Text and icons on an action-primary fill (Button primary's label). Flips in lockstep with action-primary — the pairing measures 11.45:1 in every mode.",
+      "documented": true,
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-on-highlight",
+      "tokenPath": "color.text.on-highlight",
+      "value": "#2f2c28",
+      "usage": "Text on an action-highlight fill (Button accent's label). Mode-invariant — always Neutral/800, since every mode's accent fill is a mid-to-light amber.",
+      "documented": true,
+      "consumedBy": [
+        "Button"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-text-on-state",
+      "tokenPath": "color.text.on-state",
+      "value": "#fefbf8",
+      "usage": "Text on a state-* fill (Badge's success/warning/error variants). Mode-invariant, matching those fills, which are the same colour on every surface.",
+      "documented": true,
+      "consumedBy": [
+        "Badge"
+      ]
+    },
+    {
+      "type": "Color",
       "tier": "semantic",
       "name": "--color-action-primary",
       "tokenPath": "color.action.primary",
       "value": "#2f2c28",
-      "usage": "Button primary variant's fill. Inverted in the 2026-08-05 sync — was light cream (#f8ebda) at all times, now dark on Light mode / light on Dark/Feature. A real visual redesign, not a rename — verified against a live Figma screenshot before shipping (see PR).",
+      "usage": "Primary button fill. Dark on cream, light on the three dark surfaces.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -18,7 +244,7 @@
       "name": "--color-action-primary-hover",
       "tokenPath": "color.action.primary-hover",
       "value": "#464340",
-      "usage": "Button primary variant's fill on hover — mode-variant, see override blocks.",
+      "usage": "Primary button fill on hover.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -30,9 +256,12 @@
       "name": "--color-action-secondary",
       "tokenPath": "color.action.secondary",
       "value": "rgba(255, 255, 255, 0)",
-      "usage": "Transparent, mode-invariant. Aliases Alpha/White-0 in Figma. Button secondary variant's fill in its default state. Not yet wired to a component via this token name — Secondary uses a literal bg-transparent.",
+      "usage": "Secondary (outlined) button and Input-family field fill — genuinely transparent (Alpha/White-0), not white. Mode-invariant: the surface behind it showing through is the point. Always compute contrast against the composited result, never against this token alone.",
       "documented": true,
       "consumedBy": [
+        "Badge",
+        "Button",
+        "ButtonClose",
         "Checkbox",
         "Input",
         "Select",
@@ -45,10 +274,11 @@
       "name": "--color-action-secondary-hover",
       "tokenPath": "color.action.secondary-hover",
       "value": "rgba(93, 100, 64, 0.1)",
-      "usage": "Button secondary variant's fill on hover. Aliases Alpha/Olive-10 on Light, Alpha/White-10 on Dark/Feature.",
+      "usage": "Secondary button and Input-family hover tint — a 10%-alpha wash baked into the token, ink-tinted on cream and white-tinted on the three dark surfaces. Successor to the retired state-hover.",
       "documented": true,
       "consumedBy": [
         "Button",
+        "ButtonClose",
         "Checkbox",
         "Input",
         "Select",
@@ -61,7 +291,7 @@
       "name": "--color-action-highlight",
       "tokenPath": "color.action.highlight",
       "value": "#df8e10",
-      "usage": "Button accent variant's fill. Mode-invariant.",
+      "usage": "Accent button fill. Mode-variant as of 2026-09-07 — it was pinned to a single amber under the previous architecture.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -73,7 +303,7 @@
       "name": "--color-action-highlight-hover",
       "tokenPath": "color.action.highlight-hover",
       "value": "#e39b2b",
-      "usage": "Button accent variant's fill on hover. Mode-invariant.",
+      "usage": "Accent button fill on hover.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -85,7 +315,7 @@
       "name": "--color-action-disabled",
       "tokenPath": "color.action.disabled",
       "value": "#f4dfc3",
-      "usage": "Not yet used by any built component.",
+      "usage": "Standalone disabled fill, for disabled text and surfaces outside a component. Components never use it — a disabled control is its Default appearance at opacity-disabled, never a colour swap (rules §2).",
       "documented": true,
       "consumedBy": []
     },
@@ -94,15 +324,29 @@
       "tier": "semantic",
       "name": "--color-border-default",
       "tokenPath": "color.border.default",
-      "value": "#939880",
-      "usage": "Button secondary variant's resting border; also the resting border for every Input-family control.",
+      "value": "#4a5435",
+      "usage": "Dividers and the resting border on Input-family controls. Same colour as text-secondary in every mode, by design in Figma.",
       "documented": true,
       "consumedBy": [
+        "CardEvent",
+        "Modal"
+      ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-border-strong",
+      "tokenPath": "color.border.strong",
+      "value": "#2a2d1e",
+      "usage": "Outlined buttons, Badge's neutral outline, Tab's active indicator, and any emphasised rule. Same colour as text-primary in every mode.",
+      "documented": true,
+      "consumedBy": [
+        "Badge",
         "Button",
-        "Card",
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -111,271 +355,12 @@
       "tier": "semantic",
       "name": "--color-border-subtle",
       "tokenPath": "color.border.subtle",
-      "value": "#f4dfc3",
-      "usage": "Hover-state border color for every Input-family control.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-border-strong",
-      "tokenPath": "color.border.strong",
-      "value": "#3d4a2e",
-      "usage": "Not yet used by any built component.",
+      "value": "rgba(93, 100, 64, 0.1)",
+      "usage": "10% ink hairline for card edges, table rows and section rules.",
       "documented": true,
       "consumedBy": [
-        "Checkbox",
-        "Input",
-        "Select",
-        "Textarea"
+        "CardEvent"
       ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-border-focus",
-      "tokenPath": "color.border.focus",
-      "value": "#2563eb",
-      "usage": "Focus-ring border for Button primary/secondary/link and every Input-family control. Mode-aware — replaces the old fixed value plus separate border-focus-inverse/border-focus-on-feature tokens; a container's data-mode resolves the correct pairing.",
-      "documented": true,
-      "consumedBy": [
-        "Button",
-        "Card",
-        "Checkbox",
-        "Input",
-        "Select",
-        "Tab",
-        "Textarea"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-border-focus-on-highlight",
-      "tokenPath": "color.border.focus-on-highlight",
-      "value": "#1e3a8a",
-      "usage": "Button accent's Focused-state ring only — border-focus fails WCAG 1.4.11's 3:1 against accent's action-highlight fill. Mode-invariant.",
-      "documented": true,
-      "consumedBy": [
-        "Button"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-primary",
-      "tokenPath": "color.text.primary",
-      "value": "#2f2c28",
-      "usage": "Default body text color; also the typed-value color for Input-family controls when focused.",
-      "documented": true,
-      "consumedBy": [
-        "Button",
-        "Card",
-        "Checkbox",
-        "Input",
-        "Select",
-        "Tab",
-        "Textarea"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-secondary",
-      "tokenPath": "color.text.secondary",
-      "value": "#4a5435",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-muted",
-      "tokenPath": "color.text.muted",
-      "value": "#5d5b58",
-      "usage": "Placeholder text color for Input-family controls; also Checkbox's disabled-state checkmark/label color.",
-      "documented": true,
-      "consumedBy": [
-        "Input",
-        "Textarea"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-highlight",
-      "tokenPath": "color.text.highlight",
-      "value": "#7a4e09",
-      "usage": "Checkbox's checkmark glyph.",
-      "documented": true,
-      "consumedBy": [
-        "Checkbox",
-        "Tab"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-link",
-      "tokenPath": "color.text.link",
-      "value": "#7a4e09",
-      "usage": "Not yet used by any built component — Button's link variant binds to text-button instead, a pre-existing divergence.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-button",
-      "tokenPath": "color.text.button",
-      "value": "#7a4e09",
-      "usage": "Button link's Default state. Link's Hover/Focused state does NOT use this token or its mode resolution — see Button.tsx's own comment: the old text-button-inverse 'brighter on hover' token has no successor in the mode system, since modes model surface context, not same-page hover state. Kept as a literal hex value there pending a design-side decision.",
-      "documented": true,
-      "consumedBy": [
-        "Button"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-on-action",
-      "tokenPath": "color.text.on-action",
-      "value": "#f7e7d2",
-      "usage": "Button primary's label text. Inverted in lockstep with action.primary.",
-      "documented": true,
-      "consumedBy": [
-        "Button"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-on-highlight",
-      "tokenPath": "color.text.on-highlight",
-      "value": "#2f2c28",
-      "usage": "Button accent's label text. Mode-invariant.",
-      "documented": true,
-      "consumedBy": [
-        "Button"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-text-on-state",
-      "tokenPath": "color.text.on-state",
-      "value": "#fefbf8",
-      "usage": "Text that sits on a state-colored fill (Badge's success/warning/error variants). Mode-invariant by design — a badge's fixed dark/saturated fill always pairs with the same light text regardless of the page's ambient mode; Badge deliberately does not set its own data-mode.",
-      "documented": true,
-      "consumedBy": [
-        "Badge"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-primary",
-      "tokenPath": "color.surface.primary",
-      "value": "#f3dbbc",
-      "usage": "Mode-invariant. Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-secondary",
-      "tokenPath": "color.surface.secondary",
-      "value": "#3d4a2e",
-      "usage": "Mode-invariant. Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-tertiary",
-      "tokenPath": "color.surface.tertiary",
-      "value": "#fefbf8",
-      "usage": "Mode-invariant. Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-inverse",
-      "tokenPath": "color.surface.inverse",
-      "value": "#2f2c28",
-      "usage": "Badge's neutral variant fill. Mode-invariant.",
-      "documented": true,
-      "consumedBy": [
-        "Badge"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-feature",
-      "tokenPath": "color.surface.feature",
-      "value": "#a74b24",
-      "usage": "Card's fill — always this exact terracotta regardless of page mode, which is why Card sets data-mode=\"feature\" on its own root so everything nested inside resolves the correct pairing. Mode-invariant.",
-      "documented": true,
-      "consumedBy": [
-        "Card"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-scrim",
-      "tokenPath": "color.surface.scrim",
-      "value": "#1d1b19",
-      "usage": "For modal/overlay backdrops. Not yet used by any built component (no Modal built yet). Mode-invariant.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-card",
-      "tokenPath": "color.surface.card",
-      "value": "#fefbf8",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-surface-subtle",
-      "tokenPath": "color.surface.subtle",
-      "value": "#faefe1",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-state-hover",
-      "tokenPath": "color.state.hover",
-      "value": "#f6e3cb",
-      "usage": "Mode-invariant. Not yet used by any built component directly.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-state-disabled",
-      "tokenPath": "color.state.disabled",
-      "value": "#747270",
-      "usage": "Border color for Input-family controls in the disabled state; also Button link's disabled-state label text.",
-      "documented": true,
-      "consumedBy": []
     },
     {
       "type": "Color",
@@ -383,17 +368,26 @@
       "name": "--color-state-focus",
       "tokenPath": "color.state.focus",
       "value": "#2563eb",
-      "usage": "Not yet used by any built component directly — border-focus is what components reference for focus-ring styling.",
+      "usage": "Focus ring — 2px, offset 2px outside the control (rules §2). Successor to border-focus and its retired -inverse/-on-feature/-on-highlight partners. Focus/500 on cream, Focus/200 on the three dark surfaces; clears SC 1.4.11's 3:1 on all four (4.40 / 6.08 / 8.92 / 3.67).",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Button",
+        "ButtonClose",
+        "CardEvent",
+        "Checkbox",
+        "Input",
+        "Select",
+        "Tab",
+        "Textarea"
+      ]
     },
     {
       "type": "Color",
       "tier": "semantic",
-      "name": "--color-state-warning",
-      "tokenPath": "color.state.warning",
-      "value": "#7a4e09",
-      "usage": "Badge's Warning variant background — pinned to its On Light value regardless of ambient mode (Badge doesn't set its own data-mode), paired with the mode-invariant text-on-state.",
+      "name": "--color-state-error",
+      "tokenPath": "color.state.error",
+      "value": "#b91c1c",
+      "usage": "Error text, borders and badge fills. Mode-invariant — a status colour means the same thing on every surface, and pairs with text-on-state at 6.28:1.",
       "documented": true,
       "consumedBy": [
         "Badge"
@@ -405,7 +399,7 @@
       "name": "--color-state-success",
       "tokenPath": "color.state.success",
       "value": "#166534",
-      "usage": "Badge's Success variant background. Same pinned-to-On-Light convention as state.warning.",
+      "usage": "Success text, borders and badge fills. Mode-invariant; pairs with text-on-state at 6.92:1.",
       "documented": true,
       "consumedBy": [
         "Badge"
@@ -414,804 +408,662 @@
     {
       "type": "Color",
       "tier": "semantic",
-      "name": "--color-state-error",
-      "tokenPath": "color.state.error",
-      "value": "#b91c1c",
-      "usage": "Badge's Error variant background. Same pinned-to-On-Light convention as state.warning.",
-      "documented": true,
-      "consumedBy": [
-        "Badge"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-icon-primary",
-      "tokenPath": "color.icon.primary",
-      "value": "#2f2c28",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": [
-        "Select"
-      ]
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-icon-secondary",
-      "tokenPath": "color.icon.secondary",
-      "value": "#4a5435",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-icon-muted",
-      "tokenPath": "color.icon.muted",
-      "value": "#5d5b58",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-icon-interactive",
-      "tokenPath": "color.icon.interactive",
+      "name": "--color-state-warning",
+      "tokenPath": "color.state.warning",
       "value": "#7a4e09",
-      "usage": "Tab's Active/Hover indicator (confirmed against a live Figma screenshot — renders as a dark muted amber, not action-highlight's bright orange).",
+      "usage": "Warning text, borders and badge fills. Rebound to Accent/950 in the 2026-09-07 sync (was a mode-variant amber); pairs with text-on-state at 6.97:1.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Badge"
+      ]
     },
     {
       "type": "Color",
       "tier": "semantic",
-      "name": "--color-icon-on-action",
-      "tokenPath": "color.icon.on-action",
-      "value": "#f7e7d2",
-      "usage": "Not yet used by any built component.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "semantic",
-      "name": "--color-icon-disabled",
-      "tokenPath": "color.icon.disabled",
+      "name": "--color-state-disabled",
+      "tokenPath": "color.state.disabled",
       "value": "#747270",
-      "usage": "Not yet used by any built component.",
+      "usage": "Disabled text and icons standing alone, outside a component. Absorbed the retired icon-disabled.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-sand-50",
-      "tokenPath": "color.sand.50",
-      "value": "#fefbf8",
-      "usage": "Primitive ramp, renumbered 2026-08-05 to the standard light->dark convention (50 = lightest, ...950 = darkest). Consumed only via the semantic tokens above — no component binds a primitive directly.",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-100",
-      "tokenPath": "color.sand.100",
-      "value": "#fcf7f0",
-      "usage": "Sand palette — step 100 (2 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-200",
-      "tokenPath": "color.sand.200",
-      "value": "#fbf3e9",
-      "usage": "Sand palette — step 200 (3 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-300",
-      "tokenPath": "color.sand.300",
-      "value": "#faefe1",
-      "usage": "Sand palette — step 300 (4 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-400",
-      "tokenPath": "color.sand.400",
-      "value": "#f8ebda",
-      "usage": "Sand palette — step 400 (5 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-500",
-      "tokenPath": "color.sand.500",
-      "value": "#f7e7d2",
-      "usage": "Sand palette — step 500 (6 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-600",
-      "tokenPath": "color.sand.600",
-      "value": "#f6e3cb",
-      "usage": "Sand palette — step 600 (7 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-700",
-      "tokenPath": "color.sand.700",
-      "value": "#f4dfc3",
-      "usage": "Sand palette — step 700 (8 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-sand-800",
-      "tokenPath": "color.sand.800",
-      "value": "#f3dbbc",
-      "usage": "Sand palette — step 800 (9 of 9 in the ramp).",
-      "documented": true,
-      "consumedBy": []
-    },
-    {
-      "type": "Color",
-      "tier": "primitive",
-      "name": "--color-terracotta-50",
-      "tokenPath": "color.terracotta.50",
+      "name": "--color-brand-50",
+      "tokenPath": "color.brand.50",
       "value": "#fcf6f3",
-      "usage": "Terracotta palette — step 50 (1 of 9 in the ramp).",
+      "usage": "Brand palette — step 50 (1 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-100",
-      "tokenPath": "color.terracotta.100",
+      "name": "--color-brand-100",
+      "tokenPath": "color.brand.100",
       "value": "#f5e2da",
-      "usage": "Terracotta palette — step 100 (2 of 9 in the ramp).",
+      "usage": "Brand palette — step 100 (2 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-200",
-      "tokenPath": "color.terracotta.200",
+      "name": "--color-brand-200",
+      "tokenPath": "color.brand.200",
       "value": "#eecfc1",
-      "usage": "Terracotta palette — step 200 (3 of 9 in the ramp).",
+      "usage": "Brand palette — step 200 (3 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-300",
-      "tokenPath": "color.terracotta.300",
+      "name": "--color-brand-300",
+      "tokenPath": "color.brand.300",
       "value": "#e7bba8",
-      "usage": "Terracotta palette — step 300 (4 of 9 in the ramp).",
+      "usage": "Brand palette — step 300 (4 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-400",
-      "tokenPath": "color.terracotta.400",
+      "name": "--color-brand-400",
+      "tokenPath": "color.brand.400",
       "value": "#e0a78f",
-      "usage": "Terracotta palette — step 400 (5 of 9 in the ramp).",
+      "usage": "Brand palette — step 400 (5 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-500",
-      "tokenPath": "color.terracotta.500",
+      "name": "--color-brand-500",
+      "tokenPath": "color.brand.500",
       "value": "#d99375",
-      "usage": "Terracotta palette — step 500 (6 of 9 in the ramp).",
+      "usage": "Brand palette — step 500 (6 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-600",
-      "tokenPath": "color.terracotta.600",
+      "name": "--color-brand-600",
+      "tokenPath": "color.brand.600",
       "value": "#d2805c",
-      "usage": "Terracotta palette — step 600 (7 of 9 in the ramp).",
+      "usage": "Brand palette — step 600 (7 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-700",
-      "tokenPath": "color.terracotta.700",
+      "name": "--color-brand-700",
+      "tokenPath": "color.brand.700",
       "value": "#cb6c43",
-      "usage": "Terracotta palette — step 700 (8 of 9 in the ramp).",
+      "usage": "Brand palette — step 700 (8 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-terracotta-800",
-      "tokenPath": "color.terracotta.800",
+      "name": "--color-brand-800",
+      "tokenPath": "color.brand.800",
       "value": "#a74b24",
-      "usage": "Darkened from #c4582a in the 2026-07-19 token sync so surface-feature keeps AA text contrast. Renumbered from Terracotta/100 to Terracotta/800 in the 2026-08-05 primitive renumbering.",
+      "usage": "Brand palette — step 800 (9 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-50",
-      "tokenPath": "color.rose.50",
+      "name": "--color-soft-50",
+      "tokenPath": "color.soft.50",
       "value": "#fbefef",
-      "usage": "Rose palette — step 50 (1 of 9 in the ramp).",
+      "usage": "Soft palette — step 50 (1 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-100",
-      "tokenPath": "color.rose.100",
+      "name": "--color-soft-100",
+      "tokenPath": "color.soft.100",
       "value": "#f7dedf",
-      "usage": "Rose palette — step 100 (2 of 9 in the ramp).",
+      "usage": "Soft palette — step 100 (2 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-200",
-      "tokenPath": "color.rose.200",
+      "name": "--color-soft-200",
+      "tokenPath": "color.soft.200",
       "value": "#f3cecf",
-      "usage": "Rose palette — step 200 (3 of 9 in the ramp).",
+      "usage": "Soft palette — step 200 (3 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-300",
-      "tokenPath": "color.rose.300",
+      "name": "--color-soft-300",
+      "tokenPath": "color.soft.300",
       "value": "#efbebf",
-      "usage": "Rose palette — step 300 (4 of 9 in the ramp).",
+      "usage": "Soft palette — step 300 (4 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-400",
-      "tokenPath": "color.rose.400",
+      "name": "--color-soft-400",
+      "tokenPath": "color.soft.400",
       "value": "#eaadae",
-      "usage": "Rose palette — step 400 (5 of 9 in the ramp).",
+      "usage": "Soft palette — step 400 (5 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-500",
-      "tokenPath": "color.rose.500",
+      "name": "--color-soft-500",
+      "tokenPath": "color.soft.500",
       "value": "#e69d9e",
-      "usage": "Rose palette — step 500 (6 of 9 in the ramp).",
+      "usage": "Soft palette — step 500 (6 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-600",
-      "tokenPath": "color.rose.600",
+      "name": "--color-soft-600",
+      "tokenPath": "color.soft.600",
       "value": "#e28d8e",
-      "usage": "Rose palette — step 600 (7 of 9 in the ramp).",
+      "usage": "Soft palette — step 600 (7 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-700",
-      "tokenPath": "color.rose.700",
+      "name": "--color-soft-700",
+      "tokenPath": "color.soft.700",
       "value": "#de7c7e",
-      "usage": "Rose palette — step 700 (8 of 9 in the ramp).",
+      "usage": "Soft palette — step 700 (8 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-rose-800",
-      "tokenPath": "color.rose.800",
+      "name": "--color-soft-800",
+      "tokenPath": "color.soft.800",
       "value": "#da6c6e",
-      "usage": "Rose palette — step 800 (9 of 9 in the ramp).",
+      "usage": "Soft palette — step 800 (9 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-50",
-      "tokenPath": "color.burgundy.50",
+      "name": "--color-deep-50",
+      "tokenPath": "color.deep.50",
       "value": "#e8e4e5",
-      "usage": "Burgundy palette — step 50 (1 of 10 in the ramp).",
+      "usage": "Deep palette — step 50 (1 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-100",
-      "tokenPath": "color.burgundy.100",
+      "name": "--color-deep-100",
+      "tokenPath": "color.deep.100",
       "value": "#d2caca",
-      "usage": "Burgundy palette — step 100 (2 of 10 in the ramp).",
+      "usage": "Deep palette — step 100 (2 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-200",
-      "tokenPath": "color.burgundy.200",
+      "name": "--color-deep-200",
+      "tokenPath": "color.deep.200",
       "value": "#bbafb0",
-      "usage": "Burgundy palette — step 200 (3 of 10 in the ramp).",
+      "usage": "Deep palette — step 200 (3 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-300",
-      "tokenPath": "color.burgundy.300",
+      "name": "--color-deep-300",
+      "tokenPath": "color.deep.300",
       "value": "#a59596",
-      "usage": "Burgundy palette — step 300 (4 of 10 in the ramp).",
+      "usage": "Deep palette — step 300 (4 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-400",
-      "tokenPath": "color.burgundy.400",
+      "name": "--color-deep-400",
+      "tokenPath": "color.deep.400",
       "value": "#8e7a7b",
-      "usage": "Burgundy palette — step 400 (5 of 10 in the ramp).",
+      "usage": "Deep palette — step 400 (5 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-500",
-      "tokenPath": "color.burgundy.500",
+      "name": "--color-deep-500",
+      "tokenPath": "color.deep.500",
       "value": "#786061",
-      "usage": "Burgundy palette — step 500 (6 of 10 in the ramp).",
+      "usage": "Deep palette — step 500 (6 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-600",
-      "tokenPath": "color.burgundy.600",
+      "name": "--color-deep-600",
+      "tokenPath": "color.deep.600",
       "value": "#614547",
-      "usage": "Burgundy palette — step 600 (7 of 10 in the ramp).",
+      "usage": "Deep palette — step 600 (7 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-700",
-      "tokenPath": "color.burgundy.700",
+      "name": "--color-deep-700",
+      "tokenPath": "color.deep.700",
       "value": "#4b2b2c",
-      "usage": "Burgundy palette — step 700 (8 of 10 in the ramp).",
+      "usage": "Deep palette — step 700 (8 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-800",
-      "tokenPath": "color.burgundy.800",
+      "name": "--color-deep-800",
+      "tokenPath": "color.deep.800",
       "value": "#4d0707",
-      "usage": "Burgundy palette — step 800 (9 of 10 in the ramp).",
+      "usage": "Deep palette — step 800 (9 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-burgundy-900",
-      "tokenPath": "color.burgundy.900",
+      "name": "--color-deep-900",
+      "tokenPath": "color.deep.900",
       "value": "#341012",
-      "usage": "Burgundy palette — step 900 (10 of 10 in the ramp).",
+      "usage": "Deep palette — step 900 (10 of 10 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-50",
-      "tokenPath": "color.amber.50",
+      "name": "--color-accent-50",
+      "tokenPath": "color.accent.50",
       "value": "#fbf2e4",
-      "usage": "Amber palette — step 50 (1 of 11 in the ramp).",
+      "usage": "Accent palette — step 50 (1 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-100",
-      "tokenPath": "color.amber.100",
+      "name": "--color-accent-100",
+      "tokenPath": "color.accent.100",
       "value": "#f8e6ca",
-      "usage": "Amber palette — step 100 (2 of 11 in the ramp).",
+      "usage": "Accent palette — step 100 (2 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-200",
-      "tokenPath": "color.amber.200",
+      "name": "--color-accent-200",
+      "tokenPath": "color.accent.200",
       "value": "#f4d9af",
-      "usage": "Amber palette — step 200 (3 of 11 in the ramp).",
+      "usage": "Accent palette — step 200 (3 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-300",
-      "tokenPath": "color.amber.300",
+      "name": "--color-accent-300",
+      "tokenPath": "color.accent.300",
       "value": "#f1cd95",
-      "usage": "Amber palette — step 300 (4 of 11 in the ramp).",
+      "usage": "Accent palette — step 300 (4 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-400",
-      "tokenPath": "color.amber.400",
+      "name": "--color-accent-400",
+      "tokenPath": "color.accent.400",
       "value": "#edc07a",
-      "usage": "Amber palette — step 400 (5 of 11 in the ramp).",
+      "usage": "Accent palette — step 400 (5 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-500",
-      "tokenPath": "color.amber.500",
+      "name": "--color-accent-500",
+      "tokenPath": "color.accent.500",
       "value": "#eab460",
-      "usage": "Amber palette — step 500 (6 of 11 in the ramp).",
+      "usage": "Accent palette — step 500 (6 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-600",
-      "tokenPath": "color.amber.600",
+      "name": "--color-accent-600",
+      "tokenPath": "color.accent.600",
       "value": "#e6a745",
-      "usage": "Amber palette — step 600 (7 of 11 in the ramp).",
+      "usage": "Accent palette — step 600 (7 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-700",
-      "tokenPath": "color.amber.700",
+      "name": "--color-accent-700",
+      "tokenPath": "color.accent.700",
       "value": "#e39b2b",
-      "usage": "Amber palette — step 700 (8 of 11 in the ramp).",
+      "usage": "Accent palette — step 700 (8 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-800",
-      "tokenPath": "color.amber.800",
+      "name": "--color-accent-800",
+      "tokenPath": "color.accent.800",
       "value": "#df8e10",
-      "usage": "Amber palette — step 800 (9 of 11 in the ramp).",
+      "usage": "Accent palette — step 800 (9 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-900",
-      "tokenPath": "color.amber.900",
+      "name": "--color-accent-900",
+      "tokenPath": "color.accent.900",
       "value": "#c07b0e",
-      "usage": "Amber palette — step 900 (10 of 11 in the ramp).",
+      "usage": "Accent palette — step 900 (10 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-amber-950",
-      "tokenPath": "color.amber.950",
+      "name": "--color-accent-950",
+      "tokenPath": "color.accent.950",
       "value": "#7a4e09",
-      "usage": "The darkest amber step, ensuring text-highlight/border-focus/state-focus/text-link/text-button reach AA contrast on light surfaces. Renumbered from Amber/25 to Amber/950 in the 2026-08-05 primitive renumbering (light->dark convention).",
+      "usage": "Accent palette — step 950 (11 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-50",
-      "tokenPath": "color.olive.50",
+      "name": "--color-ink-50",
+      "tokenPath": "color.ink.50",
       "value": "#edeeea",
-      "usage": "Olive palette — step 50 (1 of 12 in the ramp).",
+      "usage": "Ink palette — step 50 (1 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-100",
-      "tokenPath": "color.olive.100",
+      "name": "--color-ink-100",
+      "tokenPath": "color.ink.100",
       "value": "#dbddd5",
-      "usage": "Olive palette — step 100 (2 of 12 in the ramp).",
+      "usage": "Ink palette — step 100 (2 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-200",
-      "tokenPath": "color.olive.200",
+      "name": "--color-ink-200",
+      "tokenPath": "color.ink.200",
       "value": "#c9cbbf",
-      "usage": "Olive palette — step 200 (3 of 12 in the ramp).",
+      "usage": "Ink palette — step 200 (3 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-300",
-      "tokenPath": "color.olive.300",
+      "name": "--color-ink-300",
+      "tokenPath": "color.ink.300",
       "value": "#b7baaa",
-      "usage": "Olive palette — step 300 (4 of 12 in the ramp).",
+      "usage": "Ink palette — step 300 (4 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-400",
-      "tokenPath": "color.olive.400",
+      "name": "--color-ink-400",
+      "tokenPath": "color.ink.400",
       "value": "#a5a995",
-      "usage": "Olive palette — step 400 (5 of 12 in the ramp).",
+      "usage": "Ink palette — step 400 (5 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-500",
-      "tokenPath": "color.olive.500",
+      "name": "--color-ink-500",
+      "tokenPath": "color.ink.500",
       "value": "#939880",
-      "usage": "Olive palette — step 500 (6 of 12 in the ramp).",
+      "usage": "Ink palette — step 500 (6 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-600",
-      "tokenPath": "color.olive.600",
+      "name": "--color-ink-600",
+      "tokenPath": "color.ink.600",
       "value": "#81866a",
-      "usage": "Olive palette — step 600 (7 of 12 in the ramp).",
+      "usage": "Ink palette — step 600 (7 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-700",
-      "tokenPath": "color.olive.700",
+      "name": "--color-ink-700",
+      "tokenPath": "color.ink.700",
       "value": "#6f7555",
-      "usage": "Olive palette — step 700 (8 of 12 in the ramp).",
+      "usage": "Ink palette — step 700 (8 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-800",
-      "tokenPath": "color.olive.800",
+      "name": "--color-ink-800",
+      "tokenPath": "color.ink.800",
       "value": "#5d6440",
-      "usage": "Olive palette — step 800 (9 of 12 in the ramp).",
+      "usage": "Ink palette — step 800 (9 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-850",
-      "tokenPath": "color.olive.850",
+      "name": "--color-ink-850",
+      "tokenPath": "color.ink.850",
       "value": "#4a5435",
-      "usage": "Aliased by surface.card and surface.subtle's Dark mode.",
+      "usage": "Ink palette — step 850 (10 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-900",
-      "tokenPath": "color.olive.900",
+      "name": "--color-ink-900",
+      "tokenPath": "color.ink.900",
       "value": "#3d4a2e",
-      "usage": "Olive palette — step 900 (11 of 12 in the ramp).",
+      "usage": "Ink palette — step 900 (11 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-olive-950",
-      "tokenPath": "color.olive.950",
+      "name": "--color-ink-950",
+      "tokenPath": "color.ink.950",
       "value": "#2a2d1e",
-      "usage": "Olive palette — step 950 (12 of 12 in the ramp).",
+      "usage": "Ink palette — step 950 (12 of 12 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-0",
-      "tokenPath": "color.grey.0",
+      "name": "--color-neutral-0",
+      "tokenPath": "color.neutral.0",
       "value": "#ffffff",
-      "usage": "Grey palette — step 0 (1 of 11 in the ramp).",
+      "usage": "Neutral palette — step 0 (1 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-50",
-      "tokenPath": "color.grey.50",
+      "name": "--color-neutral-50",
+      "tokenPath": "color.neutral.50",
       "value": "#e8e8e7",
-      "usage": "Grey palette — step 50 (2 of 11 in the ramp).",
+      "usage": "Neutral palette — step 50 (2 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-100",
-      "tokenPath": "color.grey.100",
+      "name": "--color-neutral-100",
+      "tokenPath": "color.neutral.100",
       "value": "#d1d0cf",
-      "usage": "Grey palette — step 100 (3 of 11 in the ramp).",
+      "usage": "Neutral palette — step 100 (3 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-200",
-      "tokenPath": "color.grey.200",
+      "name": "--color-neutral-200",
+      "tokenPath": "color.neutral.200",
       "value": "#bab9b7",
-      "usage": "Grey palette — step 200 (4 of 11 in the ramp).",
+      "usage": "Neutral palette — step 200 (4 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-300",
-      "tokenPath": "color.grey.300",
+      "name": "--color-neutral-300",
+      "tokenPath": "color.neutral.300",
       "value": "#a3a19f",
-      "usage": "Grey palette — step 300 (5 of 11 in the ramp).",
+      "usage": "Neutral palette — step 300 (5 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-400",
-      "tokenPath": "color.grey.400",
+      "name": "--color-neutral-400",
+      "tokenPath": "color.neutral.400",
       "value": "#8b8a88",
-      "usage": "Grey palette — step 400 (6 of 11 in the ramp).",
+      "usage": "Neutral palette — step 400 (6 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-500",
-      "tokenPath": "color.grey.500",
+      "name": "--color-neutral-500",
+      "tokenPath": "color.neutral.500",
       "value": "#747270",
-      "usage": "Grey palette — step 500 (7 of 11 in the ramp).",
+      "usage": "Neutral palette — step 500 (7 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-600",
-      "tokenPath": "color.grey.600",
+      "name": "--color-neutral-600",
+      "tokenPath": "color.neutral.600",
       "value": "#5d5b58",
-      "usage": "Grey palette — step 600 (8 of 11 in the ramp).",
+      "usage": "Neutral palette — step 600 (8 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-700",
-      "tokenPath": "color.grey.700",
+      "name": "--color-neutral-700",
+      "tokenPath": "color.neutral.700",
       "value": "#464340",
-      "usage": "Grey palette — step 700 (9 of 11 in the ramp).",
+      "usage": "Neutral palette — step 700 (9 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-800",
-      "tokenPath": "color.grey.800",
+      "name": "--color-neutral-800",
+      "tokenPath": "color.neutral.800",
       "value": "#2f2c28",
-      "usage": "Grey palette — step 800 (10 of 11 in the ramp).",
+      "usage": "Neutral palette — step 800 (10 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-grey-900",
-      "tokenPath": "color.grey.900",
+      "name": "--color-neutral-900",
+      "tokenPath": "color.neutral.900",
       "value": "#1d1b19",
-      "usage": "Grey palette — step 900 (11 of 11 in the ramp).",
+      "usage": "Neutral palette — step 900 (11 of 11 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-cream-50",
-      "tokenPath": "color.cream.50",
+      "name": "--color-paper-50",
+      "tokenPath": "color.paper.50",
       "value": "#f9ecd2",
-      "usage": "Cream palette — step 50 (1 of 2 in the ramp).",
+      "usage": "Paper palette — step 50 (1 of 2 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-cream-100",
-      "tokenPath": "color.cream.100",
+      "name": "--color-paper-100",
+      "tokenPath": "color.paper.100",
       "value": "#ebe9e3",
-      "usage": "Cream palette — step 100 (2 of 2 in the ramp).",
+      "usage": "Paper palette — step 100 (2 of 2 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1241,7 +1093,7 @@
       "name": "--color-green-800",
       "tokenPath": "color.green.800",
       "value": "#166534",
-      "usage": "Aliased by state.success's On Light value.",
+      "usage": "Green palette — step 800 (3 of 3 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1281,77 +1133,77 @@
       "name": "--color-red-700",
       "tokenPath": "color.red.700",
       "value": "#b91c1c",
-      "usage": "Aliased by state.error's On Light value.",
+      "usage": "Red palette — step 700 (4 of 4 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-blue-200",
-      "tokenPath": "color.blue.200",
+      "name": "--color-focus-200",
+      "tokenPath": "color.focus.200",
       "value": "#b3d1ff",
-      "usage": "Aliased by border.focus/state.focus's Dark and Feature values.",
+      "usage": "Focus palette — step 200 (1 of 3 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-blue-500",
-      "tokenPath": "color.blue.500",
+      "name": "--color-focus-500",
+      "tokenPath": "color.focus.500",
       "value": "#2563eb",
-      "usage": "Aliased by border.focus/state.focus's Light value.",
+      "usage": "Focus palette — step 500 (2 of 3 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-blue-900",
-      "tokenPath": "color.blue.900",
+      "name": "--color-focus-900",
+      "tokenPath": "color.focus.900",
       "value": "#1e3a8a",
-      "usage": "Aliased by border.focus-on-highlight.",
+      "usage": "Kept for a focus ring that has to sit directly on a mid-luminance fill. Nothing binds it today: the ring is drawn 2px outside the control with a 2px gap, so it is measured against the surface, not the control's fill — which clears 3:1 on all four modes, Button accent included. Re-measure before reaching for it.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-alpha-olive-10",
-      "tokenPath": "color.alpha.olive-10",
+      "name": "--color-alpha-ink-10",
+      "tokenPath": "color.alpha.ink-10",
       "value": "rgba(93, 100, 64, 0.1)",
-      "usage": "Aliased by action.secondary-hover's Light value.",
+      "usage": "Aliased by action.secondary-hover and border.subtle on cream.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-alpha-olive-20",
-      "tokenPath": "color.alpha.olive-20",
+      "name": "--color-alpha-ink-20",
+      "tokenPath": "color.alpha.ink-20",
       "value": "rgba(93, 100, 64, 0.2)",
-      "usage": "Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces.",
+      "usage": "Alpha palette — step ink-20 (2 of 8 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-alpha-olive-40",
-      "tokenPath": "color.alpha.olive-40",
+      "name": "--color-alpha-ink-40",
+      "tokenPath": "color.alpha.ink-40",
       "value": "rgba(93, 100, 64, 0.4)",
-      "usage": "Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces.",
+      "usage": "Alpha palette — step ink-40 (3 of 8 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-alpha-olive-60",
-      "tokenPath": "color.alpha.olive-60",
+      "name": "--color-alpha-ink-60",
+      "tokenPath": "color.alpha.ink-60",
       "value": "rgba(93, 100, 64, 0.6)",
-      "usage": "Defined-but-unused: reserved for overlays and scrims, not text-bearing surfaces.",
+      "usage": "Alpha palette — step ink-60 (4 of 8 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1371,11 +1223,69 @@
       "name": "--color-alpha-white-10",
       "tokenPath": "color.alpha.white-10",
       "value": "rgba(255, 255, 255, 0.1)",
-      "usage": "Aliased by action.secondary-hover's Dark/Feature values.",
+      "usage": "Aliased by action.secondary-hover and border.subtle on olive/dark/terracotta.",
       "documented": true,
-      "consumedBy": [
-        "Card"
-      ]
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-alpha-scrim-0",
+      "tokenPath": "color.alpha.scrim-0",
+      "value": "rgba(29, 27, 25, 0)",
+      "usage": "Neutral/900 at 0% — aliased by surface.scrim-start.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-alpha-scrim-85",
+      "tokenPath": "color.alpha.scrim-85",
+      "value": "rgba(29, 27, 25, 0.85)",
+      "usage": "Neutral/900 at 85% — aliased by surface.scrim-end.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-event-vinyl-pink",
+      "tokenPath": "color.event.vinyl-pink",
+      "value": "#e9a5a9",
+      "usage": "Vines & Vinyl poster pink. Print/campaign only — no semantic role. approx C0 M29 Y27 K9",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-event-vinyl-yellow",
+      "tokenPath": "color.event.vinyl-yellow",
+      "value": "#e7a431",
+      "usage": "Vines & Vinyl poster yellow. Print/campaign only — no semantic role. approx C0 M29 Y79 K9",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-event-vinyl-burgundy",
+      "tokenPath": "color.event.vinyl-burgundy",
+      "value": "#331013",
+      "usage": "Vines & Vinyl wordmark burgundy. Print/campaign only — no semantic role. approx C0 M69 Y63 K80",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "primitive",
+      "name": "--color-event-vinyl-cream",
+      "tokenPath": "color.event.vinyl-cream",
+      "value": "#f5ddbc",
+      "usage": "Vines & Vinyl poster stock cream. Print/campaign only — no semantic role. approx C0 M10 Y23 K4",
+      "documented": true,
+      "consumedBy": []
     }
   ],
   "typography": [
@@ -1389,12 +1299,11 @@
       "lineHeight": 1.45,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Button small-size label text style.",
+      "usage": "Figma text style \"Manrope/Label\" — Badge's label at both sizes.",
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Button",
-        "Tab"
+        "Button"
       ]
     },
     {
@@ -1407,7 +1316,7 @@
       "lineHeight": 1.35,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Button large-size label text; also the large-size value/label text for every Input-family control (Input/Select/Textarea/Checkbox).",
+      "usage": "Figma text style \"Manrope/H6\" — Button's large-size label, and the large-size value/label text for every Input-family control.",
       "documented": true,
       "consumedBy": [
         "Button",
@@ -1427,13 +1336,15 @@
       "lineHeight": 1.65,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Card's date/time/description text; also the small-size value/label text for every Input-family control.",
+      "usage": "Figma text style \"Manrope/Paragraph Small\" — Card/Event's date, time and description, Card/Producer's location, Tab's label, and the small-size value/label text for every Input-family control.",
       "documented": true,
       "consumedBy": [
-        "Card",
+        "CardEvent",
+        "CardProducer",
         "Checkbox",
         "Input",
         "Select",
+        "Tab",
         "Textarea"
       ]
     },
@@ -1447,10 +1358,11 @@
       "lineHeight": 1.15,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Card's title text style — the only place the Recoleta display face is used.",
+      "usage": "Figma text style \"Recoleta/H3\" — Card/Event's title and Card/Quote's quote, the two places the Recoleta display face carries a block of copy.",
       "documented": true,
       "consumedBy": [
-        "Card"
+        "CardEvent",
+        "CardQuote"
       ]
     },
     {
@@ -1463,7 +1375,7 @@
       "lineHeight": "normal",
       "fontWeight": 600,
       "letterSpacing": "0%",
-      "usage": "Figma text style \"Manrope/Label SemiBold\" — confirmed 2026-08-08 via a live Plugin API read (font-size + rendered node height), added while building the \"Vines & Vinyl\" landing page story. AUTO line-height in Figma, not a fixed ratio — \"normal\" matches both Figma's own setting and get_design_context's own generated `leading-[normal]` hint, rather than hand-computing a ratio off one rendered sample. Weight (600) isn't encoded here, same convention as every other --text-* token — apply font-semibold alongside, as get_design_context's reference code does. Landing page's Hero eyebrow and the floating date card's time line.",
+      "usage": "Figma text style \"Manrope/Label SemiBold\". AUTO line-height in Figma, not a fixed ratio — \"normal\" matches Figma's own setting rather than hand-computing a ratio off one rendered sample. Weight (600) isn't encoded here, same convention as every other --text-* token — apply font-semibold alongside. Landing page's Hero eyebrow and the floating date card's time line.",
       "documented": true,
       "consumedBy": []
     },
@@ -1477,7 +1389,7 @@
       "lineHeight": 1.65,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Figma text style \"Manrope/Paragraph Large\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's Hero description paragraph.",
+      "usage": "Figma text style \"Manrope/Paragraph Large\" — landing page's Hero description paragraph.",
       "documented": true,
       "consumedBy": []
     },
@@ -1491,9 +1403,12 @@
       "lineHeight": 1.55,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Figma text style \"Manrope/Caption\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's Footer tagline.",
+      "usage": "Figma text style \"Manrope/Caption\" — Card/Quote's attribution, Modal's description, and the landing page's Footer tagline.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "CardQuote",
+        "Modal"
+      ]
     },
     {
       "type": "Typography",
@@ -1505,9 +1420,11 @@
       "lineHeight": "normal",
       "fontWeight": 600,
       "letterSpacing": "3px",
-      "usage": "Figma text style \"Manrope/Overline Compact\" — confirmed 2026-08-08 (see text-label-strong's comment above for the AUTO/\"normal\" line-height reasoning). Also carries a real 3px letter-spacing, unlike every other --text-* token here — Tailwind v4 supports a --text-*--letter-spacing companion the same way it supports --line-height, so it's captured as a token property rather than left to an ad hoc tracking-[3px] utility wherever this style is used. Weight (600) still isn't encoded here, same convention as every other --text-* token. Landing page's floating date card \"SATURDAY\" label.",
+      "usage": "Figma text style \"Manrope/Overline Compact\" — Card/Producer's category label and the landing page's floating date card \"SATURDAY\" label. Also carries a real 3px letter-spacing, unlike every other --text-* token here: Tailwind v4 supports a --text-*--letter-spacing companion the same way it supports --line-height, so it's captured as a token property rather than left to an ad hoc tracking-[3px] utility. Weight (600) still isn't encoded here, same convention as every other --text-* token.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "CardProducer"
+      ]
     },
     {
       "type": "Typography",
@@ -1519,9 +1436,12 @@
       "lineHeight": 1.2,
       "fontWeight": 400,
       "letterSpacing": "0%",
-      "usage": "Figma text style \"Recoleta/H4\" — confirmed 2026-08-08 (see text-label-strong's comment above for method). Landing page's floating date card's date line.",
+      "usage": "Figma text style \"Recoleta/H4\" — Card/Producer's name and the landing page's floating date card's date line.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "CardProducer",
+        "Modal"
+      ]
     }
   ],
   "spacing": [
@@ -1556,7 +1476,9 @@
       "consumedBy": [
         "Badge",
         "Button",
-        "Card",
+        "CardEvent",
+        "CardProducer",
+        "CardQuote",
         "Checkbox",
         "Tab"
       ]
@@ -1571,8 +1493,9 @@
       "consumedBy": [
         "Badge",
         "Button",
-        "Card",
+        "CardEvent",
         "Input",
+        "Modal",
         "Select",
         "Tab",
         "Textarea"
@@ -1587,7 +1510,10 @@
       "documented": true,
       "consumedBy": [
         "Button",
+        "CardProducer",
+        "CardQuote",
         "Input",
+        "Modal",
         "Select",
         "Textarea"
       ]
@@ -1600,7 +1526,8 @@
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
       "consumedBy": [
-        "Card"
+        "CardEvent",
+        "Modal"
       ]
     },
     {
@@ -1610,7 +1537,9 @@
       "value": "40px",
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Modal"
+      ]
     },
     {
       "type": "Spacing",
@@ -1620,7 +1549,7 @@
       "usage": "px, not rem — see spacing-00's comment above for why.",
       "documented": true,
       "consumedBy": [
-        "Card"
+        "CardEvent"
       ]
     },
     {
@@ -1693,7 +1622,7 @@
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
       "consumedBy": [
-        "Card"
+        "CardEvent"
       ]
     },
     {
@@ -1703,7 +1632,9 @@
       "value": "12px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "CardQuote"
+      ]
     },
     {
       "type": "Radius",
@@ -1714,7 +1645,9 @@
       "documented": true,
       "consumedBy": [
         "Button",
-        "Card"
+        "CardEvent",
+        "CardProducer",
+        "Modal"
       ]
     },
     {
@@ -1726,6 +1659,7 @@
       "documented": true,
       "consumedBy": [
         "Button",
+        "ButtonClose",
         "Input",
         "Select",
         "Textarea"
@@ -1749,11 +1683,12 @@
       "value": "150ms / ease-out",
       "duration": "150ms",
       "easing": "ease-out",
-      "usage": "Not Figma-sourced (the file has no motion variables). Formalizes the identical transition-colors duration-150 ease-out already used in Button/Input/Select/Textarea/Checkbox.",
+      "usage": "Not Figma-sourced — the file has no motion variables and the 2026-09-07 export carries no motion group. Formalizes the identical transition-colors duration-150 ease-out already used across Button and the Input family.",
       "documented": true,
       "consumedBy": [],
       "literalConsumers": [
         "Button",
+        "ButtonClose",
         "Checkbox",
         "Input",
         "Select",
@@ -1768,11 +1703,9 @@
       "name": "--breakpoint-tablet",
       "tokenPath": "breakpoint.tablet",
       "value": "1024px",
-      "usage": "Not Figma-sourced (no breakpoint variables exist in the file) and not yet used by any of the 6 built components (none are responsive). Formalizes the one breakpoint value already used repeatedly across the pre-existing app shell (src/index.css, src/App.css). Tailwind's own default scale (sm 640px / md 768px / lg 1024px / xl 1280px / 2xl 1536px) is available but not customized or formally adopted by this design system.",
+      "usage": "Not Figma-sourced (no breakpoint variables exist in the file) and not used by any built component (none are responsive). Formalizes the one breakpoint value already used across the pre-existing app shell (src/index.css, src/App.css). Tailwind's own default scale is available but not adopted by this system.",
       "documented": true,
       "consumedBy": []
     }
-  ],
-  "shadow": [],
-  "shadowNote": "No shadow tokens are defined. The Figma source file has zero effect styles, and no component in this system currently uses box-shadow. This is an accurate empty state, not an omission — see the Shadows foundation page."
+  ]
 }
