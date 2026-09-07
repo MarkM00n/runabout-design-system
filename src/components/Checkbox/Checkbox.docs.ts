@@ -16,7 +16,7 @@ export const docs: ComponentDocMeta = {
   ],
   donts: [
     'Do not replace the native input with a styled div. The real input stays in the DOM, hidden with sr-only rather than display:none, so keyboard operation and the accessibility tree survive.',
-    'Do not apply the disabled opacity twice. Figma currently binds opacity/disabled on both the variant root and the box child, which multiplies to about 14% on the box — a design-side defect reported on 2026-09-07. This component applies it once, per rules §2.',
+    'Do not apply the disabled opacity twice. Nesting a second opacity-disabled inside the first multiplies rather than replaces — Figma bound it on both the variant root and the box child until 2026-09-07, rendering the box at about 14% against its own label at 38%. Apply it once, at the control\'s root, per rules §2.',
   ],
   variants: ['large', 'small'],
   states: ['default', 'hover', 'focus', 'disabled', 'checked'],

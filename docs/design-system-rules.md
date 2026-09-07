@@ -135,11 +135,15 @@ below, and `scripts/design-sync.js` for the implementation.
   SC 1.4.3 — don't "fix" a disabled state's ratio by deviating from
   this rule.
   **Apply it once, at the control's root.** Nesting a second
-  `opacity-disabled` inside multiplies rather than replaces: Figma's
-  `Input/Checkbox` currently binds it on both the variant root and the `box`
-  child, giving ~14% on the box against 38% on its own label (reported
-  2026-09-07 as a design-side defect). Code follows this rule, not the
-  compounding.
+  `opacity-disabled` inside multiplies rather than replaces. Real incident
+  (2026-09-07): `Input/Checkbox`'s four Disabled variants bound it on the
+  variant root *and* on the `box` child, rendering the box at ~14% against
+  its own label at 38% — a checkbox outline noticeably fainter than the text
+  beside it. Caught by reading the bindings rather than the screenshot, since
+  both layers were correctly bound to the right variable; the defect was
+  that one of them shouldn't have been bound at all. Fixed in Figma in the
+  same sync. The tell was inconsistency: the nine other component sets all
+  applied it once.
 - **Focus visuals are an offset outer ring (token renamed 2026-09-07).**
   Figma's Focused variants carry a `focus-ring` overlay: a 2px
   **`state-focus`** ring offset 2px outside the control's bounds, with the

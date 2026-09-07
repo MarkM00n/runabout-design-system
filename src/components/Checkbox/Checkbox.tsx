@@ -25,13 +25,14 @@ export interface CheckboxProps
 // state including Disabled — the control dims as a whole, the label doesn't
 // recolour.
 //
-// Disabled applies opacity-disabled ONCE, on the outer label. Figma's four
-// Disabled variants currently bind opacity/disabled on the variant root AND
-// again on the `box` child, which multiplies to ~14% on the box while its
-// own label sits at 38%. That's a design-side defect (reported 2026-09-07,
-// nodes 141:415 / 141:418 / 141:443 / 141:446); the single application here
-// follows the documented rule in rules §2 — "Default appearance at 38%
-// opacity" — rather than mirroring the compounding.
+// Disabled applies opacity-disabled ONCE, on the outer label — the rule in
+// rules §2, and now also what Figma does. Its four Disabled variants used to
+// bind opacity/disabled on the variant root AND again on the `box` child,
+// which multiplied to ~14% on the box while its own label sat at 38%. Found
+// during the 2026-09-07 sync and fixed in Figma in the same change (nodes
+// 141:415 / 141:418 / 141:443 / 141:446 unbound and restored to 100%,
+// leaving the binding on each variant root). Verified after: the box and its
+// label now render at identical ink weight.
 const boxStyles: Record<CheckboxSize, string> = {
   // Arbitrary px, not Tailwind's size-6 scale — rem-based utilities scale off
   // this app's 18px root font-size and would render 24px as 27px.
