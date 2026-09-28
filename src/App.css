@@ -160,7 +160,7 @@
   font-family: var(--font-manrope);
   font-size: var(--text-h3);
   line-height: var(--text-h3--line-height);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -212,7 +212,7 @@
   font-family: var(--font-manrope);
   font-size: var(--text-h4);
   line-height: var(--text-h4--line-height);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -691,7 +691,7 @@
   font-family: var(--font-manrope);
   font-size: var(--text-h6);
   line-height: var(--text-h6--line-height);
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-primary);
 }
