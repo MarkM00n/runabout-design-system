@@ -305,8 +305,7 @@ function CycleTimeChart() {
     else groups.push({ label, rows: [row] });
   }
   return (
-    <div className="cycle-chart card card-lift" data-mode="cream">
-      <span className="card-strip" data-mode="terracotta" aria-hidden="true" />
+    <div className="cycle-chart card" data-mode="cream">
       {groups.map((g) => (
         <div className="cycle-group" key={g.label}>
           <div className="cycle-group-label">
@@ -409,9 +408,8 @@ function App() {
             terracotta strip (a surface owning its mode, not a border colour),
             the four supporting tiles stay flat. */}
         <section className="stat-header" aria-label="Headline metrics">
-          <div className="stat-hero card card-lift" data-mode="cream">
-            <span className="card-strip" data-mode="terracotta" aria-hidden="true" />
-            <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
+          <div className="stat-hero card" data-mode="cream">
+                  <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
             <div className="stat-hero-label">Median cycle time, first commit → merged</div>
             <div className="stat-hero-caption">
               mean {data.totals.averageCycleTimeLabel ?? '—'} · {data.totals.cycleTimeSampleSize} components ·{' '}

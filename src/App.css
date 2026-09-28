@@ -932,25 +932,9 @@
   grid-template-columns: 1.4fr 1fr 1fr;
 }
 
-/* Shared card skin; the lift tier adds a terracotta strip along the top,
-   a surface owning its own mode (never a border colour). */
 .card {
   position: relative;
   overflow: hidden;
-}
-
-.card-strip {
-  position: absolute;
-  top: var(--spacing-03);
-  bottom: var(--spacing-03);
-  left: var(--spacing-02);
-  width: var(--spacing-00);
-  border-radius: var(--radius-full);
-  background: var(--color-surface-section);
-}
-
-.card-lift {
-  padding-left: calc(var(--spacing-04) + var(--spacing-02));
 }
 
 /* Section titles: label caps in secondary ink. The serif is saved for the
