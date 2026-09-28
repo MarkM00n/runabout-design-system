@@ -160,7 +160,7 @@
   font-family: var(--font-manrope);
   font-size: var(--text-h3);
   line-height: var(--text-h3--line-height);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -212,7 +212,7 @@
   font-family: var(--font-manrope);
   font-size: var(--text-h4);
   line-height: var(--text-h4--line-height);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -631,4 +631,527 @@
 
 .status-fail {
   color: var(--color-state-error);
+}
+
+/* ---------------------------------------------------------------------------
+   2026-09-29 redesign: checks as meters, cycle time as a chart.
+   Every value below is a token; the only colours are surface, text, border
+   and state tokens resolved through the data-mode each block carries.
+   --------------------------------------------------------------------------- */
+
+/* "9 of 13" — the "of 13" is secondary ink at label size so the count leads. */
+.stat-value-of {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.stat-value-warn {
+  color: var(--color-state-warning);
+}
+
+/* Four meters in a row, one per check. Below 1000px they wrap to two. */
+.meter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-04);
+}
+
+@media (max-width: 1000px) {
+  .meter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Same skin as the stat tiles: surface-card with data-mode="cream". */
+.meter {
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-03) var(--spacing-04);
+  background: var(--color-surface-card);
+}
+
+.meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--spacing-02);
+  margin-bottom: var(--spacing-02);
+}
+
+.meter-label {
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
+  color: var(--color-text-primary);
+}
+
+.meter-count {
+  font-family: var(--font-manrope);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.meter-count-pass {
+  color: var(--color-state-success);
+}
+
+.meter-count-warn {
+  color: var(--color-state-warning);
+}
+
+.meter-count-fail {
+  color: var(--color-state-error);
+}
+
+.meter-of {
+  font-size: var(--text-label);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+/* The track is paper-100, the same step the zebra odd row uses, so it reads
+   as "empty" against surface-card without a border. spacing-01 tall. */
+.meter-track {
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: var(--color-paper-100);
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+/* Status colour on the fill is a status, not a series: state tokens, and the
+   count beside it says the same thing in words (SC 1.4.1). */
+.meter-fill-pass {
+  background: var(--color-state-success);
+}
+
+.meter-fill-warn {
+  background: var(--color-state-warning);
+}
+
+.meter-fill-fail {
+  background: var(--color-state-error);
+}
+
+.meter-foot {
+  margin-top: var(--spacing-01);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  color: var(--color-text-secondary);
+}
+
+/* Cycle-time chart. A cream card; one row per component; the bar is a
+   surface (it owns data-mode="terracotta", so it is surface-section
+   resolved On Terracotta), the median a border-strong hairline. */
+.cycle-chart {
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-03) var(--spacing-04);
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+.cycle-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: var(--spacing-02);
+  padding: var(--spacing-00) 0;
+}
+
+.cycle-name {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.cycle-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  height: var(--spacing-03);
+}
+
+.cycle-bar {
+  display: block;
+  height: var(--spacing-02);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-surface-section);
+}
+
+.cycle-value {
+  position: relative;
+  padding: 0 var(--spacing-00);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  /* Same fill as the card, so the label masks the median hairline where the
+     two coincide (three components sit exactly on the median). */
+  background: var(--color-surface-card);
+}
+
+.cycle-median {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-border-strong);
+  opacity: 0.5;
+}
+
+.cycle-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  margin-top: var(--spacing-02);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  color: var(--color-text-secondary);
+}
+
+.cycle-median-key {
+  display: inline-block;
+  width: 1px;
+  height: var(--spacing-02);
+  background: var(--color-border-strong);
+  opacity: 0.5;
+}
+
+.cell-cycle {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   2026-09-29 layout pass: header band, card tiers, grouped chart, quiet table.
+   --------------------------------------------------------------------------- */
+
+/* The page keeps its 100vw breakout; content sits in a 1280px column so
+   the tiles stop stretching on a wide screen. The band is full-bleed. */
+.dashboard {
+  padding: 0 0 var(--spacing-07);
+}
+
+.dashboard-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-05);
+}
+
+/* Header band: surface-section resolved On Terracotta (Brand/800). Extra
+   bottom padding is what the stat row pulls up into. */
+.band {
+  background: var(--color-surface-section);
+  color: var(--color-text-primary);
+  padding: var(--spacing-08) 0 var(--spacing-10);
+}
+
+.band-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-03);
+}
+
+.band .dashboard-title {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  margin-bottom: var(--spacing-01);
+}
+
+.band .dashboard-subtitle {
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
+  color: var(--color-text-secondary);
+}
+
+.band-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-02);
+  flex-wrap: wrap;
+}
+
+/* Run status: action-primary on the band (cream on terracotta, the same
+   pairing Button primary uses On Terracotta) with a state-coloured dot. */
+.run-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  height: 32px;
+  padding: 0 var(--spacing-02);
+  border-radius: var(--radius-full);
+  background: var(--color-action-primary);
+  color: var(--color-text-on-action);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.run-pill-dot {
+  width: var(--spacing-01);
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+}
+
+/* The dot resolves its state colour On Cream, which is what the pill's
+   cream fill is — hence the explicit cream values via a nested mode would
+   be the strict reading; state tokens are mode-invariant enough here
+   (success #166534 on #f7e7d2 is 6.9:1). */
+.run-pill-pass .run-pill-dot {
+  background: var(--color-state-success);
+}
+
+.run-pill-warn .run-pill-dot {
+  background: var(--color-state-warning);
+}
+
+.run-pill-fail .run-pill-dot {
+  background: var(--color-state-error);
+}
+
+/* Stat row pulls up over the band's bottom edge. */
+.stat-header {
+  margin-top: calc(-1 * var(--spacing-07));
+  grid-template-columns: 1.4fr 1fr 1fr;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section titles: label caps in secondary ink. The serif is saved for the
+   page title and the numbers, so hierarchy reads without size games. */
+.section-title {
+  font-family: var(--font-manrope);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-02);
+}
+
+/* Chart: grouped by merge month. */
+.cycle-chart {
+  padding-top: var(--spacing-04);
+}
+
+.cycle-group + .cycle-group {
+  margin-top: var(--spacing-03);
+  padding-top: var(--spacing-02);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.cycle-group-label {
+  font-family: var(--font-recoleta);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-01);
+}
+
+.cycle-group-count {
+  font-family: var(--font-manrope);
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
+}
+
+.cycle-row {
+  grid-template-columns: 140px 1fr;
+  padding: var(--spacing-00) 0;
+}
+
+.cycle-name {
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.cycle-bar {
+  height: var(--spacing-02);
+}
+
+/* Overnight bars carry a hatch: border-subtle On Terracotta is a 10% white,
+   laid over the bar's own fill. Texture, not a second hue. */
+.cycle-bar-overnight {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-border-subtle) 0,
+    var(--color-border-subtle) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.cycle-hatch-key {
+  display: inline-block;
+  width: var(--spacing-03);
+  height: var(--spacing-01);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-surface-section);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-border-subtle) 0,
+    var(--color-border-subtle) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+/* Table: quiet. Hairlines instead of zebra; numbers right-aligned. */
+.table-card .row-even,
+.table-card .row-odd,
+.table-card .component-row {
+  background: var(--color-surface-card);
+}
+
+.table-card .dashboard-table > tbody > tr:not(.detail-row) > td {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.col-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-card .dashboard-table > thead th.col-num {
+  text-align: right;
+}
+
+/* Status badge: paper-100 pill with a state-coloured dot and the label in
+   primary ink, so the state is carried by dot + words, never colour alone. */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  padding: var(--spacing-00) var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: var(--color-paper-100);
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+.status-dot {
+  width: var(--spacing-01);
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.status-pass .status-dot {
+  color: var(--color-state-success);
+}
+
+.status-warn .status-dot {
+  color: var(--color-state-warning);
+}
+
+.status-fail .status-dot {
+  color: var(--color-state-error);
+}
+
+.status-pass,
+.status-warn,
+.status-fail {
+  color: var(--color-text-primary);
+}
+
+/* Hover: keep the badge legible on the dark hover fill. */
+.component-row:hover .status-badge {
+  background: var(--color-surface-card);
+}
+
+/* Expanded-row panel: the same language as the rest of the page. paper-100
+   inset panel with the card radius, hairline tables, dot-and-label badges. */
+.detail-panel {
+  margin: var(--spacing-02);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+}
+
+.issue-table th {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.issue-table td {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.issue-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Severity and fixed badges share the status badge skin; on the paper-100
+   panel the badge fill steps to surface-card so it still reads as a pill. */
+.severity-badge {
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+.severity-fail .status-dot {
+  color: var(--color-state-error);
+}
+
+.severity-warn .status-dot {
+  color: var(--color-state-warning);
+}
+
+.severity-fixed .status-dot {
+  color: var(--color-state-success);
+}
+
+/* Meters, chart and table all share the card radius; the table's scroll box
+   clips its corners so the dark header band follows the curve. */
+.table-card .table-scroll {
+  overflow: hidden;
+}
+
+.table-card .table-scroll {
+  overflow-x: auto;
+}
+
+.dashboard-table {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* Links in the panel tables match the page link token. */
+.detail-panel a {
+  color: var(--color-text-link);
+}
+
+/* Hover has to outrank the flat row fill above it. On hover the row goes to
+   action-primary-hover (dark On Cream) with text-on-state, as before. */
+.table-card .component-row:hover {
+  background: var(--color-action-primary-hover);
+  color: var(--color-text-on-state);
+}
+
+.table-card .component-row:hover .status-badge {
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+/* The expanded panel's own cell fills with surface-card so the inset panel
+   sits on the table, not on the page canvas showing through. */
+.table-card .dashboard-table > tbody > tr.detail-row > td {
+  background: var(--color-surface-card);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
