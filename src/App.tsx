@@ -44,6 +44,7 @@ interface ComponentRow {
   storybookUrl: string;
   pr: { number: number; url: string } | null;
   cycleTimeSeconds: number | null;
+  mergedAt: string | null;
 }
 
 interface CheckTally {
@@ -112,6 +113,16 @@ const CHECK_LABELS: Record<keyof DashboardData['validationSummary'], string> = {
   documentationCoverage: 'Documentation Coverage',
 };
 
+// Short forms for the meter tiles, where four sit in a row and the long
+// label wrapped onto the count. The full label stays on the table and in
+// the aria-label, so nothing is lost for a screen reader.
+const CHECK_SHORT_LABELS: Record<keyof DashboardData['validationSummary'], string> = {
+  tokenCompliance: 'Tokens',
+  accessibility: 'Accessibility',
+  storybookCoverage: 'Storybook',
+  documentationCoverage: 'Documentation',
+};
+
 // Three states, not two: a component that passes every check but still has
 // open warnings isn't a clean pass, so it gets its own amber state rather
 // than being shown identical to a component with nothing open at all.
@@ -129,6 +140,25 @@ function formatGeneratedAt(iso: string) {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(iso));
+}
+
+// Seconds → "28m" / "18h 38m". Whole minutes only: the pipeline's own
+// resolution is a git timestamp, and a seconds column would imply precision
+// the sample doesn't carry.
+function formatCycle(seconds: number | null) {
+  if (seconds == null) return '—';
+  const mins = Math.round(seconds / 60);
+  if (mins < 60) return `${mins}m`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+// "n of N components pass this check" — read from each component's own
+// check result, never from the tally, so the meter and the table can't
+// disagree.
+function passingCount(checkType: string) {
+  return data.components.filter((c) => c.checks[checkType]?.pass).length;
 }
 
 function checkLabel(checkType: string) {
@@ -229,7 +259,7 @@ function ComponentRowDetail({ component }: { component: ComponentRow }) {
   const openIssues = Object.values(component.checks).flatMap((c) => c.open);
   return (
     <tr className="detail-row">
-      <td colSpan={7}>
+      <td colSpan={8}>
         <div className="detail-panel">
           <div className="detail-block">
             <h3 className="detail-title">Open issues ({openIssues.length})</h3>
@@ -243,6 +273,45 @@ function ComponentRowDetail({ component }: { component: ComponentRow }) {
       </td>
     </tr>
   );
+}
+
+function CycleTimeChart() {
+  const rows = data.components
+    .filter((c) => c.cycleTimeSeconds != null)
+    .sort((a, b) => (a.mergedAt ?? '').localeCompare(b.mergedAt ?? ''));
+  const max = Math.max(...rows.map((c) => c.cycleTimeSeconds ?? 0));
+  const medianSeconds = data.totals.medianCycleTimeLabel ? medianOf(rows.map((c) => c.cycleTimeSeconds ?? 0)) : null;
+  return (
+    <div className="cycle-chart" data-mode="cream">
+      {rows.map((c) => {
+        const pct = ((c.cycleTimeSeconds ?? 0) / max) * 100;
+        return (
+          <div className="cycle-row" key={c.name} title={`${c.name}: ${formatCycle(c.cycleTimeSeconds)}`}>
+            <span className="cycle-name">{c.name}</span>
+            <span className="cycle-track">
+              {medianSeconds != null && (
+                <span className="cycle-median" style={{ left: `${(medianSeconds / max) * 100}%` }} aria-hidden="true" />
+              )}
+              <span className="cycle-bar" data-mode="terracotta" style={{ width: `${Math.max(pct, 0.6)}%` }} />
+              <span className="cycle-value">{formatCycle(c.cycleTimeSeconds)}</span>
+            </span>
+          </div>
+        );
+      })}
+      {medianSeconds != null && (
+        <div className="cycle-legend">
+          <span className="cycle-median-key" aria-hidden="true" /> median {formatCycle(medianSeconds)} · mean{' '}
+          {data.totals.averageCycleTimeLabel} · wall-clock, not effort
+        </div>
+      )}
+    </div>
+  );
+}
+
+function medianOf(values: number[]) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 function App() {
@@ -260,9 +329,9 @@ function App() {
     <div className="dashboard" data-mode="olive">
       <header className="dashboard-header">
         <div>
-          <h1 className="dashboard-title">Runabout DesignOps — Pilot Dashboard</h1>
+          <h1 className="dashboard-title">Runabout DesignOps</h1>
           <p className="dashboard-subtitle">
-            Live snapshot, generated {formatGeneratedAt(data.generatedAt)}
+            Live from the pipeline · updates on every merge · last run {formatGeneratedAt(data.generatedAt)}
           </p>
         </div>
         <nav className="dashboard-links">
@@ -306,13 +375,30 @@ function App() {
             Median cycle time, first commit → merged
           </div>
           <div className="stat-hero-caption">
-            mean {data.totals.averageCycleTimeLabel ?? '—'} · across {data.totals.cycleTimeSampleSize} components
+            mean {data.totals.averageCycleTimeLabel ?? '—'} · {data.totals.cycleTimeSampleSize} components ·{' '}
+            {data.totals.totalDesignTokens ?? '—'} tokens documented
           </div>
         </div>
 
         <div className="stat-tile" data-mode="cream">
+          <div className="stat-value">{data.totals.totalComponents}</div>
+          <div className="stat-label">Components, all through the pipeline</div>
+        </div>
+
+        <div className="stat-tile" data-mode="cream">
+          <div className="stat-value stat-value-good">
+            <span className="stat-tick" aria-hidden="true">
+              ✓
+            </span>
+            {data.components.filter((c) => c.overall).length}
+            <span className="stat-value-of">of {data.totals.totalComponents}</span>
+          </div>
+          <div className="stat-label">Passing every check</div>
+        </div>
+
+        <div className="stat-tile" data-mode="cream">
           <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
-          <div className="stat-label">Caught &amp; fixed</div>
+          <div className="stat-label">Caught &amp; fixed by the checks</div>
         </div>
 
         {/* Zero open issues is a result, not a measurement — it reads as a
@@ -321,23 +407,10 @@ function App() {
             still comes from the number and its label for a screen reader
             rather than from colour or a glyph alone. */}
         <div className="stat-tile" data-mode="cream">
-          <div className="stat-value stat-value-good">
-            <span className="stat-tick" aria-hidden="true">
-              ✓
-            </span>
+          <div className={`stat-value ${data.totals.totalOpenIssues === 0 ? 'stat-value-good' : 'stat-value-warn'}`}>
             {data.totals.totalOpenIssues}
           </div>
           <div className="stat-label">Open issues</div>
-        </div>
-
-        <div className="stat-tile" data-mode="cream">
-          <div className="stat-value">{data.totals.totalComponents}</div>
-          <div className="stat-label">Components</div>
-        </div>
-
-        <div className="stat-tile" data-mode="cream">
-          <div className="stat-value">{data.totals.totalDesignTokens ?? '—'}</div>
-          <div className="stat-label">Tokens documented</div>
         </div>
       </section>
 
@@ -350,35 +423,47 @@ function App() {
           it — scoping data-mode="cream" to the whole section previously
           pulled the heading into that override too, rendering dark text
           on the dark canvas (near-invisible, filed 2026-08-05). */}
-      <section className="dashboard-section table-card" aria-label="Errors caught by validation">
-        <h2 className="section-title">Errors caught by validation</h2>
-        <div className="table-scroll" data-mode="cream">
-          <table className="dashboard-table">
-            {/* data-mode="dark" on the header row only: it is a fixed dark
-                band inside an otherwise cream table, so it is its own
-                surface and owns its own mode. Scoped to the <thead>, not
-                the table — the narrowest element that actually needs it. */}
-            <thead data-mode="dark">
-              <tr>
-                <th>Check type</th>
-                <th>Fail</th>
-                <th>Warn</th>
-              </tr>
-            </thead>
-            <tbody>
-              {checkTypes.map((key, i) => {
-                const tally = data.validationSummary[key];
-                return (
-                  <tr key={key} className={i % 2 === 0 ? 'row-even' : 'row-odd'}>
-                    <td>{CHECK_LABELS[key]}</td>
-                    <td className={tally.fail > 0 ? 'cell-fail' : ''}>{tally.fail}</td>
-                    <td className={tally.warn > 0 ? 'cell-warn' : ''}>{tally.warn}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      {/* One meter per check, read from each component's own result. A table
+          of zeros said "nothing happened"; four full meters say "everything
+          passes", which is the actual state. The fill is a state token — it
+          is a status, not a series — and the number beside it carries the
+          meaning, so nothing here depends on colour alone. */}
+      <section className="dashboard-section" aria-label="Checks passing">
+        <h2 className="section-title">Checks, on every pull request</h2>
+        <div className="meter-grid">
+          {checkTypes.map((key) => {
+            const passing = passingCount(key);
+            const total = data.totals.totalComponents;
+            const tally = data.validationSummary[key];
+            const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
+            return (
+              <div className="meter" data-mode="cream" key={key}>
+                <div className="meter-head">
+                  <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
+                  <span className={`meter-count meter-count-${tone}`}>
+                    {passing} <span className="meter-of">of {total}</span>
+                  </span>
+                </div>
+                <div className="meter-track" role="img" aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}>
+                  <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
+                </div>
+                <div className="meter-foot">
+                  {tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}
+                </div>
+              </div>
+            );
+          })}
         </div>
+      </section>
+
+      {/* Cycle time per component, oldest merge at the top. One series, so
+          one hue and no legend; every bar is labelled because thirteen values
+          are the point, not a trend. Linear scale on purpose: the first PRs
+          sat open overnight and everything since ships inside an hour, and a
+          log scale would hide exactly that. */}
+      <section className="dashboard-section" aria-label="Cycle time per component">
+        <h2 className="section-title">Cycle time per component, first commit → merged</h2>
+        <CycleTimeChart />
       </section>
 
       <section className="dashboard-section table-card" aria-label="Component status">
@@ -395,6 +480,7 @@ function App() {
                 <th>Overall</th>
                 <th>Caught &amp; fixed</th>
                 <th>Open</th>
+                <th>Cycle time</th>
                 <th>Links</th>
                 <th>Last validated</th>
                 <th></th>
@@ -418,6 +504,7 @@ function App() {
                       <td className={c.openFailCount > 0 ? 'cell-fail' : c.openWarnCount > 0 ? 'cell-warn' : ''}>
                         {c.openCount}
                       </td>
+                      <td className="cell-cycle">{formatCycle(c.cycleTimeSeconds)}</td>
                       <td className="cell-links">
                         <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
                           Story

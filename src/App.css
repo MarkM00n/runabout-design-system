@@ -632,3 +632,203 @@
 .status-fail {
   color: var(--color-state-error);
 }
+
+/* ---------------------------------------------------------------------------
+   2026-09-29 redesign: checks as meters, cycle time as a chart.
+   Every value below is a token; the only colours are surface, text, border
+   and state tokens resolved through the data-mode each block carries.
+   --------------------------------------------------------------------------- */
+
+/* "9 of 13" — the "of 13" is secondary ink at label size so the count leads. */
+.stat-value-of {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.stat-value-warn {
+  color: var(--color-state-warning);
+}
+
+/* Four meters in a row, one per check. Below 1000px they wrap to two. */
+.meter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-04);
+}
+
+@media (max-width: 1000px) {
+  .meter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Same skin as the stat tiles: surface-card with data-mode="cream". */
+.meter {
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-03) var(--spacing-04);
+  background: var(--color-surface-card);
+}
+
+.meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--spacing-02);
+  margin-bottom: var(--spacing-02);
+}
+
+.meter-label {
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
+  color: var(--color-text-primary);
+}
+
+.meter-count {
+  font-family: var(--font-manrope);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.meter-count-pass {
+  color: var(--color-state-success);
+}
+
+.meter-count-warn {
+  color: var(--color-state-warning);
+}
+
+.meter-count-fail {
+  color: var(--color-state-error);
+}
+
+.meter-of {
+  font-size: var(--text-label);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+/* The track is paper-100, the same step the zebra odd row uses, so it reads
+   as "empty" against surface-card without a border. spacing-01 tall. */
+.meter-track {
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: var(--color-paper-100);
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+/* Status colour on the fill is a status, not a series: state tokens, and the
+   count beside it says the same thing in words (SC 1.4.1). */
+.meter-fill-pass {
+  background: var(--color-state-success);
+}
+
+.meter-fill-warn {
+  background: var(--color-state-warning);
+}
+
+.meter-fill-fail {
+  background: var(--color-state-error);
+}
+
+.meter-foot {
+  margin-top: var(--spacing-01);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  color: var(--color-text-secondary);
+}
+
+/* Cycle-time chart. A cream card; one row per component; the bar is a
+   surface (it owns data-mode="terracotta", so it is surface-section
+   resolved On Terracotta), the median a border-strong hairline. */
+.cycle-chart {
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-03) var(--spacing-04);
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+.cycle-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: var(--spacing-02);
+  padding: var(--spacing-00) 0;
+}
+
+.cycle-name {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.cycle-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  height: var(--spacing-03);
+}
+
+.cycle-bar {
+  display: block;
+  height: var(--spacing-02);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-surface-section);
+}
+
+.cycle-value {
+  position: relative;
+  padding: 0 var(--spacing-00);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  /* Same fill as the card, so the label masks the median hairline where the
+     two coincide (three components sit exactly on the median). */
+  background: var(--color-surface-card);
+}
+
+.cycle-median {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-border-strong);
+  opacity: 0.5;
+}
+
+.cycle-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  margin-top: var(--spacing-02);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  color: var(--color-text-secondary);
+}
+
+.cycle-median-key {
+  display: inline-block;
+  width: 1px;
+  height: var(--spacing-02);
+  background: var(--color-border-strong);
+  opacity: 0.5;
+}
+
+.cell-cycle {
+  font-variant-numeric: tabular-nums;
+}
