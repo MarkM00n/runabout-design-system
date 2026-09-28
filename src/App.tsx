@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import dashboardData from './design-docs/dashboard-data.generated.json';
 import foundationsData from './design-docs/foundations-data.generated.json';
+import validationReport from './design-docs/validation-report.generated.json';
 import type { ValidationStatus } from './design-docs/types';
 import { statusLabel, statusTone } from './design-docs/statusFormat';
 import './App.css';
@@ -136,13 +137,6 @@ function StatusBadge({ status, warnCount }: { status: ValidationStatus; warnCoun
   );
 }
 
-function formatGeneratedAt(iso: string) {
-  return new Intl.DateTimeFormat('en-AU', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(iso));
-}
-
 // Seconds → "28m" / "18h 38m". Whole minutes only: the pipeline's own
 // resolution is a git timestamp, and a seconds column would imply precision
 // the sample doesn't carry.
@@ -153,13 +147,6 @@ function formatCycle(seconds: number | null) {
   const h = Math.floor(mins / 60);
   const m = mins % 60;
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
-}
-
-// "n of N components pass this check" — read from each component's own
-// check result, never from the tally, so the meter and the table can't
-// disagree.
-function passingCount(checkType: string) {
-  return data.components.filter((c) => c.checks[checkType]?.pass).length;
 }
 
 function checkLabel(checkType: string) {
@@ -303,13 +290,41 @@ const TOKEN_CATEGORIES: [keyof typeof foundationsData, string, string][] = [
   ['breakpoint', 'Breakpoints', 'foundations-breakpoints--docs'],
 ];
 
-// The rule file each check enforces, in the repo.
-const CHECK_RULE_FILES: Record<keyof DashboardData['validationSummary'], string> = {
-  tokenCompliance: 'docs/design-system-rules.md#1-token-compliance',
-  accessibility: 'docs/design-system-rules.md#2-accessibility',
-  storybookCoverage: 'docs/design-system-rules.md#3-storybook-coverage',
-  documentationCoverage: 'docs/design-system-rules.md#5-documentation',
-};
+// Every gate work passes through, with the rule it enforces. Three groups:
+// the design check in Figma before anything is built, the four per-component
+// checks, and the two whole-system checks. The per-component and system
+// results come from the last design-sync run; the Figma gate runs in the
+// Claude app before a build and has no result to show here.
+type Gate = { name: string; what: string; rule: string; result?: boolean | null; detail?: string };
+const RULES = 'docs/design-system-rules.md';
+const systemPass = (validationReport as { categoryPass: Record<string, boolean> }).categoryPass;
+const GATE_GROUPS: { title: string; note: string; gates: Gate[] }[] = [
+  {
+    title: 'In Figma, before build',
+    note: 'In the Claude app, on request',
+    gates: [{ name: 'Ready for AI', what: 'the Figma file is buildable', rule: 'docs/ready-for-ai.md', result: null }],
+  },
+  {
+    title: 'Per component',
+    note: 'design-sync, every pull request',
+    gates: [
+      { name: 'Tokens', what: 'values trace to tokens', rule: `${RULES}#1-token-compliance` },
+      { name: 'Accessibility', what: 'AA contrast, every mode', rule: `${RULES}#2-accessibility` },
+      { name: 'Storybook', what: 'a story per variant', rule: `${RULES}#3-storybook-coverage` },
+      { name: 'Documentation', what: 'docs from the code', rule: `${RULES}#5-documentation` },
+    ],
+  },
+  {
+    title: 'Whole system',
+    note: 'design-sync, every pull request',
+    gates: [
+      { name: 'Foundations', what: 'every token documented, nothing documented that is missing', rule: `${RULES}#6-foundations`, result: systemPass['Foundation Coverage'] },
+      { name: 'Dashboard', what: 'this page uses only tokens and classes that exist', rule: 'CLAUDE.md#component-changes-must-also-sweep-every-consumer-outside-srccomponents', result: systemPass['Dashboard Coverage'] },
+      { name: 'Builds', what: 'Storybook and the dashboard build clean', rule: 'prompts/validate-component.md', result: systemPass['Storybook Coverage'] && systemPass['Dashboard Coverage'] },
+    ],
+  },
+];
+const GATE_COUNT = GATE_GROUPS.reduce((n, g) => n + g.gates.length, 0);
 
 // Surface modes and brand overrides are declared in src/styles/tokens.css
 // ([data-mode=…] and [data-brand=…] blocks). Counted here by name so the
@@ -321,13 +336,6 @@ const BRANDS = ['northline'];
 const figmaExportName = Object.keys(import.meta.glob('./tokens/figma-export-*.json'))[0] ?? '';
 const FIGMA_SYNCED = figmaExportName.match(/(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
 
-const CHECK_DESCRIPTIONS: Record<keyof DashboardData['validationSummary'], string> = {
-  tokenCompliance: 'Every colour, space, radius and type value traces to a token',
-  accessibility: 'Text and focus contrast at WCAG 2.2 AA in every mode',
-  storybookCoverage: 'A story for every component and variant',
-  documentationCoverage: 'Usage docs present and generated from the code',
-};
-
 function openIssues() {
   const items = data.components.flatMap((c) =>
     Object.values(c.checks).flatMap((check) => check.open.map((issue) => ({ component: c, issue }))),
@@ -335,25 +343,37 @@ function openIssues() {
   return items.sort((a, b) => (a.issue.level === b.issue.level ? 0 : a.issue.level === 'fail' ? -1 : 1));
 }
 
+function shortTime(iso: string | null) {
+  if (!iso) return '';
+  return new Intl.DateTimeFormat('en-AU', { hour: 'numeric', minute: '2-digit' }).format(new Date(iso));
+}
+
 function shortDate(iso: string | null) {
   if (!iso) return '—';
   return new Intl.DateTimeFormat('en-AU', { day: 'numeric', month: 'short' }).format(new Date(iso));
 }
 
-function Status() {
+function healthSummary() {
   const items = openIssues();
   const failing = items.filter((i) => i.issue.level === 'fail').length;
   const warning = items.length - failing;
-  const runTone = data.status === 'fail' ? 'fail' : data.status === 'pass-with-warnings' ? 'warn' : 'pass';
+  const tone: 'pass' | 'warn' | 'fail' = failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass';
+  const text = failing > 0 ? `${failing} blocking` : warning > 0 ? `Healthy · ${warning} warning${warning === 1 ? '' : 's'}` : 'Healthy';
+  return { items, failing, warning, tone, text };
+}
+
+function Status() {
+  const { items, failing, warning } = healthSummary();
   const checksPassing = (Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[]).filter(
     (k) => data.validationSummary[k].fail === 0,
   ).length;
-  const facts: { label: string; value: string; tone?: 'pass' | 'warn' | 'fail'; sub?: string }[] = [
-    { label: 'Last run', value: runTone === 'fail' ? 'Failed' : 'Passed', tone: runTone === 'fail' ? 'fail' : 'pass', sub: `checks ${formatGeneratedAt(data.validationReportGeneratedAt)} · page ${formatGeneratedAt(data.generatedAt)}` },
-    { label: 'Checks', value: `${checksPassing} of 4`, tone: checksPassing === 4 ? 'pass' : 'fail', sub: 'no blocking failures' },
+  const passingAll = data.components.filter((c) => c.overall).length;
+  const facts: { label: string; value: string; tone?: 'pass' | 'warn' | 'fail'; sub: string }[] = [
+    { label: 'Last run', value: data.status === 'fail' ? 'Failed' : 'Passed', tone: data.status === 'fail' ? 'fail' : 'pass', sub: shortDate(data.validationReportGeneratedAt) + ', ' + shortTime(data.validationReportGeneratedAt) },
+    { label: 'Checks', value: `${checksPassing} / 4`, tone: checksPassing === 4 ? 'pass' : 'fail', sub: 'passing' },
     { label: 'Open issues', value: String(items.length), tone: failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass', sub: `${failing} blocking · ${warning} warning` },
-    { label: 'Components', value: String(data.totals.totalComponents), sub: `${data.components.filter((c) => c.overall).length} pass every check` },
-    { label: 'Figma sync', value: FIGMA_SYNCED ? shortDate(FIGMA_SYNCED) : '—', sub: 'tokens exported from the file' },
+    { label: 'Components', value: `${passingAll} / ${data.totals.totalComponents}`, sub: 'pass every check' },
+    { label: 'Figma sync', value: FIGMA_SYNCED ? shortDate(FIGMA_SYNCED) : '—', sub: 'tokens exported' },
   ];
   return (
     <section className="status card" data-mode="cream" aria-label="Status">
@@ -364,46 +384,55 @@ function Status() {
             {f.tone && <span className="status-dot" aria-hidden="true" />}
             {f.value}
           </div>
-          {f.sub && <div className="status-sub">{f.sub}</div>}
+          <div className="status-sub">{f.sub}</div>
         </div>
       ))}
     </section>
   );
 }
 
+const ISSUES_SHOWN = 5;
+
 function Issues() {
-  const items = openIssues();
+  const { items, failing, warning } = healthSummary();
+  const [all, setAll] = useState(false);
   if (items.length === 0) return null;
+  const shown = all ? items : items.slice(0, ISSUES_SHOWN);
   return (
     <section className="dashboard-section" aria-label="Issues">
-      <h2 className="section-title">Issues · {items.length}</h2>
+      <div className="section-head">
+        <h2 className="section-title">Issues</h2>
+        <span className="section-stat">
+          {failing > 0 && <strong className="tone-fail-text">{failing} blocking</strong>}
+          {failing > 0 && warning > 0 && ' · '}
+          {warning > 0 && <span>{warning} warning{warning === 1 ? '' : 's'}</span>}
+        </span>
+      </div>
       <div className="table-scroll card issues" data-mode="cream">
         <table className="dashboard-table plain-table">
           <thead>
             <tr>
-              <th>Severity</th>
+              <th className="col-sev">Severity</th>
               <th>Component</th>
               <th>Check</th>
               <th>What's wrong</th>
-              <th>Suggested fix</th>
+              <th>Fix</th>
               <th>Where</th>
             </tr>
           </thead>
           <tbody>
-            {items.map(({ component, issue }, i) => (
+            {shown.map(({ component, issue }, i) => (
               <tr key={i}>
-                <td>
+                <td className="col-sev">
                   <span className={`status-badge severity-badge severity-${issue.level}`}>
                     <span className="status-dot" aria-hidden="true" />
                     {issue.level === 'fail' ? 'Blocking' : 'Warning'}
                   </span>
                 </td>
                 <td className="cell-component">
-                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">
-                    {component.name}
-                  </a>
+                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">{component.name}</a>
                 </td>
-                <td>{checkLabel(issue.checkType)}</td>
+                <td className="cell-check">{CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</td>
                 <td className="cell-prose">{issue.message}</td>
                 <td className="cell-prose">{issue.fix ?? '—'}</td>
                 <td className="issue-where">{whereLabel(issue.file, issue.line)}</td>
@@ -411,99 +440,127 @@ function Issues() {
             ))}
           </tbody>
         </table>
+        {items.length > ISSUES_SHOWN && (
+          <button type="button" className="show-all" onClick={() => setAll(!all)}>
+            {all ? 'Show fewer' : `Show all ${items.length}`}
+          </button>
+        )}
       </div>
     </section>
   );
 }
 
 function Inventory() {
-  const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
+  const passingAll = data.components.filter((c) => c.overall).length;
+  const counts = TOKEN_CATEGORIES.map(([k, label, path]) => ({
+    k,
+    label,
+    path,
+    n: Array.isArray(foundationsData[k]) ? (foundationsData[k] as unknown[]).length : 0,
+  }));
+  const maxCount = Math.max(...counts.map((c) => c.n));
+  const numbers: [string, string, string][] = [
+    [String(data.totals.totalComponents), 'Components', `${passingAll} pass every check`],
+    [String(data.totals.totalDesignTokens ?? '—'), 'Tokens', `${counts.length} categories`],
+    [String(SURFACE_MODES.length), 'Surface modes', `${BRANDS.length} brand override`],
+    [String(GATE_COUNT), 'Gates', 'Figma, per component, whole system'],
+  ];
   return (
     <section className="dashboard-section" aria-label="Inventory">
       <h2 className="section-title">Inventory</h2>
-      <div className="inv-grid">
-        <div className="card inv-card" data-mode="cream">
-          <div className="eyebrow">Components</div>
-          <div className="inv-big">{data.totals.totalComponents}</div>
-          <ul className="inv-list">
-            <li><span>Passing every check</span><span>{data.components.filter((c) => c.overall).length}</span></li>
-            <li><span>With open issues</span><span>{data.components.filter((c) => c.openCount > 0).length}</span></li>
-            <li><span>Issues caught &amp; fixed</span><span>{data.totals.totalCaughtAndFixed}</span></li>
-            <li><span>Last validated</span><span>{shortDate(data.validationReportGeneratedAt)}</span></li>
-          </ul>
+      <div className="card inv" data-mode="cream">
+        <div className="inv-numbers">
+          {numbers.map(([v, l, sub]) => (
+            <div className="inv-number" key={l}>
+              <div className="eyebrow">{l}</div>
+              <div className="inv-big">{v}</div>
+              <div className="inv-sub">{sub}</div>
+            </div>
+          ))}
         </div>
-        <div className="card inv-card" data-mode="cream">
-          <div className="eyebrow">Tokens</div>
-          <div className="inv-big">{data.totals.totalDesignTokens ?? '—'}</div>
-          <ul className="inv-list">
-            {TOKEN_CATEGORIES.map(([k, label, path]) => (
-              <li key={k}>
-                <span>
-                  <a href={`${data.links.storybookBaseUrl}?path=/docs/${path}`} target="_blank" rel="noreferrer">
-                    {label}
+        <div className="inv-detail">
+          {/* Tokens by category as proportional bars: one hue, length is
+              the count, label and number direct. Each links to its page. */}
+          <div>
+            <div className="eyebrow">Tokens by category</div>
+            <ul className="tok-list">
+              {counts.map((c) => (
+                <li className="tok-row" key={c.k}>
+                  <a className="tok-label" href={`${data.links.storybookBaseUrl}?path=/docs/${c.path}`} target="_blank" rel="noreferrer">
+                    {c.label}
                   </a>
-                </span>
-                <span>{Array.isArray(foundationsData[k]) ? (foundationsData[k] as unknown[]).length : 0}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="card inv-card" data-mode="cream">
-          <div className="eyebrow">Modes and brands</div>
-          <div className="inv-big">{SURFACE_MODES.length}</div>
-          <ul className="inv-list inv-list-stack">
-            <li><span>Surface modes</span><span className="inv-desc">{SURFACE_MODES.join(' · ')}</span></li>
-            <li><span>Brand overrides</span><span className="inv-desc">{BRANDS.join(' · ')}</span></li>
-            <li><span>The rule</span><span className="inv-desc">A surface owns a mode; everything else inherits.</span></li>
-          </ul>
-        </div>
-        <div className="card inv-card" data-mode="cream">
-          <div className="eyebrow">Checks, every pull request</div>
-          <div className="inv-big">{checkTypes.length}</div>
-          <ul className="inv-list inv-list-stack">
-            {checkTypes.map((k) => (
-              <li key={k}>
-                <span>
-                  <a href={`${data.links.githubRepoUrl}/blob/main/${CHECK_RULE_FILES[k]}`} target="_blank" rel="noreferrer">
-                    {CHECK_LABELS[k]}
-                  </a>
-                </span>
-                <span className="inv-desc">{CHECK_DESCRIPTIONS[k]}</span>
-              </li>
-            ))}
-          </ul>
+                  <span className="tok-track">
+                    <span className="tok-bar" data-mode="terracotta" style={{ width: `${Math.max((c.n / maxCount) * 100, 2)}%` }} />
+                  </span>
+                  <span className="tok-n">{c.n}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Modes as real swatches: each square is surface-section resolved
+              through its own data-mode, so the colour is the token, not a
+              picture of it. The brand swatch does the same through data-brand. */}
+          <div>
+            <div className="eyebrow">Surface modes</div>
+            <ul className="mode-list">
+              {SURFACE_MODES.map((m) => (
+                <li key={m}>
+                  <span className="mode-swatch" data-mode={m} aria-hidden="true" />
+                  <span className="mode-name">{m}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="eyebrow mode-brand-label">Brand override</div>
+            <ul className="mode-list">
+              {BRANDS.map((b) => (
+                <li key={b}>
+                  <span className="mode-swatch" data-brand={b} data-mode="terracotta" aria-hidden="true" />
+                  <span className="mode-name">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Coverage() {
+function Gates() {
   const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
-  const total = data.totals.totalComponents;
   return (
-    <section className="dashboard-section" aria-label="Coverage">
-      <h2 className="section-title">Coverage</h2>
-      <div className="meter-grid">
-        {checkTypes.map((key) => {
-          const passing = passingCount(key);
-          const tally = data.validationSummary[key];
-          const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
-          return (
-            <div className="meter card" data-mode="cream" key={key}>
-              <div className="meter-head">
-                <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
-                <span className={`meter-count meter-count-${tone}`}>
-                  {passing} <span className="meter-of">of {total}</span>
-                </span>
+    <section className="dashboard-section" aria-label="Gates">
+      <h2 className="section-title">Gates · {GATE_COUNT}</h2>
+      <div className="card gates" data-mode="cream">
+        <div className="gates-intro">Every change passes through these, and each one links to the rule it enforces.</div>
+          <div className="gate-groups">
+            {GATE_GROUPS.map((g) => (
+              <div className="gate-group" key={g.title}>
+                <div className="gate-group-title">{g.title}</div>
+                <div className="gate-group-note">{g.note}</div>
+                <ul className="check-list">
+                  {g.gates.map((gate) => {
+                    const perComponent = checkTypes.find((k) => CHECK_SHORT_LABELS[k] === gate.name);
+                    const t = perComponent ? data.validationSummary[perComponent] : null;
+                    const tone = gate.result === null ? 'none' : t ? (t.fail > 0 ? 'fail' : t.warn > 0 ? 'warn' : 'pass') : gate.result ? 'pass' : 'fail';
+                    const result = gate.result === null ? 'before build' : t ? (t.fail > 0 ? `${t.fail} fail` : t.warn > 0 ? `${t.warn} warn` : 'pass') : gate.result ? 'pass' : 'fail';
+                    return (
+                      <li key={gate.name} className="check-row">
+                        <span className={`status-dot check-dot tone-${tone}`} aria-hidden="true" />
+                        <span className="check-text">
+                          <a href={`${data.links.githubRepoUrl}/blob/main/${gate.rule}`} target="_blank" rel="noreferrer">
+                            {gate.name}
+                          </a>
+                          <span className="inv-sub">{gate.what}</span>
+                        </span>
+                        <span className="check-result">{result}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
-              <div className="meter-track" role="img" aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}>
-                <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
-              </div>
-              <div className="meter-foot">{tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}</div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
       </div>
     </section>
   );
@@ -608,6 +665,16 @@ function Library({ expanded, setExpanded }: { expanded: string | null; setExpand
   );
 }
 
+function HealthPill() {
+  const { tone, text } = healthSummary();
+  return (
+    <span className={`run-pill run-pill-${tone}`}>
+      <span className="run-pill-dot" aria-hidden="true" />
+      {text} · {shortTime(data.validationReportGeneratedAt)}
+    </span>
+  );
+}
+
 function App() {
   const [expanded, setExpanded] = useState<string | null>(null);
   return (
@@ -615,21 +682,24 @@ function App() {
       <header className="band" data-mode="terracotta">
         <div className="band-inner">
           <div>
-            <h1 className="dashboard-title">Runabout DesignOps</h1>
-            <p className="dashboard-subtitle">The design system, reporting on itself · updates on every merge</p>
+            <h1 className="dashboard-title">Runabout System Status</h1>
+            <p className="dashboard-subtitle">Health, inventory and activity, regenerated on every merge.</p>
           </div>
-          <nav className="dashboard-links">
-            <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>GitHub</a>
-            <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>Storybook</a>
-          </nav>
+          <div className="band-right">
+            <HealthPill />
+            <nav className="dashboard-links">
+              <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>GitHub</a>
+              <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>Storybook</a>
+            </nav>
+          </div>
         </div>
       </header>
       <div className="dashboard-inner">
         <Status />
         <Issues />
-        <Inventory />
-        <Coverage />
         <Activity />
+        <Inventory />
+        <Gates />
         <Library expanded={expanded} setExpanded={setExpanded} />
       </div>
     </div>
