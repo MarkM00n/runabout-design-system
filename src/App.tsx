@@ -180,8 +180,9 @@ function SeverityBadge({ level }: { level: 'fail' | 'warn' }) {
   // aria-label, so the distinction (not just the icon shape) still reaches
   // screen readers rather than being dropped outright.
   return (
-    <span className={`severity-badge severity-${level}`} aria-label={level === 'fail' ? 'Fail' : 'Warn'}>
-      {level === 'fail' ? '✗' : '⚠'}
+    <span className={`status-badge severity-badge severity-${level}`}>
+      <span className="status-dot" aria-hidden="true" />
+      {level === 'fail' ? 'Fail' : 'Warn'}
     </span>
   );
 }
@@ -245,7 +246,11 @@ function HistoryTable({ entries }: { entries: ResolvedIssue[] }) {
               <td>{entry.message}</td>
               <td className="issue-col-where issue-where">{whereLabel(entry.file, entry.line)}</td>
               <td className="issue-col-fixed">
-                <span className="severity-badge severity-fixed">✓ Fixed</span> {entry.resolvedAt}
+                <span className="status-badge severity-badge severity-fixed">
+                  <span className="status-dot" aria-hidden="true" />
+                  Fixed
+                </span>{' '}
+                {entry.resolvedAt}
               </td>
             </tr>
           ))}

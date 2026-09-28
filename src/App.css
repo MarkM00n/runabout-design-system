@@ -1093,3 +1093,81 @@
 .component-row:hover .status-badge {
   background: var(--color-surface-card);
 }
+
+/* Expanded-row panel: the same language as the rest of the page. paper-100
+   inset panel with the card radius, hairline tables, dot-and-label badges. */
+.detail-panel {
+  margin: var(--spacing-02);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+}
+
+.issue-table th {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.issue-table td {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.issue-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Severity and fixed badges share the status badge skin; on the paper-100
+   panel the badge fill steps to surface-card so it still reads as a pill. */
+.severity-badge {
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+.severity-fail .status-dot {
+  color: var(--color-state-error);
+}
+
+.severity-warn .status-dot {
+  color: var(--color-state-warning);
+}
+
+.severity-fixed .status-dot {
+  color: var(--color-state-success);
+}
+
+/* Meters, chart and table all share the card radius; the table's scroll box
+   clips its corners so the dark header band follows the curve. */
+.table-card .table-scroll {
+  overflow: hidden;
+}
+
+.table-card .table-scroll {
+  overflow-x: auto;
+}
+
+.dashboard-table {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* Links in the panel tables match the page link token. */
+.detail-panel a {
+  color: var(--color-text-link);
+}
+
+/* Hover has to outrank the flat row fill above it. On hover the row goes to
+   action-primary-hover (dark On Cream) with text-on-state, as before. */
+.table-card .component-row:hover {
+  background: var(--color-action-primary-hover);
+  color: var(--color-text-on-state);
+}
+
+.table-card .component-row:hover .status-badge {
+  background: var(--color-surface-card);
+  color: var(--color-text-primary);
+}
+
+/* The expanded panel's own cell fills with surface-card so the inset panel
+   sits on the table, not on the page canvas showing through. */
+.table-card .dashboard-table > tbody > tr.detail-row > td {
+  background: var(--color-surface-card);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
