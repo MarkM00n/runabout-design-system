@@ -1808,3 +1808,24 @@
   .status-item:nth-child(n + 4) { border-top: 1px solid var(--color-border-subtle); }
   .issues .plain-table { min-width: 880px; }
 }
+
+/* Tighter rhythm between sections. */
+.dashboard-section { margin-bottom: var(--spacing-05); }
+.status { margin-bottom: var(--spacing-05); }
+.section-title, .section-head { margin-bottom: var(--spacing-01); }
+.card { padding: var(--spacing-03) var(--spacing-04); }
+.inv-number { padding: var(--spacing-02) var(--spacing-04); }
+.inv-detail { padding: var(--spacing-03) var(--spacing-04); }
+.gates { padding: var(--spacing-03) var(--spacing-04); }
+.status-item { padding: var(--spacing-02) var(--spacing-04); }
+
+/* Open since: date on one line, age under it; two weeks or more reads as
+   warning-coloured so a stale issue stands out. */
+.col-since { white-space: nowrap; }
+.since-date { display: block; }
+.since-age {
+  display: block;
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
+}
+.since-old { color: var(--color-state-warning); font-weight: 700; }

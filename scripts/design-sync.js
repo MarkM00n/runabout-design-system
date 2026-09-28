@@ -1257,8 +1257,17 @@ function buildComponentReport(name, dir, issuesByCheck) {
   let overall = true;
   let totalFail = 0;
   let totalWarn = 0;
+  // openedAt: the first run that saw this issue. Carried forward from the
+  // previous report when the same issue (by issueKey) was open last run,
+  // stamped today when it is new — so the dashboard can say how long an
+  // issue has been sitting, and the date survives every regeneration.
+  const today = new Date().toISOString().slice(0, 10);
+  const previousOpenedAt = new Map(previousOpenIssues.map((issue) => [issueKey(issue), issue.openedAt ?? null]));
   for (const key of CHECK_TYPE_KEYS) {
-    const issues = (issuesByCheck[key] ?? []).map((issue) => ({ ...issue, checkType: key }));
+    const issues = (issuesByCheck[key] ?? []).map((issue) => {
+      const withKey = { ...issue, checkType: key };
+      return { ...withKey, openedAt: previousOpenedAt.get(issueKey(withKey)) ?? today };
+    });
     const fail = issues.filter((i) => i.level === 'fail').length;
     const warn = issues.filter((i) => i.level === 'warn').length;
     const pass = fail === 0;
@@ -1269,7 +1278,6 @@ function buildComponentReport(name, dir, issuesByCheck) {
   }
 
   const currentOpenKeys = new Set(Object.values(checks).flatMap((c) => c.open).map(issueKey));
-  const today = new Date().toISOString().slice(0, 10);
   const newlyResolved = previousOpenIssues
     .filter((issue) => !currentOpenKeys.has(issueKey(issue)))
     .map((issue) => ({
@@ -1278,6 +1286,7 @@ function buildComponentReport(name, dir, issuesByCheck) {
       line: issue.line ?? null,
       message: issue.message,
       fix: issue.fix ?? null,
+      openedAt: issue.openedAt ?? null,
       resolvedAt: today,
     }));
 
