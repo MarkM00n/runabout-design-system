@@ -127,10 +127,10 @@ const CHECK_SHORT_LABELS: Record<keyof DashboardData['validationSummary'], strin
 // open warnings isn't a clean pass, so it gets its own amber state rather
 // than being shown identical to a component with nothing open at all.
 function StatusBadge({ status, warnCount }: { status: ValidationStatus; warnCount: number }) {
-  const icon = status === 'fail' ? '✗' : status === 'pass-with-warnings' ? '⚠' : '✓';
   return (
     <span className={`status-badge status-${statusTone(status)}`}>
-      {icon} {statusLabel(status, warnCount)}
+      <span className="status-dot" aria-hidden="true" />
+      {statusLabel(status, warnCount)}
     </span>
   );
 }
@@ -275,35 +275,64 @@ function ComponentRowDetail({ component }: { component: ComponentRow }) {
   );
 }
 
+// Rows grouped by merge month, oldest first, so the shape of the sample is
+// on the chart itself: the first PRs sat overnight, everything since ships
+// inside an hour. Bars at or over OVERNIGHT_SECONDS carry a hatch so the
+// exception is marked by texture as well as length.
+const OVERNIGHT_SECONDS = 8 * 60 * 60;
+
+function monthLabel(iso: string | null) {
+  if (!iso) return 'Undated';
+  return new Intl.DateTimeFormat('en-AU', { month: 'long', year: 'numeric' }).format(new Date(iso));
+}
+
 function CycleTimeChart() {
   const rows = data.components
     .filter((c) => c.cycleTimeSeconds != null)
     .sort((a, b) => (a.mergedAt ?? '').localeCompare(b.mergedAt ?? ''));
   const max = Math.max(...rows.map((c) => c.cycleTimeSeconds ?? 0));
-  const medianSeconds = data.totals.medianCycleTimeLabel ? medianOf(rows.map((c) => c.cycleTimeSeconds ?? 0)) : null;
+  const medianSeconds = medianOf(rows.map((c) => c.cycleTimeSeconds ?? 0));
+  const groups: { label: string; rows: ComponentRow[] }[] = [];
+  for (const row of rows) {
+    const label = monthLabel(row.mergedAt);
+    const last = groups[groups.length - 1];
+    if (last && last.label === label) last.rows.push(row);
+    else groups.push({ label, rows: [row] });
+  }
   return (
-    <div className="cycle-chart" data-mode="cream">
-      {rows.map((c) => {
-        const pct = ((c.cycleTimeSeconds ?? 0) / max) * 100;
-        return (
-          <div className="cycle-row" key={c.name} title={`${c.name}: ${formatCycle(c.cycleTimeSeconds)}`}>
-            <span className="cycle-name">{c.name}</span>
-            <span className="cycle-track">
-              {medianSeconds != null && (
-                <span className="cycle-median" style={{ left: `${(medianSeconds / max) * 100}%` }} aria-hidden="true" />
-              )}
-              <span className="cycle-bar" data-mode="terracotta" style={{ width: `${Math.max(pct, 0.6)}%` }} />
-              <span className="cycle-value">{formatCycle(c.cycleTimeSeconds)}</span>
-            </span>
+    <div className="cycle-chart card card-lift" data-mode="cream">
+      <span className="card-strip" data-mode="terracotta" aria-hidden="true" />
+      {groups.map((g) => (
+        <div className="cycle-group" key={g.label}>
+          <div className="cycle-group-label">
+            {g.label} <span className="cycle-group-count">· {g.rows.length} merged</span>
           </div>
-        );
-      })}
-      {medianSeconds != null && (
-        <div className="cycle-legend">
-          <span className="cycle-median-key" aria-hidden="true" /> median {formatCycle(medianSeconds)} · mean{' '}
-          {data.totals.averageCycleTimeLabel} · wall-clock, not effort
+          {g.rows.map((c) => {
+            const secs = c.cycleTimeSeconds ?? 0;
+            const pct = (secs / max) * 100;
+            const overnight = secs >= OVERNIGHT_SECONDS;
+            return (
+              <div className="cycle-row" key={c.name} title={`${c.name}: ${formatCycle(secs)}`}>
+                <span className="cycle-name">{c.name}</span>
+                <span className="cycle-track">
+                  <span className="cycle-median" style={{ left: `${(medianSeconds / max) * 100}%` }} aria-hidden="true" />
+                  <span
+                    className={`cycle-bar ${overnight ? 'cycle-bar-overnight' : ''}`}
+                    data-mode="terracotta"
+                    style={{ width: `${Math.max(pct, 0.6)}%` }}
+                  />
+                  <span className="cycle-value">{formatCycle(secs)}</span>
+                </span>
+              </div>
+            );
+          })}
         </div>
-      )}
+      ))}
+      <div className="cycle-legend">
+        <span className="cycle-median-key" aria-hidden="true" /> median {formatCycle(medianSeconds)} · mean{' '}
+        {data.totals.averageCycleTimeLabel} · wall-clock from first commit to merge, not effort ·{' '}
+        <span className="cycle-hatch-key" data-mode="terracotta" aria-hidden="true" /> sat open overnight
+      </div>
     </div>
   );
 }
@@ -314,226 +343,212 @@ function medianOf(values: number[]) {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
+function RunStatusPill() {
+  const failing = data.components.filter((c) => c.openFailCount > 0).length;
+  const warning = data.components.filter((c) => c.openWarnCount > 0).length;
+  const tone = failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass';
+  const text =
+    failing > 0
+      ? `${failing} failing`
+      : warning > 0
+        ? `All passing · ${warning} warning${warning === 1 ? '' : 's'}`
+        : 'All checks passing';
+  return (
+    <span className={`run-pill run-pill-${tone}`}>
+      <span className="run-pill-dot" aria-hidden="true" />
+      {text}
+    </span>
+  );
+}
+
 function App() {
   const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
   const [expanded, setExpanded] = useState<string | null>(null);
+  const passingAll = data.components.filter((c) => c.overall).length;
 
   return (
-    // data-mode="olive" — this page's canvas is Ink/900, which is exactly
-    // what On Olive resolves surface-section to. Under the 2026-09-07 rule
-    // "anything with a background owns a mode", the dashboard root is a
-    // surface and declares one:
-    // every nested text-*/border-*/action-* token needs the On Dark column,
-    // not the ambient default. The two .table-card sections below override
-    // this back to data-mode="cream" for their own light zebra-row content.
+    // data-mode="olive": the page canvas is Ink/900. Under the 2026-09-07
+    // rule "anything with a background owns a mode", the root is a surface
+    // and declares one; the band, every card and the table override it on
+    // the narrowest element that actually carries a fill.
     <div className="dashboard" data-mode="olive">
-      <header className="dashboard-header">
-        <div>
-          <h1 className="dashboard-title">Runabout DesignOps</h1>
-          <p className="dashboard-subtitle">
-            Live from the pipeline · updates on every merge · last run {formatGeneratedAt(data.generatedAt)}
-          </p>
+      {/* Header band: a full-width surface in the terracotta mode. The
+          stat row below pulls up over its bottom edge, which is what gives
+          the page a top instead of a heading. */}
+      <header className="band" data-mode="terracotta">
+        <div className="band-inner">
+          <div>
+            <h1 className="dashboard-title">Runabout DesignOps</h1>
+            <p className="dashboard-subtitle">
+              Live from the pipeline · updates on every merge · last run {formatGeneratedAt(data.generatedAt)}
+            </p>
+          </div>
+          <div className="band-right">
+            <RunStatusPill />
+            <nav className="dashboard-links">
+              <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
+                GitHub
+              </a>
+              <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
+                Storybook
+              </a>
+            </nav>
+          </div>
         </div>
-        <nav className="dashboard-links">
-          <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
-            GitHub
-          </a>
-          <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
-            Storybook
-          </a>
-        </nav>
       </header>
 
-      {/* data-mode="cream" is on each tile, never on the <section>. The
-          section is only a grid container — it has no text and no fill of
-          its own, so it stays on the page's ambient dark canvas, and the
-          override reaches exactly the elements whose surface is actually
-          light. This is the narrowest-element rule from the 2026-08-05
-          .section-title incident, applied up front rather than after the
-          fact.
-
-          All five tiles fill with surface-card, which is Surface/50 in
-          every mode — it does not vary. That makes the data-mode="cream"
-          on each tile load-bearing rather than decorative: pairing a
-          mode-invariant light fill with mode-resolved ink is exactly how
-          the VinesAndVinyl Hero Input went to 1.18:1 (2026-08-08), the
-          fill staying put while the text moved out from under it. The
-          mode is what keeps text-primary resolving to dark ink here.
-          It is the same pairing, and the same reasoning, as Modal. */}
-      <section className="stat-header" aria-label="Headline metrics">
-        {/* Median leads, mean is demoted to the caption. The sample is 8
-            components and splits 4/4 — three shipped in 36 minutes plus Tab
-            at 41, against four that sat open overnight — so neither figure
-            describes a typical PR, and showing them as two equal-weight
-            tiles implied a precision the data doesn't have. One hero with
-            the mean alongside reads as "here is the number, and here is its
-            spread", which is what the data actually supports. */}
-        <div className="stat-hero" data-mode="cream">
-          <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
-          <div className="stat-hero-label">
-            <span className="stat-accent" data-mode="terracotta" aria-hidden="true" />
-            Median cycle time, first commit → merged
+      <div className="dashboard-inner">
+        {/* Every tile is surface-card with its own data-mode="cream" — a
+            light elevated panel on the dark canvas, the same fill-plus-
+            pinned-mode pairing Modal uses. Two tiers: the hero carries a
+            terracotta strip (a surface owning its mode, not a border colour),
+            the four supporting tiles stay flat. */}
+        <section className="stat-header" aria-label="Headline metrics">
+          <div className="stat-hero card card-lift" data-mode="cream">
+            <span className="card-strip" data-mode="terracotta" aria-hidden="true" />
+            <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
+            <div className="stat-hero-label">Median cycle time, first commit → merged</div>
+            <div className="stat-hero-caption">
+              mean {data.totals.averageCycleTimeLabel ?? '—'} · {data.totals.cycleTimeSampleSize} components ·{' '}
+              {data.totals.totalDesignTokens ?? '—'} tokens documented
+            </div>
           </div>
-          <div className="stat-hero-caption">
-            mean {data.totals.averageCycleTimeLabel ?? '—'} · {data.totals.cycleTimeSampleSize} components ·{' '}
-            {data.totals.totalDesignTokens ?? '—'} tokens documented
+
+          <div className="stat-tile card" data-mode="cream">
+            <div className="stat-value">{data.totals.totalComponents}</div>
+            <div className="stat-label">Components through the pipeline</div>
           </div>
-        </div>
 
-        <div className="stat-tile" data-mode="cream">
-          <div className="stat-value">{data.totals.totalComponents}</div>
-          <div className="stat-label">Components, all through the pipeline</div>
-        </div>
-
-        <div className="stat-tile" data-mode="cream">
-          <div className="stat-value stat-value-good">
-            <span className="stat-tick" aria-hidden="true">
-              ✓
-            </span>
-            {data.components.filter((c) => c.overall).length}
-            <span className="stat-value-of">of {data.totals.totalComponents}</span>
+          <div className="stat-tile card" data-mode="cream">
+            <div className={`stat-value ${passingAll === data.totals.totalComponents ? 'stat-value-good' : ''}`}>
+              {passingAll}
+              <span className="stat-value-of">of {data.totals.totalComponents}</span>
+            </div>
+            <div className="stat-label">Passing every check</div>
           </div>
-          <div className="stat-label">Passing every check</div>
-        </div>
 
-        <div className="stat-tile" data-mode="cream">
-          <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
-          <div className="stat-label">Caught &amp; fixed by the checks</div>
-        </div>
-
-        {/* Zero open issues is a result, not a measurement — it reads as a
-            status line rather than a stat. The tick carries state-success
-            (6.28:1 on surface-card) and is aria-hidden, so the meaning
-            still comes from the number and its label for a screen reader
-            rather than from colour or a glyph alone. */}
-        <div className="stat-tile" data-mode="cream">
-          <div className={`stat-value ${data.totals.totalOpenIssues === 0 ? 'stat-value-good' : 'stat-value-warn'}`}>
-            {data.totals.totalOpenIssues}
+          <div className="stat-tile card" data-mode="cream">
+            <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
+            <div className="stat-label">Caught &amp; fixed by the checks</div>
           </div>
-          <div className="stat-label">Open issues</div>
-        </div>
-      </section>
 
-      {/* data-mode="cream" lives on .table-scroll specifically, not the
-          whole <section> — it overrides the page's ambient dark mode back
-          to light for the table's own zebra-row content, which needs it
-          (text-primary would otherwise inherit the dark-mode value and
-          become nearly invisible against the light rows). .section-title
-          sits visually on the dark canvas above the table box, not inside
-          it — scoping data-mode="cream" to the whole section previously
-          pulled the heading into that override too, rendering dark text
-          on the dark canvas (near-invisible, filed 2026-08-05). */}
-      {/* One meter per check, read from each component's own result. A table
-          of zeros said "nothing happened"; four full meters say "everything
-          passes", which is the actual state. The fill is a state token — it
-          is a status, not a series — and the number beside it carries the
-          meaning, so nothing here depends on colour alone. */}
-      <section className="dashboard-section" aria-label="Checks passing">
-        <h2 className="section-title">Checks, on every pull request</h2>
-        <div className="meter-grid">
-          {checkTypes.map((key) => {
-            const passing = passingCount(key);
-            const total = data.totals.totalComponents;
-            const tally = data.validationSummary[key];
-            const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
-            return (
-              <div className="meter" data-mode="cream" key={key}>
-                <div className="meter-head">
-                  <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
-                  <span className={`meter-count meter-count-${tone}`}>
-                    {passing} <span className="meter-of">of {total}</span>
-                  </span>
+          <div className="stat-tile card" data-mode="cream">
+            <div className={`stat-value ${data.totals.totalOpenIssues === 0 ? 'stat-value-good' : 'stat-value-warn'}`}>
+              {data.totals.totalOpenIssues}
+            </div>
+            <div className="stat-label">Open issues</div>
+          </div>
+        </section>
+
+        {/* One meter per check, read from each component's own result. The
+            fill is a state token — it is a status, not a series — and the
+            count beside it carries the meaning, so nothing depends on colour
+            alone. */}
+        <section className="dashboard-section" aria-label="Checks passing">
+          <h2 className="section-title">Checks, on every pull request</h2>
+          <div className="meter-grid">
+            {checkTypes.map((key) => {
+              const passing = passingCount(key);
+              const total = data.totals.totalComponents;
+              const tally = data.validationSummary[key];
+              const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
+              return (
+                <div className="meter card" data-mode="cream" key={key}>
+                  <div className="meter-head">
+                    <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
+                    <span className={`meter-count meter-count-${tone}`}>
+                      {passing} <span className="meter-of">of {total}</span>
+                    </span>
+                  </div>
+                  <div
+                    className="meter-track"
+                    role="img"
+                    aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}
+                  >
+                    <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
+                  </div>
+                  <div className="meter-foot">
+                    {tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}
+                  </div>
                 </div>
-                <div className="meter-track" role="img" aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}>
-                  <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
-                </div>
-                <div className="meter-foot">
-                  {tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
 
-      {/* Cycle time per component, oldest merge at the top. One series, so
-          one hue and no legend; every bar is labelled because thirteen values
-          are the point, not a trend. Linear scale on purpose: the first PRs
-          sat open overnight and everything since ships inside an hour, and a
-          log scale would hide exactly that. */}
-      <section className="dashboard-section" aria-label="Cycle time per component">
-        <h2 className="section-title">Cycle time per component, first commit → merged</h2>
-        <CycleTimeChart />
-      </section>
+        <section className="dashboard-section" aria-label="Cycle time per component">
+          <h2 className="section-title">Cycle time per component</h2>
+          <CycleTimeChart />
+        </section>
 
-      <section className="dashboard-section table-card" aria-label="Component status">
-        <h2 className="section-title">Component status</h2>
-        <div className="table-scroll" data-mode="cream">
-          <table className="dashboard-table">
-            {/* data-mode="dark" on the header row only: it is a fixed dark
-                band inside an otherwise cream table, so it is its own
-                surface and owns its own mode. Scoped to the <thead>, not
-                the table — the narrowest element that actually needs it. */}
-            <thead data-mode="dark">
-              <tr>
-                <th>Component</th>
-                <th>Overall</th>
-                <th>Caught &amp; fixed</th>
-                <th>Open</th>
-                <th>Cycle time</th>
-                <th>Links</th>
-                <th>Last validated</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.components.map((c, i) => {
-                const isExpanded = expanded === c.name;
-                return (
-                  <Fragment key={c.name}>
-                    <tr
-                      className={`component-row ${i % 2 === 0 ? 'row-even' : 'row-odd'}`}
-                      onClick={() => setExpanded(isExpanded ? null : c.name)}
-                      aria-expanded={isExpanded}
-                    >
-                      <td className="cell-component">{c.name}</td>
-                      <td>
-                        <StatusBadge status={c.status} warnCount={c.openWarnCount} />
-                      </td>
-                      <td>{c.fixedCount}</td>
-                      <td className={c.openFailCount > 0 ? 'cell-fail' : c.openWarnCount > 0 ? 'cell-warn' : ''}>
-                        {c.openCount}
-                      </td>
-                      <td className="cell-cycle">{formatCycle(c.cycleTimeSeconds)}</td>
-                      <td className="cell-links">
-                        <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
-                          Story
-                        </a>
-                        {c.pr && (
-                          <>
-                            {' · '}
-                            <a
-                              href={c.pr.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              PR #{c.pr.number}
-                            </a>
-                          </>
-                        )}
-                      </td>
-                      <td>{c.lastValidated ?? '—'}</td>
-                      <td className="cell-expand-toggle">{isExpanded ? '▾' : '▸'}</td>
-                    </tr>
-                    {isExpanded && <ComponentRowDetail component={c} />}
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        {/* The table is the quiet bottom layer: hairlines, no zebra, numbers
+            right-aligned, status as a badge with a state-coloured dot. The
+            <thead> owns data-mode="dark"; the scroll box owns "cream". */}
+        <section className="dashboard-section table-card" aria-label="Component status">
+          <h2 className="section-title">Component status</h2>
+          <div className="table-scroll" data-mode="cream">
+            <table className="dashboard-table">
+              <thead data-mode="dark">
+                <tr>
+                  <th>Component</th>
+                  <th>Overall</th>
+                  <th className="col-num">Caught &amp; fixed</th>
+                  <th className="col-num">Open</th>
+                  <th className="col-num">Cycle time</th>
+                  <th>Links</th>
+                  <th>Last validated</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.components.map((c) => {
+                  const isExpanded = expanded === c.name;
+                  return (
+                    <Fragment key={c.name}>
+                      <tr
+                        className="component-row"
+                        onClick={() => setExpanded(isExpanded ? null : c.name)}
+                        aria-expanded={isExpanded}
+                      >
+                        <td className="cell-component">{c.name}</td>
+                        <td>
+                          <StatusBadge status={c.status} warnCount={c.openWarnCount} />
+                        </td>
+                        <td className="col-num">{c.fixedCount}</td>
+                        <td className={`col-num ${c.openFailCount > 0 ? 'cell-fail' : c.openWarnCount > 0 ? 'cell-warn' : ''}`}>
+                          {c.openCount}
+                        </td>
+                        <td className="col-num cell-cycle">{formatCycle(c.cycleTimeSeconds)}</td>
+                        <td className="cell-links">
+                          <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
+                            Story
+                          </a>
+                          {c.pr && (
+                            <>
+                              {' · '}
+                              <a
+                                href={c.pr.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                PR #{c.pr.number}
+                              </a>
+                            </>
+                          )}
+                        </td>
+                        <td>{c.lastValidated ?? '—'}</td>
+                        <td className="cell-expand-toggle">{isExpanded ? '▾' : '▸'}</td>
+                      </tr>
+                      {isExpanded && <ComponentRowDetail component={c} />}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

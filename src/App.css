@@ -832,3 +832,264 @@
 .cell-cycle {
   font-variant-numeric: tabular-nums;
 }
+
+/* ---------------------------------------------------------------------------
+   2026-09-29 layout pass: header band, card tiers, grouped chart, quiet table.
+   --------------------------------------------------------------------------- */
+
+/* The page keeps its 100vw breakout; content sits in a 1280px column so
+   the tiles stop stretching on a wide screen. The band is full-bleed. */
+.dashboard {
+  padding: 0 0 var(--spacing-07);
+}
+
+.dashboard-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-05);
+}
+
+/* Header band: surface-section resolved On Terracotta (Brand/800). Extra
+   bottom padding is what the stat row pulls up into. */
+.band {
+  background: var(--color-surface-section);
+  color: var(--color-text-primary);
+  padding: var(--spacing-08) 0 var(--spacing-10);
+}
+
+.band-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-03);
+}
+
+.band .dashboard-title {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  margin-bottom: var(--spacing-01);
+}
+
+.band .dashboard-subtitle {
+  font-size: var(--text-paragraph-small);
+  line-height: var(--text-paragraph-small--line-height);
+  color: var(--color-text-secondary);
+}
+
+.band-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-02);
+  flex-wrap: wrap;
+}
+
+/* Run status: action-primary on the band (cream on terracotta, the same
+   pairing Button primary uses On Terracotta) with a state-coloured dot. */
+.run-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  height: 32px;
+  padding: 0 var(--spacing-02);
+  border-radius: var(--radius-full);
+  background: var(--color-action-primary);
+  color: var(--color-text-on-action);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.run-pill-dot {
+  width: var(--spacing-01);
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+}
+
+/* The dot resolves its state colour On Cream, which is what the pill's
+   cream fill is — hence the explicit cream values via a nested mode would
+   be the strict reading; state tokens are mode-invariant enough here
+   (success #166534 on #f7e7d2 is 6.9:1). */
+.run-pill-pass .run-pill-dot {
+  background: var(--color-state-success);
+}
+
+.run-pill-warn .run-pill-dot {
+  background: var(--color-state-warning);
+}
+
+.run-pill-fail .run-pill-dot {
+  background: var(--color-state-error);
+}
+
+/* Stat row pulls up over the band's bottom edge. */
+.stat-header {
+  margin-top: calc(-1 * var(--spacing-07));
+  grid-template-columns: 1.4fr 1fr 1fr;
+}
+
+/* Shared card skin; the lift tier adds a terracotta strip along the top,
+   a surface owning its own mode (never a border colour). */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-strip {
+  position: absolute;
+  top: var(--spacing-03);
+  bottom: var(--spacing-03);
+  left: var(--spacing-02);
+  width: var(--spacing-00);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-section);
+}
+
+.card-lift {
+  padding-left: calc(var(--spacing-04) + var(--spacing-02));
+}
+
+/* Section titles: label caps in secondary ink. The serif is saved for the
+   page title and the numbers, so hierarchy reads without size games. */
+.section-title {
+  font-family: var(--font-manrope);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-02);
+}
+
+/* Chart: grouped by merge month. */
+.cycle-chart {
+  padding-top: var(--spacing-04);
+}
+
+.cycle-group + .cycle-group {
+  margin-top: var(--spacing-03);
+  padding-top: var(--spacing-02);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.cycle-group-label {
+  font-family: var(--font-recoleta);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-01);
+}
+
+.cycle-group-count {
+  font-family: var(--font-manrope);
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
+}
+
+.cycle-row {
+  grid-template-columns: 140px 1fr;
+  padding: var(--spacing-00) 0;
+}
+
+.cycle-name {
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.cycle-bar {
+  height: var(--spacing-02);
+}
+
+/* Overnight bars carry a hatch: border-subtle On Terracotta is a 10% white,
+   laid over the bar's own fill. Texture, not a second hue. */
+.cycle-bar-overnight {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-border-subtle) 0,
+    var(--color-border-subtle) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.cycle-hatch-key {
+  display: inline-block;
+  width: var(--spacing-03);
+  height: var(--spacing-01);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-surface-section);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-border-subtle) 0,
+    var(--color-border-subtle) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+/* Table: quiet. Hairlines instead of zebra; numbers right-aligned. */
+.table-card .row-even,
+.table-card .row-odd,
+.table-card .component-row {
+  background: var(--color-surface-card);
+}
+
+.table-card .dashboard-table > tbody > tr:not(.detail-row) > td {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.col-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-card .dashboard-table > thead th.col-num {
+  text-align: right;
+}
+
+/* Status badge: paper-100 pill with a state-coloured dot and the label in
+   primary ink, so the state is carried by dot + words, never colour alone. */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  padding: var(--spacing-00) var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: var(--color-paper-100);
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+.status-dot {
+  width: var(--spacing-01);
+  height: var(--spacing-01);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.status-pass .status-dot {
+  color: var(--color-state-success);
+}
+
+.status-warn .status-dot {
+  color: var(--color-state-warning);
+}
+
+.status-fail .status-dot {
+  color: var(--color-state-error);
+}
+
+.status-pass,
+.status-warn,
+.status-fail {
+  color: var(--color-text-primary);
+}
+
+/* Hover: keep the badge legible on the dark hover fill. */
+.component-row:hover .status-badge {
+  background: var(--color-surface-card);
+}
