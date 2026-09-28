@@ -13,6 +13,7 @@ interface ValidationIssue {
   line: number | null;
   message: string;
   fix: string | null;
+  openedAt?: string | null;
 }
 
 interface ResolvedIssue {
@@ -340,12 +341,25 @@ function openIssues() {
   const items = data.components.flatMap((c) =>
     Object.values(c.checks).flatMap((check) => check.open.map((issue) => ({ component: c, issue }))),
   );
-  return items.sort((a, b) => (a.issue.level === b.issue.level ? 0 : a.issue.level === 'fail' ? -1 : 1));
+  return items.sort((a, b) => {
+    if (a.issue.level !== b.issue.level) return a.issue.level === 'fail' ? -1 : 1;
+    return (a.issue.openedAt ?? '9999').localeCompare(b.issue.openedAt ?? '9999');
+  });
 }
 
 function shortTime(iso: string | null) {
   if (!iso) return '';
   return new Intl.DateTimeFormat('en-AU', { hour: 'numeric', minute: '2-digit' }).format(new Date(iso));
+}
+
+// "22 days" / "today" from a YYYY-MM-DD, against the report's own run date
+// so the age is the pipeline's clock, not the viewer's.
+function ageLabel(openedAt: string | null | undefined) {
+  if (!openedAt) return null;
+  const from = new Date(`${openedAt}T00:00:00Z`).getTime();
+  const to = new Date(data.validationReportGeneratedAt.slice(0, 10) + 'T00:00:00Z').getTime();
+  const days = Math.max(0, Math.round((to - from) / 86400000));
+  return days === 0 ? 'today' : days === 1 ? '1 day' : `${days} days`;
 }
 
 function shortDate(iso: string | null) {
@@ -418,6 +432,7 @@ function Issues() {
               <th>What's wrong</th>
               <th>Fix</th>
               <th>Where</th>
+              <th className="col-since">Open since</th>
             </tr>
           </thead>
           <tbody>
@@ -436,6 +451,18 @@ function Issues() {
                 <td className="cell-prose">{issue.message}</td>
                 <td className="cell-prose">{issue.fix ?? '—'}</td>
                 <td className="issue-where">{whereLabel(issue.file, issue.line)}</td>
+                <td className="col-since">
+                  {issue.openedAt ? (
+                    <>
+                      <span className="since-date">{shortDate(issue.openedAt)}</span>
+                      <span className={`since-age ${(ageLabel(issue.openedAt) ?? '').endsWith('days') && parseInt(ageLabel(issue.openedAt) ?? '0') >= 14 ? 'since-old' : ''}`}>
+                        {ageLabel(issue.openedAt)}
+                      </span>
+                    </>
+                  ) : (
+                    '—'
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
