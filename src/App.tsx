@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react';
 import dashboardData from './design-docs/dashboard-data.generated.json';
+import foundationsData from './design-docs/foundations-data.generated.json';
 import type { ValidationStatus } from './design-docs/types';
 import { statusLabel, statusTone } from './design-docs/statusFormat';
 import './App.css';
@@ -280,277 +281,356 @@ function ComponentRowDetail({ component }: { component: ComponentRow }) {
   );
 }
 
-// Rows grouped by merge month, oldest first, so the shape of the sample is
-// on the chart itself: the first PRs sat overnight, everything since ships
-// inside an hour. Bars at or over OVERNIGHT_SECONDS carry a hatch so the
-// exception is marked by texture as well as length.
-const OVERNIGHT_SECONDS = 8 * 60 * 60;
+// ---------------------------------------------------------------------------
+// A control panel for whoever runs the system. Read top to bottom:
+//   Status    — did the last run pass, when, what's open, when Figma last synced
+//   Issues    — the work queue, worst first, with the fix and where to look
+//   Inventory — what's in the system: components, tokens by category, modes, checks
+//   Coverage  — n of N components passing each check
+//   Activity  — recent merges through the pipeline
+//   Library   — the full component table, collapsed
+// ---------------------------------------------------------------------------
 
-function monthLabel(iso: string | null) {
-  if (!iso) return 'Undated';
-  return new Intl.DateTimeFormat('en-AU', { month: 'long', year: 'numeric' }).format(new Date(iso));
+
+// Each category links to its Foundations page in Storybook, so the
+// inventory is an index into the system, not just a count.
+const TOKEN_CATEGORIES: [keyof typeof foundationsData, string, string][] = [
+  ['color', 'Colour', 'foundations-colours--docs'],
+  ['typography', 'Type', 'foundations-typography--docs'],
+  ['spacing', 'Spacing', 'foundations-spacing--docs'],
+  ['radius', 'Radius', 'foundations-radius--docs'],
+  ['motion', 'Motion', 'foundations-motion--docs'],
+  ['breakpoint', 'Breakpoints', 'foundations-breakpoints--docs'],
+];
+
+// The rule file each check enforces, in the repo.
+const CHECK_RULE_FILES: Record<keyof DashboardData['validationSummary'], string> = {
+  tokenCompliance: 'docs/design-system-rules.md#1-token-compliance',
+  accessibility: 'docs/design-system-rules.md#2-accessibility',
+  storybookCoverage: 'docs/design-system-rules.md#3-storybook-coverage',
+  documentationCoverage: 'docs/design-system-rules.md#5-documentation',
+};
+
+// Surface modes and brand overrides are declared in src/styles/tokens.css
+// ([data-mode=…] and [data-brand=…] blocks). Counted here by name so the
+// panel says what the CSS actually carries.
+const SURFACE_MODES = ['cream', 'olive', 'dark', 'terracotta'];
+const BRANDS = ['northline'];
+
+// Figma export date, read from the export file's name so it can't drift.
+const figmaExportName = Object.keys(import.meta.glob('./tokens/figma-export-*.json'))[0] ?? '';
+const FIGMA_SYNCED = figmaExportName.match(/(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
+
+const CHECK_DESCRIPTIONS: Record<keyof DashboardData['validationSummary'], string> = {
+  tokenCompliance: 'Every colour, space, radius and type value traces to a token',
+  accessibility: 'Text and focus contrast at WCAG 2.2 AA in every mode',
+  storybookCoverage: 'A story for every component and variant',
+  documentationCoverage: 'Usage docs present and generated from the code',
+};
+
+function openIssues() {
+  const items = data.components.flatMap((c) =>
+    Object.values(c.checks).flatMap((check) => check.open.map((issue) => ({ component: c, issue }))),
+  );
+  return items.sort((a, b) => (a.issue.level === b.issue.level ? 0 : a.issue.level === 'fail' ? -1 : 1));
 }
 
-function CycleTimeChart() {
-  const rows = data.components
-    .filter((c) => c.cycleTimeSeconds != null)
-    .sort((a, b) => (a.mergedAt ?? '').localeCompare(b.mergedAt ?? ''));
-  const max = Math.max(...rows.map((c) => c.cycleTimeSeconds ?? 0));
-  const medianSeconds = medianOf(rows.map((c) => c.cycleTimeSeconds ?? 0));
-  const groups: { label: string; rows: ComponentRow[] }[] = [];
-  for (const row of rows) {
-    const label = monthLabel(row.mergedAt);
-    const last = groups[groups.length - 1];
-    if (last && last.label === label) last.rows.push(row);
-    else groups.push({ label, rows: [row] });
-  }
+function shortDate(iso: string | null) {
+  if (!iso) return '—';
+  return new Intl.DateTimeFormat('en-AU', { day: 'numeric', month: 'short' }).format(new Date(iso));
+}
+
+function Status() {
+  const items = openIssues();
+  const failing = items.filter((i) => i.issue.level === 'fail').length;
+  const warning = items.length - failing;
+  const runTone = data.status === 'fail' ? 'fail' : data.status === 'pass-with-warnings' ? 'warn' : 'pass';
+  const checksPassing = (Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[]).filter(
+    (k) => data.validationSummary[k].fail === 0,
+  ).length;
+  const facts: { label: string; value: string; tone?: 'pass' | 'warn' | 'fail'; sub?: string }[] = [
+    { label: 'Last run', value: runTone === 'fail' ? 'Failed' : 'Passed', tone: runTone === 'fail' ? 'fail' : 'pass', sub: `checks ${formatGeneratedAt(data.validationReportGeneratedAt)} · page ${formatGeneratedAt(data.generatedAt)}` },
+    { label: 'Checks', value: `${checksPassing} of 4`, tone: checksPassing === 4 ? 'pass' : 'fail', sub: 'no blocking failures' },
+    { label: 'Open issues', value: String(items.length), tone: failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass', sub: `${failing} blocking · ${warning} warning` },
+    { label: 'Components', value: String(data.totals.totalComponents), sub: `${data.components.filter((c) => c.overall).length} pass every check` },
+    { label: 'Figma sync', value: FIGMA_SYNCED ? shortDate(FIGMA_SYNCED) : '—', sub: 'tokens exported from the file' },
+  ];
   return (
-    <div className="cycle-chart card" data-mode="cream">
-      {groups.map((g) => (
-        <div className="cycle-group" key={g.label}>
-          <div className="cycle-group-label">
-            {g.label} <span className="cycle-group-count">· {g.rows.length} merged</span>
+    <section className="status card" data-mode="cream" aria-label="Status">
+      {facts.map((f) => (
+        <div className="status-item" key={f.label}>
+          <div className="eyebrow">{f.label}</div>
+          <div className={`status-value ${f.tone ? `tone-${f.tone}` : ''}`}>
+            {f.tone && <span className="status-dot" aria-hidden="true" />}
+            {f.value}
           </div>
-          {g.rows.map((c) => {
-            const secs = c.cycleTimeSeconds ?? 0;
-            const pct = (secs / max) * 100;
-            const overnight = secs >= OVERNIGHT_SECONDS;
-            return (
-              <div className="cycle-row" key={c.name} title={`${c.name}: ${formatCycle(secs)}`}>
-                <span className="cycle-name">{c.name}</span>
-                <span className="cycle-track">
-                  <span className="cycle-median" style={{ left: `${(medianSeconds / max) * 100}%` }} aria-hidden="true" />
-                  <span
-                    className={`cycle-bar ${overnight ? 'cycle-bar-overnight' : ''}`}
-                    data-mode="terracotta"
-                    style={{ width: `${Math.max(pct, 0.6)}%` }}
-                  />
-                  <span className="cycle-value">{formatCycle(secs)}</span>
-                </span>
-              </div>
-            );
-          })}
+          {f.sub && <div className="status-sub">{f.sub}</div>}
         </div>
       ))}
-      <div className="cycle-legend">
-        <span className="cycle-median-key" aria-hidden="true" /> median {formatCycle(medianSeconds)} · mean{' '}
-        {data.totals.averageCycleTimeLabel} · wall-clock from first commit to merge, not effort ·{' '}
-        <span className="cycle-hatch-key" data-mode="terracotta" aria-hidden="true" /> sat open overnight
-      </div>
-    </div>
+    </section>
   );
 }
 
-function medianOf(values: number[]) {
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+function Issues() {
+  const items = openIssues();
+  if (items.length === 0) return null;
+  return (
+    <section className="dashboard-section" aria-label="Issues">
+      <h2 className="section-title">Issues · {items.length}</h2>
+      <div className="table-scroll card issues" data-mode="cream">
+        <table className="dashboard-table plain-table">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Component</th>
+              <th>Check</th>
+              <th>What's wrong</th>
+              <th>Suggested fix</th>
+              <th>Where</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map(({ component, issue }, i) => (
+              <tr key={i}>
+                <td>
+                  <span className={`status-badge severity-badge severity-${issue.level}`}>
+                    <span className="status-dot" aria-hidden="true" />
+                    {issue.level === 'fail' ? 'Blocking' : 'Warning'}
+                  </span>
+                </td>
+                <td className="cell-component">
+                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">
+                    {component.name}
+                  </a>
+                </td>
+                <td>{checkLabel(issue.checkType)}</td>
+                <td className="cell-prose">{issue.message}</td>
+                <td className="cell-prose">{issue.fix ?? '—'}</td>
+                <td className="issue-where">{whereLabel(issue.file, issue.line)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
 }
 
-function RunStatusPill() {
-  const failing = data.components.filter((c) => c.openFailCount > 0).length;
-  const warning = data.components.filter((c) => c.openWarnCount > 0).length;
-  const tone = failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass';
-  const text =
-    failing > 0
-      ? `${failing} failing`
-      : warning > 0
-        ? `All passing · ${warning} warning${warning === 1 ? '' : 's'}`
-        : 'All checks passing';
+function Inventory() {
+  const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
   return (
-    <span className={`run-pill run-pill-${tone}`}>
-      <span className="run-pill-dot" aria-hidden="true" />
-      {text}
-    </span>
+    <section className="dashboard-section" aria-label="Inventory">
+      <h2 className="section-title">Inventory</h2>
+      <div className="inv-grid">
+        <div className="card inv-card" data-mode="cream">
+          <div className="eyebrow">Components</div>
+          <div className="inv-big">{data.totals.totalComponents}</div>
+          <ul className="inv-list">
+            <li><span>Passing every check</span><span>{data.components.filter((c) => c.overall).length}</span></li>
+            <li><span>With open issues</span><span>{data.components.filter((c) => c.openCount > 0).length}</span></li>
+            <li><span>Issues caught &amp; fixed</span><span>{data.totals.totalCaughtAndFixed}</span></li>
+            <li><span>Last validated</span><span>{shortDate(data.validationReportGeneratedAt)}</span></li>
+          </ul>
+        </div>
+        <div className="card inv-card" data-mode="cream">
+          <div className="eyebrow">Tokens</div>
+          <div className="inv-big">{data.totals.totalDesignTokens ?? '—'}</div>
+          <ul className="inv-list">
+            {TOKEN_CATEGORIES.map(([k, label, path]) => (
+              <li key={k}>
+                <span>
+                  <a href={`${data.links.storybookBaseUrl}?path=/docs/${path}`} target="_blank" rel="noreferrer">
+                    {label}
+                  </a>
+                </span>
+                <span>{Array.isArray(foundationsData[k]) ? (foundationsData[k] as unknown[]).length : 0}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="card inv-card" data-mode="cream">
+          <div className="eyebrow">Modes and brands</div>
+          <div className="inv-big">{SURFACE_MODES.length}</div>
+          <ul className="inv-list inv-list-stack">
+            <li><span>Surface modes</span><span className="inv-desc">{SURFACE_MODES.join(' · ')}</span></li>
+            <li><span>Brand overrides</span><span className="inv-desc">{BRANDS.join(' · ')}</span></li>
+            <li><span>The rule</span><span className="inv-desc">A surface owns a mode; everything else inherits.</span></li>
+          </ul>
+        </div>
+        <div className="card inv-card" data-mode="cream">
+          <div className="eyebrow">Checks, every pull request</div>
+          <div className="inv-big">{checkTypes.length}</div>
+          <ul className="inv-list inv-list-stack">
+            {checkTypes.map((k) => (
+              <li key={k}>
+                <span>
+                  <a href={`${data.links.githubRepoUrl}/blob/main/${CHECK_RULE_FILES[k]}`} target="_blank" rel="noreferrer">
+                    {CHECK_LABELS[k]}
+                  </a>
+                </span>
+                <span className="inv-desc">{CHECK_DESCRIPTIONS[k]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Coverage() {
+  const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
+  const total = data.totals.totalComponents;
+  return (
+    <section className="dashboard-section" aria-label="Coverage">
+      <h2 className="section-title">Coverage</h2>
+      <div className="meter-grid">
+        {checkTypes.map((key) => {
+          const passing = passingCount(key);
+          const tally = data.validationSummary[key];
+          const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
+          return (
+            <div className="meter card" data-mode="cream" key={key}>
+              <div className="meter-head">
+                <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
+                <span className={`meter-count meter-count-${tone}`}>
+                  {passing} <span className="meter-of">of {total}</span>
+                </span>
+              </div>
+              <div className="meter-track" role="img" aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}>
+                <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
+              </div>
+              <div className="meter-foot">{tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}</div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Activity() {
+  // One row per merge (a PR can land several components at once).
+  const byPr = new Map<number, { pr: NonNullable<ComponentRow['pr']>; mergedAt: string; names: string[]; cycle: number | null; status: ValidationStatus }>();
+  for (const c of data.components) {
+    if (!c.pr || !c.mergedAt) continue;
+    const cur = byPr.get(c.pr.number);
+    if (cur) {
+      cur.names.push(c.name);
+      if (c.status === 'fail' || (c.status === 'pass-with-warnings' && cur.status === 'pass')) cur.status = c.status;
+    } else byPr.set(c.pr.number, { pr: c.pr, mergedAt: c.mergedAt, names: [c.name], cycle: c.cycleTimeSeconds, status: c.status });
+  }
+  const rows = [...byPr.values()].sort((a, b) => b.mergedAt.localeCompare(a.mergedAt)).slice(0, 10);
+  return (
+    <section className="dashboard-section" aria-label="Activity">
+      <div className="section-head">
+        <h2 className="section-title">Activity · last {rows.length} merges</h2>
+        <span className="section-stat">
+          median time to merge <strong>{data.totals.medianCycleTimeLabel}</strong>
+        </span>
+      </div>
+      <div className="table-scroll card" data-mode="cream">
+        <table className="dashboard-table plain-table">
+          <thead>
+            <tr>
+              <th>Merged</th>
+              <th>Pull request</th>
+              <th>Components</th>
+              <th>Checks</th>
+              <th className="col-num">First commit → merged</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.pr.number}>
+                <td>{shortDate(r.mergedAt)}</td>
+                <td>
+                  <a href={r.pr.url} target="_blank" rel="noreferrer">PR #{r.pr.number}</a>
+                </td>
+                <td className="cell-prose">{r.names.join(', ')}</td>
+                <td><StatusBadge status={r.status === 'pass-with-warnings' ? 'pass' : r.status} warnCount={0} /></td>
+                <td className="col-num cell-cycle">{formatCycle(r.cycle)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Library({ expanded, setExpanded }: { expanded: string | null; setExpanded: (v: string | null) => void }) {
+  return (
+    <section className="dashboard-section table-card" aria-label="All components">
+      <details className="lib-details">
+        <summary className="lib-summary">All components · {data.totals.totalComponents}</summary>
+        <div className="table-scroll" data-mode="cream">
+          <table className="dashboard-table">
+            <thead data-mode="dark">
+              <tr>
+                <th>Component</th>
+                <th>Overall</th>
+                <th className="col-num">Caught &amp; fixed</th>
+                <th className="col-num">Open</th>
+                <th className="col-num">Cycle time</th>
+                <th>Links</th>
+                <th>Last validated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.components.map((c) => {
+                const isExpanded = expanded === c.name;
+                return (
+                  <Fragment key={c.name}>
+                    <tr className="component-row" onClick={() => setExpanded(isExpanded ? null : c.name)} aria-expanded={isExpanded}>
+                      <td className="cell-component">{c.name}</td>
+                      <td><StatusBadge status={c.status} warnCount={c.openWarnCount} /></td>
+                      <td className="col-num">{c.fixedCount}</td>
+                      <td className="col-num">{c.openCount}</td>
+                      <td className="col-num cell-cycle">{formatCycle(c.cycleTimeSeconds)}</td>
+                      <td className="cell-links">
+                        <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Story</a>
+                        {c.pr && (<>{' · '}<a href={c.pr.url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>PR #{c.pr.number}</a></>)}
+                      </td>
+                      <td>{c.lastValidated ?? '—'}</td>
+                      <td className="cell-expand-toggle">{isExpanded ? '▾' : '▸'}</td>
+                    </tr>
+                    {isExpanded && <ComponentRowDetail component={c} />}
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
   );
 }
 
 function App() {
-  const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
   const [expanded, setExpanded] = useState<string | null>(null);
-  const passingAll = data.components.filter((c) => c.overall).length;
-
   return (
-    // data-mode="olive": the page canvas is Ink/900. Under the 2026-09-07
-    // rule "anything with a background owns a mode", the root is a surface
-    // and declares one; the band, every card and the table override it on
-    // the narrowest element that actually carries a fill.
     <div className="dashboard" data-mode="olive">
-      {/* Header band: a full-width surface in the terracotta mode. The
-          stat row below pulls up over its bottom edge, which is what gives
-          the page a top instead of a heading. */}
       <header className="band" data-mode="terracotta">
         <div className="band-inner">
           <div>
             <h1 className="dashboard-title">Runabout DesignOps</h1>
-            <p className="dashboard-subtitle">
-              Live from the pipeline · updates on every merge · last run {formatGeneratedAt(data.generatedAt)}
-            </p>
+            <p className="dashboard-subtitle">The design system, reporting on itself · updates on every merge</p>
           </div>
-          <div className="band-right">
-            <RunStatusPill />
-            <nav className="dashboard-links">
-              <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
-                GitHub
-              </a>
-              <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>
-                Storybook
-              </a>
-            </nav>
-          </div>
+          <nav className="dashboard-links">
+            <a href={data.links.githubRepoUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>GitHub</a>
+            <a href={data.links.storybookBaseUrl} target="_blank" rel="noreferrer" className={SECONDARY_LINK_CLASS}>Storybook</a>
+          </nav>
         </div>
       </header>
-
       <div className="dashboard-inner">
-        {/* Every tile is surface-card with its own data-mode="cream" — a
-            light elevated panel on the dark canvas, the same fill-plus-
-            pinned-mode pairing Modal uses. Two tiers: the hero carries a
-            terracotta strip (a surface owning its mode, not a border colour),
-            the four supporting tiles stay flat. */}
-        <section className="stat-header" aria-label="Headline metrics">
-          <div className="stat-hero card" data-mode="cream">
-                  <div className="stat-hero-value">{data.totals.medianCycleTimeLabel ?? '—'}</div>
-            <div className="stat-hero-label">Median cycle time, first commit → merged</div>
-            <div className="stat-hero-caption">
-              mean {data.totals.averageCycleTimeLabel ?? '—'} · {data.totals.cycleTimeSampleSize} components ·{' '}
-              {data.totals.totalDesignTokens ?? '—'} tokens documented
-            </div>
-          </div>
-
-          <div className="stat-tile card" data-mode="cream">
-            <div className="stat-value">{data.totals.totalComponents}</div>
-            <div className="stat-label">Components through the pipeline</div>
-          </div>
-
-          <div className="stat-tile card" data-mode="cream">
-            <div className={`stat-value ${passingAll === data.totals.totalComponents ? 'stat-value-good' : ''}`}>
-              {passingAll}
-              <span className="stat-value-of">of {data.totals.totalComponents}</span>
-            </div>
-            <div className="stat-label">Passing every check</div>
-          </div>
-
-          <div className="stat-tile card" data-mode="cream">
-            <div className="stat-value">{data.totals.totalCaughtAndFixed}</div>
-            <div className="stat-label">Caught &amp; fixed by the checks</div>
-          </div>
-
-          <div className="stat-tile card" data-mode="cream">
-            <div className={`stat-value ${data.totals.totalOpenIssues === 0 ? 'stat-value-good' : 'stat-value-warn'}`}>
-              {data.totals.totalOpenIssues}
-            </div>
-            <div className="stat-label">Open issues</div>
-          </div>
-        </section>
-
-        {/* One meter per check, read from each component's own result. The
-            fill is a state token — it is a status, not a series — and the
-            count beside it carries the meaning, so nothing depends on colour
-            alone. */}
-        <section className="dashboard-section" aria-label="Checks passing">
-          <h2 className="section-title">Checks, on every pull request</h2>
-          <div className="meter-grid">
-            {checkTypes.map((key) => {
-              const passing = passingCount(key);
-              const total = data.totals.totalComponents;
-              const tally = data.validationSummary[key];
-              const tone = tally.fail > 0 ? 'fail' : tally.warn > 0 ? 'warn' : 'pass';
-              return (
-                <div className="meter card" data-mode="cream" key={key}>
-                  <div className="meter-head">
-                    <span className="meter-label">{CHECK_SHORT_LABELS[key]}</span>
-                    <span className={`meter-count meter-count-${tone}`}>
-                      {passing} <span className="meter-of">of {total}</span>
-                    </span>
-                  </div>
-                  <div
-                    className="meter-track"
-                    role="img"
-                    aria-label={`${CHECK_LABELS[key]}: ${passing} of ${total} components passing`}
-                  >
-                    <div className={`meter-fill meter-fill-${tone}`} style={{ width: `${(passing / total) * 100}%` }} />
-                  </div>
-                  <div className="meter-foot">
-                    {tally.fail > 0 ? `${tally.fail} failing` : tally.warn > 0 ? `${tally.warn} warning` : 'All passing'}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="dashboard-section" aria-label="Cycle time per component">
-          <h2 className="section-title">Cycle time per component</h2>
-          <CycleTimeChart />
-        </section>
-
-        {/* The table is the quiet bottom layer: hairlines, no zebra, numbers
-            right-aligned, status as a badge with a state-coloured dot. The
-            <thead> owns data-mode="dark"; the scroll box owns "cream". */}
-        <section className="dashboard-section table-card" aria-label="Component status">
-          <h2 className="section-title">Component status</h2>
-          <div className="table-scroll" data-mode="cream">
-            <table className="dashboard-table">
-              <thead data-mode="dark">
-                <tr>
-                  <th>Component</th>
-                  <th>Overall</th>
-                  <th className="col-num">Caught &amp; fixed</th>
-                  <th className="col-num">Open</th>
-                  <th className="col-num">Cycle time</th>
-                  <th>Links</th>
-                  <th>Last validated</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.components.map((c) => {
-                  const isExpanded = expanded === c.name;
-                  return (
-                    <Fragment key={c.name}>
-                      <tr
-                        className="component-row"
-                        onClick={() => setExpanded(isExpanded ? null : c.name)}
-                        aria-expanded={isExpanded}
-                      >
-                        <td className="cell-component">{c.name}</td>
-                        <td>
-                          <StatusBadge status={c.status} warnCount={c.openWarnCount} />
-                        </td>
-                        <td className="col-num">{c.fixedCount}</td>
-                        <td className={`col-num ${c.openFailCount > 0 ? 'cell-fail' : c.openWarnCount > 0 ? 'cell-warn' : ''}`}>
-                          {c.openCount}
-                        </td>
-                        <td className="col-num cell-cycle">{formatCycle(c.cycleTimeSeconds)}</td>
-                        <td className="cell-links">
-                          <a href={c.storybookUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
-                            Story
-                          </a>
-                          {c.pr && (
-                            <>
-                              {' · '}
-                              <a
-                                href={c.pr.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                PR #{c.pr.number}
-                              </a>
-                            </>
-                          )}
-                        </td>
-                        <td>{c.lastValidated ?? '—'}</td>
-                        <td className="cell-expand-toggle">{isExpanded ? '▾' : '▸'}</td>
-                      </tr>
-                      {isExpanded && <ComponentRowDetail component={c} />}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <Status />
+        <Issues />
+        <Inventory />
+        <Coverage />
+        <Activity />
+        <Library expanded={expanded} setExpanded={setExpanded} />
       </div>
     </div>
   );
