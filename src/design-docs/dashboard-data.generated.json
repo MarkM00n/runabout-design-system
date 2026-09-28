@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-28T23:35:07.574Z",
-  "validationReportGeneratedAt": "2026-09-28T22:46:06.768Z",
+  "generatedAt": "2026-09-28T23:55:56.956Z",
+  "validationReportGeneratedAt": "2026-09-28T23:55:53.176Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Wall-clock elapsed time, first commit to merge — not working hours, and not an estimate of effort. Per component: from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time. Read from local git history (a first-parent walk over both merge commits and squash commits, with squash-merged branches recovered from their permanent refs/pull/N/head ref), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time. Both figures cover the same sample: components with no recoverable start time are excluded outright, never counted as a zero — see cycleTimeSampleSize for how many of the components are actually in it. Read the two figures together, and read them as a summary of a bimodal sample rather than as a typical PR. The components split cleanly into two clusters — four shipped in well under an hour (PR #2 landed three at once in 36 minutes; Tab took 41), and four sat open overnight (16–19 hours, PR #1 and Badge). With the sample split evenly between them, the median falls in the empty gap between the clusters and lands close to the mean, so it is NOT doing its usual job of resisting the outliers here — no component in the set actually took anywhere near either figure. The per-component cycleTimeSeconds values below are the honest read.",
@@ -437,7 +437,8 @@
               "code": "no-tokens-used",
               "message": "This component doesn't appear to use any colours, spacing, or sizing from the design system.",
               "fix": "Double check this is intentional — if the component should be using design system values, update it to reference them.",
-              "checkType": "documentationCoverage"
+              "checkType": "documentationCoverage",
+              "openedAt": "2026-09-28"
             }
           ]
         }

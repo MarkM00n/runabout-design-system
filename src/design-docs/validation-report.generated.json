@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T22:46:06.768Z",
+  "generatedAt": "2026-09-28T23:55:53.176Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -426,7 +426,8 @@
               "code": "no-tokens-used",
               "message": "This component doesn't appear to use any colours, spacing, or sizing from the design system.",
               "fix": "Double check this is intentional — if the component should be using design system values, update it to reference them.",
-              "checkType": "documentationCoverage"
+              "checkType": "documentationCoverage",
+              "openedAt": "2026-09-28"
             }
           ]
         }

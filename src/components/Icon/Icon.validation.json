@@ -36,7 +36,8 @@
           "code": "no-tokens-used",
           "message": "This component doesn't appear to use any colours, spacing, or sizing from the design system.",
           "fix": "Double check this is intentional — if the component should be using design system values, update it to reference them.",
-          "checkType": "documentationCoverage"
+          "checkType": "documentationCoverage",
+          "openedAt": "2026-09-28"
         }
       ]
     }
