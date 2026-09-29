@@ -2024,3 +2024,25 @@
 .check-pill.tone-warn .status-dot { color: var(--color-state-warning); }
 .check-pill.tone-fail .status-dot { color: var(--color-state-error); }
 .check-pill.tone-none { color: var(--color-text-secondary); }
+
+/* Issue card: the severity rail is a stroke on the card's left edge rather
+   than a separate bar, so it follows the rounded corner instead of poking
+   through it; the badge keeps its pill fill on every surface. */
+.issue-card { border-left: var(--spacing-00) solid transparent; padding-left: var(--spacing-04); }
+.issue-warn { border-left-color: var(--color-state-warning); }
+.issue-fail { border-left-color: var(--color-state-error); }
+.issue-rail { display: none; }
+.issue-card .status-badge,
+.plain-table .status-badge,
+.check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-01);
+  padding: var(--spacing-00) var(--spacing-02);
+  border-radius: var(--radius-full);
+  background: var(--color-paper-100);
+  color: var(--color-text-primary);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 400;
+}
