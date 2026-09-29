@@ -2290,3 +2290,21 @@
 /* Panel titles carry their colour explicitly; numeric headers align with their column. */
 .dashboard-light .panel-title { color: var(--color-text-primary); }
 .dashboard-light table th.col-num, .dashboard-light .plain-table th.col-num { text-align: right; }
+
+
+/* Issue row: fix block and rule link. Layout is the original pill · body · age. */
+.dashboard-light .issue-row { grid-template-columns: 112px 1fr auto; gap: var(--spacing-04); padding: var(--spacing-04) 0; }
+.dashboard-light .issue-row .issue-msg { max-width: none; margin-top: var(--spacing-01); }
+.dashboard-light .issue-row .issue-meta { margin-top: var(--spacing-02); gap: var(--spacing-04); }
+.dashboard-light .issue-age-pill { align-self: start; }
+
+/* Squads: the columns a design tech asks about, empty until a repo connects. */
+.dashboard-light .squads-table th, .dashboard-light .squads-table td { padding-right: var(--spacing-03); }
+.dashboard-light .squads-table .squad-meter { max-width: 96px; }
+.dashboard-light .squads-note { margin: var(--spacing-02) var(--spacing-04) var(--spacing-04); font-size: var(--text-label); line-height: 1.5; color: var(--color-text-secondary); max-width: 80ch; }
+.dashboard-light .squads-note code { font-family: monospace; }
+.dashboard-light .check-pill.tone-none { color: var(--color-text-secondary); }
+.dashboard-light .squads-table th.col-num, .dashboard-light .squads-table td.col-num { padding-right: var(--spacing-05); }
+.dashboard-light .squads-note code { background: none; padding: 0; font-size: inherit; color: var(--color-text-primary); }
+
+.dashboard-light .issue-row > .status-badge { justify-self: start; margin-top: 2px; }

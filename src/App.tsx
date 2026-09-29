@@ -298,6 +298,12 @@ const TOKEN_CATEGORIES: [keyof typeof foundationsData, string, string][] = [
 // Claude app before a build and has no result to show here.
 type Gate = { name: string; what: string; rule: string; result?: boolean | null; detail?: string };
 const RULES = 'docs/design-system-rules.md';
+const RULE_ANCHORS: Record<string, string> = {
+  tokenCompliance: `${RULES}#1-token-compliance`,
+  accessibility: `${RULES}#2-accessibility`,
+  storybookCoverage: `${RULES}#3-storybook-coverage`,
+  documentationCoverage: `${RULES}#5-documentation`,
+};
 // Heading anchors for docs/ready-for-ai.md. Written with spaces and joined at
 // runtime so the dashboard dead-class check doesn't read "text-styles" or
 // "to-variables" inside a URL as Tailwind utilities.
@@ -457,7 +463,7 @@ function Issues() {
                 <div className="issue-meta">
                   <a href={component.storybookUrl} target="_blank" rel="noreferrer">Open story</a>
                   {component.pr && <a href={component.pr.url} target="_blank" rel="noreferrer">PR #{component.pr.number}</a>}
-                  <span>Fix in the component row below</span>
+                  {RULE_ANCHORS[issue.checkType] && <a href={`${data.links.githubRepoUrl}/blob/main/${RULE_ANCHORS[issue.checkType]}`} target="_blank" rel="noreferrer">The rule</a>}
                 </div>
               </div>
               <span className={`issue-age-pill ${stale ? 'issue-age-stale' : ''}`}>
@@ -630,25 +636,34 @@ function Squads() {
           <thead>
             <tr>
               <th>Squad</th>
+              <th>Repo</th>
               <th>On-system UI</th>
-              <th className="col-num">Issues</th>
+              <th>Checks</th>
+              <th className="col-num">Open issues</th>
+              <th className="col-num">Oldest</th>
               <th>Last merge</th>
+              <th>Designer</th>
             </tr>
           </thead>
           <tbody>
             {SQUADS.map((name) => (
               <tr key={name} className="squad-row squad-row-pending">
                 <td className="cell-component">{name}</td>
+                <td className="squad-dash">—</td>
                 <td>
                   <span className="squad-meter" aria-hidden="true"><span className="squad-meter-fill" /></span>
                 </td>
+                <td><span className="status-badge check-pill tone-none">not run</span></td>
                 <td className="col-num squad-dash">—</td>
-                <td className="squad-dash">not connected</td>
+                <td className="col-num squad-dash">—</td>
+                <td className="squad-dash">—</td>
+                <td className="squad-dash">—</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <p className="squads-note">A squad connects by adding <code>design-sync</code> to its repo's pull request checks. From then on this row fills itself: how much of its UI is on the system, whether its checks pass, what's open and for how long, and who to talk to.</p>
     </section>
   );
 }
