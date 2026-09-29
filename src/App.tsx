@@ -407,6 +407,9 @@ function Status() {
 
 const ISSUES_SHOWN = 5;
 
+// The work queue. Each issue is a row with a severity rail down its left
+// edge, the component and check as the title, the problem in one line, and
+// a right-hand column with the age and the file. Blocking rows sit first.
 function Issues() {
   const { items, failing, warning } = healthSummary();
   const [all, setAll] = useState(false);
@@ -422,57 +425,47 @@ function Issues() {
           {warning > 0 && <span>{warning} warning{warning === 1 ? '' : 's'}</span>}
         </span>
       </div>
-      <div className="table-scroll card issues" data-mode="cream">
-        <table className="dashboard-table plain-table">
-          <thead>
-            <tr>
-              <th className="col-sev">Severity</th>
-              <th>Component</th>
-              <th>Check</th>
-              <th>What's wrong</th>
-              <th>Fix</th>
-              <th>Where</th>
-              <th className="col-since">Open since</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shown.map(({ component, issue }, i) => (
-              <tr key={i}>
-                <td className="col-sev">
+      <ul className="issue-list">
+        {shown.map(({ component, issue }, i) => {
+          const age = ageLabel(issue.openedAt);
+          const stale = (age ?? '').endsWith('days') && parseInt(age ?? '0') >= 14;
+          return (
+            <li className={`issue-card card issue-${issue.level}`} data-mode="cream" key={i}>
+              <span className="issue-rail" aria-hidden="true" />
+              <div className="issue-body">
+                <div className="issue-top">
                   <span className={`status-badge severity-badge severity-${issue.level}`}>
                     <span className="status-dot" aria-hidden="true" />
                     {issue.level === 'fail' ? 'Blocking' : 'Warning'}
                   </span>
-                </td>
-                <td className="cell-component">
-                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">{component.name}</a>
-                </td>
-                <td className="cell-check">{CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</td>
-                <td className="cell-prose">{issue.message}</td>
-                <td className="cell-prose">{issue.fix ?? '—'}</td>
-                <td className="issue-where">{whereLabel(issue.file, issue.line)}</td>
-                <td className="col-since">
-                  {issue.openedAt ? (
-                    <>
-                      <span className="since-date">{shortDate(issue.openedAt)}</span>
-                      <span className={`since-age ${(ageLabel(issue.openedAt) ?? '').endsWith('days') && parseInt(ageLabel(issue.openedAt) ?? '0') >= 14 ? 'since-old' : ''}`}>
-                        {ageLabel(issue.openedAt)}
-                      </span>
-                    </>
-                  ) : (
-                    '—'
+                  <span className="issue-title">
+                    <a href={component.storybookUrl} target="_blank" rel="noreferrer" className="issue-component">{component.name}</a>
+                    <span className="issue-check"> · {CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</span>
+                  </span>
+                </div>
+                <p className="issue-msg">{issue.message}</p>
+                <div className="issue-meta">
+                  <span className="issue-where">{whereLabel(issue.file, issue.line)}</span>
+                  {component.pr && (
+                    <a href={component.pr.url} target="_blank" rel="noreferrer">PR #{component.pr.number}</a>
                   )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {items.length > ISSUES_SHOWN && (
-          <button type="button" className="show-all" onClick={() => setAll(!all)}>
-            {all ? 'Show fewer' : `Show all ${items.length}`}
-          </button>
-        )}
-      </div>
+                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">Story</a>
+                  <span className="issue-fixlink">Fix in the component row below</span>
+                </div>
+              </div>
+              <div className="issue-age">
+                <span className={`issue-age-n ${stale ? 'since-old' : ''}`}>{age ?? '—'}</span>
+                <span className="issue-age-l">{issue.openedAt ? `open since ${shortDate(issue.openedAt)}` : 'open'}</span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {items.length > ISSUES_SHOWN && (
+        <button type="button" className="show-all" onClick={() => setAll(!all)}>
+          {all ? 'Show fewer' : `Show all ${items.length}`}
+        </button>
+      )}
     </section>
   );
 }
@@ -643,6 +636,49 @@ function Activity() {
   );
 }
 
+// Per-squad adoption. Rows are the team's product squads; every value is a
+// placeholder until the checks run against that squad's repo, so the shape
+// is visible without any number being invented.
+const SQUADS = ['Engage', 'Operate', 'Platform', 'Data Intelligence', 'Growth'];
+
+function Squads() {
+  return (
+    <section className="dashboard-section" aria-label="Squads">
+      <div className="section-head">
+        <h2 className="section-title">Squads · {SQUADS.length}</h2>
+        <span className="section-stat">connects when the checks run against each squad's repo</span>
+      </div>
+      <div className="table-scroll card" data-mode="cream">
+        <table className="dashboard-table plain-table squads-table">
+          <thead>
+            <tr>
+              <th>Squad</th>
+              <th className="col-num">On-system UI</th>
+              <th className="col-num">Open issues</th>
+              <th>Last merge through the pipeline</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            {SQUADS.map((name) => (
+              <tr key={name} className="squad-row squad-row-pending">
+                <td className="cell-component">{name}</td>
+                <td className="col-num">
+                  <span className="squad-meter" aria-hidden="true"><span className="squad-meter-fill" /></span>
+                  <span className="squad-dash">—</span>
+                </td>
+                <td className="col-num squad-dash">—</td>
+                <td className="squad-dash">not connected</td>
+                <td className="squad-dash">—</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function Library({ expanded, setExpanded }: { expanded: string | null; setExpanded: (v: string | null) => void }) {
   return (
     <section className="dashboard-section table-card" aria-label="All components">
@@ -725,6 +761,7 @@ function App() {
         <Status />
         <Issues />
         <Activity />
+        <Squads />
         <Inventory />
         <Gates />
         <Library expanded={expanded} setExpanded={setExpanded} />
