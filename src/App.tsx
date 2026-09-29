@@ -302,8 +302,16 @@ const systemPass = (validationReport as { categoryPass: Record<string, boolean> 
 const GATE_GROUPS: { title: string; note: string; gates: Gate[] }[] = [
   {
     title: 'In Figma, before build',
-    note: 'In the Claude app, on request',
-    gates: [{ name: 'Ready for AI', what: 'the Figma file is buildable', rule: 'docs/ready-for-ai.md', result: null }],
+    note: 'Ready for AI · in the Claude app, on request',
+    gates: [
+      { name: 'Library components', what: 'nothing detached', rule: 'docs/ready-for-ai.md#1-uses-library-components-not-detached', result: null },
+      { name: 'Colours', what: 'bound to variables', rule: 'docs/ready-for-ai.md#2-colours-bound-to-variables', result: null },
+      { name: 'Text styles', what: 'applied, every variant', rule: 'docs/ready-for-ai.md#3-text-styles-applied', result: null },
+      { name: 'Spacing', what: 'bound to variables', rule: 'docs/ready-for-ai.md#4-spacing-bound-to-variables', result: null },
+      { name: 'Variants', what: 'properties clearly named', rule: 'docs/ready-for-ai.md#5-variant-properties-clearly-named', result: null },
+      { name: 'Behaviour notes', what: 'in the description', rule: 'docs/ready-for-ai.md#6-behaviour-notes-in-the-description', result: null },
+      { name: 'Accessibility', what: 'contrast and touch targets', rule: 'docs/ready-for-ai.md#7-accessibility-basics', result: null },
+    ],
   },
   {
     title: 'Per component',
@@ -382,23 +390,23 @@ function Status() {
     (k) => data.validationSummary[k].fail === 0,
   ).length;
   const passingAll = data.components.filter((c) => c.overall).length;
+  void passingAll;
   const facts: { label: string; value: string; tone?: 'pass' | 'warn' | 'fail'; sub: string }[] = [
-    { label: 'Last run', value: data.status === 'fail' ? 'Failed' : 'Passed', tone: data.status === 'fail' ? 'fail' : 'pass', sub: shortDate(data.validationReportGeneratedAt) + ', ' + shortTime(data.validationReportGeneratedAt) },
-    { label: 'Checks', value: `${checksPassing} / 4`, tone: checksPassing === 4 ? 'pass' : 'fail', sub: 'passing' },
-    { label: 'Open issues', value: String(items.length), tone: failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass', sub: `${failing} blocking · ${warning} warning` },
-    { label: 'Components', value: `${passingAll} / ${data.totals.totalComponents}`, sub: 'pass every check' },
+    { label: 'Last run', value: data.status === 'fail' ? 'Failed' : 'Passed', tone: data.status === 'fail' ? 'fail' : 'pass', sub: `${shortDate(data.validationReportGeneratedAt)}, ${shortTime(data.validationReportGeneratedAt)}` },
+    { label: 'Checks passing', value: `${checksPassing} / 4`, tone: checksPassing === 4 ? 'pass' : 'fail', sub: 'every pull request' },
+    { label: 'Open issues', value: String(items.length), tone: failing > 0 ? 'fail' : warning > 0 ? 'warn' : 'pass', sub: failing > 0 ? `${failing} blocking` : `${warning} warning` },
     { label: 'Figma sync', value: FIGMA_SYNCED ? shortDate(FIGMA_SYNCED) : '—', sub: 'tokens exported' },
   ];
   return (
-    <section className="status card" data-mode="cream" aria-label="Status">
+    <section className="status-tiles span-12" aria-label="Status">
       {facts.map((f) => (
-        <div className="status-item" key={f.label}>
-          <div className="eyebrow">{f.label}</div>
-          <div className={`status-value ${f.tone ? `tone-${f.tone}` : ''}`}>
-            {f.tone && <span className="status-dot" aria-hidden="true" />}
-            {f.value}
+        <div className={`card inv-card ${f.tone ? `tile-${f.tone}` : ''}`} data-mode="cream" key={f.label}>
+          <div className="eyebrow tile-eyebrow">
+            {f.label}
+            {f.tone && <span className="status-dot tile-dot" aria-hidden="true" />}
           </div>
-          <div className="status-sub">{f.sub}</div>
+          <div className="inv-big">{f.value}</div>
+          <div className="inv-sub">{f.sub}</div>
         </div>
       ))}
     </section>
@@ -430,33 +438,28 @@ function Issues() {
           const age = ageLabel(issue.openedAt);
           const stale = (age ?? '').endsWith('days') && parseInt(age ?? '0') >= 14;
           return (
-            <li className={`issue-card card issue-${issue.level}`} data-mode="cream" key={i}>
-              <span className="issue-rail" aria-hidden="true" />
+            <li className={`issue-row issue-${issue.level}`} key={i}>
+              <span className={`status-badge severity-badge severity-${issue.level}`}>
+                <span className="status-dot" aria-hidden="true" />
+                {issue.level === 'fail' ? 'Blocking' : 'Warning'}
+              </span>
               <div className="issue-body">
-                <div className="issue-top">
-                  <span className={`status-badge severity-badge severity-${issue.level}`}>
-                    <span className="status-dot" aria-hidden="true" />
-                    {issue.level === 'fail' ? 'Blocking' : 'Warning'}
-                  </span>
-                  <span className="issue-title">
-                    <a href={component.storybookUrl} target="_blank" rel="noreferrer" className="issue-component">{component.name}</a>
-                    <span className="issue-check"> · {CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</span>
-                  </span>
+                <div className="issue-title">
+                  <a href={component.storybookUrl} target="_blank" rel="noreferrer" className="issue-component">{component.name}</a>
+                  <span className="issue-check"> · {CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</span>
+                  <span className="issue-where">{whereLabel(issue.file, issue.line)}</span>
                 </div>
                 <p className="issue-msg">{issue.message}</p>
                 <div className="issue-meta">
-                  <span className="issue-where">{whereLabel(issue.file, issue.line)}</span>
-                  {component.pr && (
-                    <a href={component.pr.url} target="_blank" rel="noreferrer">PR #{component.pr.number}</a>
-                  )}
-                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">Story</a>
-                  <span className="issue-fixlink">Fix in the component row below</span>
+                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">Open story</a>
+                  {component.pr && <a href={component.pr.url} target="_blank" rel="noreferrer">PR #{component.pr.number}</a>}
+                  <span>Fix in the component row below</span>
                 </div>
               </div>
-              <div className="issue-age">
-                <span className={`issue-age-n ${stale ? 'since-old' : ''}`}>{age ?? '—'}</span>
-                <span className="issue-age-l">{issue.openedAt ? `open since ${shortDate(issue.openedAt)}` : 'open'}</span>
-              </div>
+              <span className={`issue-age-pill ${stale ? 'issue-age-stale' : ''}`}>
+                <span className="issue-age-n">{age ?? '—'}</span>
+                {issue.openedAt && <span className="issue-age-d">since {shortDate(issue.openedAt)}</span>}
+              </span>
             </li>
           );
         })}
@@ -472,121 +475,89 @@ function Issues() {
 
 function Inventory() {
   const passingAll = data.components.filter((c) => c.overall).length;
-  const counts = TOKEN_CATEGORIES.map(([k, label, path]) => ({
-    k,
-    label,
-    path,
-    n: Array.isArray(foundationsData[k]) ? (foundationsData[k] as unknown[]).length : 0,
-  }));
+  const counts = TOKEN_CATEGORIES.map(([k, label, path]) => ({ k, label, path, n: Array.isArray(foundationsData[k]) ? (foundationsData[k] as unknown[]).length : 0 }));
   const maxCount = Math.max(...counts.map((c) => c.n));
   const numbers: [string, string, string][] = [
     [String(data.totals.totalComponents), 'Components', `${passingAll} pass every check`],
     [String(data.totals.totalDesignTokens ?? '—'), 'Tokens', `${counts.length} categories`],
     [String(SURFACE_MODES.length), 'Surface modes', `${BRANDS.length} brand override`],
-    [String(GATE_COUNT), 'Gates', 'Figma, per component, whole system'],
+    [String(GATE_COUNT), 'Gates', 'on every change'],
   ];
   return (
-    <section className="dashboard-section" aria-label="Inventory">
-      <h2 className="section-title">Inventory</h2>
-      <div className="card inv" data-mode="cream">
-        <div className="inv-numbers">
-          {numbers.map(([v, l, sub]) => (
-            <div className="inv-number" key={l}>
-              <div className="eyebrow">{l}</div>
-              <div className="inv-big">{v}</div>
-              <div className="inv-sub">{sub}</div>
-            </div>
+    <>
+      <section className="inv-row span-12" aria-label="Inventory">
+        {numbers.map(([v, l, sub]) => (
+          <div className="card inv-card" data-mode="cream" key={l}>
+            <div className="eyebrow">{l}</div>
+            <div className="inv-big">{v}</div>
+            <div className="inv-sub">{sub}</div>
+          </div>
+        ))}
+      </section>
+      <section className="card panel span-6" data-mode="cream" aria-label="Tokens by category">
+        <h2 className="panel-title">Tokens by category</h2>
+        <ul className="tok-list">
+          {counts.map((c) => (
+            <li className="tok-row" key={c.k}>
+              <a className="tok-label" href={`${data.links.storybookBaseUrl}?path=/docs/${c.path}`} target="_blank" rel="noreferrer">{c.label}</a>
+              <span className="tok-track"><span className="tok-bar" data-mode="terracotta" style={{ width: `${Math.max((c.n / maxCount) * 100, 2)}%` }} /></span>
+              <span className="tok-n">{c.n}</span>
+            </li>
           ))}
-        </div>
-        <div className="inv-detail">
-          {/* Tokens by category as proportional bars: one hue, length is
-              the count, label and number direct. Each links to its page. */}
-          <div>
-            <div className="eyebrow">Tokens by category</div>
-            <ul className="tok-list">
-              {counts.map((c) => (
-                <li className="tok-row" key={c.k}>
-                  <a className="tok-label" href={`${data.links.storybookBaseUrl}?path=/docs/${c.path}`} target="_blank" rel="noreferrer">
-                    {c.label}
-                  </a>
-                  <span className="tok-track">
-                    <span className="tok-bar" data-mode="terracotta" style={{ width: `${Math.max((c.n / maxCount) * 100, 2)}%` }} />
-                  </span>
-                  <span className="tok-n">{c.n}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* Modes as real swatches: each square is surface-section resolved
-              through its own data-mode, so the colour is the token, not a
-              picture of it. The brand swatch does the same through data-brand. */}
-          <div>
-            <div className="eyebrow">Surface modes</div>
-            <ul className="mode-list">
-              {SURFACE_MODES.map((m) => (
-                <li key={m}>
-                  <span className="mode-swatch" data-mode={m} aria-hidden="true" />
-                  <span className="mode-name">{m}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="eyebrow mode-brand-label">Brand override</div>
-            <ul className="mode-list">
-              {BRANDS.map((b) => (
-                <li key={b}>
-                  <span className="mode-swatch" data-brand={b} data-mode="terracotta" aria-hidden="true" />
-                  <span className="mode-name">{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+        </ul>
+      </section>
+      <section className="card panel span-6" data-mode="cream" aria-label="Surface modes">
+        <h2 className="panel-title">Surface modes</h2>
+        <ul className="mode-list mode-list-4">
+          {SURFACE_MODES.map((m) => (
+            <li key={m}><span className="mode-swatch" data-mode={m} aria-hidden="true" /><span className="mode-name">{m}</span></li>
+          ))}
+          {BRANDS.map((b) => (
+            <li key={b}><span className="mode-swatch" data-brand={b} data-mode="terracotta" aria-hidden="true" /><span className="mode-name">{b}<span className="mode-tag">brand</span></span></li>
+          ))}
+        </ul>
+        <p className="mode-rule">A surface owns a mode; everything else inherits.</p>
+      </section>
+    </>
   );
 }
 
 function Gates() {
   const checkTypes = Object.keys(data.validationSummary) as (keyof DashboardData['validationSummary'])[];
   return (
-    <section className="dashboard-section" aria-label="Gates">
-      <h2 className="section-title">Gates · {GATE_COUNT}</h2>
-      <div className="card gates" data-mode="cream">
-        <div className="gates-intro">Every change passes through these, and each one links to the rule it enforces.</div>
-          <div className="gate-groups">
-            {GATE_GROUPS.map((g) => (
-              <div className="gate-group" key={g.title}>
-                <div className="gate-group-title">{g.title}</div>
-                <div className="gate-group-note">{g.note}</div>
-                <ul className="check-list">
-                  {g.gates.map((gate) => {
-                    const perComponent = checkTypes.find((k) => CHECK_SHORT_LABELS[k] === gate.name);
-                    const t = perComponent ? data.validationSummary[perComponent] : null;
-                    const tone = gate.result === null ? 'none' : t ? (t.fail > 0 ? 'fail' : t.warn > 0 ? 'warn' : 'pass') : gate.result ? 'pass' : 'fail';
-                    const result = gate.result === null ? 'Before build' : t ? (t.fail > 0 ? `${t.fail} failing` : t.warn > 0 ? `${t.warn} warning` : 'Pass') : gate.result ? 'Pass' : 'Fail';
-                    return (
-                      <li key={gate.name} className="check-row">
-                        <span className="check-text">
-                          <a href={`${data.links.githubRepoUrl}/blob/main/${gate.rule}`} target="_blank" rel="noreferrer">
-                            {gate.name}
-                          </a>
-                          <span className="inv-sub">{gate.what}</span>
-                        </span>
-                        <span className={`status-badge check-pill tone-${tone}`}>
-                          {tone !== 'none' && <span className="status-dot" aria-hidden="true" />}
-                          {result}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-          </div>
-      </div>
-    </section>
+    <>
+      {GATE_GROUPS.map((g) => (
+        <section className="card panel span-4" data-mode="cream" key={g.title} aria-label={g.title}>
+          <h2 className="panel-title">{g.title}</h2>
+          <div className="panel-sub">{g.note}</div>
+          <ul className="check-list">
+            {g.gates.map((gate) => {
+              const perComponent = checkTypes.find((k) => CHECK_SHORT_LABELS[k] === gate.name);
+              const t = perComponent ? data.validationSummary[perComponent] : null;
+              const tone = gate.result === null ? 'none' : t ? (t.fail > 0 ? 'fail' : t.warn > 0 ? 'warn' : 'pass') : gate.result ? 'pass' : 'fail';
+              const result = gate.result === null ? 'Before build' : t ? (t.fail > 0 ? `${t.fail} failing` : t.warn > 0 ? `${t.warn} warning` : 'Pass') : gate.result ? 'Pass' : 'Fail';
+              return (
+                <li key={gate.name} className={`check-row${gate.result === null ? ' check-row-compact' : ''}`}>
+                  <span className="check-text">
+                    <a href={`${data.links.githubRepoUrl}/blob/main/${gate.rule}`} target="_blank" rel="noreferrer">{gate.name}</a>
+                    <span className="inv-sub">{gate.what}</span>
+                  </span>
+                  {tone !== 'none' && (
+                    <span className={`status-badge check-pill tone-${tone}`}>
+                      <span className="status-dot" aria-hidden="true" />
+                      {result}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </>
   );
 }
+
 
 function Activity() {
   // One row per merge (a PR can land several components at once).
@@ -648,30 +619,27 @@ function Squads() {
     <section className="dashboard-section" aria-label="Squads">
       <div className="section-head">
         <h2 className="section-title">Squads · {SQUADS.length}</h2>
-        <span className="section-stat">connects when the checks run against each squad's repo</span>
+        <span className="section-stat">not connected yet</span>
       </div>
       <div className="table-scroll card" data-mode="cream">
         <table className="dashboard-table plain-table squads-table">
           <thead>
             <tr>
               <th>Squad</th>
-              <th className="col-num">On-system UI</th>
-              <th className="col-num">Open issues</th>
-              <th>Last merge through the pipeline</th>
-              <th>Owner</th>
+              <th>On-system UI</th>
+              <th className="col-num">Issues</th>
+              <th>Last merge</th>
             </tr>
           </thead>
           <tbody>
             {SQUADS.map((name) => (
               <tr key={name} className="squad-row squad-row-pending">
                 <td className="cell-component">{name}</td>
-                <td className="col-num">
+                <td>
                   <span className="squad-meter" aria-hidden="true"><span className="squad-meter-fill" /></span>
-                  <span className="squad-dash">—</span>
                 </td>
                 <td className="col-num squad-dash">—</td>
                 <td className="squad-dash">not connected</td>
-                <td className="squad-dash">—</td>
               </tr>
             ))}
           </tbody>
@@ -685,10 +653,10 @@ function Library({ expanded, setExpanded }: { expanded: string | null; setExpand
   return (
     <section className="dashboard-section table-card" aria-label="All components">
       <details className="lib-details">
-        <summary className="lib-summary">All components · {data.totals.totalComponents}</summary>
+        <summary className="lib-summary"><span className="lib-summary-title">All components</span><span className="lib-summary-count">{data.totals.totalComponents} · click to expand</span></summary>
         <div className="table-scroll" data-mode="cream">
           <table className="dashboard-table">
-            <thead data-mode="dark">
+            <thead>
               <tr>
                 <th>Component</th>
                 <th>Overall</th>
@@ -743,7 +711,7 @@ function HealthPill() {
 function App() {
   const [expanded, setExpanded] = useState<string | null>(null);
   return (
-    <div className="dashboard" data-mode="olive">
+    <div className="dashboard dashboard-light" data-mode="cream">
       <header className="band" data-mode="terracotta">
         <div className="band-inner">
           <div>
@@ -759,14 +727,14 @@ function App() {
           </div>
         </div>
       </header>
-      <div className="dashboard-inner">
+      <div className="dashboard-inner grid">
         <Status />
-        <Issues />
-        <Activity />
-        <Squads />
+        <div className="span-12"><Issues /></div>
+        <div className="span-12"><Activity /></div>
+        <div className="span-12"><Squads /></div>
         <Inventory />
         <Gates />
-        <Library expanded={expanded} setExpanded={setExpanded} />
+        <div className="span-12"><Library expanded={expanded} setExpanded={setExpanded} /></div>
       </div>
     </div>
   );
