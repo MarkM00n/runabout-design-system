@@ -563,17 +563,19 @@ function Gates() {
                     const perComponent = checkTypes.find((k) => CHECK_SHORT_LABELS[k] === gate.name);
                     const t = perComponent ? data.validationSummary[perComponent] : null;
                     const tone = gate.result === null ? 'none' : t ? (t.fail > 0 ? 'fail' : t.warn > 0 ? 'warn' : 'pass') : gate.result ? 'pass' : 'fail';
-                    const result = gate.result === null ? 'before build' : t ? (t.fail > 0 ? `${t.fail} fail` : t.warn > 0 ? `${t.warn} warn` : 'pass') : gate.result ? 'pass' : 'fail';
+                    const result = gate.result === null ? 'Before build' : t ? (t.fail > 0 ? `${t.fail} failing` : t.warn > 0 ? `${t.warn} warning` : 'Pass') : gate.result ? 'Pass' : 'Fail';
                     return (
                       <li key={gate.name} className="check-row">
-                        <span className={`status-dot check-dot tone-${tone}`} aria-hidden="true" />
                         <span className="check-text">
                           <a href={`${data.links.githubRepoUrl}/blob/main/${gate.rule}`} target="_blank" rel="noreferrer">
                             {gate.name}
                           </a>
                           <span className="inv-sub">{gate.what}</span>
                         </span>
-                        <span className="check-result">{result}</span>
+                        <span className={`status-badge check-pill tone-${tone}`}>
+                          {tone !== 'none' && <span className="status-dot" aria-hidden="true" />}
+                          {result}
+                        </span>
                       </li>
                     );
                   })}

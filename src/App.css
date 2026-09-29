@@ -2016,3 +2016,11 @@
 }
 .issue-age-l { display: block; font-size: var(--text-label); color: var(--color-text-secondary); }
 .issue-list + .show-all { margin-top: var(--spacing-02); }
+
+/* Gate results as the same pill used everywhere else. */
+.check-row { align-items: center; }
+.check-pill { flex: none; white-space: nowrap; }
+.check-pill.tone-pass .status-dot { color: var(--color-state-success); }
+.check-pill.tone-warn .status-dot { color: var(--color-state-warning); }
+.check-pill.tone-fail .status-dot { color: var(--color-state-error); }
+.check-pill.tone-none { color: var(--color-text-secondary); }
