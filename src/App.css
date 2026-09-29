@@ -1829,3 +1829,50 @@
   color: var(--color-text-secondary);
 }
 .since-old { color: var(--color-state-warning); font-weight: 700; }
+
+/* ---------------------------------------------------------------------------
+   One rhythm, applied last so it wins:
+     band       40 above the title, 96 below (the strip overlaps 64 of it,
+                leaving a 32 gap between band copy and strip)
+     sections   40 apart; label 8 above its card
+     cards      24 vertical, 32 horizontal, everywhere
+     tables     header 0/8, rows 16/16, last row no border
+     type       eyebrow → value 8, value → note 4
+   --------------------------------------------------------------------------- */
+.band { padding: var(--spacing-05) 0 var(--spacing-09); }
+.band-inner { align-items: center; }
+.band .dashboard-title { margin-bottom: var(--spacing-00); }
+
+.status { margin-top: calc(-1 * var(--spacing-07)); margin-bottom: var(--spacing-05); }
+.status-item { padding: var(--spacing-03) var(--spacing-04); }
+.status-value { margin-top: var(--spacing-01); }
+.status-sub { margin-top: var(--spacing-00); }
+
+.dashboard-section { margin-bottom: var(--spacing-05); }
+.section-title, .section-head { margin-bottom: var(--spacing-01); }
+
+.card,
+.inv,
+.gates { padding: var(--spacing-03) var(--spacing-04); }
+.inv { padding: 0; }
+.inv-number { padding: var(--spacing-03) var(--spacing-04); }
+.inv-number .eyebrow { margin: 0; }
+.inv-number .inv-big { margin-top: var(--spacing-01); }
+.inv-sub { margin-top: var(--spacing-00); }
+.inv-detail { padding: var(--spacing-03) var(--spacing-04); }
+.inv-detail .eyebrow, .gates .eyebrow { margin-bottom: var(--spacing-02); }
+.gates-intro { margin-bottom: var(--spacing-02); }
+.gate-groups { margin-top: 0; }
+
+.plain-table th { padding: 0 var(--spacing-02) var(--spacing-01) 0; }
+.plain-table td { padding: var(--spacing-02) var(--spacing-02) var(--spacing-02) 0; }
+.plain-table tr:last-child td { padding-bottom: 0; }
+
+.lib-details { margin-top: 0; }
+.lib-summary { padding: 0; }
+
+/* Rounded corners belong on the card, not the table: on a table they clip
+   the first cell's first glyph. */
+.plain-table { border-radius: 0; overflow: visible; }
+
+.status { padding: 0; }
