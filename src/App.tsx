@@ -449,27 +449,23 @@ function Issues() {
           const stale = (age ?? '').endsWith('days') && parseInt(age ?? '0') >= 14;
           return (
             <li className={`issue-row issue-${issue.level}`} key={i}>
-              <span className={`status-badge severity-badge severity-${issue.level}`}>
-                <span className="status-dot" aria-hidden="true" />
-                {issue.level === 'fail' ? 'Blocking' : 'Warning'}
-              </span>
-              <div className="issue-body">
-                <div className="issue-title">
+              <div className="issue-main">
+                <p className="issue-headline">
                   <a href={component.storybookUrl} target="_blank" rel="noreferrer" className="issue-component">{component.name}</a>
-                  <span className="issue-check"> · {CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType}</span>
+                  <span className="issue-msg-inline">{issue.message}</span>
+                </p>
+                <p className="issue-meta-line">
+                  <span className={`issue-level-text level-${issue.level}`}><span className="status-dot" aria-hidden="true" />{issue.level === 'fail' ? 'Blocking' : 'Warning'}</span>
+                  <span>{CHECK_SHORT_LABELS[issue.checkType as keyof DashboardData['validationSummary']] ?? issue.checkType} check</span>
                   <span className="issue-where">{whereLabel(issue.file, issue.line)}</span>
-                </div>
-                <p className="issue-msg">{issue.message}</p>
-                <div className="issue-meta">
-                  <a href={component.storybookUrl} target="_blank" rel="noreferrer">Open story</a>
-                  {component.pr && <a href={component.pr.url} target="_blank" rel="noreferrer">PR #{component.pr.number}</a>}
-                  {RULE_ANCHORS[issue.checkType] && <a href={`${data.links.githubRepoUrl}/blob/main/${RULE_ANCHORS[issue.checkType]}`} target="_blank" rel="noreferrer">The rule</a>}
-                </div>
+                  <span className={stale ? 'issue-age-stale-text' : ''}>open <strong>{age ?? '—'}</strong>{issue.openedAt && <>, since {shortDate(issue.openedAt)}</>}</span>
+                </p>
               </div>
-              <span className={`issue-age-pill ${stale ? 'issue-age-stale' : ''}`}>
-                <span className="issue-age-n">{age ?? '—'}</span>
-                {issue.openedAt && <span className="issue-age-d">since {shortDate(issue.openedAt)}</span>}
-              </span>
+              <div className="issue-side">
+                {component.pr && <a href={component.pr.url} target="_blank" rel="noreferrer" className="issue-pr">PR #{component.pr.number}</a>}
+                <a href={component.storybookUrl} target="_blank" rel="noreferrer" className="issue-icon-link" title="Open story">Story</a>
+                {RULE_ANCHORS[issue.checkType] && <a href={`${data.links.githubRepoUrl}/blob/main/${RULE_ANCHORS[issue.checkType]}`} target="_blank" rel="noreferrer" className="issue-icon-link" title="The rule">Rule</a>}
+              </div>
             </li>
           );
         })}
@@ -633,13 +629,17 @@ function Squads() {
       </div>
       <div className="table-scroll card" data-mode="cream">
         <table className="dashboard-table plain-table squads-table">
+          <colgroup>
+            <col style={{ width: '18%' }} /><col style={{ width: '12%' }} /><col style={{ width: '16%' }} /><col style={{ width: '10%' }} />
+            <col style={{ width: '9%' }} /><col style={{ width: '9%' }} /><col style={{ width: '13%' }} /><col style={{ width: '13%' }} />
+          </colgroup>
           <thead>
             <tr>
               <th>Squad</th>
               <th>Repo</th>
               <th>On-system UI</th>
               <th>Checks</th>
-              <th className="col-num">Open issues</th>
+              <th className="col-num">Issues</th>
               <th className="col-num">Oldest</th>
               <th>Last merge</th>
               <th>Designer</th>
@@ -657,13 +657,13 @@ function Squads() {
                 <td className="col-num squad-dash">—</td>
                 <td className="col-num squad-dash">—</td>
                 <td className="squad-dash">—</td>
-                <td className="squad-dash">—</td>
+                <td><span className="squad-avatar" aria-label="No designer connected" /></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="squads-note">A squad connects by adding <code>design-sync</code> to its repo's pull request checks. From then on this row fills itself: how much of its UI is on the system, whether its checks pass, what's open and for how long, and who to talk to.</p>
+      <p className="squads-note">To connect a squad, add <code>design-sync</code> to its pull request checks. The row fills itself from the next run.</p>
     </section>
   );
 }

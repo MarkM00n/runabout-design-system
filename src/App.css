@@ -2308,3 +2308,53 @@
 .dashboard-light .squads-note code { background: none; padding: 0; font-size: inherit; color: var(--color-text-primary); }
 
 .dashboard-light .issue-row > .status-badge { justify-self: start; margin-top: 2px; }
+
+/* Issues as commit rows: headline, a meta line, actions on the right. */
+.dashboard-light .dashboard-section > .section-head + .issue-list { padding: 0 var(--spacing-04) var(--spacing-04); gap: 0; }
+.dashboard-light .issue-row {
+  grid-template-columns: minmax(0, 1fr) auto; gap: var(--spacing-04); align-items: center;
+  padding: var(--spacing-03) var(--spacing-03);
+  border: 1px solid var(--color-border-subtle); border-top-width: 0;
+}
+.dashboard-light .issue-row:first-child { border-top-width: 1px; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.dashboard-light .issue-row:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+.dashboard-light .issue-row:first-child:last-child { border-radius: var(--radius-md); }
+.dashboard-light .issue-headline { margin: 0; font-size: var(--text-paragraph-small); line-height: var(--text-paragraph-small--line-height); color: var(--color-text-primary); }
+.dashboard-light .issue-headline .issue-component { font-weight: 700; color: var(--color-text-primary); text-decoration: none; margin-right: var(--spacing-01); }
+.dashboard-light .issue-headline .issue-msg-inline { font-weight: 400; }
+.dashboard-light .issue-meta-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-02); margin: var(--spacing-00) 0 0; font-size: var(--text-label); color: var(--color-text-secondary); }
+.dashboard-light .issue-meta-line > * + *::before { content: '·'; margin-right: var(--spacing-02); }
+.dashboard-light .issue-meta-line .issue-where { margin: 0; }
+.dashboard-light .issue-level-text { display: inline-flex; align-items: center; gap: 6px; }
+.dashboard-light .issue-level-text .status-dot { width: 8px; height: 8px; }
+.dashboard-light .issue-level-text.level-warn .status-dot { color: var(--color-state-warning); }
+.dashboard-light .issue-level-text.level-fail .status-dot { color: var(--color-state-error); }
+.dashboard-light .issue-meta-line strong { color: var(--color-text-primary); }
+.dashboard-light .issue-age-stale-text strong { color: var(--color-state-warning); }
+.dashboard-light .issue-side { display: flex; align-items: center; gap: var(--spacing-02); }
+.dashboard-light .issue-pr { font-family: monospace; font-size: var(--text-label); color: var(--color-text-secondary); text-decoration: none; margin-right: var(--spacing-01); }
+.dashboard-light .issue-icon-link {
+  font-size: var(--text-label); font-weight: 700; color: var(--color-text-link); text-decoration: none;
+  padding: var(--spacing-00) var(--spacing-02); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm);
+}
+.dashboard-light .issue-icon-link:hover { background: var(--color-paper-100); }
+
+/* Squads table: fixed columns, one placeholder style, numbers right, tight rows. */
+.dashboard-light .squads-table { table-layout: fixed; width: 100%; }
+.dashboard-light .squads-table th, .dashboard-light .squads-table td { padding: var(--spacing-02) var(--spacing-02) var(--spacing-02) 0; vertical-align: middle; }
+.dashboard-light .squads-table th { font-size: var(--text-label); font-weight: 700; color: var(--color-text-secondary); }
+.dashboard-light .squads-table th.col-num, .dashboard-light .squads-table td.col-num { text-align: right; padding-right: var(--spacing-04); }
+.dashboard-light .squads-table .squad-dash { color: var(--color-text-secondary); opacity: .6; }
+.dashboard-light .squads-table .squad-meter { max-width: 120px; height: 6px; }
+.dashboard-light .squads-table .check-pill.tone-none { padding: 2px 10px; font-size: var(--text-label); }
+.dashboard-light .squads-note { margin: var(--spacing-02) var(--spacing-04) var(--spacing-03); max-width: none; }
+.dashboard-light .squads-table th.col-num, .dashboard-light .squads-table td.col-num { padding-right: var(--spacing-06); }
+.dashboard-light .squads-table th { white-space: nowrap; }
+.dashboard-light .squads-note { margin: var(--spacing-03) var(--spacing-04) var(--spacing-04); padding-bottom: var(--spacing-01); }
+.dashboard-light .squads-note { margin-bottom: 0; padding-bottom: var(--spacing-05); }
+.dashboard-light .squad-avatar {
+  display: inline-block; width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: var(--color-paper-100); border: 1px dashed var(--color-border-strong); opacity: .35;
+  vertical-align: middle;
+}
+.dashboard-light .squads-note { padding-bottom: var(--spacing-06); }
