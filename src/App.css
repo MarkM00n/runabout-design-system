@@ -2286,3 +2286,7 @@
 .check-row-compact .check-text .inv-sub { margin: 0; }
 .check-row-compact .check-text .inv-sub::before { content: '·'; margin-right: var(--spacing-01); color: var(--color-text-secondary); }
 .panel .check-row-compact { padding: var(--spacing-02) 0; }
+
+/* Panel titles carry their colour explicitly; numeric headers align with their column. */
+.dashboard-light .panel-title { color: var(--color-text-primary); }
+.dashboard-light table th.col-num, .dashboard-light .plain-table th.col-num { text-align: right; }
