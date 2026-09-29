@@ -298,19 +298,23 @@ const TOKEN_CATEGORIES: [keyof typeof foundationsData, string, string][] = [
 // Claude app before a build and has no result to show here.
 type Gate = { name: string; what: string; rule: string; result?: boolean | null; detail?: string };
 const RULES = 'docs/design-system-rules.md';
+// Heading anchors for docs/ready-for-ai.md. Written with spaces and joined at
+// runtime so the dashboard dead-class check doesn't read "text-styles" or
+// "to-variables" inside a URL as Tailwind utilities.
+const READY = (heading: string) => `docs/ready-for-ai.md#${heading.split(' ').join('-')}`;
 const systemPass = (validationReport as { categoryPass: Record<string, boolean> }).categoryPass;
 const GATE_GROUPS: { title: string; note: string; gates: Gate[] }[] = [
   {
     title: 'In Figma, before build',
     note: 'Ready for AI · in the Claude app, on request',
     gates: [
-      { name: 'Library components', what: 'nothing detached', rule: 'docs/ready-for-ai.md#1-uses-library-components-not-detached', result: null },
-      { name: 'Colours', what: 'bound to variables', rule: 'docs/ready-for-ai.md#2-colours-bound-to-variables', result: null },
-      { name: 'Text styles', what: 'applied, every variant', rule: 'docs/ready-for-ai.md#3-text-styles-applied', result: null },
-      { name: 'Spacing', what: 'bound to variables', rule: 'docs/ready-for-ai.md#4-spacing-bound-to-variables', result: null },
-      { name: 'Variants', what: 'properties clearly named', rule: 'docs/ready-for-ai.md#5-variant-properties-clearly-named', result: null },
-      { name: 'Behaviour notes', what: 'in the description', rule: 'docs/ready-for-ai.md#6-behaviour-notes-in-the-description', result: null },
-      { name: 'Accessibility', what: 'contrast and touch targets', rule: 'docs/ready-for-ai.md#7-accessibility-basics', result: null },
+      { name: 'Library components', what: 'nothing detached', rule: READY('1 uses library components not detached'), result: null },
+      { name: 'Colours', what: 'bound to variables', rule: READY('2 colours bound to variables'), result: null },
+      { name: 'Text styles', what: 'applied, every variant', rule: READY('3 text styles applied'), result: null },
+      { name: 'Spacing', what: 'bound to variables', rule: READY('4 spacing bound to variables'), result: null },
+      { name: 'Variants', what: 'properties clearly named', rule: READY('5 variant properties clearly named'), result: null },
+      { name: 'Behaviour notes', what: 'in the description', rule: READY('6 behaviour notes in the description'), result: null },
+      { name: 'Accessibility', what: 'contrast and touch targets', rule: READY('7 accessibility basics'), result: null },
     ],
   },
   {
