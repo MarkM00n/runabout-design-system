@@ -2046,3 +2046,243 @@
   line-height: var(--text-label--line-height);
   font-weight: 400;
 }
+
+/* ---------------------------------------------------------------------------
+   Light layout: cream canvas, white cards on a 12-column grid, titles inside
+   cards, a tinted icon on each stat tile.
+   --------------------------------------------------------------------------- */
+.dashboard-light { background: var(--color-surface-section); }
+.dashboard-light .band { padding: var(--spacing-05) 0 var(--spacing-08); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-03);
+  align-items: start;
+}
+.span-12 { grid-column: span 12; }
+.span-7 { grid-column: span 7; }
+.span-5 { grid-column: span 5; }
+.grid .dashboard-section { margin-bottom: 0; }
+@media (max-width: 1000px) { .span-7, .span-5 { grid-column: span 12; } }
+
+/* Cards: white, soft radius, faint shadow instead of hairline rules. */
+.dashboard-light .card {
+  background: var(--color-surface-card);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 2px rgba(42, 45, 30, 0.04), 0 8px 24px rgba(42, 45, 30, 0.05);
+}
+
+/* Section titles move inside the card as a header row. */
+.dashboard-light .section-title,
+.dashboard-light .section-head {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-manrope);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  font-weight: 700;
+  text-transform: none;
+}
+.dashboard-light .section-head { display: flex; justify-content: space-between; align-items: baseline; }
+.dashboard-light .dashboard-section > .section-title,
+.dashboard-light .dashboard-section > .section-head {
+  background: var(--color-surface-card);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--spacing-03) var(--spacing-04) var(--spacing-02);
+  box-shadow: 0 1px 2px rgba(42, 45, 30, 0.04), 0 8px 24px rgba(42, 45, 30, 0.05);
+}
+.dashboard-light .dashboard-section > .section-title + *,
+.dashboard-light .dashboard-section > .section-head + * {
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  box-shadow: 0 1px 2px rgba(42, 45, 30, 0.04), 0 8px 24px rgba(42, 45, 30, 0.05);
+}
+.dashboard-light .dashboard-section > .section-title + .issue-list { padding: var(--spacing-02) var(--spacing-04) var(--spacing-04); background: var(--color-surface-card); gap: var(--spacing-02); }
+.dashboard-light .issue-card { box-shadow: none; border: 1px solid var(--color-border-subtle); }
+.dashboard-light .dashboard-section > .section-head .section-stat { font-family: var(--font-manrope); font-size: var(--text-label); font-weight: 400; }
+
+/* Status tiles */
+.status-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-03);
+  margin-top: calc(-1 * var(--spacing-06));
+}
+@media (max-width: 1000px) { .status-tiles { grid-template-columns: repeat(2, 1fr); } }
+.tile { display: flex; gap: var(--spacing-02); align-items: center; padding: var(--spacing-03) var(--spacing-03); }
+.tile-icon {
+  flex: none;
+  width: 48px; height: 48px;
+  border-radius: var(--radius-full);
+  display: grid; place-items: center;
+  background: var(--color-paper-100);
+}
+.tile-icon-dot { width: 12px; height: 12px; border-radius: var(--radius-full); background: var(--color-text-secondary); }
+.tile-pass .tile-icon { background: rgba(22, 101, 52, 0.10); } .tile-pass .tile-icon-dot { background: var(--color-state-success); }
+.tile-warn .tile-icon { background: rgba(122, 78, 9, 0.12); } .tile-warn .tile-icon-dot { background: var(--color-state-warning); }
+.tile-fail .tile-icon { background: rgba(185, 28, 28, 0.10); } .tile-fail .tile-icon-dot { background: var(--color-state-error); }
+.tile-value { font-family: var(--font-manrope); font-size: var(--text-h4); line-height: var(--text-h4--line-height); font-weight: 700; font-variant-numeric: tabular-nums; }
+.tile-label { font-size: var(--text-paragraph-small); color: var(--color-text-primary); }
+.tile-sub { font-size: var(--text-label); color: var(--color-text-secondary); }
+
+/* Squads side by side with Issues: compact rows. */
+.squads-table th, .squads-table td { padding-right: var(--spacing-01); }
+
+.tile { align-items: flex-start; }
+.tile-icon { margin-top: 2px; }
+.tile-label { font-size: var(--text-label); line-height: var(--text-label--line-height); color: var(--color-text-secondary); }
+.tile-sub { color: var(--color-text-secondary); }
+.dashboard-light .gate-groups { grid-template-columns: 1fr; gap: var(--spacing-03); }
+.dashboard-light .gates-intro { display: none; }
+.dashboard-light .gate-group + .gate-group { padding-top: var(--spacing-03); border-top: 1px solid var(--color-border-subtle); }
+.dashboard-light .inv-numbers { grid-template-columns: repeat(2, 1fr); }
+.dashboard-light .inv-number:nth-child(3) { border-left: none; }
+.dashboard-light .inv-number:nth-child(n + 3) { border-top: 1px solid var(--color-border-subtle); }
+.dashboard-light .inv-detail { grid-template-columns: 1fr 1fr; }
+.dashboard-light .squads-table .squad-meter { width: 100%; max-width: 120px; margin: 0; }
+.dashboard-light .section-head .section-title { font-size: var(--text-h6); }
+
+/* Grid additions: 4-up, 6-up, and panel cards that stretch to equal height. */
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
+.grid { align-items: stretch; }
+.panel { padding: var(--spacing-03) var(--spacing-04) var(--spacing-04); }
+.panel-title {
+  margin: 0 0 var(--spacing-02);
+  font-family: var(--font-manrope);
+  font-size: var(--text-h6);
+  line-height: var(--text-h6--line-height);
+  font-weight: 700;
+}
+.panel-sub { margin: calc(-1 * var(--spacing-01)) 0 var(--spacing-02); font-size: var(--text-label); color: var(--color-text-secondary); }
+.status-tiles { grid-template-columns: repeat(4, 1fr); }
+.tile { flex-direction: row; align-items: center; }
+.tile-label { color: var(--color-text-primary); font-size: var(--text-paragraph-small); }
+.inv-row { grid-column: span 12; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-03); }
+.inv-card { padding: var(--spacing-03) var(--spacing-04); }
+.inv-card .inv-big { margin: var(--spacing-01) 0 0; }
+.mode-rule { margin: var(--spacing-03) 0 0; font-size: var(--text-label); color: var(--color-text-secondary); }
+.panel .mode-list { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-03); }
+.panel .mode-swatch { width: 40px; height: 40px; }
+.panel .check-row { padding: var(--spacing-02) 0; }
+.panel .check-row:first-child { padding-top: 0; }
+@media (max-width: 1000px) { .span-6, .span-4 { grid-column: span 12; } .inv-row { grid-template-columns: repeat(2, 1fr); } }
+
+/* Issue cards sit inside the section card with the same gutter as the
+   header, and a real gap under the header. */
+.dashboard-light .dashboard-section > .section-head + .issue-list {
+  padding: var(--spacing-03) var(--spacing-04) var(--spacing-04);
+  background: var(--color-surface-card);
+  gap: var(--spacing-02);
+}
+.dashboard-light .dashboard-section > .section-head { padding-bottom: var(--spacing-01); }
+.dashboard-light .issue-card { background: var(--color-surface-section); border: none; }
+.dashboard-light .issue-card { border-left: var(--spacing-00) solid transparent; box-shadow: none; }
+.dashboard-light .issue-warn { border-left-color: var(--color-state-warning); }
+.dashboard-light .issue-fail { border-left-color: var(--color-state-error); }
+.dashboard-light .dashboard-section > .section-head { box-shadow: none; }
+.dashboard-light .dashboard-section > .section-head + * { box-shadow: none; }
+.dashboard-light .dashboard-section {
+  background: var(--color-surface-card);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 2px rgba(42, 45, 30, 0.04), 0 8px 24px rgba(42, 45, 30, 0.05);
+}
+
+.tile-value-row { display: flex; align-items: center; gap: var(--spacing-01); }
+.tile-dot { width: 12px; height: 12px; }
+.tile-pass .tile-dot { color: var(--color-state-success); }
+.tile-warn .tile-dot { color: var(--color-state-warning); }
+.tile-fail .tile-dot { color: var(--color-state-error); }
+
+/* All components: a proper card header that opens into the table. */
+.dashboard-light .lib-details { margin: 0; }
+.dashboard-light .lib-summary {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: var(--spacing-03) var(--spacing-04);
+  text-transform: none; color: var(--color-text-primary);
+  list-style: none;
+}
+.dashboard-light .lib-summary::-webkit-details-marker { display: none; }
+.dashboard-light .lib-summary-title { font-family: var(--font-manrope); font-size: var(--text-h6); font-weight: 700; }
+.dashboard-light .lib-summary-count { font-size: var(--text-label); font-weight: 400; color: var(--color-text-secondary); }
+.dashboard-light .lib-details[open] .lib-summary-count { visibility: hidden; }
+.dashboard-light .lib-details[open] .lib-summary { margin-bottom: 0; }
+.dashboard-light .lib-details .table-scroll { padding: 0 var(--spacing-04) var(--spacing-04); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
+.dashboard-light .lib-details .dashboard-table { border-radius: var(--radius-lg); overflow: hidden; }
+.dashboard-light .detail-title { font-family: var(--font-manrope); font-size: var(--text-paragraph-small); font-weight: 700; }
+.dashboard-light .table-card .dashboard-table > thead th { background: var(--color-paper-100); color: var(--color-text-primary); font-weight: 700; }
+.dashboard-light .lib-details .dashboard-table > thead { --color-surface-section: var(--color-paper-100); }
+.dashboard-light .component-row:hover { background: var(--color-paper-100); color: var(--color-text-primary); }
+.dashboard-light .component-row:hover .cell-links a, .dashboard-light .component-row:hover .cell-expand-toggle { color: var(--color-text-link); }
+.dashboard-light .component-row:hover .status-badge { background: var(--color-surface-card); }
+/* One hairline everywhere: border-subtle. */
+.dashboard-light .plain-table th,
+.dashboard-light .issue-table th,
+.dashboard-light .cycle-col-plot { border-bottom-color: var(--color-border-subtle); }
+
+/* Issue rows: status · story · age. Hairline between rows, no card-in-card. */
+.dashboard-light .dashboard-section > .section-head + .issue-list { padding: 0 var(--spacing-04) var(--spacing-02); gap: 0; }
+.issue-row {
+  display: grid;
+  grid-template-columns: 112px 1fr auto;
+  gap: var(--spacing-04);
+  align-items: start;
+  padding: var(--spacing-03) 0;
+  border-top: 1px solid var(--color-border-subtle);
+}
+.issue-row:first-child { border-top: none; }
+.issue-row .status-badge { margin-top: 2px; }
+.issue-row .issue-title { display: flex; align-items: baseline; gap: var(--spacing-01); flex-wrap: wrap; font-size: var(--text-paragraph-small); line-height: var(--text-paragraph-small--line-height); }
+.issue-row .issue-component { font-weight: 700; }
+.issue-row .issue-check { color: var(--color-text-secondary); }
+.issue-row .issue-where { font-family: monospace; font-size: var(--text-label); color: var(--color-text-secondary); margin-left: var(--spacing-01); }
+.issue-row .issue-msg { margin: var(--spacing-00) 0 0; font-size: var(--text-paragraph-small); line-height: var(--text-paragraph-small--line-height); color: var(--color-text-primary); max-width: 80ch; }
+.issue-row .issue-meta { display: flex; gap: var(--spacing-03); margin-top: var(--spacing-01); font-size: var(--text-label); color: var(--color-text-secondary); }
+.issue-row .issue-meta a { color: var(--color-text-link); font-weight: 700; }
+.issue-age-pill {
+  display: flex; flex-direction: column; align-items: flex-end;
+  padding: var(--spacing-01) var(--spacing-02);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+  white-space: nowrap;
+}
+.issue-age-pill .issue-age-n { font-family: var(--font-manrope); font-size: var(--text-h6); line-height: var(--text-h6--line-height); font-weight: 700; font-variant-numeric: tabular-nums; }
+.issue-age-pill .issue-age-d { font-size: var(--text-label); color: var(--color-text-secondary); }
+.issue-age-stale { background: rgba(122, 78, 9, 0.12); }
+.issue-age-stale .issue-age-n { color: var(--color-state-warning); }
+.issue-row .status-badge {
+  display: inline-flex; align-items: center; gap: var(--spacing-01);
+  padding: var(--spacing-00) var(--spacing-02); border-radius: var(--radius-full);
+  background: var(--color-paper-100); color: var(--color-text-primary);
+  font-size: var(--text-label); line-height: var(--text-label--line-height); font-weight: 400;
+}
+
+.tile-eyebrow { display: flex; align-items: center; gap: var(--spacing-01); }
+.tile-dot { width: 10px; height: 10px; }
+
+/* Modes: one grid of swatches, brand tagged inline; rule pinned to the bottom. */
+.panel { display: flex; flex-direction: column; }
+.panel .mode-list-4 { grid-template-columns: repeat(3, 1fr); gap: var(--spacing-03) var(--spacing-02); }
+.panel .mode-list li { flex-direction: column; align-items: flex-start; gap: var(--spacing-01); }
+.panel .mode-swatch { width: 100%; max-width: 160px; height: 56px; border-radius: var(--radius-lg); }
+.mode-tag { margin-left: var(--spacing-01); font-size: var(--text-label); color: var(--color-text-secondary); }
+.mode-rule { margin-top: auto; padding-top: var(--spacing-03); }
+
+.issue-age-pill { align-items: center; text-align: center; min-width: 120px; }
+/* One pill recipe everywhere: 4/12 padding, 6px gap, 8px dot. */
+.status-badge, .check-pill, .run-pill, .issue-row .status-badge, .plain-table .status-badge {
+  padding: var(--spacing-00) 12px;
+  gap: 6px;
+  line-height: 1.2;
+}
+.status-badge .status-dot, .check-pill .status-dot { width: 8px; height: 8px; flex: none; }
+.issue-row { grid-template-columns: auto 1fr auto; }
+.issue-row .status-badge { margin-top: 3px; }
+
+/* Header title in Manrope; status tile values one step down */
+.dashboard-light .dashboard-title { font-family: var(--font-manrope); font-weight: 700; letter-spacing: -0.01em; }
+.dashboard-light .inv-card .inv-big { font-size: var(--text-h4); line-height: var(--text-h4--line-height); }
+.tile-eyebrow .tile-dot { position: relative; top: -1px; }
+.check-row-compact .check-text { flex-direction: row; align-items: baseline; gap: var(--spacing-01); flex-wrap: wrap; }
+.check-row-compact .check-text .inv-sub { margin: 0; }
+.check-row-compact .check-text .inv-sub::before { content: '·'; margin-right: var(--spacing-01); color: var(--color-text-secondary); }
+.panel .check-row-compact { padding: var(--spacing-02) 0; }
