@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-29T11:25:45.199Z",
-  "validationReportGeneratedAt": "2026-09-29T00:05:13.258Z",
+  "generatedAt": "2026-09-30T22:33:14.994Z",
+  "validationReportGeneratedAt": "2026-09-30T22:33:11.613Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Wall-clock elapsed time, first commit to merge — not working hours, and not an estimate of effort. Per component: from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time. Read from local git history (a first-parent walk over both merge commits and squash commits, with squash-merged branches recovered from their permanent refs/pull/N/head ref), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time. Both figures cover the same sample: components with no recoverable start time are excluded outright, never counted as a zero — see cycleTimeSampleSize for how many of the components are actually in it. Read the two figures together, and read them as a summary of a bimodal sample rather than as a typical PR. The components split cleanly into two clusters — four shipped in well under an hour (PR #2 landed three at once in 36 minutes; Tab took 41), and four sat open overnight (16–19 hours, PR #1 and Badge). With the sample split evenly between them, the median falls in the empty gap between the clusters and lands close to the mean, so it is NOT doing its usual job of resisting the outliers here — no component in the set actually took anywhere near either figure. The per-component cycleTimeSeconds values below are the honest read.",
@@ -77,7 +77,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-badge--docs",
       "pr": {
         "number": 22,
@@ -143,7 +143,7 @@
           "resolvedAt": "2026-08-05"
         }
       ],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-button--docs",
       "pr": {
         "number": 1,
@@ -192,7 +192,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-buttonclose--docs",
       "pr": {
         "number": 87,
@@ -241,7 +241,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-cardevent--docs",
       "pr": {
         "number": 87,
@@ -290,7 +290,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-cardproducer--docs",
       "pr": {
         "number": 87,
@@ -339,7 +339,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-cardquote--docs",
       "pr": {
         "number": 87,
@@ -388,7 +388,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-checkbox--docs",
       "pr": {
         "number": 2,
@@ -448,7 +448,7 @@
       "openWarnCount": 1,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-icon--docs",
       "pr": {
         "number": 87,
@@ -497,7 +497,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-input--docs",
       "pr": {
         "number": 1,
@@ -546,7 +546,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-modal--docs",
       "pr": {
         "number": 87,
@@ -595,7 +595,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-select--docs",
       "pr": {
         "number": 2,
@@ -653,7 +653,7 @@
           "resolvedAt": "2026-08-05"
         }
       ],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-tab--docs",
       "pr": {
         "number": 62,
@@ -702,7 +702,7 @@
       "openWarnCount": 0,
       "fixedCount": 0,
       "history": [],
-      "lastValidated": "2026-09-29",
+      "lastValidated": "2026-09-30",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-textarea--docs",
       "pr": {
         "number": 2,
