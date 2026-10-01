@@ -67,6 +67,7 @@ function kindOf(values: string[]): Kind {
   return unique <= Math.max(30, present.length * 0.05) ? 'category' : 'text';
 }
 
+const STORE_KEY = 'runabout-working-session-data';
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -107,7 +108,24 @@ export interface WorkingSessionProps {
 }
 
 export function WorkingSession({ csv = sampleCsv }: WorkingSessionProps) {
-  const [source, setSource] = useState({ name: 'working-session-data.csv', text: csv });
+  // A dropped CSV is kept in this browser's localStorage only — never written
+  // to the repo — so it survives every hot reload while the prototype is
+  // being changed live. "Use sample data" clears it.
+  const [source, setSource] = useState<{ name: string; text: string }>(() => {
+    try {
+      const kept = localStorage.getItem(STORE_KEY);
+      if (kept) return JSON.parse(kept);
+    } catch { /* storage unavailable: fall back to the sample */ }
+    return { name: 'working-session-data.csv', text: csv };
+  });
+  const loadData = (next: { name: string; text: string } | null) => {
+    try {
+      if (next) localStorage.setItem(STORE_KEY, JSON.stringify(next));
+      else localStorage.removeItem(STORE_KEY);
+    } catch { /* too large or unavailable: still show it for this load */ }
+    setSource(next ?? { name: 'working-session-data.csv', text: csv });
+    setFilters({});
+  };
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [dragging, setDragging] = useState(false);
 
@@ -149,7 +167,7 @@ export function WorkingSession({ csv = sampleCsv }: WorkingSessionProps) {
   const onDrop = (e: DragEvent) => {
     e.preventDefault(); setDragging(false);
     const file = e.dataTransfer.files[0];
-    if (file) file.text().then((text) => { setSource({ name: file.name, text }); setFilters({}); });
+    if (file) file.text().then((text) => loadData({ name: file.name, text }));
   };
 
   // Table: the columns that matter first (date, group, outcome), then the rest.
@@ -174,6 +192,9 @@ export function WorkingSession({ csv = sampleCsv }: WorkingSessionProps) {
           </div>
           <p className="font-manrope text-caption text-text-secondary">
             {source.name} · {rows.length.toLocaleString()} rows · drop a CSV anywhere to swap the data
+            {source.name !== 'working-session-data.csv' && (
+              <> · <button type="button" className="underline text-text-link" onClick={() => loadData(null)}>Use sample data</button></>
+            )}
           </p>
         </header>
 
