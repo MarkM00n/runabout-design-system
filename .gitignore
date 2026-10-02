@@ -33,3 +33,8 @@ storybook-static
 .claude/*
 !.claude/skills/
 !.claude/skills/**
+
+# Working session: their data and generated output never get committed
+working-session/data/*
+!working-session/data/README.md
+working-session/out/

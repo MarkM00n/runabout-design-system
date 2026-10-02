@@ -1,0 +1,1755 @@
+booking_id,date,weekday,start_time,duration_mins,building,space,space_type,capacity,tenant,attendees,status,booked_days_ahead,credits_used
+BK10001,2026-06-01,Mon,16:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,2,Completed,0,0.9
+BK10002,2026-06-01,Mon,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,2,Completed,1,1.8
+BK10003,2026-06-01,Mon,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,21,3.8
+BK10004,2026-06-01,Mon,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,9,Completed,0,3.8
+BK10005,2026-06-01,Mon,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,3,Completed,1,1.0
+BK10006,2026-06-01,Mon,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,22,Completed,45,45.0
+BK10007,2026-06-01,Mon,11:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,57,Completed,21,45.0
+BK10008,2026-06-01,Mon,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,39,Completed,30,60.0
+BK10009,2026-06-01,Mon,15:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,Cancelled,3,2.5
+BK10010,2026-06-01,Mon,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,15,Completed,21,5.0
+BK10011,2026-06-01,Mon,11:00,120,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,10,Completed,7,7.5
+BK10012,2026-06-01,Mon,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,24,Completed,0,1.9
+BK10013,2026-06-01,Mon,16:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,5,2.6
+BK10014,2026-06-01,Mon,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,21,1.8
+BK10015,2026-06-01,Mon,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,,No-show,1,1.8
+BK10016,2026-06-01,Mon,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,7,1.8
+BK10017,2026-06-01,Mon,13:00,90,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,8,Completed,14,4.7
+BK10018,2026-06-01,Mon,10:00,120,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,9,Completed,5,6.2
+BK10019,2026-06-01,Mon,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,,Cancelled,21,1.0
+BK10020,2026-06-01,Mon,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,2,Completed,3,1.0
+BK10021,2026-06-01,Mon,15:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,3,Completed,14,1.9
+BK10022,2026-06-01,Mon,08:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,No-show,45,56.2
+BK10023,2026-06-01,Mon,08:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,23,Completed,14,37.5
+BK10024,2026-06-01,Mon,09:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,70,Completed,14,37.5
+BK10025,2026-06-02,Tue,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,21,2.6
+BK10026,2026-06-02,Tue,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,7,1.8
+BK10027,2026-06-02,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,No-show,3,1.8
+BK10028,2026-06-02,Tue,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,9,Completed,1,1.8
+BK10029,2026-06-02,Tue,09:00,120,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,9,Completed,2,5.0
+BK10030,2026-06-02,Tue,16:00,30,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,11,Completed,1,1.2
+BK10031,2026-06-02,Tue,11:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,9,Completed,21,2.5
+BK10032,2026-06-02,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,13,Completed,7,2.5
+BK10033,2026-06-02,Tue,11:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,1,Completed,7,2.0
+BK10034,2026-06-02,Tue,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,4,Completed,3,1.0
+BK10035,2026-06-02,Tue,10:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,7,0.5
+BK10036,2026-06-02,Tue,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,81,Completed,14,60.0
+BK10037,2026-06-02,Tue,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,91,Completed,30,30.0
+BK10038,2026-06-02,Tue,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,15,Completed,1,5.0
+BK10039,2026-06-02,Tue,09:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,9,Completed,1,2.5
+BK10040,2026-06-02,Tue,15:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,35,Completed,14,7.5
+BK10041,2026-06-02,Tue,09:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,3,Completed,1,2.5
+BK10042,2026-06-02,Tue,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,,Cancelled,1,5.0
+BK10043,2026-06-02,Tue,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,9,Completed,5,5.6
+BK10044,2026-06-02,Tue,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,22,Completed,21,1.9
+BK10045,2026-06-02,Tue,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,20,Completed,14,3.8
+BK10046,2026-06-02,Tue,14:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,21,Completed,1,1.9
+BK10047,2026-06-02,Tue,09:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,0,0.8
+BK10048,2026-06-02,Tue,14:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,,Cancelled,0,0.2
+BK10049,2026-06-02,Tue,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,2,Completed,21,0.5
+BK10050,2026-06-02,Tue,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,6,Completed,14,2.6
+BK10051,2026-06-02,Tue,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,11,Completed,1,2.6
+BK10052,2026-06-02,Tue,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,5,Completed,0,1.8
+BK10053,2026-06-02,Tue,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,0,1.8
+BK10054,2026-06-02,Tue,09:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,1,3.5
+BK10055,2026-06-02,Tue,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,18,Completed,1,3.1
+BK10056,2026-06-02,Tue,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,10,Completed,1,6.2
+BK10057,2026-06-02,Tue,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,,Cancelled,14,3.1
+BK10058,2026-06-02,Tue,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,4,Completed,21,1.0
+BK10059,2026-06-02,Tue,10:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,6,Completed,1,1.5
+BK10060,2026-06-02,Tue,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,1,Completed,1,1.2
+BK10061,2026-06-02,Tue,13:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,6,Completed,14,2.5
+BK10062,2026-06-02,Tue,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,64,Completed,21,75.0
+BK10063,2026-06-02,Tue,13:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,46,Completed,14,37.5
+BK10064,2026-06-03,Wed,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,5,Completed,5,0.9
+BK10065,2026-06-03,Wed,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,3,Completed,1,2.6
+BK10066,2026-06-03,Wed,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,4,Completed,14,0.9
+BK10067,2026-06-03,Wed,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,8,Completed,0,2.5
+BK10068,2026-06-03,Wed,10:00,30,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,2,Completed,1,1.2
+BK10069,2026-06-03,Wed,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,4,Completed,2,1.0
+BK10070,2026-06-03,Wed,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,3,Completed,3,1.0
+BK10071,2026-06-03,Wed,08:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,1,Completed,0,1.0
+BK10072,2026-06-03,Wed,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,,Cancelled,21,60.0
+BK10073,2026-06-03,Wed,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,48,Completed,30,45.0
+BK10074,2026-06-03,Wed,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,Cancelled,45,30.0
+BK10075,2026-06-03,Wed,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,No-show,14,45.0
+BK10076,2026-06-03,Wed,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,Cancelled,2,5.0
+BK10077,2026-06-03,Wed,16:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,7,Completed,21,5.0
+BK10078,2026-06-03,Wed,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,23,Completed,21,5.0
+BK10079,2026-06-03,Wed,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,12,Completed,14,7.5
+BK10080,2026-06-03,Wed,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,,No-show,0,1.9
+BK10081,2026-06-03,Wed,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,7,1.0
+BK10082,2026-06-03,Wed,14:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,2,Completed,0,0.2
+BK10083,2026-06-03,Wed,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,3,Completed,7,2.6
+BK10084,2026-06-03,Wed,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,9,Completed,1,0.9
+BK10085,2026-06-03,Wed,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,7,Completed,5,3.5
+BK10086,2026-06-03,Wed,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,10,Completed,21,1.8
+BK10087,2026-06-03,Wed,16:00,120,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,7,Completed,2,6.2
+BK10088,2026-06-03,Wed,15:00,90,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,,Cancelled,2,4.7
+BK10089,2026-06-03,Wed,16:00,30,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,14,Completed,14,1.6
+BK10090,2026-06-03,Wed,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,0,1.5
+BK10091,2026-06-03,Wed,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,1,Completed,5,1.0
+BK10092,2026-06-03,Wed,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,2,Completed,14,1.2
+BK10093,2026-06-03,Wed,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,2,Completed,3,1.2
+BK10094,2026-06-03,Wed,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,14,Completed,45,56.2
+BK10095,2026-06-03,Wed,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,33,Completed,14,75.0
+BK10096,2026-06-03,Wed,11:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,101,Completed,14,56.2
+BK10097,2026-06-04,Thu,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,5,Completed,21,1.8
+BK10098,2026-06-04,Thu,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,11,Completed,2,1.8
+BK10099,2026-06-04,Thu,09:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,9,Completed,1,0.9
+BK10100,2026-06-04,Thu,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,5,Completed,3,1.8
+BK10101,2026-06-04,Thu,13:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,9,Completed,14,0.9
+BK10102,2026-06-04,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,8,Completed,5,1.8
+BK10103,2026-06-04,Thu,16:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,8,Completed,5,2.5
+BK10104,2026-06-04,Thu,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,2,Completed,1,1.0
+BK10105,2026-06-04,Thu,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,,Cancelled,1,1.0
+BK10106,2026-06-04,Thu,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,3,Completed,7,1.0
+BK10107,2026-06-04,Thu,14:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,1,1.0
+BK10108,2026-06-04,Thu,11:00,90,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,21,1.5
+BK10109,2026-06-04,Thu,10:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,4,Completed,14,0.5
+BK10110,2026-06-04,Thu,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,No-show,21,45.0
+BK10111,2026-06-04,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,21,Completed,0,5.0
+BK10112,2026-06-04,Thu,09:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,15,Completed,7,2.5
+BK10113,2026-06-04,Thu,08:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,15,Completed,1,2.5
+BK10114,2026-06-04,Thu,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,9,Completed,7,5.0
+BK10115,2026-06-04,Thu,09:00,90,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,18,Completed,1,5.6
+BK10116,2026-06-04,Thu,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,15,Completed,2,1.9
+BK10117,2026-06-04,Thu,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,No-show,2,7.5
+BK10118,2026-06-04,Thu,14:00,90,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,8,Completed,21,5.6
+BK10119,2026-06-04,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,3,Completed,1,0.5
+BK10120,2026-06-04,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,1,Completed,2,0.5
+BK10121,2026-06-04,Thu,08:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,,Cancelled,1,0.2
+BK10122,2026-06-04,Thu,16:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,3,Completed,3,0.5
+BK10123,2026-06-04,Thu,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,,Cancelled,2,1.8
+BK10124,2026-06-04,Thu,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,4,Completed,1,0.9
+BK10125,2026-06-04,Thu,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,,No-show,21,1.8
+BK10126,2026-06-04,Thu,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,4,Completed,0,2.6
+BK10127,2026-06-04,Thu,13:00,30,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,7,Completed,0,1.6
+BK10128,2026-06-04,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,10,Completed,0,3.1
+BK10129,2026-06-04,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,,Cancelled,5,3.1
+BK10130,2026-06-04,Thu,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,,Cancelled,2,1.0
+BK10131,2026-06-04,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,3,Completed,1,1.0
+BK10132,2026-06-04,Thu,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,26,Completed,30,56.2
+BK10133,2026-06-04,Thu,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,76,Completed,14,37.5
+BK10134,2026-06-04,Thu,13:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,61,Completed,30,37.5
+BK10135,2026-06-04,Thu,11:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,51,Completed,30,56.2
+BK10136,2026-06-05,Fri,16:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,,No-show,7,0.9
+BK10137,2026-06-05,Fri,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,,No-show,7,1.8
+BK10138,2026-06-05,Fri,09:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,9,Completed,1,0.9
+BK10139,2026-06-05,Fri,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,5,Completed,21,1.8
+BK10140,2026-06-05,Fri,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,5,Completed,0,3.8
+BK10141,2026-06-05,Fri,16:00,30,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,8,Completed,5,1.2
+BK10142,2026-06-05,Fri,10:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,2,Completed,7,1.5
+BK10143,2026-06-05,Fri,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,2,Completed,1,1.0
+BK10144,2026-06-05,Fri,14:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,5,Completed,21,2.0
+BK10145,2026-06-05,Fri,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,2,Completed,1,1.0
+BK10146,2026-06-05,Fri,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,31,Completed,21,60.0
+BK10147,2026-06-05,Fri,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,63,Completed,21,30.0
+BK10148,2026-06-05,Fri,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,5,Completed,0,5.0
+BK10149,2026-06-05,Fri,10:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,34,Completed,3,7.5
+BK10150,2026-06-05,Fri,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,,No-show,21,3.8
+BK10151,2026-06-05,Fri,15:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,1,Completed,0,0.5
+BK10152,2026-06-05,Fri,15:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,7,Completed,3,3.5
+BK10153,2026-06-05,Fri,13:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,,Cancelled,0,3.5
+BK10154,2026-06-05,Fri,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,Cancelled,5,2.6
+BK10155,2026-06-05,Fri,16:00,90,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,6,Completed,5,4.7
+BK10156,2026-06-05,Fri,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,22,Completed,0,3.1
+BK10157,2026-06-05,Fri,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,3,Completed,5,1.0
+BK10158,2026-06-05,Fri,13:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,8,Completed,5,1.2
+BK10159,2026-06-05,Fri,09:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,4,Completed,1,0.6
+BK10160,2026-06-05,Fri,09:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,96,Completed,21,75.0
+BK10161,2026-06-05,Fri,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,,No-show,45,56.2
+BK10162,2026-06-08,Mon,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,3,Completed,7,1.8
+BK10163,2026-06-08,Mon,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,21,0.9
+BK10164,2026-06-08,Mon,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,8,Completed,21,3.5
+BK10165,2026-06-08,Mon,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,5,Completed,1,3.8
+BK10166,2026-06-08,Mon,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,4,Completed,1,2.5
+BK10167,2026-06-08,Mon,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,13,Completed,3,3.8
+BK10168,2026-06-08,Mon,14:00,120,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,5,Completed,1,2.0
+BK10169,2026-06-08,Mon,13:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,Cancelled,45,45.0
+BK10170,2026-06-08,Mon,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,48,Completed,45,30.0
+BK10171,2026-06-08,Mon,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,7,Completed,0,5.0
+BK10172,2026-06-08,Mon,08:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,9,Completed,14,10.0
+BK10173,2026-06-08,Mon,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,18,Completed,1,1.9
+BK10174,2026-06-08,Mon,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,No-show,7,1.9
+BK10175,2026-06-08,Mon,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,,Cancelled,3,1.0
+BK10176,2026-06-08,Mon,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,3,Completed,7,1.8
+BK10177,2026-06-08,Mon,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,2,1.8
+BK10178,2026-06-08,Mon,15:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,1,2.6
+BK10179,2026-06-08,Mon,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,7,Completed,5,1.8
+BK10180,2026-06-08,Mon,09:00,90,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,4,Completed,7,4.7
+BK10181,2026-06-08,Mon,14:00,90,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,12,Completed,14,4.7
+BK10182,2026-06-08,Mon,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,3,1.0
+BK10183,2026-06-08,Mon,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,3,Completed,1,1.0
+BK10184,2026-06-08,Mon,15:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,6,Completed,2,2.0
+BK10185,2026-06-08,Mon,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,111,Completed,30,75.0
+BK10186,2026-06-08,Mon,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,,No-show,21,75.0
+BK10187,2026-06-08,Mon,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,19,Completed,30,75.0
+BK10188,2026-06-08,Mon,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,57,Completed,45,37.5
+BK10189,2026-06-09,Tue,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,Cancelled,1,3.5
+BK10190,2026-06-09,Tue,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,0,1.8
+BK10191,2026-06-09,Tue,16:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,10,Completed,14,2.6
+BK10192,2026-06-09,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,14,1.8
+BK10193,2026-06-09,Tue,08:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,,Cancelled,0,2.5
+BK10194,2026-06-09,Tue,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,9,Completed,1,3.8
+BK10195,2026-06-09,Tue,14:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,10,Completed,1,3.8
+BK10196,2026-06-09,Tue,16:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,7,Completed,0,0.5
+BK10197,2026-06-09,Tue,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,,No-show,7,1.0
+BK10198,2026-06-09,Tue,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,62,Completed,30,30.0
+BK10199,2026-06-09,Tue,16:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,No-show,14,60.0
+BK10200,2026-06-09,Tue,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,90,Completed,30,45.0
+BK10201,2026-06-09,Tue,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,41,Completed,14,45.0
+BK10202,2026-06-09,Tue,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,33,Completed,2,5.0
+BK10203,2026-06-09,Tue,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,20,Completed,1,5.0
+BK10204,2026-06-09,Tue,09:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,4,Completed,1,2.5
+BK10205,2026-06-09,Tue,11:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,,Cancelled,0,5.0
+BK10206,2026-06-09,Tue,09:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,5,Completed,14,10.0
+BK10207,2026-06-09,Tue,16:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,Cancelled,1,2.5
+BK10208,2026-06-09,Tue,16:00,30,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,20,Completed,1,1.9
+BK10209,2026-06-09,Tue,09:00,120,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,8,Completed,2,7.5
+BK10210,2026-06-09,Tue,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,,Cancelled,3,3.8
+BK10211,2026-06-09,Tue,11:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,2,Completed,0,0.8
+BK10212,2026-06-09,Tue,13:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,0,0.2
+BK10213,2026-06-09,Tue,14:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,2,0.8
+BK10214,2026-06-09,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,7,1.8
+BK10215,2026-06-09,Tue,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,21,1.8
+BK10216,2026-06-09,Tue,11:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,4,Completed,1,2.6
+BK10217,2026-06-09,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,3,Completed,14,1.8
+BK10218,2026-06-09,Tue,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,8,Completed,5,6.2
+BK10219,2026-06-09,Tue,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,18,Completed,2,3.1
+BK10220,2026-06-09,Tue,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,18,Completed,1,3.1
+BK10221,2026-06-09,Tue,15:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,5,Completed,3,2.0
+BK10222,2026-06-09,Tue,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,3,1.0
+BK10223,2026-06-09,Tue,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,3,Completed,1,1.0
+BK10224,2026-06-09,Tue,11:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,5,Completed,2,1.2
+BK10225,2026-06-09,Tue,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,86,Completed,30,37.5
+BK10226,2026-06-09,Tue,09:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,51,Completed,14,37.5
+BK10227,2026-06-10,Wed,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,3,Completed,2,1.8
+BK10228,2026-06-10,Wed,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,4,Completed,5,1.8
+BK10229,2026-06-10,Wed,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,1,Completed,14,0.9
+BK10230,2026-06-10,Wed,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,6,Completed,5,1.8
+BK10231,2026-06-10,Wed,08:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,4,Completed,21,3.5
+BK10232,2026-06-10,Wed,10:00,120,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,11,Completed,0,5.0
+BK10233,2026-06-10,Wed,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,6,Completed,1,2.5
+BK10234,2026-06-10,Wed,13:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,4,Completed,5,2.0
+BK10235,2026-06-10,Wed,13:00,240,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,65,Completed,14,60.0
+BK10236,2026-06-10,Wed,13:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,90,Completed,21,45.0
+BK10237,2026-06-10,Wed,14:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,23,Completed,30,45.0
+BK10238,2026-06-10,Wed,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,36,Completed,0,5.0
+BK10239,2026-06-10,Wed,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,15,Completed,5,3.8
+BK10240,2026-06-10,Wed,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,5,Completed,3,1.9
+BK10241,2026-06-10,Wed,10:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,1,Completed,5,1.0
+BK10242,2026-06-10,Wed,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,1,0.5
+BK10243,2026-06-10,Wed,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,6,Completed,1,3.5
+BK10244,2026-06-10,Wed,11:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,7,Completed,2,3.5
+BK10245,2026-06-10,Wed,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,3,Completed,1,3.5
+BK10246,2026-06-10,Wed,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,5,Completed,1,3.5
+BK10247,2026-06-10,Wed,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,7,Completed,7,3.1
+BK10248,2026-06-10,Wed,13:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,2,1.5
+BK10249,2026-06-10,Wed,13:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,2,Completed,1,0.5
+BK10250,2026-06-10,Wed,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,4,Completed,1,1.0
+BK10251,2026-06-10,Wed,10:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,2,Completed,1,1.9
+BK10252,2026-06-10,Wed,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,6,Completed,14,1.2
+BK10253,2026-06-10,Wed,09:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,7,Completed,14,1.9
+BK10254,2026-06-10,Wed,16:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,39,Completed,14,56.2
+BK10255,2026-06-10,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,46,Completed,14,37.5
+BK10256,2026-06-11,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,3,1.8
+BK10257,2026-06-11,Thu,14:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,6,Completed,3,3.5
+BK10258,2026-06-11,Thu,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,19,Completed,3,2.5
+BK10259,2026-06-11,Thu,16:00,120,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,2,Completed,3,5.0
+BK10260,2026-06-11,Thu,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,,Cancelled,5,3.8
+BK10261,2026-06-11,Thu,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,3,Completed,3,1.0
+BK10262,2026-06-11,Thu,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,3,Completed,7,1.0
+BK10263,2026-06-11,Thu,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,42,Completed,30,60.0
+BK10264,2026-06-11,Thu,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,68,Completed,14,45.0
+BK10265,2026-06-11,Thu,13:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,18,Completed,0,10.0
+BK10266,2026-06-11,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,8,Completed,7,5.0
+BK10267,2026-06-11,Thu,15:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,6,Completed,21,10.0
+BK10268,2026-06-11,Thu,08:00,120,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,,No-show,1,7.5
+BK10269,2026-06-11,Thu,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,18,Completed,1,3.8
+BK10270,2026-06-11,Thu,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,17,Completed,0,5.6
+BK10271,2026-06-11,Thu,11:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,14,0.2
+BK10272,2026-06-11,Thu,08:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,5,0.2
+BK10273,2026-06-11,Thu,13:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,5,2.6
+BK10274,2026-06-11,Thu,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,3,Completed,1,0.9
+BK10275,2026-06-11,Thu,16:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,5,Completed,0,0.9
+BK10276,2026-06-11,Thu,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,10,Completed,2,1.8
+BK10277,2026-06-11,Thu,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,10,Completed,3,3.1
+BK10278,2026-06-11,Thu,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,15,Completed,7,6.2
+BK10279,2026-06-11,Thu,14:00,120,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,19,Completed,0,6.2
+BK10280,2026-06-11,Thu,08:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,2,2.0
+BK10281,2026-06-11,Thu,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,6,Completed,3,1.0
+BK10282,2026-06-11,Thu,11:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,6,Completed,1,1.9
+BK10283,2026-06-11,Thu,16:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,76,Completed,30,37.5
+BK10284,2026-06-11,Thu,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,22,Completed,14,56.2
+BK10285,2026-06-11,Thu,09:00,240,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,,No-show,45,75.0
+BK10286,2026-06-12,Fri,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,2,1.8
+BK10287,2026-06-12,Fri,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,0,1.8
+BK10288,2026-06-12,Fri,15:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,6,Completed,0,2.5
+BK10289,2026-06-12,Fri,14:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,,Cancelled,1,1.5
+BK10290,2026-06-12,Fri,10:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,1,Completed,1,1.5
+BK10291,2026-06-12,Fri,08:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Northwind Capital,3,Completed,3,1.0
+BK10292,2026-06-12,Fri,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,45,Completed,45,30.0
+BK10293,2026-06-12,Fri,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,7,Completed,21,5.0
+BK10294,2026-06-12,Fri,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,18,Completed,7,3.8
+BK10295,2026-06-12,Fri,16:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,2,Completed,0,0.5
+BK10296,2026-06-12,Fri,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,1,1.8
+BK10297,2026-06-12,Fri,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,7,Completed,2,1.8
+BK10298,2026-06-12,Fri,13:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,11,Completed,0,0.9
+BK10299,2026-06-12,Fri,13:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,1,Completed,7,0.5
+BK10300,2026-06-12,Fri,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,5,Completed,0,0.5
+BK10301,2026-06-12,Fri,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,14,1.0
+BK10302,2026-06-12,Fri,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,3,Completed,1,1.0
+BK10303,2026-06-12,Fri,08:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,8,Completed,0,1.2
+BK10304,2026-06-12,Fri,08:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,94,Completed,14,56.2
+BK10305,2026-06-15,Mon,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,7,Completed,3,2.6
+BK10306,2026-06-15,Mon,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,7,1.8
+BK10307,2026-06-15,Mon,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,10,Completed,1,1.8
+BK10308,2026-06-15,Mon,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,,Cancelled,21,1.8
+BK10309,2026-06-15,Mon,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,4,Completed,5,5.0
+BK10310,2026-06-15,Mon,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,3,Completed,3,1.0
+BK10311,2026-06-15,Mon,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,2,Completed,7,1.0
+BK10312,2026-06-15,Mon,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,46,Completed,30,45.0
+BK10313,2026-06-15,Mon,11:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,,No-show,7,5.0
+BK10314,2026-06-15,Mon,08:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,22,Completed,2,7.5
+BK10315,2026-06-15,Mon,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,18,Completed,2,3.8
+BK10316,2026-06-15,Mon,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,6,Completed,1,3.8
+BK10317,2026-06-15,Mon,08:00,120,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,26,Completed,0,7.5
+BK10318,2026-06-15,Mon,14:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,14,0.8
+BK10319,2026-06-15,Mon,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,1,0.5
+BK10320,2026-06-15,Mon,10:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,1,0.8
+BK10321,2026-06-15,Mon,09:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,10,Completed,1,0.9
+BK10322,2026-06-15,Mon,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,7,Completed,1,1.8
+BK10323,2026-06-15,Mon,08:00,30,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,14,Completed,0,1.6
+BK10324,2026-06-15,Mon,10:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,,No-show,5,2.0
+BK10325,2026-06-15,Mon,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,7,Completed,21,1.2
+BK10326,2026-06-15,Mon,09:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,54,Completed,14,75.0
+BK10327,2026-06-15,Mon,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,85,Completed,14,56.2
+BK10328,2026-06-16,Tue,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,11,Completed,0,0.9
+BK10329,2026-06-16,Tue,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,3,Completed,1,2.6
+BK10330,2026-06-16,Tue,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,3,Completed,0,1.8
+BK10331,2026-06-16,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,2,Completed,7,2.5
+BK10332,2026-06-16,Tue,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,,Cancelled,0,2.5
+BK10333,2026-06-16,Tue,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,,No-show,0,2.5
+BK10334,2026-06-16,Tue,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,9,Completed,1,2.5
+BK10335,2026-06-16,Tue,16:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,,Cancelled,0,3.8
+BK10336,2026-06-16,Tue,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,4,Completed,0,1.0
+BK10337,2026-06-16,Tue,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,21,1.0
+BK10338,2026-06-16,Tue,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,5,Completed,1,1.0
+BK10339,2026-06-16,Tue,10:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Arcadia Legal,4,Completed,14,1.0
+BK10340,2026-06-16,Tue,09:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,3,Completed,0,0.5
+BK10341,2026-06-16,Tue,10:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,3,Completed,7,1.0
+BK10342,2026-06-16,Tue,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,77,Completed,30,30.0
+BK10343,2026-06-16,Tue,16:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,77,Completed,14,60.0
+BK10344,2026-06-16,Tue,10:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,,No-show,21,1.9
+BK10345,2026-06-16,Tue,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,5,Completed,14,3.8
+BK10346,2026-06-16,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,23,Completed,0,3.8
+BK10347,2026-06-16,Tue,14:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,2,Completed,1,0.8
+BK10348,2026-06-16,Tue,14:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,1,Completed,7,1.0
+BK10349,2026-06-16,Tue,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,4,Completed,14,0.9
+BK10350,2026-06-16,Tue,13:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,1,2.6
+BK10351,2026-06-16,Tue,11:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,5,Completed,1,2.6
+BK10352,2026-06-16,Tue,09:00,90,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,4,Completed,0,4.7
+BK10353,2026-06-16,Tue,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,16,Completed,0,3.1
+BK10354,2026-06-16,Tue,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,7,Completed,3,1.0
+BK10355,2026-06-16,Tue,09:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,2,Completed,14,2.0
+BK10356,2026-06-16,Tue,09:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,1,2.0
+BK10357,2026-06-16,Tue,13:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,1,Completed,21,0.5
+BK10358,2026-06-16,Tue,10:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,5,Completed,7,1.9
+BK10359,2026-06-16,Tue,10:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,3,Completed,14,2.5
+BK10360,2026-06-16,Tue,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,78,Completed,45,56.2
+BK10361,2026-06-16,Tue,13:00,180,Southbank Place,Level 7 Event Hall,Event,150,Meridian Engineering,48,Completed,45,56.2
+BK10362,2026-06-16,Tue,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,26,Completed,21,37.5
+BK10363,2026-06-16,Tue,13:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,15,Completed,30,37.5
+BK10364,2026-06-17,Wed,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,8,Completed,3,2.6
+BK10365,2026-06-17,Wed,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,11,Completed,0,3.8
+BK10366,2026-06-17,Wed,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,4,Completed,14,2.5
+BK10367,2026-06-17,Wed,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,3,Completed,21,1.0
+BK10368,2026-06-17,Wed,11:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,3,Completed,3,2.0
+BK10369,2026-06-17,Wed,11:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,,No-show,2,0.5
+BK10370,2026-06-17,Wed,14:00,180,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,61,Completed,21,45.0
+BK10371,2026-06-17,Wed,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,18,Completed,14,30.0
+BK10372,2026-06-17,Wed,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,22,Completed,5,5.0
+BK10373,2026-06-17,Wed,16:00,30,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,8,Completed,21,1.9
+BK10374,2026-06-17,Wed,10:00,120,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,22,Completed,5,7.5
+BK10375,2026-06-17,Wed,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,Cancelled,0,1.9
+BK10376,2026-06-17,Wed,09:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,0,0.8
+BK10377,2026-06-17,Wed,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,3,Completed,1,1.8
+BK10378,2026-06-17,Wed,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,7,Completed,7,1.8
+BK10379,2026-06-17,Wed,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,1,Completed,21,1.8
+BK10380,2026-06-17,Wed,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,4,Completed,0,3.1
+BK10381,2026-06-17,Wed,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,1,Completed,21,1.0
+BK10382,2026-06-17,Wed,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,7,Completed,5,1.0
+BK10383,2026-06-17,Wed,16:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,4,Completed,7,2.0
+BK10384,2026-06-17,Wed,08:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,2,Completed,1,1.2
+BK10385,2026-06-17,Wed,08:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,,No-show,14,1.2
+BK10386,2026-06-17,Wed,16:00,120,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,126,Completed,21,37.5
+BK10387,2026-06-17,Wed,13:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,62,Completed,14,37.5
+BK10388,2026-06-17,Wed,11:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,44,Completed,21,37.5
+BK10389,2026-06-18,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,6,Completed,3,1.8
+BK10390,2026-06-18,Thu,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,7,3.5
+BK10391,2026-06-18,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,4,Completed,2,1.8
+BK10392,2026-06-18,Thu,11:00,90,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,,No-show,0,3.8
+BK10393,2026-06-18,Thu,16:00,90,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,4,Completed,5,3.8
+BK10394,2026-06-18,Thu,08:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,4,Completed,5,2.0
+BK10395,2026-06-18,Thu,09:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,2,Completed,0,2.0
+BK10396,2026-06-18,Thu,14:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Meridian Engineering,,No-show,2,1.0
+BK10397,2026-06-18,Thu,09:00,120,Collins Arch,Level 12 Meeting Room B,Meeting,8,Oakline Insurance,3,Completed,7,2.0
+BK10398,2026-06-18,Thu,16:00,240,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,84,Completed,30,60.0
+BK10399,2026-06-18,Thu,16:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,66,Completed,45,60.0
+BK10400,2026-06-18,Thu,11:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,22,Completed,14,60.0
+BK10401,2026-06-18,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,24,Completed,0,5.0
+BK10402,2026-06-18,Thu,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,15,Completed,1,3.8
+BK10403,2026-06-18,Thu,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,17,Completed,21,3.8
+BK10404,2026-06-18,Thu,11:00,30,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,6,Completed,21,1.9
+BK10405,2026-06-18,Thu,10:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,1,Completed,3,1.0
+BK10406,2026-06-18,Thu,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,21,0.5
+BK10407,2026-06-18,Thu,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,6,Completed,5,1.8
+BK10408,2026-06-18,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,7,Completed,1,1.8
+BK10409,2026-06-18,Thu,13:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,6,Completed,1,3.5
+BK10410,2026-06-18,Thu,08:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,9,Completed,1,3.5
+BK10411,2026-06-18,Thu,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,7,Completed,3,3.1
+BK10412,2026-06-18,Thu,13:00,30,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,,No-show,7,1.6
+BK10413,2026-06-18,Thu,16:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,,Cancelled,7,3.1
+BK10414,2026-06-18,Thu,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,,No-show,1,6.2
+BK10415,2026-06-18,Thu,15:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,1,1.5
+BK10416,2026-06-18,Thu,16:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,2,Completed,5,2.0
+BK10417,2026-06-18,Thu,10:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,,Cancelled,2,0.6
+BK10418,2026-06-18,Thu,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,2,Completed,0,1.2
+BK10419,2026-06-18,Thu,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,,Cancelled,45,56.2
+BK10420,2026-06-18,Thu,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,89,Completed,14,37.5
+BK10421,2026-06-19,Fri,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,0,1.8
+BK10422,2026-06-19,Fri,16:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,,Cancelled,0,2.0
+BK10423,2026-06-19,Fri,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,43,Completed,30,45.0
+BK10424,2026-06-19,Fri,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,No-show,30,30.0
+BK10425,2026-06-19,Fri,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,6,Completed,5,5.0
+BK10426,2026-06-19,Fri,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,17,Completed,2,5.0
+BK10427,2026-06-19,Fri,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,5,1.0
+BK10428,2026-06-19,Fri,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,21,1.8
+BK10429,2026-06-19,Fri,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,3,Completed,14,1.8
+BK10430,2026-06-19,Fri,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,2,Completed,1,1.8
+BK10431,2026-06-19,Fri,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,8,Completed,3,3.1
+BK10432,2026-06-19,Fri,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,10,Completed,5,3.1
+BK10433,2026-06-19,Fri,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,6,Completed,0,1.0
+BK10434,2026-06-19,Fri,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,4,Completed,5,1.0
+BK10435,2026-06-19,Fri,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,4,Completed,3,1.0
+BK10436,2026-06-19,Fri,14:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,1,Completed,7,2.0
+BK10437,2026-06-19,Fri,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,69,Completed,45,56.2
+BK10438,2026-06-22,Mon,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,4,Completed,0,0.9
+BK10439,2026-06-22,Mon,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,2,1.8
+BK10440,2026-06-22,Mon,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,9,Completed,21,2.5
+BK10441,2026-06-22,Mon,15:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,5,Completed,1,0.5
+BK10442,2026-06-22,Mon,09:00,120,Collins Arch,Level 12 Meeting Room B,Meeting,8,Northwind Capital,7,Completed,5,2.0
+BK10443,2026-06-22,Mon,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,No-show,14,30.0
+BK10444,2026-06-22,Mon,08:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,22,Completed,0,2.5
+BK10445,2026-06-22,Mon,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,22,Completed,1,3.8
+BK10446,2026-06-22,Mon,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,,No-show,3,1.9
+BK10447,2026-06-22,Mon,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,1,Completed,14,0.5
+BK10448,2026-06-22,Mon,11:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,No-show,14,1.0
+BK10449,2026-06-22,Mon,11:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,,No-show,1,2.6
+BK10450,2026-06-22,Mon,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,5,Completed,0,3.1
+BK10451,2026-06-22,Mon,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,2,Completed,5,1.0
+BK10452,2026-06-22,Mon,10:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,9,Completed,0,1.9
+BK10453,2026-06-23,Tue,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,0,2.6
+BK10454,2026-06-23,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,7,Completed,1,1.8
+BK10455,2026-06-23,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,4,Completed,14,1.8
+BK10456,2026-06-23,Tue,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,10,Completed,3,1.8
+BK10457,2026-06-23,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,6,Completed,3,1.8
+BK10458,2026-06-23,Tue,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,6,Completed,1,1.8
+BK10459,2026-06-23,Tue,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,2,Completed,1,2.6
+BK10460,2026-06-23,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,6,Completed,21,2.5
+BK10461,2026-06-23,Tue,14:00,90,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,16,Completed,0,3.8
+BK10462,2026-06-23,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,10,Completed,2,2.5
+BK10463,2026-06-23,Tue,09:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,1,Completed,14,2.0
+BK10464,2026-06-23,Tue,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,3,Completed,3,1.0
+BK10465,2026-06-23,Tue,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,5,Completed,1,1.0
+BK10466,2026-06-23,Tue,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,32,Completed,30,30.0
+BK10467,2026-06-23,Tue,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,18,Completed,30,60.0
+BK10468,2026-06-23,Tue,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,57,Completed,45,30.0
+BK10469,2026-06-23,Tue,11:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,47,Completed,21,60.0
+BK10470,2026-06-23,Tue,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,15,Completed,1,3.8
+BK10471,2026-06-23,Tue,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,12,Completed,0,3.8
+BK10472,2026-06-23,Tue,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,2,Completed,0,0.5
+BK10473,2026-06-23,Tue,09:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,2,0.8
+BK10474,2026-06-23,Tue,14:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,3,Completed,1,1.0
+BK10475,2026-06-23,Tue,08:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,6,Completed,5,3.5
+BK10476,2026-06-23,Tue,08:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,21,0.9
+BK10477,2026-06-23,Tue,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,3,1.8
+BK10478,2026-06-23,Tue,15:00,120,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,22,Completed,3,6.2
+BK10479,2026-06-23,Tue,09:00,30,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,2,Completed,0,1.6
+BK10480,2026-06-23,Tue,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,10,Completed,21,3.1
+BK10481,2026-06-23,Tue,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,7,Completed,7,3.1
+BK10482,2026-06-23,Tue,10:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,3,2.0
+BK10483,2026-06-23,Tue,14:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,6,Completed,14,1.5
+BK10484,2026-06-23,Tue,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,1,0.5
+BK10485,2026-06-24,Wed,08:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,3,Completed,1,2.6
+BK10486,2026-06-24,Wed,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,4,Completed,1,1.8
+BK10487,2026-06-24,Wed,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,2,Completed,7,2.6
+BK10488,2026-06-24,Wed,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,10,Completed,3,3.5
+BK10489,2026-06-24,Wed,08:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,5,0.9
+BK10490,2026-06-24,Wed,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,2,Completed,5,1.8
+BK10491,2026-06-24,Wed,10:00,30,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,6,Completed,1,1.2
+BK10492,2026-06-24,Wed,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,5,Completed,2,2.5
+BK10493,2026-06-24,Wed,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,17,Completed,2,2.5
+BK10494,2026-06-24,Wed,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,,Cancelled,1,2.5
+BK10495,2026-06-24,Wed,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,4,Completed,0,1.0
+BK10496,2026-06-24,Wed,10:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,3,Completed,1,2.0
+BK10497,2026-06-24,Wed,08:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Arcadia Legal,,No-show,2,0.5
+BK10498,2026-06-24,Wed,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,70,Completed,45,60.0
+BK10499,2026-06-24,Wed,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,41,Completed,14,45.0
+BK10500,2026-06-24,Wed,16:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,3,Completed,1,10.0
+BK10501,2026-06-24,Wed,15:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,,Cancelled,3,5.0
+BK10502,2026-06-24,Wed,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,6,Completed,14,1.9
+BK10503,2026-06-24,Wed,13:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,8,Completed,14,1.9
+BK10504,2026-06-24,Wed,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,3,Completed,1,0.5
+BK10505,2026-06-24,Wed,10:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,2,1.0
+BK10506,2026-06-24,Wed,09:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,4,Completed,14,0.9
+BK10507,2026-06-24,Wed,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,1,Completed,14,1.8
+BK10508,2026-06-24,Wed,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,5,Completed,2,2.6
+BK10509,2026-06-24,Wed,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,5,Completed,1,1.8
+BK10510,2026-06-24,Wed,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,18,Completed,14,3.1
+BK10511,2026-06-24,Wed,10:00,120,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,12,Completed,1,6.2
+BK10512,2026-06-24,Wed,16:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,2,Completed,0,0.5
+BK10513,2026-06-24,Wed,13:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,3,2.0
+BK10514,2026-06-24,Wed,14:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,1,Completed,21,1.5
+BK10515,2026-06-24,Wed,16:00,240,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,106,Completed,30,75.0
+BK10516,2026-06-24,Wed,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,81,Completed,30,75.0
+BK10517,2026-06-25,Thu,11:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,0,2.6
+BK10518,2026-06-25,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,6,Completed,1,1.8
+BK10519,2026-06-25,Thu,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,0,1.8
+BK10520,2026-06-25,Thu,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,1.8
+BK10521,2026-06-25,Thu,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,4,Completed,14,2.5
+BK10522,2026-06-25,Thu,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,2,2.5
+BK10523,2026-06-25,Thu,14:00,120,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,4,Completed,1,5.0
+BK10524,2026-06-25,Thu,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,1,Completed,14,2.5
+BK10525,2026-06-25,Thu,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,,Cancelled,1,1.0
+BK10526,2026-06-25,Thu,08:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,2,Completed,14,1.5
+BK10527,2026-06-25,Thu,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,80,Completed,21,45.0
+BK10528,2026-06-25,Thu,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,100,Completed,14,45.0
+BK10529,2026-06-25,Thu,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,14,Completed,5,5.0
+BK10530,2026-06-25,Thu,16:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,26,Completed,21,7.5
+BK10531,2026-06-25,Thu,09:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,,Cancelled,1,7.5
+BK10532,2026-06-25,Thu,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,11,Completed,0,3.8
+BK10533,2026-06-25,Thu,09:00,90,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,14,Completed,5,5.6
+BK10534,2026-06-25,Thu,13:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,7,0.5
+BK10535,2026-06-25,Thu,09:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,1,0.8
+BK10536,2026-06-25,Thu,13:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,1,Completed,5,0.8
+BK10537,2026-06-25,Thu,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,0,0.9
+BK10538,2026-06-25,Thu,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,7,2.6
+BK10539,2026-06-25,Thu,08:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,7,Completed,1,2.6
+BK10540,2026-06-25,Thu,13:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,10,Completed,1,0.9
+BK10541,2026-06-25,Thu,14:00,30,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,6,Completed,0,1.6
+BK10542,2026-06-25,Thu,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,7,Completed,14,3.1
+BK10543,2026-06-25,Thu,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,2,Completed,14,1.0
+BK10544,2026-06-25,Thu,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,2,Completed,3,1.0
+BK10545,2026-06-25,Thu,14:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,3,Completed,3,2.0
+BK10546,2026-06-25,Thu,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,6,Completed,0,1.0
+BK10547,2026-06-25,Thu,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,17,Completed,21,56.2
+BK10548,2026-06-26,Fri,15:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,5,Completed,1,2.6
+BK10549,2026-06-26,Fri,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,Cancelled,0,1.8
+BK10550,2026-06-26,Fri,08:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,9,Completed,2,5.0
+BK10551,2026-06-26,Fri,10:00,90,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,13,Completed,1,3.8
+BK10552,2026-06-26,Fri,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,98,Completed,45,30.0
+BK10553,2026-06-26,Fri,08:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,9,Completed,2,10.0
+BK10554,2026-06-26,Fri,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,19,Completed,2,5.6
+BK10555,2026-06-26,Fri,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,3,Completed,3,1.0
+BK10556,2026-06-26,Fri,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,7,Completed,0,1.8
+BK10557,2026-06-26,Fri,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,3,Completed,5,1.8
+BK10558,2026-06-26,Fri,09:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,9,Completed,1,0.9
+BK10559,2026-06-26,Fri,16:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,6,Completed,0,2.6
+BK10560,2026-06-26,Fri,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,10,Completed,14,3.1
+BK10561,2026-06-26,Fri,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,6,Completed,1,3.1
+BK10562,2026-06-26,Fri,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,28,Completed,14,75.0
+BK10563,2026-06-29,Mon,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,5,Completed,2,1.8
+BK10564,2026-06-29,Mon,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,6,Completed,0,3.5
+BK10565,2026-06-29,Mon,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,14,2.6
+BK10566,2026-06-29,Mon,15:00,30,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,7,Completed,3,1.2
+BK10567,2026-06-29,Mon,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,11,Completed,0,2.5
+BK10568,2026-06-29,Mon,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,,No-show,1,1.0
+BK10569,2026-06-29,Mon,09:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Northwind Capital,3,Completed,1,1.0
+BK10570,2026-06-29,Mon,09:00,90,Collins Arch,Level 12 Meeting Room B,Meeting,8,Meridian Engineering,3,Completed,1,1.5
+BK10571,2026-06-29,Mon,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,,Cancelled,14,30.0
+BK10572,2026-06-29,Mon,14:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,,No-show,1,10.0
+BK10573,2026-06-29,Mon,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,No-show,14,5.0
+BK10574,2026-06-29,Mon,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,,No-show,21,5.0
+BK10575,2026-06-29,Mon,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,,Cancelled,3,7.5
+BK10576,2026-06-29,Mon,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,8,Completed,3,1.9
+BK10577,2026-06-29,Mon,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,5,0.5
+BK10578,2026-06-29,Mon,13:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,,No-show,14,0.2
+BK10579,2026-06-29,Mon,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,4,Completed,0,1.8
+BK10580,2026-06-29,Mon,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,2,Completed,21,1.8
+BK10581,2026-06-29,Mon,16:00,30,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,7,Completed,5,1.6
+BK10582,2026-06-29,Mon,11:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,2,Completed,7,1.5
+BK10583,2026-06-29,Mon,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,5,Completed,7,1.0
+BK10584,2026-06-29,Mon,16:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,2,Completed,14,1.5
+BK10585,2026-06-29,Mon,10:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,,Cancelled,2,2.5
+BK10586,2026-06-29,Mon,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,3,Completed,7,1.2
+BK10587,2026-06-30,Tue,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,7,Completed,3,1.8
+BK10588,2026-06-30,Tue,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,11,Completed,3,1.8
+BK10589,2026-06-30,Tue,16:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,10,Completed,0,2.6
+BK10590,2026-06-30,Tue,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,8,Completed,3,2.5
+BK10591,2026-06-30,Tue,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,4,Completed,21,2.5
+BK10592,2026-06-30,Tue,08:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,3,Completed,7,1.0
+BK10593,2026-06-30,Tue,13:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,,No-show,0,2.0
+BK10594,2026-06-30,Tue,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,3,1.0
+BK10595,2026-06-30,Tue,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,3,Completed,3,1.0
+BK10596,2026-06-30,Tue,15:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Bright Path Health,5,Completed,0,1.0
+BK10597,2026-06-30,Tue,08:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,2,1.0
+BK10598,2026-06-30,Tue,11:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,23,Completed,14,60.0
+BK10599,2026-06-30,Tue,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,41,Completed,45,60.0
+BK10600,2026-06-30,Tue,08:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,17,Completed,0,10.0
+BK10601,2026-06-30,Tue,08:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,8,Completed,14,10.0
+BK10602,2026-06-30,Tue,09:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,,Cancelled,3,10.0
+BK10603,2026-06-30,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,2,Completed,21,5.0
+BK10604,2026-06-30,Tue,15:00,90,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,21,5.6
+BK10605,2026-06-30,Tue,16:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,15,Completed,14,3.8
+BK10606,2026-06-30,Tue,13:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,1,Completed,3,1.0
+BK10607,2026-06-30,Tue,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,14,0.5
+BK10608,2026-06-30,Tue,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,14,0.5
+BK10609,2026-06-30,Tue,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,5,1.0
+BK10610,2026-06-30,Tue,11:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,4,Completed,7,3.5
+BK10611,2026-06-30,Tue,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,2,2.6
+BK10612,2026-06-30,Tue,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,1,1.8
+BK10613,2026-06-30,Tue,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,6,Completed,3,1.8
+BK10614,2026-06-30,Tue,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,13,Completed,2,3.1
+BK10615,2026-06-30,Tue,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,14,Completed,2,3.1
+BK10616,2026-06-30,Tue,16:00,30,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,,Cancelled,21,1.6
+BK10617,2026-06-30,Tue,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,1,1.0
+BK10618,2026-06-30,Tue,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,2,Completed,0,1.5
+BK10619,2026-06-30,Tue,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,5,1.0
+BK10620,2026-06-30,Tue,11:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,4,Completed,1,1.2
+BK10621,2026-06-30,Tue,09:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,6,Completed,2,1.9
+BK10622,2026-06-30,Tue,09:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,Cancelled,14,37.5
+BK10623,2026-07-01,Wed,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,1,1.8
+BK10624,2026-07-01,Wed,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,2,1.8
+BK10625,2026-07-01,Wed,08:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,12,Completed,1,3.5
+BK10626,2026-07-01,Wed,16:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,10,Completed,2,3.5
+BK10627,2026-07-01,Wed,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,7,Completed,1,2.6
+BK10628,2026-07-01,Wed,10:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,7,Completed,14,1.2
+BK10629,2026-07-01,Wed,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,1,Completed,14,1.0
+BK10630,2026-07-01,Wed,08:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,,Cancelled,7,1.0
+BK10631,2026-07-01,Wed,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,2,Completed,14,1.0
+BK10632,2026-07-01,Wed,15:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,2,Completed,21,1.0
+BK10633,2026-07-01,Wed,14:00,120,Collins Arch,Level 12 Meeting Room B,Meeting,8,Bright Path Health,,Cancelled,14,2.0
+BK10634,2026-07-01,Wed,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,69,Completed,14,45.0
+BK10635,2026-07-01,Wed,11:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,41,Completed,45,60.0
+BK10636,2026-07-01,Wed,14:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,28,Completed,21,10.0
+BK10637,2026-07-01,Wed,10:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,15,Completed,0,2.5
+BK10638,2026-07-01,Wed,14:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,16,Completed,1,2.5
+BK10639,2026-07-01,Wed,10:00,120,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,19,Completed,21,7.5
+BK10640,2026-07-01,Wed,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,14,1.9
+BK10641,2026-07-01,Wed,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,10,Completed,3,5.6
+BK10642,2026-07-01,Wed,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,5,0.5
+BK10643,2026-07-01,Wed,08:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,1,1.0
+BK10644,2026-07-01,Wed,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,10,Completed,1,0.9
+BK10645,2026-07-01,Wed,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,Cancelled,2,2.6
+BK10646,2026-07-01,Wed,16:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,11,Completed,14,0.9
+BK10647,2026-07-01,Wed,13:00,120,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,14,Completed,5,6.2
+BK10648,2026-07-01,Wed,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,2,Completed,14,3.1
+BK10649,2026-07-01,Wed,13:00,30,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,2,Completed,0,1.6
+BK10650,2026-07-01,Wed,10:00,90,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,11,Completed,3,4.7
+BK10651,2026-07-01,Wed,14:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,6,Completed,3,2.0
+BK10652,2026-07-01,Wed,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,121,Completed,14,37.5
+BK10653,2026-07-01,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,56,Completed,45,37.5
+BK10654,2026-07-02,Thu,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,0,1.8
+BK10655,2026-07-02,Thu,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,1,Completed,0,1.8
+BK10656,2026-07-02,Thu,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,10,Completed,0,0.9
+BK10657,2026-07-02,Thu,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,0,0.9
+BK10658,2026-07-02,Thu,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,,Cancelled,0,2.5
+BK10659,2026-07-02,Thu,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,5,Completed,3,2.5
+BK10660,2026-07-02,Thu,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,12,Completed,0,3.8
+BK10661,2026-07-02,Thu,09:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,9,Completed,21,1.2
+BK10662,2026-07-02,Thu,15:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,5,Completed,14,1.5
+BK10663,2026-07-02,Thu,15:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,3,Completed,1,1.0
+BK10664,2026-07-02,Thu,14:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,0,1.0
+BK10665,2026-07-02,Thu,15:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Oakline Insurance,3,Completed,0,0.5
+BK10666,2026-07-02,Thu,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,21,Completed,30,30.0
+BK10667,2026-07-02,Thu,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,20,Completed,45,30.0
+BK10668,2026-07-02,Thu,13:00,240,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,57,Completed,14,60.0
+BK10669,2026-07-02,Thu,08:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,22,Completed,0,10.0
+BK10670,2026-07-02,Thu,09:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,32,Completed,1,7.5
+BK10671,2026-07-02,Thu,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,27,Completed,0,5.0
+BK10672,2026-07-02,Thu,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,10,Completed,3,5.0
+BK10673,2026-07-02,Thu,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,2,Completed,14,3.8
+BK10674,2026-07-02,Thu,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,1,Completed,0,3.8
+BK10675,2026-07-02,Thu,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,Cancelled,0,0.5
+BK10676,2026-07-02,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,14,0.5
+BK10677,2026-07-02,Thu,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,11,Completed,1,1.8
+BK10678,2026-07-02,Thu,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,8,Completed,1,0.9
+BK10679,2026-07-02,Thu,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,2,1.8
+BK10680,2026-07-02,Thu,13:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,1,1.8
+BK10681,2026-07-02,Thu,16:00,120,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,14,Completed,21,6.2
+BK10682,2026-07-02,Thu,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,,Cancelled,0,6.2
+BK10683,2026-07-02,Thu,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,1,Completed,0,0.5
+BK10684,2026-07-02,Thu,14:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,7,Completed,0,2.5
+BK10685,2026-07-02,Thu,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,56,Completed,45,56.2
+BK10686,2026-07-03,Fri,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,,No-show,1,1.8
+BK10687,2026-07-03,Fri,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,7,Completed,0,5.0
+BK10688,2026-07-03,Fri,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,12,Completed,1,2.5
+BK10689,2026-07-03,Fri,08:00,60,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,8,Completed,0,2.5
+BK10690,2026-07-03,Fri,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,1,Completed,3,1.0
+BK10691,2026-07-03,Fri,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,25,Completed,1,5.0
+BK10692,2026-07-03,Fri,14:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,8,Completed,1,10.0
+BK10693,2026-07-03,Fri,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,31,Completed,1,5.0
+BK10694,2026-07-03,Fri,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,15,Completed,0,3.8
+BK10695,2026-07-03,Fri,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,16,Completed,0,1.9
+BK10696,2026-07-03,Fri,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,12,Completed,7,3.8
+BK10697,2026-07-03,Fri,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,10,Completed,0,1.8
+BK10698,2026-07-03,Fri,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,4,Completed,3,0.9
+BK10699,2026-07-03,Fri,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,2,Completed,1,0.9
+BK10700,2026-07-03,Fri,15:00,90,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,,Cancelled,5,4.7
+BK10701,2026-07-03,Fri,14:00,30,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,7,Completed,3,1.6
+BK10702,2026-07-03,Fri,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,6,Completed,1,1.0
+BK10703,2026-07-03,Fri,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,3,1.0
+BK10704,2026-07-03,Fri,09:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,5,Completed,1,0.6
+BK10705,2026-07-06,Mon,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,7,Completed,1,0.9
+BK10706,2026-07-06,Mon,14:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,7,Completed,3,3.5
+BK10707,2026-07-06,Mon,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,15,Completed,0,5.0
+BK10708,2026-07-06,Mon,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,16,Completed,2,5.0
+BK10709,2026-07-06,Mon,11:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,11,Completed,1,7.5
+BK10710,2026-07-06,Mon,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,,Cancelled,3,3.8
+BK10711,2026-07-06,Mon,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,13,Completed,1,7.5
+BK10712,2026-07-06,Mon,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,Cancelled,1,0.5
+BK10713,2026-07-06,Mon,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,1,0.5
+BK10714,2026-07-06,Mon,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,3,Completed,7,0.9
+BK10715,2026-07-06,Mon,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,,No-show,14,2.6
+BK10716,2026-07-06,Mon,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,11,Completed,14,1.8
+BK10717,2026-07-06,Mon,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,5,2.6
+BK10718,2026-07-06,Mon,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,7,Completed,2,3.1
+BK10719,2026-07-06,Mon,13:00,30,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,4,Completed,2,1.6
+BK10720,2026-07-06,Mon,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,5,Completed,5,1.0
+BK10721,2026-07-06,Mon,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,3,Completed,14,1.5
+BK10722,2026-07-06,Mon,15:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,21,0.5
+BK10723,2026-07-06,Mon,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,39,Completed,21,75.0
+BK10724,2026-07-07,Tue,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,0,1.8
+BK10725,2026-07-07,Tue,08:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,0,2.6
+BK10726,2026-07-07,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,5,Completed,3,1.8
+BK10727,2026-07-07,Tue,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,3,Completed,5,1.8
+BK10728,2026-07-07,Tue,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,4,Completed,7,3.5
+BK10729,2026-07-07,Tue,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,13,Completed,0,1.8
+BK10730,2026-07-07,Tue,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,4,Completed,0,3.8
+BK10731,2026-07-07,Tue,11:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,5,1.5
+BK10732,2026-07-07,Tue,11:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Arcadia Legal,5,Completed,1,1.0
+BK10733,2026-07-07,Tue,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,80,Completed,21,45.0
+BK10734,2026-07-07,Tue,11:00,180,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,62,Completed,14,45.0
+BK10735,2026-07-07,Tue,10:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,19,Completed,2,2.5
+BK10736,2026-07-07,Tue,08:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,,No-show,1,2.5
+BK10737,2026-07-07,Tue,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,11,Completed,1,5.0
+BK10738,2026-07-07,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,,Cancelled,3,3.8
+BK10739,2026-07-07,Tue,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,11,Completed,3,3.8
+BK10740,2026-07-07,Tue,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,,No-show,21,1.9
+BK10741,2026-07-07,Tue,08:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,3,Completed,3,1.0
+BK10742,2026-07-07,Tue,11:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,2,Completed,14,0.8
+BK10743,2026-07-07,Tue,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,0,0.5
+BK10744,2026-07-07,Tue,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,2,Completed,7,0.9
+BK10745,2026-07-07,Tue,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,7,Completed,1,1.8
+BK10746,2026-07-07,Tue,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,,No-show,7,1.8
+BK10747,2026-07-07,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,6,Completed,0,1.8
+BK10748,2026-07-07,Tue,10:00,120,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,3,Completed,7,6.2
+BK10749,2026-07-07,Tue,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,18,Completed,2,3.1
+BK10750,2026-07-07,Tue,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,4,Completed,2,3.1
+BK10751,2026-07-07,Tue,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,,Cancelled,21,3.1
+BK10752,2026-07-07,Tue,11:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,2,Completed,1,1.5
+BK10753,2026-07-07,Tue,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,14,0.5
+BK10754,2026-07-07,Tue,11:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,5,Completed,0,2.5
+BK10755,2026-07-07,Tue,16:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,5,Completed,2,0.6
+BK10756,2026-07-07,Tue,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,103,Completed,45,56.2
+BK10757,2026-07-07,Tue,11:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,No-show,21,75.0
+BK10758,2026-07-07,Tue,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,82,Completed,30,56.2
+BK10759,2026-07-08,Wed,13:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,3,Completed,0,2.6
+BK10760,2026-07-08,Wed,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,10,Completed,0,1.8
+BK10761,2026-07-08,Wed,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,1.8
+BK10762,2026-07-08,Wed,11:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,4,Completed,14,2.5
+BK10763,2026-07-08,Wed,09:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,2,Completed,1,0.5
+BK10764,2026-07-08,Wed,15:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,5,Completed,1,1.0
+BK10765,2026-07-08,Wed,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,2,Completed,0,1.0
+BK10766,2026-07-08,Wed,10:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,3,Completed,21,1.5
+BK10767,2026-07-08,Wed,11:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,31,Completed,30,60.0
+BK10768,2026-07-08,Wed,08:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,59,Completed,30,45.0
+BK10769,2026-07-08,Wed,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,No-show,21,45.0
+BK10770,2026-07-08,Wed,16:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,24,Completed,0,7.5
+BK10771,2026-07-08,Wed,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,26,Completed,3,5.0
+BK10772,2026-07-08,Wed,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,27,Completed,3,5.0
+BK10773,2026-07-08,Wed,16:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,14,Completed,1,2.5
+BK10774,2026-07-08,Wed,16:00,90,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,15,Completed,14,5.6
+BK10775,2026-07-08,Wed,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,12,Completed,1,3.8
+BK10776,2026-07-08,Wed,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,No-show,0,3.8
+BK10777,2026-07-08,Wed,11:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,1,0.2
+BK10778,2026-07-08,Wed,14:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,2,1.0
+BK10779,2026-07-08,Wed,16:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,3,Completed,3,1.0
+BK10780,2026-07-08,Wed,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,10,Completed,14,3.5
+BK10781,2026-07-08,Wed,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,5,Completed,1,1.8
+BK10782,2026-07-08,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,0,1.8
+BK10783,2026-07-08,Wed,16:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,2.6
+BK10784,2026-07-08,Wed,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,,No-show,21,3.1
+BK10785,2026-07-08,Wed,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,,Cancelled,0,3.1
+BK10786,2026-07-08,Wed,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,3,Completed,1,1.0
+BK10787,2026-07-08,Wed,14:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,4,Completed,1,1.5
+BK10788,2026-07-08,Wed,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,7,Completed,14,1.0
+BK10789,2026-07-08,Wed,15:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,2,Completed,0,1.2
+BK10790,2026-07-08,Wed,14:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,7,Completed,1,2.5
+BK10791,2026-07-08,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,34,Completed,30,37.5
+BK10792,2026-07-08,Wed,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,Cancelled,14,56.2
+BK10793,2026-07-09,Thu,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,8,Completed,1,3.5
+BK10794,2026-07-09,Thu,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,3,Completed,0,2.6
+BK10795,2026-07-09,Thu,14:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,5,3.5
+BK10796,2026-07-09,Thu,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,0,0.9
+BK10797,2026-07-09,Thu,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,7,Completed,1,2.6
+BK10798,2026-07-09,Thu,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,34,Completed,21,30.0
+BK10799,2026-07-09,Thu,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,No-show,30,30.0
+BK10800,2026-07-09,Thu,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,17,Completed,21,5.0
+BK10801,2026-07-09,Thu,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,32,Completed,7,5.0
+BK10802,2026-07-09,Thu,15:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,9,Completed,3,7.5
+BK10803,2026-07-09,Thu,13:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,15,Completed,3,2.5
+BK10804,2026-07-09,Thu,13:00,120,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,,Cancelled,7,7.5
+BK10805,2026-07-09,Thu,11:00,90,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,15,Completed,21,5.6
+BK10806,2026-07-09,Thu,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,1,0.5
+BK10807,2026-07-09,Thu,16:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,21,0.5
+BK10808,2026-07-09,Thu,15:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,5,1.0
+BK10809,2026-07-09,Thu,16:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,0,0.5
+BK10810,2026-07-09,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,4,Completed,14,1.8
+BK10811,2026-07-09,Thu,11:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,11,Completed,5,3.5
+BK10812,2026-07-09,Thu,15:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,,Cancelled,5,2.6
+BK10813,2026-07-09,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,16,Completed,3,3.1
+BK10814,2026-07-09,Thu,13:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,,Cancelled,1,0.5
+BK10815,2026-07-09,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,2,Completed,0,1.0
+BK10816,2026-07-09,Thu,09:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,4,Completed,1,1.2
+BK10817,2026-07-09,Thu,13:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,1,Completed,5,1.2
+BK10818,2026-07-09,Thu,09:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,32,Completed,14,75.0
+BK10819,2026-07-10,Fri,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,No-show,1,1.8
+BK10820,2026-07-10,Fri,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,4,Completed,1,1.8
+BK10821,2026-07-10,Fri,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,12,Completed,5,0.9
+BK10822,2026-07-10,Fri,08:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,11,Completed,1,5.0
+BK10823,2026-07-10,Fri,11:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,4,Completed,21,2.0
+BK10824,2026-07-10,Fri,16:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,5,Completed,0,0.5
+BK10825,2026-07-10,Fri,13:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,97,Completed,21,60.0
+BK10826,2026-07-10,Fri,09:00,120,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,15,Completed,3,7.5
+BK10827,2026-07-10,Fri,13:00,120,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,16,Completed,5,7.5
+BK10828,2026-07-10,Fri,15:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,,Cancelled,1,0.8
+BK10829,2026-07-10,Fri,16:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,9,Completed,14,2.6
+BK10830,2026-07-10,Fri,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,0,2.6
+BK10831,2026-07-10,Fri,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,3,Completed,2,0.9
+BK10832,2026-07-10,Fri,08:00,30,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,,No-show,2,1.6
+BK10833,2026-07-10,Fri,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,2,1.5
+BK10834,2026-07-10,Fri,11:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,1,Completed,2,0.6
+BK10835,2026-07-10,Fri,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,3,Completed,2,1.2
+BK10836,2026-07-10,Fri,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,105,Completed,14,75.0
+BK10837,2026-07-10,Fri,08:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,101,Completed,45,75.0
+BK10838,2026-07-13,Mon,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,No-show,0,0.9
+BK10839,2026-07-13,Mon,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,7,Completed,3,1.8
+BK10840,2026-07-13,Mon,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,11,Completed,14,1.8
+BK10841,2026-07-13,Mon,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,5,Completed,1,2.5
+BK10842,2026-07-13,Mon,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,6,Completed,0,1.0
+BK10843,2026-07-13,Mon,16:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Sable & Co,3,Completed,5,1.0
+BK10844,2026-07-13,Mon,14:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,,No-show,7,1.0
+BK10845,2026-07-13,Mon,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,10,Completed,5,5.0
+BK10846,2026-07-13,Mon,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,29,Completed,2,5.0
+BK10847,2026-07-13,Mon,14:00,90,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,10,Completed,3,5.6
+BK10848,2026-07-13,Mon,13:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,3,Completed,2,0.2
+BK10849,2026-07-13,Mon,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,7,1.8
+BK10850,2026-07-13,Mon,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,3,1.8
+BK10851,2026-07-13,Mon,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,4,Completed,21,3.5
+BK10852,2026-07-13,Mon,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,8,Completed,21,3.1
+BK10853,2026-07-13,Mon,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,1,0.5
+BK10854,2026-07-13,Mon,16:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,21,0.5
+BK10855,2026-07-13,Mon,16:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,,Cancelled,2,0.6
+BK10856,2026-07-13,Mon,08:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,57,Completed,21,75.0
+BK10857,2026-07-14,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,11,Completed,14,1.8
+BK10858,2026-07-14,Tue,11:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,12,Completed,0,3.5
+BK10859,2026-07-14,Tue,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,2,2.6
+BK10860,2026-07-14,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,5,Completed,0,1.8
+BK10861,2026-07-14,Tue,13:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,3,2.6
+BK10862,2026-07-14,Tue,11:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,9,Completed,1,2.5
+BK10863,2026-07-14,Tue,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,12,Completed,14,3.8
+BK10864,2026-07-14,Tue,15:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,2,Completed,14,1.5
+BK10865,2026-07-14,Tue,08:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,,Cancelled,0,2.0
+BK10866,2026-07-14,Tue,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,80,Completed,21,30.0
+BK10867,2026-07-14,Tue,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,48,Completed,21,30.0
+BK10868,2026-07-14,Tue,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Oakline Insurance,36,Completed,14,30.0
+BK10869,2026-07-14,Tue,13:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,20,Completed,45,45.0
+BK10870,2026-07-14,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,31,Completed,1,5.0
+BK10871,2026-07-14,Tue,16:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,13,Completed,0,2.5
+BK10872,2026-07-14,Tue,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,18,Completed,1,7.5
+BK10873,2026-07-14,Tue,10:00,120,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,8,Completed,0,7.5
+BK10874,2026-07-14,Tue,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,1,Completed,0,3.8
+BK10875,2026-07-14,Tue,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,5,Completed,3,3.8
+BK10876,2026-07-14,Tue,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,1,Completed,5,0.5
+BK10877,2026-07-14,Tue,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,2,0.5
+BK10878,2026-07-14,Tue,16:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,0,0.2
+BK10879,2026-07-14,Tue,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,6,Completed,21,1.8
+BK10880,2026-07-14,Tue,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,3,Completed,0,1.8
+BK10881,2026-07-14,Tue,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,12,Completed,0,2.6
+BK10882,2026-07-14,Tue,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,4,Completed,2,1.8
+BK10883,2026-07-14,Tue,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,2,1.8
+BK10884,2026-07-14,Tue,09:00,30,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,5,Completed,1,1.6
+BK10885,2026-07-14,Tue,16:00,60,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,14,Completed,0,3.1
+BK10886,2026-07-14,Tue,16:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,1,Completed,0,3.1
+BK10887,2026-07-14,Tue,10:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,21,1.5
+BK10888,2026-07-14,Tue,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,2,Completed,3,1.0
+BK10889,2026-07-14,Tue,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,3,Completed,14,1.0
+BK10890,2026-07-14,Tue,13:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,5,Completed,2,2.5
+BK10891,2026-07-14,Tue,09:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,84,Completed,45,75.0
+BK10892,2026-07-14,Tue,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,48,Completed,21,56.2
+BK10893,2026-07-14,Tue,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,85,Completed,21,56.2
+BK10894,2026-07-15,Wed,13:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,8,Completed,0,3.5
+BK10895,2026-07-15,Wed,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,2,Completed,5,2.6
+BK10896,2026-07-15,Wed,15:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,10,Completed,1,2.6
+BK10897,2026-07-15,Wed,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,6,Completed,3,1.8
+BK10898,2026-07-15,Wed,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,10,Completed,3,1.8
+BK10899,2026-07-15,Wed,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,1,1.0
+BK10900,2026-07-15,Wed,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,2,Completed,1,1.0
+BK10901,2026-07-15,Wed,08:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,3,Completed,3,1.0
+BK10902,2026-07-15,Wed,14:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,2,Completed,5,0.5
+BK10903,2026-07-15,Wed,08:00,180,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,44,Completed,14,45.0
+BK10904,2026-07-15,Wed,11:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,25,Completed,14,45.0
+BK10905,2026-07-15,Wed,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,57,Completed,21,60.0
+BK10906,2026-07-15,Wed,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,58,Completed,14,45.0
+BK10907,2026-07-15,Wed,14:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,25,Completed,14,45.0
+BK10908,2026-07-15,Wed,10:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,No-show,5,2.5
+BK10909,2026-07-15,Wed,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,19,Completed,14,5.0
+BK10910,2026-07-15,Wed,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,18,Completed,0,3.8
+BK10911,2026-07-15,Wed,08:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,11,Completed,1,7.5
+BK10912,2026-07-15,Wed,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,0,3.8
+BK10913,2026-07-15,Wed,10:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,1,1.0
+BK10914,2026-07-15,Wed,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,5,Completed,7,1.8
+BK10915,2026-07-15,Wed,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,1,3.5
+BK10916,2026-07-15,Wed,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,6,Completed,14,2.6
+BK10917,2026-07-15,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,10,Completed,21,1.8
+BK10918,2026-07-15,Wed,15:00,90,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,11,Completed,21,4.7
+BK10919,2026-07-15,Wed,11:00,30,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,,No-show,0,1.6
+BK10920,2026-07-15,Wed,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,3,Completed,1,1.0
+BK10921,2026-07-15,Wed,16:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,,No-show,1,1.5
+BK10922,2026-07-15,Wed,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,6,Completed,0,1.2
+BK10923,2026-07-15,Wed,08:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,3,Completed,0,1.2
+BK10924,2026-07-15,Wed,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,37,Completed,21,75.0
+BK10925,2026-07-16,Thu,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,7,Completed,14,1.8
+BK10926,2026-07-16,Thu,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,No-show,2,3.5
+BK10927,2026-07-16,Thu,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,4,Completed,3,3.5
+BK10928,2026-07-16,Thu,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,8,Completed,14,1.8
+BK10929,2026-07-16,Thu,16:00,30,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,4,Completed,14,1.2
+BK10930,2026-07-16,Thu,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,13,Completed,14,2.5
+BK10931,2026-07-16,Thu,08:00,30,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,10,Completed,7,1.2
+BK10932,2026-07-16,Thu,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,14,Completed,3,2.5
+BK10933,2026-07-16,Thu,15:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,,Cancelled,0,0.5
+BK10934,2026-07-16,Thu,08:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,4,Completed,2,1.5
+BK10935,2026-07-16,Thu,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,110,Completed,14,30.0
+BK10936,2026-07-16,Thu,08:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,38,Completed,21,60.0
+BK10937,2026-07-16,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,26,Completed,14,5.0
+BK10938,2026-07-16,Thu,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,,Cancelled,0,5.0
+BK10939,2026-07-16,Thu,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,24,Completed,3,3.8
+BK10940,2026-07-16,Thu,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,3,Completed,1,3.8
+BK10941,2026-07-16,Thu,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,1,3.8
+BK10942,2026-07-16,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,2,Completed,1,0.5
+BK10943,2026-07-16,Thu,11:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,2,Completed,3,0.8
+BK10944,2026-07-16,Thu,16:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,6,Completed,1,0.9
+BK10945,2026-07-16,Thu,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,9,Completed,1,1.8
+BK10946,2026-07-16,Thu,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,1,2.6
+BK10947,2026-07-16,Thu,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,9,Completed,5,3.5
+BK10948,2026-07-16,Thu,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,17,Completed,14,3.1
+BK10949,2026-07-16,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,7,Completed,1,3.1
+BK10950,2026-07-16,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,14,Completed,21,3.1
+BK10951,2026-07-16,Thu,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,0,1.0
+BK10952,2026-07-16,Thu,14:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,7,Completed,1,0.6
+BK10953,2026-07-16,Thu,10:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,6,Completed,1,2.5
+BK10954,2026-07-16,Thu,16:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,3,Completed,1,1.2
+BK10955,2026-07-16,Thu,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,45,Completed,21,37.5
+BK10956,2026-07-16,Thu,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,45,Completed,30,56.2
+BK10957,2026-07-17,Fri,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,0,3.5
+BK10958,2026-07-17,Fri,11:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,1,3.5
+BK10959,2026-07-17,Fri,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,2,Completed,14,1.8
+BK10960,2026-07-17,Fri,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,6,Completed,14,2.5
+BK10961,2026-07-17,Fri,15:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,5,Completed,5,1.5
+BK10962,2026-07-17,Fri,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,16,Completed,14,60.0
+BK10963,2026-07-17,Fri,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,,Cancelled,45,60.0
+BK10964,2026-07-17,Fri,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,81,Completed,45,30.0
+BK10965,2026-07-17,Fri,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,15,Completed,0,3.8
+BK10966,2026-07-17,Fri,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,,No-show,0,2.6
+BK10967,2026-07-17,Fri,10:00,30,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,15,Completed,1,1.6
+BK10968,2026-07-17,Fri,09:00,30,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,14,Completed,2,1.6
+BK10969,2026-07-17,Fri,08:00,120,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,19,Completed,14,6.2
+BK10970,2026-07-17,Fri,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,5,1.5
+BK10971,2026-07-17,Fri,13:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,50,Completed,14,37.5
+BK10972,2026-07-17,Fri,16:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,45,Completed,30,56.2
+BK10973,2026-07-17,Fri,11:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,74,Completed,21,37.5
+BK10974,2026-07-20,Mon,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,Cancelled,7,2.6
+BK10975,2026-07-20,Mon,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,10,Completed,0,1.8
+BK10976,2026-07-20,Mon,09:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,5,Completed,3,0.9
+BK10977,2026-07-20,Mon,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,3,Completed,1,1.8
+BK10978,2026-07-20,Mon,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,38,Completed,14,30.0
+BK10979,2026-07-20,Mon,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,,No-show,0,2.6
+BK10980,2026-07-20,Mon,15:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,4,Completed,2,3.5
+BK10981,2026-07-20,Mon,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,12,Completed,14,3.1
+BK10982,2026-07-20,Mon,09:00,30,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,16,Completed,3,1.6
+BK10983,2026-07-20,Mon,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,3,Completed,3,1.0
+BK10984,2026-07-20,Mon,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,6,Completed,21,1.0
+BK10985,2026-07-20,Mon,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,,No-show,14,1.2
+BK10986,2026-07-20,Mon,16:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,,Cancelled,1,1.2
+BK10987,2026-07-20,Mon,11:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,5,Completed,1,1.2
+BK10988,2026-07-21,Tue,16:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,0.9
+BK10989,2026-07-21,Tue,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,7,Completed,14,1.8
+BK10990,2026-07-21,Tue,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,5,Completed,1,1.8
+BK10991,2026-07-21,Tue,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,11,Completed,7,1.8
+BK10992,2026-07-21,Tue,08:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,6,Completed,1,1.2
+BK10993,2026-07-21,Tue,11:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,14,Completed,2,2.5
+BK10994,2026-07-21,Tue,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,30,Completed,14,60.0
+BK10995,2026-07-21,Tue,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,27,Completed,30,30.0
+BK10996,2026-07-21,Tue,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,37,Completed,21,30.0
+BK10997,2026-07-21,Tue,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,3,Completed,0,5.0
+BK10998,2026-07-21,Tue,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,12,Completed,7,5.0
+BK10999,2026-07-21,Tue,14:00,30,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,9,Completed,0,1.9
+BK11000,2026-07-21,Tue,11:00,90,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,27,Completed,21,5.6
+BK11001,2026-07-21,Tue,08:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,5,1.0
+BK11002,2026-07-21,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,,No-show,21,1.8
+BK11003,2026-07-21,Tue,16:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,5,Completed,2,3.5
+BK11004,2026-07-21,Tue,15:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,0,3.5
+BK11005,2026-07-21,Tue,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,8,Completed,5,1.8
+BK11006,2026-07-21,Tue,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,3,1.8
+BK11007,2026-07-21,Tue,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,12,Completed,1,6.2
+BK11008,2026-07-21,Tue,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,7,Completed,3,3.1
+BK11009,2026-07-21,Tue,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,16,Completed,0,3.1
+BK11010,2026-07-21,Tue,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,,Cancelled,7,3.1
+BK11011,2026-07-21,Tue,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,2,Completed,21,1.0
+BK11012,2026-07-21,Tue,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,0,1.0
+BK11013,2026-07-21,Tue,11:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,74,Completed,14,37.5
+BK11014,2026-07-21,Tue,09:00,120,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,103,Completed,14,37.5
+BK11015,2026-07-22,Wed,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,2,1.8
+BK11016,2026-07-22,Wed,13:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,11,Completed,5,2.6
+BK11017,2026-07-22,Wed,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,3,Completed,5,1.8
+BK11018,2026-07-22,Wed,09:00,120,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,,Cancelled,5,5.0
+BK11019,2026-07-22,Wed,16:00,90,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,6,Completed,1,3.8
+BK11020,2026-07-22,Wed,11:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,21,3.8
+BK11021,2026-07-22,Wed,15:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,3,Completed,21,0.5
+BK11022,2026-07-22,Wed,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,47,Completed,14,30.0
+BK11023,2026-07-22,Wed,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Oakline Insurance,9,Completed,21,60.0
+BK11024,2026-07-22,Wed,08:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,29,Completed,30,60.0
+BK11025,2026-07-22,Wed,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,27,Completed,21,60.0
+BK11026,2026-07-22,Wed,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,31,Completed,7,5.0
+BK11027,2026-07-22,Wed,08:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,10,Completed,14,2.5
+BK11028,2026-07-22,Wed,16:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,,Cancelled,5,10.0
+BK11029,2026-07-22,Wed,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,13,Completed,0,3.8
+BK11030,2026-07-22,Wed,14:00,90,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,18,Completed,0,5.6
+BK11031,2026-07-22,Wed,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,3,Completed,2,0.5
+BK11032,2026-07-22,Wed,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,2,Completed,1,0.5
+BK11033,2026-07-22,Wed,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,21,0.5
+BK11034,2026-07-22,Wed,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,,No-show,3,1.8
+BK11035,2026-07-22,Wed,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,7,Completed,0,1.8
+BK11036,2026-07-22,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,8,Completed,2,1.8
+BK11037,2026-07-22,Wed,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,9,Completed,0,1.8
+BK11038,2026-07-22,Wed,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,10,Completed,0,1.8
+BK11039,2026-07-22,Wed,09:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,5,Completed,0,3.5
+BK11040,2026-07-22,Wed,14:00,30,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,3,Completed,21,1.6
+BK11041,2026-07-22,Wed,13:00,120,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,9,Completed,1,6.2
+BK11042,2026-07-22,Wed,13:00,30,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,8,Completed,0,1.6
+BK11043,2026-07-22,Wed,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,3,Completed,7,1.0
+BK11044,2026-07-22,Wed,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,7,1.0
+BK11045,2026-07-22,Wed,13:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,,Cancelled,14,1.2
+BK11046,2026-07-22,Wed,16:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,4,Completed,7,1.2
+BK11047,2026-07-22,Wed,13:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,54,Completed,21,56.2
+BK11048,2026-07-22,Wed,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,66,Completed,45,56.2
+BK11049,2026-07-22,Wed,15:00,240,Southbank Place,Level 7 Event Hall,Event,150,Meridian Engineering,33,Completed,45,75.0
+BK11050,2026-07-23,Thu,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,9,Completed,1,2.6
+BK11051,2026-07-23,Thu,13:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,6,Completed,0,0.9
+BK11052,2026-07-23,Thu,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,12,Completed,1,3.5
+BK11053,2026-07-23,Thu,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,6,Completed,3,1.8
+BK11054,2026-07-23,Thu,13:00,30,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,6,Completed,21,1.2
+BK11055,2026-07-23,Thu,13:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,3,Completed,1,2.0
+BK11056,2026-07-23,Thu,16:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,3,Completed,5,1.5
+BK11057,2026-07-23,Thu,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,106,Completed,14,30.0
+BK11058,2026-07-23,Thu,11:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,75,Completed,45,45.0
+BK11059,2026-07-23,Thu,14:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,5,Completed,1,2.5
+BK11060,2026-07-23,Thu,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,9,Completed,1,5.0
+BK11061,2026-07-23,Thu,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,,No-show,0,5.0
+BK11062,2026-07-23,Thu,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,5,Completed,2,5.0
+BK11063,2026-07-23,Thu,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,12,Completed,7,3.8
+BK11064,2026-07-23,Thu,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,2,Completed,0,0.5
+BK11065,2026-07-23,Thu,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,3,Completed,0,0.5
+BK11066,2026-07-23,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,Cancelled,7,0.5
+BK11067,2026-07-23,Thu,13:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,2,Completed,21,1.0
+BK11068,2026-07-23,Thu,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,1,Completed,7,0.5
+BK11069,2026-07-23,Thu,13:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,12,Completed,0,0.9
+BK11070,2026-07-23,Thu,15:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,5,2.6
+BK11071,2026-07-23,Thu,16:00,90,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,12,Completed,0,4.7
+BK11072,2026-07-23,Thu,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,8,Completed,2,3.1
+BK11073,2026-07-23,Thu,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,5,Completed,7,1.0
+BK11074,2026-07-23,Thu,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,4,Completed,5,1.0
+BK11075,2026-07-23,Thu,11:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,No-show,21,75.0
+BK11076,2026-07-23,Thu,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,44,Completed,30,56.2
+BK11077,2026-07-24,Fri,16:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,10,Completed,0,3.5
+BK11078,2026-07-24,Fri,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,4,Completed,2,1.8
+BK11079,2026-07-24,Fri,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,8,Completed,14,0.9
+BK11080,2026-07-24,Fri,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,4,Completed,14,2.5
+BK11081,2026-07-24,Fri,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,6,Completed,3,2.5
+BK11082,2026-07-24,Fri,14:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,5,Completed,21,1.5
+BK11083,2026-07-24,Fri,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,29,Completed,1,5.0
+BK11084,2026-07-24,Fri,10:00,30,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,,No-show,7,1.9
+BK11085,2026-07-24,Fri,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,11,Completed,1,3.8
+BK11086,2026-07-24,Fri,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,3,0.9
+BK11087,2026-07-24,Fri,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,3,Completed,0,1.8
+BK11088,2026-07-24,Fri,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,2.6
+BK11089,2026-07-24,Fri,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,6,Completed,5,1.8
+BK11090,2026-07-24,Fri,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,18,Completed,14,3.1
+BK11091,2026-07-24,Fri,09:00,120,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,17,Completed,0,6.2
+BK11092,2026-07-24,Fri,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,2,Completed,0,1.0
+BK11093,2026-07-24,Fri,13:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,4,Completed,5,0.5
+BK11094,2026-07-24,Fri,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,2,Completed,14,1.0
+BK11095,2026-07-24,Fri,09:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,3,Completed,5,0.6
+BK11096,2026-07-24,Fri,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,122,Completed,14,75.0
+BK11097,2026-07-27,Mon,15:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,9,Completed,5,3.5
+BK11098,2026-07-27,Mon,15:00,60,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,,No-show,1,2.5
+BK11099,2026-07-27,Mon,09:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,,No-show,5,0.5
+BK11100,2026-07-27,Mon,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,22,Completed,21,5.0
+BK11101,2026-07-27,Mon,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,22,Completed,1,5.0
+BK11102,2026-07-27,Mon,09:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,15,Completed,5,7.5
+BK11103,2026-07-27,Mon,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,23,Completed,14,3.8
+BK11104,2026-07-27,Mon,14:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,,No-show,0,0.8
+BK11105,2026-07-27,Mon,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,,Cancelled,1,0.5
+BK11106,2026-07-27,Mon,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,8,Completed,2,3.5
+BK11107,2026-07-27,Mon,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,3,Completed,1,1.8
+BK11108,2026-07-27,Mon,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,6,Completed,0,1.8
+BK11109,2026-07-27,Mon,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,3,Completed,14,1.8
+BK11110,2026-07-27,Mon,15:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,3,Completed,21,2.6
+BK11111,2026-07-27,Mon,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,12,Completed,1,3.1
+BK11112,2026-07-27,Mon,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,12,Completed,14,3.1
+BK11113,2026-07-27,Mon,09:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,3,Completed,0,1.2
+BK11114,2026-07-27,Mon,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,Cancelled,14,56.2
+BK11115,2026-07-28,Tue,09:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,11,Completed,3,0.9
+BK11116,2026-07-28,Tue,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,9,Completed,7,1.8
+BK11117,2026-07-28,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,3,Completed,3,1.8
+BK11118,2026-07-28,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,7,Completed,0,1.8
+BK11119,2026-07-28,Tue,14:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,,No-show,21,5.0
+BK11120,2026-07-28,Tue,08:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,7,Completed,7,2.5
+BK11121,2026-07-28,Tue,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,,No-show,21,1.0
+BK11122,2026-07-28,Tue,09:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,4,Completed,0,2.0
+BK11123,2026-07-28,Tue,11:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,1,Completed,21,1.5
+BK11124,2026-07-28,Tue,08:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Kite Studio,2,Completed,2,1.0
+BK11125,2026-07-28,Tue,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,27,Completed,21,60.0
+BK11126,2026-07-28,Tue,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Kite Studio,67,Completed,21,45.0
+BK11127,2026-07-28,Tue,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,86,Completed,45,30.0
+BK11128,2026-07-28,Tue,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,74,Completed,30,30.0
+BK11129,2026-07-28,Tue,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,9,Completed,7,5.0
+BK11130,2026-07-28,Tue,14:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,19,Completed,3,7.5
+BK11131,2026-07-28,Tue,16:00,90,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,2,5.6
+BK11132,2026-07-28,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,6,Completed,3,3.8
+BK11133,2026-07-28,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,7,Completed,21,1.8
+BK11134,2026-07-28,Tue,16:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,21,3.5
+BK11135,2026-07-28,Tue,16:00,90,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,17,Completed,14,4.7
+BK11136,2026-07-28,Tue,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,3,Completed,0,3.1
+BK11137,2026-07-28,Tue,13:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,5,Completed,1,2.0
+BK11138,2026-07-28,Tue,15:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,2,2.0
+BK11139,2026-07-28,Tue,15:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,,No-show,5,0.5
+BK11140,2026-07-28,Tue,11:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,2,Completed,2,1.5
+BK11141,2026-07-28,Tue,16:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,4,Completed,0,2.5
+BK11142,2026-07-28,Tue,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,No-show,45,37.5
+BK11143,2026-07-28,Tue,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,,Cancelled,30,56.2
+BK11144,2026-07-28,Tue,09:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,73,Completed,14,37.5
+BK11145,2026-07-29,Wed,13:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,3,Completed,1,3.5
+BK11146,2026-07-29,Wed,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,No-show,5,1.8
+BK11147,2026-07-29,Wed,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,0,2.6
+BK11148,2026-07-29,Wed,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,10,Completed,0,2.5
+BK11149,2026-07-29,Wed,14:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,12,Completed,21,3.8
+BK11150,2026-07-29,Wed,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,,No-show,5,1.0
+BK11151,2026-07-29,Wed,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,1,Completed,3,1.0
+BK11152,2026-07-29,Wed,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,4,Completed,0,1.0
+BK11153,2026-07-29,Wed,11:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,3,Completed,0,1.0
+BK11154,2026-07-29,Wed,11:00,120,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,4,Completed,3,2.0
+BK11155,2026-07-29,Wed,14:00,90,Collins Arch,Level 12 Meeting Room B,Meeting,8,Sable & Co,4,Completed,0,1.5
+BK11156,2026-07-29,Wed,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,31,Completed,21,60.0
+BK11157,2026-07-29,Wed,13:00,240,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,,No-show,21,60.0
+BK11158,2026-07-29,Wed,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,Cancelled,14,45.0
+BK11159,2026-07-29,Wed,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,14,Completed,14,5.0
+BK11160,2026-07-29,Wed,15:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,,Cancelled,1,5.0
+BK11161,2026-07-29,Wed,14:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,11,Completed,7,1.9
+BK11162,2026-07-29,Wed,09:00,90,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,14,Completed,0,5.6
+BK11163,2026-07-29,Wed,14:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,7,0.8
+BK11164,2026-07-29,Wed,13:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,0,0.5
+BK11165,2026-07-29,Wed,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,7,2.6
+BK11166,2026-07-29,Wed,16:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,14,0.9
+BK11167,2026-07-29,Wed,15:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,0,2.6
+BK11168,2026-07-29,Wed,13:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,6,Completed,1,0.9
+BK11169,2026-07-29,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,2,1.8
+BK11170,2026-07-29,Wed,10:00,30,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,2,Completed,14,1.6
+BK11171,2026-07-29,Wed,13:00,90,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,14,Completed,7,4.7
+BK11172,2026-07-29,Wed,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,6,Completed,14,1.0
+BK11173,2026-07-29,Wed,08:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,1,2.0
+BK11174,2026-07-29,Wed,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,21,1.0
+BK11175,2026-07-29,Wed,11:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,4,Completed,3,1.2
+BK11176,2026-07-29,Wed,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,37,Completed,30,37.5
+BK11177,2026-07-29,Wed,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,29,Completed,30,75.0
+BK11178,2026-07-30,Thu,10:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,2,Completed,3,2.6
+BK11179,2026-07-30,Thu,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,6,Completed,2,2.6
+BK11180,2026-07-30,Thu,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,3,1.8
+BK11181,2026-07-30,Thu,08:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,,No-show,3,2.6
+BK11182,2026-07-30,Thu,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,,No-show,0,2.6
+BK11183,2026-07-30,Thu,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,12,Completed,14,2.5
+BK11184,2026-07-30,Thu,10:00,90,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,7,Completed,2,3.8
+BK11185,2026-07-30,Thu,13:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,,No-show,0,1.5
+BK11186,2026-07-30,Thu,08:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,76,Completed,30,30.0
+BK11187,2026-07-30,Thu,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,4,Completed,21,30.0
+BK11188,2026-07-30,Thu,16:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,10,Completed,0,10.0
+BK11189,2026-07-30,Thu,15:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,13,Completed,1,5.0
+BK11190,2026-07-30,Thu,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,6,Completed,0,5.6
+BK11191,2026-07-30,Thu,16:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,8,Completed,7,7.5
+BK11192,2026-07-30,Thu,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,10,Completed,1,1.9
+BK11193,2026-07-30,Thu,13:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,16,Completed,7,3.8
+BK11194,2026-07-30,Thu,16:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,,No-show,1,0.2
+BK11195,2026-07-30,Thu,16:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,2,Completed,5,0.5
+BK11196,2026-07-30,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,5,0.5
+BK11197,2026-07-30,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,11,Completed,21,1.8
+BK11198,2026-07-30,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,1,1.8
+BK11199,2026-07-30,Thu,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,7,Completed,7,1.8
+BK11200,2026-07-30,Thu,13:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,3,2.6
+BK11201,2026-07-30,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,5,Completed,7,3.1
+BK11202,2026-07-30,Thu,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,4,Completed,1,3.1
+BK11203,2026-07-30,Thu,08:00,90,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,20,Completed,3,4.7
+BK11204,2026-07-30,Thu,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,6,Completed,1,1.0
+BK11205,2026-07-30,Thu,14:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,2,Completed,3,1.0
+BK11206,2026-07-30,Thu,08:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,5,Completed,0,0.6
+BK11207,2026-07-30,Thu,08:00,180,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,130,Completed,14,56.2
+BK11208,2026-07-31,Fri,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,7,Completed,7,1.8
+BK11209,2026-07-31,Fri,11:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,,Cancelled,3,2.6
+BK11210,2026-07-31,Fri,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,2,Completed,0,0.9
+BK11211,2026-07-31,Fri,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,9,Completed,0,1.8
+BK11212,2026-07-31,Fri,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,2,Completed,14,2.5
+BK11213,2026-07-31,Fri,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,5,Completed,21,1.0
+BK11214,2026-07-31,Fri,08:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,7,Completed,21,2.0
+BK11215,2026-07-31,Fri,08:00,30,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,7,Completed,3,1.9
+BK11216,2026-07-31,Fri,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,27,Completed,1,3.8
+BK11217,2026-07-31,Fri,10:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,4,Completed,3,3.5
+BK11218,2026-07-31,Fri,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Kite Studio,15,Completed,3,3.1
+BK11219,2026-07-31,Fri,13:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,,No-show,2,1.5
+BK11220,2026-08-03,Mon,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,7,Completed,1,3.5
+BK11221,2026-08-03,Mon,15:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,4,Completed,2,2.6
+BK11222,2026-08-03,Mon,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,8,Completed,14,5.0
+BK11223,2026-08-03,Mon,14:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,5,Completed,7,0.5
+BK11224,2026-08-03,Mon,10:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,4,Completed,14,1.5
+BK11225,2026-08-03,Mon,09:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,2,Completed,1,0.5
+BK11226,2026-08-03,Mon,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,54,Completed,30,30.0
+BK11227,2026-08-03,Mon,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,,No-show,0,5.0
+BK11228,2026-08-03,Mon,15:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,,No-show,7,0.5
+BK11229,2026-08-03,Mon,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,4,Completed,0,3.5
+BK11230,2026-08-03,Mon,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,,Cancelled,1,1.8
+BK11231,2026-08-04,Tue,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,,Cancelled,0,1.8
+BK11232,2026-08-04,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,5,1.8
+BK11233,2026-08-04,Tue,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,4,Completed,1,1.8
+BK11234,2026-08-04,Tue,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,5,Completed,1,1.8
+BK11235,2026-08-04,Tue,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,14,Completed,1,2.5
+BK11236,2026-08-04,Tue,14:00,120,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,12,Completed,1,5.0
+BK11237,2026-08-04,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,,Cancelled,3,2.5
+BK11238,2026-08-04,Tue,16:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,7,Completed,14,0.5
+BK11239,2026-08-04,Tue,08:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,,No-show,3,0.5
+BK11240,2026-08-04,Tue,14:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,43,Completed,14,45.0
+BK11241,2026-08-04,Tue,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,33,Completed,45,30.0
+BK11242,2026-08-04,Tue,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,68,Completed,30,60.0
+BK11243,2026-08-04,Tue,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,25,Completed,7,5.0
+BK11244,2026-08-04,Tue,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,17,Completed,1,5.0
+BK11245,2026-08-04,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,13,Completed,0,5.0
+BK11246,2026-08-04,Tue,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,16,Completed,2,5.0
+BK11247,2026-08-04,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,3,Completed,2,3.8
+BK11248,2026-08-04,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,18,Completed,7,3.8
+BK11249,2026-08-04,Tue,15:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,1,Completed,1,0.2
+BK11250,2026-08-04,Tue,13:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,14,0.5
+BK11251,2026-08-04,Tue,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,5,Completed,1,1.8
+BK11252,2026-08-04,Tue,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,6,Completed,7,2.6
+BK11253,2026-08-04,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,10,Completed,14,1.8
+BK11254,2026-08-04,Tue,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,6,Completed,14,1.8
+BK11255,2026-08-04,Tue,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,6,Completed,14,1.8
+BK11256,2026-08-04,Tue,10:00,30,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,5,Completed,1,1.6
+BK11257,2026-08-04,Tue,14:00,30,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,18,Completed,1,1.6
+BK11258,2026-08-04,Tue,09:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,1,2.0
+BK11259,2026-08-04,Tue,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,,No-show,2,1.0
+BK11260,2026-08-04,Tue,10:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,5,Completed,2,1.5
+BK11261,2026-08-04,Tue,15:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,3,Completed,1,0.6
+BK11262,2026-08-04,Tue,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,62,Completed,14,37.5
+BK11263,2026-08-05,Wed,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,No-show,1,1.8
+BK11264,2026-08-05,Wed,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,No-show,14,3.5
+BK11265,2026-08-05,Wed,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,3,Completed,14,1.8
+BK11266,2026-08-05,Wed,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,,Cancelled,21,2.5
+BK11267,2026-08-05,Wed,14:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,3,Completed,1,1.2
+BK11268,2026-08-05,Wed,10:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,5,Completed,3,2.0
+BK11269,2026-08-05,Wed,09:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,1,Completed,14,2.0
+BK11270,2026-08-05,Wed,11:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,4,Completed,1,0.5
+BK11271,2026-08-05,Wed,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,48,Completed,14,60.0
+BK11272,2026-08-05,Wed,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,41,Completed,30,30.0
+BK11273,2026-08-05,Wed,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,19,Completed,1,5.0
+BK11274,2026-08-05,Wed,08:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,9,Completed,0,7.5
+BK11275,2026-08-05,Wed,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,19,Completed,0,5.0
+BK11276,2026-08-05,Wed,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,29,Completed,1,5.0
+BK11277,2026-08-05,Wed,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,,No-show,1,3.8
+BK11278,2026-08-05,Wed,09:00,120,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,4,Completed,5,7.5
+BK11279,2026-08-05,Wed,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,10,Completed,1,3.8
+BK11280,2026-08-05,Wed,09:00,90,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,12,Completed,5,5.6
+BK11281,2026-08-05,Wed,15:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,3,1.0
+BK11282,2026-08-05,Wed,15:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,14,0.5
+BK11283,2026-08-05,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,6,Completed,7,1.8
+BK11284,2026-08-05,Wed,16:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,,No-show,0,0.9
+BK11285,2026-08-05,Wed,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,3,1.8
+BK11286,2026-08-05,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,9,Completed,0,1.8
+BK11287,2026-08-05,Wed,08:00,120,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,8,Completed,2,6.2
+BK11288,2026-08-05,Wed,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,3,Completed,21,1.0
+BK11289,2026-08-05,Wed,09:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,2,Completed,2,0.5
+BK11290,2026-08-05,Wed,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,84,Completed,45,75.0
+BK11291,2026-08-06,Thu,13:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,,No-show,0,0.9
+BK11292,2026-08-06,Thu,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,6,Completed,0,2.6
+BK11293,2026-08-06,Thu,13:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,5,Completed,21,0.9
+BK11294,2026-08-06,Thu,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,2,Completed,0,0.9
+BK11295,2026-08-06,Thu,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,2,Completed,0,1.8
+BK11296,2026-08-06,Thu,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,4,Completed,5,1.8
+BK11297,2026-08-06,Thu,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,,Cancelled,0,5.0
+BK11298,2026-08-06,Thu,14:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,3,3.8
+BK11299,2026-08-06,Thu,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,15,Completed,1,2.5
+BK11300,2026-08-06,Thu,09:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,0,1.5
+BK11301,2026-08-06,Thu,11:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,6,Completed,3,2.0
+BK11302,2026-08-06,Thu,10:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,2,Completed,2,2.0
+BK11303,2026-08-06,Thu,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,4,Completed,2,1.0
+BK11304,2026-08-06,Thu,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,No-show,14,45.0
+BK11305,2026-08-06,Thu,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,,Cancelled,21,5.0
+BK11306,2026-08-06,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,25,Completed,1,5.0
+BK11307,2026-08-06,Thu,09:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,16,Completed,0,10.0
+BK11308,2026-08-06,Thu,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,6,Completed,5,3.8
+BK11309,2026-08-06,Thu,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,3,Completed,1,0.5
+BK11310,2026-08-06,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,1,Completed,21,0.5
+BK11311,2026-08-06,Thu,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,9,Completed,5,2.6
+BK11312,2026-08-06,Thu,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,6,Completed,14,1.8
+BK11313,2026-08-06,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,1,1.8
+BK11314,2026-08-06,Thu,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,6,Completed,0,0.9
+BK11315,2026-08-06,Thu,11:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,11,Completed,14,0.9
+BK11316,2026-08-06,Thu,10:00,30,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,,Cancelled,14,1.6
+BK11317,2026-08-06,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,15,Completed,0,3.1
+BK11318,2026-08-06,Thu,10:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,4,Completed,5,0.5
+BK11319,2026-08-06,Thu,10:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,3,Completed,3,1.5
+BK11320,2026-08-06,Thu,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,87,Completed,30,75.0
+BK11321,2026-08-06,Thu,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,,Cancelled,21,56.2
+BK11322,2026-08-06,Thu,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,99,Completed,45,56.2
+BK11323,2026-08-07,Fri,16:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,,Cancelled,7,3.5
+BK11324,2026-08-07,Fri,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,Cancelled,7,1.8
+BK11325,2026-08-07,Fri,11:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,2,Completed,5,3.5
+BK11326,2026-08-07,Fri,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,6,Completed,14,0.9
+BK11327,2026-08-07,Fri,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,5,Completed,5,2.5
+BK11328,2026-08-07,Fri,08:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,3,Completed,0,0.5
+BK11329,2026-08-07,Fri,16:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,2,Completed,0,1.5
+BK11330,2026-08-07,Fri,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,4,Completed,14,1.0
+BK11331,2026-08-07,Fri,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,Cancelled,30,30.0
+BK11332,2026-08-07,Fri,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,13,Completed,7,5.0
+BK11333,2026-08-07,Fri,13:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,22,Completed,21,10.0
+BK11334,2026-08-07,Fri,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,17,Completed,2,3.8
+BK11335,2026-08-07,Fri,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,7,Completed,3,3.8
+BK11336,2026-08-07,Fri,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,19,Completed,21,3.8
+BK11337,2026-08-07,Fri,10:00,30,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,19,Completed,21,1.9
+BK11338,2026-08-07,Fri,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,No-show,0,0.5
+BK11339,2026-08-07,Fri,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,2,Completed,14,0.5
+BK11340,2026-08-07,Fri,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,,Cancelled,14,0.9
+BK11341,2026-08-07,Fri,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,17,Completed,1,3.1
+BK11342,2026-08-07,Fri,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,12,Completed,5,3.1
+BK11343,2026-08-07,Fri,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,4,Completed,0,1.0
+BK11344,2026-08-07,Fri,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,4,Completed,2,1.0
+BK11345,2026-08-07,Fri,16:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,,Cancelled,1,1.2
+BK11346,2026-08-07,Fri,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,90,Completed,14,75.0
+BK11347,2026-08-07,Fri,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,77,Completed,45,37.5
+BK11348,2026-08-10,Mon,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,5,Completed,21,0.9
+BK11349,2026-08-10,Mon,11:00,30,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,6,Completed,5,1.2
+BK11350,2026-08-10,Mon,15:00,30,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,9,Completed,1,1.2
+BK11351,2026-08-10,Mon,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,,Cancelled,1,3.8
+BK11352,2026-08-10,Mon,10:00,120,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,17,Completed,5,5.0
+BK11353,2026-08-10,Mon,14:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,,No-show,0,0.5
+BK11354,2026-08-10,Mon,15:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,33,Completed,45,45.0
+BK11355,2026-08-10,Mon,15:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,16,Completed,14,5.0
+BK11356,2026-08-10,Mon,15:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,19,Completed,0,7.5
+BK11357,2026-08-10,Mon,11:00,90,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,19,Completed,21,5.6
+BK11358,2026-08-10,Mon,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,9,Completed,14,3.8
+BK11359,2026-08-10,Mon,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,,No-show,21,3.8
+BK11360,2026-08-10,Mon,09:00,90,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,Cancelled,21,5.6
+BK11361,2026-08-10,Mon,10:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,1,Completed,0,0.2
+BK11362,2026-08-10,Mon,14:00,30,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,11,Completed,1,1.6
+BK11363,2026-08-10,Mon,14:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,5,Completed,0,2.0
+BK11364,2026-08-10,Mon,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,53,Completed,45,37.5
+BK11365,2026-08-11,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,5,Completed,2,1.8
+BK11366,2026-08-11,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,No-show,7,1.8
+BK11367,2026-08-11,Tue,13:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,6,Completed,1,3.5
+BK11368,2026-08-11,Tue,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,16,Completed,0,2.5
+BK11369,2026-08-11,Tue,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,5,Completed,0,2.5
+BK11370,2026-08-11,Tue,16:00,60,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,15,Completed,2,2.5
+BK11371,2026-08-11,Tue,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,,No-show,14,1.0
+BK11372,2026-08-11,Tue,08:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,4,Completed,21,2.0
+BK11373,2026-08-11,Tue,14:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Northwind Capital,3,Completed,1,1.0
+BK11374,2026-08-11,Tue,09:00,240,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,46,Completed,14,60.0
+BK11375,2026-08-11,Tue,14:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,19,Completed,21,45.0
+BK11376,2026-08-11,Tue,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,81,Completed,14,45.0
+BK11377,2026-08-11,Tue,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,Cancelled,14,30.0
+BK11378,2026-08-11,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,9,Completed,7,5.0
+BK11379,2026-08-11,Tue,14:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,10,Completed,21,2.5
+BK11380,2026-08-11,Tue,16:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,9,Completed,1,7.5
+BK11381,2026-08-11,Tue,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,,Cancelled,3,3.8
+BK11382,2026-08-11,Tue,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,5,Completed,1,3.8
+BK11383,2026-08-11,Tue,13:00,90,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,17,Completed,2,5.6
+BK11384,2026-08-11,Tue,09:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,2,Completed,3,1.0
+BK11385,2026-08-11,Tue,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,2,Completed,1,0.5
+BK11386,2026-08-11,Tue,10:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,1,0.8
+BK11387,2026-08-11,Tue,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,5,Completed,2,2.6
+BK11388,2026-08-11,Tue,10:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,8,Completed,7,2.6
+BK11389,2026-08-11,Tue,14:00,90,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,12,Completed,7,4.7
+BK11390,2026-08-11,Tue,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,0,1.0
+BK11391,2026-08-11,Tue,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,2,Completed,3,1.0
+BK11392,2026-08-11,Tue,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,4,Completed,14,1.0
+BK11393,2026-08-11,Tue,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,6,Completed,0,1.2
+BK11394,2026-08-11,Tue,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,71,Completed,45,75.0
+BK11395,2026-08-11,Tue,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,62,Completed,14,56.2
+BK11396,2026-08-12,Wed,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,4,Completed,7,1.8
+BK11397,2026-08-12,Wed,16:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,,No-show,0,2.6
+BK11398,2026-08-12,Wed,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,3,Completed,1,1.8
+BK11399,2026-08-12,Wed,11:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,10,Completed,21,2.6
+BK11400,2026-08-12,Wed,10:00,120,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,,No-show,3,5.0
+BK11401,2026-08-12,Wed,14:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,5,Completed,7,3.8
+BK11402,2026-08-12,Wed,09:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,9,Completed,1,1.2
+BK11403,2026-08-12,Wed,10:00,120,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,4,Completed,21,5.0
+BK11404,2026-08-12,Wed,13:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,7,Completed,2,1.5
+BK11405,2026-08-12,Wed,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,5,Completed,21,1.0
+BK11406,2026-08-12,Wed,14:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,2,Completed,3,0.5
+BK11407,2026-08-12,Wed,16:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,2,Completed,5,0.5
+BK11408,2026-08-12,Wed,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,88,Completed,14,60.0
+BK11409,2026-08-12,Wed,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,67,Completed,30,30.0
+BK11410,2026-08-12,Wed,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,17,Completed,0,5.0
+BK11411,2026-08-12,Wed,15:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Bright Path Health,27,Completed,14,5.0
+BK11412,2026-08-12,Wed,11:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,9,Completed,21,2.5
+BK11413,2026-08-12,Wed,10:00,120,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,15,Completed,0,7.5
+BK11414,2026-08-12,Wed,14:00,30,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,6,Completed,0,1.9
+BK11415,2026-08-12,Wed,15:00,30,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,11,Completed,2,1.9
+BK11416,2026-08-12,Wed,16:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,8,Completed,5,3.8
+BK11417,2026-08-12,Wed,16:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,,Cancelled,21,1.0
+BK11418,2026-08-12,Wed,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,14,0.5
+BK11419,2026-08-12,Wed,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,1,Completed,5,0.5
+BK11420,2026-08-12,Wed,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,6,Completed,14,1.8
+BK11421,2026-08-12,Wed,14:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,6,Completed,0,0.9
+BK11422,2026-08-12,Wed,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,8,Completed,2,3.1
+BK11423,2026-08-12,Wed,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Oakline Insurance,14,Completed,14,3.1
+BK11424,2026-08-12,Wed,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,6,Completed,0,1.0
+BK11425,2026-08-12,Wed,11:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,2,Completed,3,2.0
+BK11426,2026-08-12,Wed,14:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,3,Completed,3,2.0
+BK11427,2026-08-12,Wed,09:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,2,Completed,3,1.2
+BK11428,2026-08-12,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,85,Completed,30,37.5
+BK11429,2026-08-12,Wed,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,100,Completed,30,37.5
+BK11430,2026-08-12,Wed,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,83,Completed,14,37.5
+BK11431,2026-08-12,Wed,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,105,Completed,21,56.2
+BK11432,2026-08-13,Thu,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,Cancelled,14,1.8
+BK11433,2026-08-13,Thu,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,Cancelled,0,1.8
+BK11434,2026-08-13,Thu,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,12,Completed,0,1.8
+BK11435,2026-08-13,Thu,09:00,30,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,9,Completed,0,1.2
+BK11436,2026-08-13,Thu,09:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,4,Completed,1,1.5
+BK11437,2026-08-13,Thu,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,2,Completed,2,1.0
+BK11438,2026-08-13,Thu,09:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Arcadia Legal,4,Completed,0,1.5
+BK11439,2026-08-13,Thu,14:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Sable & Co,,Cancelled,21,2.0
+BK11440,2026-08-13,Thu,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Sable & Co,93,Completed,14,45.0
+BK11441,2026-08-13,Thu,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,,Cancelled,30,60.0
+BK11442,2026-08-13,Thu,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,48,Completed,45,60.0
+BK11443,2026-08-13,Thu,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,15,Completed,0,3.8
+BK11444,2026-08-13,Thu,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Meridian Engineering,11,Completed,14,3.8
+BK11445,2026-08-13,Thu,15:00,90,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,18,Completed,1,5.6
+BK11446,2026-08-13,Thu,10:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,1,Completed,2,0.2
+BK11447,2026-08-13,Thu,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,10,Completed,0,1.8
+BK11448,2026-08-13,Thu,08:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,5,Completed,0,3.5
+BK11449,2026-08-13,Thu,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,7,Completed,14,2.6
+BK11450,2026-08-13,Thu,09:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,,Cancelled,3,3.1
+BK11451,2026-08-13,Thu,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,20,Completed,0,3.1
+BK11452,2026-08-13,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,,No-show,1,1.0
+BK11453,2026-08-13,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,0,1.0
+BK11454,2026-08-13,Thu,14:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,2,Completed,0,0.5
+BK11455,2026-08-13,Thu,08:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,38,Completed,14,75.0
+BK11456,2026-08-13,Thu,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Meridian Engineering,66,Completed,30,75.0
+BK11457,2026-08-14,Fri,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,5,1.8
+BK11458,2026-08-14,Fri,09:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,0,0.9
+BK11459,2026-08-14,Fri,13:00,30,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,11,Completed,1,1.2
+BK11460,2026-08-14,Fri,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,,Cancelled,0,1.0
+BK11461,2026-08-14,Fri,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Northwind Capital,6,Completed,7,1.0
+BK11462,2026-08-14,Fri,10:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,Cancelled,45,60.0
+BK11463,2026-08-14,Fri,15:00,240,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,66,Completed,21,60.0
+BK11464,2026-08-14,Fri,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,26,Completed,7,5.0
+BK11465,2026-08-14,Fri,15:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,18,Completed,7,3.8
+BK11466,2026-08-14,Fri,15:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,3,Completed,0,1.0
+BK11467,2026-08-14,Fri,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,14,1.8
+BK11468,2026-08-14,Fri,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,5,Completed,21,2.6
+BK11469,2026-08-14,Fri,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,20,Completed,5,3.1
+BK11470,2026-08-14,Fri,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,22,Completed,21,75.0
+BK11471,2026-08-17,Mon,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,2,Completed,1,1.8
+BK11472,2026-08-17,Mon,10:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,5,Completed,21,3.5
+BK11473,2026-08-17,Mon,11:00,30,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,11,Completed,3,1.2
+BK11474,2026-08-17,Mon,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,11,Completed,3,2.5
+BK11475,2026-08-17,Mon,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,0,2.5
+BK11476,2026-08-17,Mon,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,2,Completed,0,1.0
+BK11477,2026-08-17,Mon,09:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,5,Completed,0,2.0
+BK11478,2026-08-17,Mon,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,2,Completed,1,1.0
+BK11479,2026-08-17,Mon,11:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Oakline Insurance,,Cancelled,1,1.0
+BK11480,2026-08-17,Mon,11:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,10,Completed,0,2.5
+BK11481,2026-08-17,Mon,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,11,Completed,5,5.0
+BK11482,2026-08-17,Mon,15:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,,No-show,7,7.5
+BK11483,2026-08-17,Mon,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,26,Completed,1,3.8
+BK11484,2026-08-17,Mon,10:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,12,Completed,3,7.5
+BK11485,2026-08-17,Mon,08:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,,No-show,1,0.2
+BK11486,2026-08-17,Mon,13:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,2,Completed,21,0.2
+BK11487,2026-08-17,Mon,15:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Oakline Insurance,,No-show,2,0.5
+BK11488,2026-08-17,Mon,11:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,14,0.2
+BK11489,2026-08-17,Mon,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,,No-show,0,1.8
+BK11490,2026-08-17,Mon,15:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,14,3.5
+BK11491,2026-08-17,Mon,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,,No-show,5,3.1
+BK11492,2026-08-17,Mon,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,8,Completed,2,3.1
+BK11493,2026-08-17,Mon,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,2,Completed,1,1.0
+BK11494,2026-08-17,Mon,11:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,7,Completed,1,1.0
+BK11495,2026-08-17,Mon,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,,No-show,14,75.0
+BK11496,2026-08-17,Mon,13:00,180,Southbank Place,Level 7 Event Hall,Event,150,Bright Path Health,12,Completed,30,56.2
+BK11497,2026-08-18,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,1,Completed,21,1.8
+BK11498,2026-08-18,Tue,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,7,Completed,1,1.8
+BK11499,2026-08-18,Tue,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,3,Completed,5,1.8
+BK11500,2026-08-18,Tue,13:00,30,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,9,Completed,21,1.2
+BK11501,2026-08-18,Tue,08:00,120,Collins Arch,Level 2 Studio,Meeting,20,Oakline Insurance,14,Completed,0,5.0
+BK11502,2026-08-18,Tue,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,5,Completed,5,1.0
+BK11503,2026-08-18,Tue,13:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,4,Completed,1,1.5
+BK11504,2026-08-18,Tue,14:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,4,Completed,2,0.5
+BK11505,2026-08-18,Tue,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,106,Completed,30,45.0
+BK11506,2026-08-18,Tue,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,30,Completed,21,30.0
+BK11507,2026-08-18,Tue,10:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,21,Completed,7,7.5
+BK11508,2026-08-18,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,32,Completed,0,5.0
+BK11509,2026-08-18,Tue,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,21,Completed,1,5.0
+BK11510,2026-08-18,Tue,14:00,60,80 Bourke,Level 5 Training Room,Training,30,Sable & Co,6,Completed,3,3.8
+BK11511,2026-08-18,Tue,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,1,Completed,0,0.5
+BK11512,2026-08-18,Tue,15:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,1,0.2
+BK11513,2026-08-18,Tue,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,1,Completed,21,0.5
+BK11514,2026-08-18,Tue,09:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,2,Completed,7,3.5
+BK11515,2026-08-18,Tue,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,5,Completed,0,1.8
+BK11516,2026-08-18,Tue,13:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,7,Completed,1,3.5
+BK11517,2026-08-18,Tue,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,6,Completed,0,3.1
+BK11518,2026-08-18,Tue,15:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,1,Completed,3,1.0
+BK11519,2026-08-18,Tue,11:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,2,Completed,21,0.5
+BK11520,2026-08-18,Tue,10:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,4,Completed,5,1.0
+BK11521,2026-08-18,Tue,11:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,3,Completed,7,1.2
+BK11522,2026-08-18,Tue,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,104,Completed,21,37.5
+BK11523,2026-08-18,Tue,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,38,Completed,21,56.2
+BK11524,2026-08-19,Wed,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,,Cancelled,3,1.8
+BK11525,2026-08-19,Wed,08:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,9,Completed,0,3.5
+BK11526,2026-08-19,Wed,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,8,Completed,1,2.6
+BK11527,2026-08-19,Wed,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,4,Completed,7,1.8
+BK11528,2026-08-19,Wed,11:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,8,Completed,5,2.6
+BK11529,2026-08-19,Wed,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Pivot Labs,16,Completed,21,2.5
+BK11530,2026-08-19,Wed,08:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,6,Completed,21,3.8
+BK11531,2026-08-19,Wed,10:00,60,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,11,Completed,5,2.5
+BK11532,2026-08-19,Wed,15:00,30,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,5,Completed,1,1.2
+BK11533,2026-08-19,Wed,15:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,7,1.0
+BK11534,2026-08-19,Wed,13:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,4,Completed,0,1.0
+BK11535,2026-08-19,Wed,13:00,90,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,4,Completed,1,1.5
+BK11536,2026-08-19,Wed,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,62,Completed,14,60.0
+BK11537,2026-08-19,Wed,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,62,Completed,21,30.0
+BK11538,2026-08-19,Wed,11:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,38,Completed,14,45.0
+BK11539,2026-08-19,Wed,09:00,120,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,,No-show,45,30.0
+BK11540,2026-08-19,Wed,10:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,27,Completed,1,2.5
+BK11541,2026-08-19,Wed,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Meridian Engineering,22,Completed,14,5.0
+BK11542,2026-08-19,Wed,08:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,23,Completed,1,5.0
+BK11543,2026-08-19,Wed,16:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,10,Completed,21,5.0
+BK11544,2026-08-19,Wed,13:00,120,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,5,7.5
+BK11545,2026-08-19,Wed,10:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,2,Completed,1,0.5
+BK11546,2026-08-19,Wed,13:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,2,Completed,1,0.8
+BK11547,2026-08-19,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,4,Completed,2,1.8
+BK11548,2026-08-19,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,6,Completed,0,1.8
+BK11549,2026-08-19,Wed,11:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,7,Completed,14,0.9
+BK11550,2026-08-19,Wed,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,14,Completed,3,3.1
+BK11551,2026-08-19,Wed,16:00,60,Southbank Place,Lobby Lounge,Meeting,25,Bright Path Health,4,Completed,1,3.1
+BK11552,2026-08-19,Wed,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,14,Completed,0,3.1
+BK11553,2026-08-19,Wed,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,4,Completed,2,1.0
+BK11554,2026-08-19,Wed,13:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,4,Completed,5,1.5
+BK11555,2026-08-19,Wed,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,2,Completed,1,1.0
+BK11556,2026-08-19,Wed,10:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,5,Completed,1,0.6
+BK11557,2026-08-19,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,70,Completed,30,37.5
+BK11558,2026-08-19,Wed,13:00,180,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,86,Completed,45,56.2
+BK11559,2026-08-19,Wed,14:00,120,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,91,Completed,45,37.5
+BK11560,2026-08-19,Wed,14:00,240,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,110,Completed,21,75.0
+BK11561,2026-08-20,Thu,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,,No-show,0,2.6
+BK11562,2026-08-20,Thu,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,8,Completed,0,1.8
+BK11563,2026-08-20,Thu,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Northwind Capital,4,Completed,0,1.8
+BK11564,2026-08-20,Thu,16:00,60,Collins Arch,Level 2 Studio,Meeting,20,Arcadia Legal,8,Completed,21,2.5
+BK11565,2026-08-20,Thu,08:00,60,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,13,Completed,0,2.5
+BK11566,2026-08-20,Thu,09:00,90,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,10,Completed,21,3.8
+BK11567,2026-08-20,Thu,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,,Cancelled,0,1.0
+BK11568,2026-08-20,Thu,09:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,5,Completed,7,1.0
+BK11569,2026-08-20,Thu,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,22,Completed,45,45.0
+BK11570,2026-08-20,Thu,09:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,23,Completed,0,2.5
+BK11571,2026-08-20,Thu,09:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Sable & Co,27,Completed,1,10.0
+BK11572,2026-08-20,Thu,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,,Cancelled,7,3.8
+BK11573,2026-08-20,Thu,09:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Northwind Capital,,Cancelled,1,0.5
+BK11574,2026-08-20,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,3,Completed,3,0.5
+BK11575,2026-08-20,Thu,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,6,Completed,1,1.8
+BK11576,2026-08-20,Thu,13:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,4,Completed,2,2.6
+BK11577,2026-08-20,Thu,09:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,8,Completed,5,3.5
+BK11578,2026-08-20,Thu,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,6,Completed,5,1.8
+BK11579,2026-08-20,Thu,14:00,120,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,5,Completed,0,6.2
+BK11580,2026-08-20,Thu,13:00,60,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,7,Completed,2,3.1
+BK11581,2026-08-20,Thu,13:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Pivot Labs,,Cancelled,5,1.0
+BK11582,2026-08-20,Thu,15:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,,Cancelled,2,1.5
+BK11583,2026-08-20,Thu,16:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Bright Path Health,5,Completed,2,0.6
+BK11584,2026-08-20,Thu,16:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,50,Completed,45,37.5
+BK11585,2026-08-20,Thu,08:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,95,Completed,14,56.2
+BK11586,2026-08-20,Thu,10:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,78,Completed,14,37.5
+BK11587,2026-08-20,Thu,13:00,240,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,25,Completed,14,75.0
+BK11588,2026-08-21,Fri,15:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,8,Completed,7,0.9
+BK11589,2026-08-21,Fri,16:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,3,Completed,14,0.9
+BK11590,2026-08-21,Fri,13:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,7,Completed,1,3.5
+BK11591,2026-08-21,Fri,11:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,3,Completed,14,0.9
+BK11592,2026-08-21,Fri,08:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,8,Completed,14,2.5
+BK11593,2026-08-21,Fri,16:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,2,Completed,1,1.0
+BK11594,2026-08-21,Fri,15:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Kite Studio,3,Completed,5,1.0
+BK11595,2026-08-21,Fri,14:00,240,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,52,Completed,45,60.0
+BK11596,2026-08-21,Fri,14:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,15,Completed,1,2.5
+BK11597,2026-08-21,Fri,11:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,5,Completed,14,3.8
+BK11598,2026-08-21,Fri,15:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,0,0.9
+BK11599,2026-08-21,Fri,15:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,8,Completed,14,0.9
+BK11600,2026-08-21,Fri,08:00,60,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,4,Completed,3,3.1
+BK11601,2026-08-21,Fri,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,6,Completed,3,1.0
+BK11602,2026-08-21,Fri,08:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,,No-show,0,1.2
+BK11603,2026-08-21,Fri,15:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Sable & Co,3,Completed,1,1.2
+BK11604,2026-08-21,Fri,16:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Arcadia Legal,2,Completed,1,1.9
+BK11605,2026-08-21,Fri,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Oakline Insurance,112,Completed,14,75.0
+BK11606,2026-08-24,Mon,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Oakline Insurance,4,Completed,5,1.8
+BK11607,2026-08-24,Mon,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,4,Completed,1,1.8
+BK11608,2026-08-24,Mon,10:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,2,Completed,14,0.9
+BK11609,2026-08-24,Mon,16:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,10,Completed,0,3.5
+BK11610,2026-08-24,Mon,09:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,No-show,1,2.6
+BK11611,2026-08-24,Mon,13:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,11,Completed,1,2.5
+BK11612,2026-08-24,Mon,13:00,60,Collins Arch,Level 12 Meeting Room B,Meeting,8,Meridian Engineering,,No-show,21,1.0
+BK11613,2026-08-24,Mon,16:00,30,Collins Arch,Level 12 Meeting Room B,Meeting,8,Pivot Labs,4,Completed,21,0.5
+BK11614,2026-08-24,Mon,14:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,22,Completed,3,2.5
+BK11615,2026-08-24,Mon,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Northwind Capital,9,Completed,1,5.0
+BK11616,2026-08-24,Mon,10:00,90,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,,Cancelled,2,5.6
+BK11617,2026-08-24,Mon,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Bright Path Health,12,Completed,1,3.8
+BK11618,2026-08-24,Mon,10:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Kite Studio,1,Completed,2,1.0
+BK11619,2026-08-24,Mon,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,,No-show,5,1.8
+BK11620,2026-08-24,Mon,14:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,,No-show,1,2.6
+BK11621,2026-08-24,Mon,09:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,6,Completed,1,1.5
+BK11622,2026-08-24,Mon,11:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,3,Completed,21,0.5
+BK11623,2026-08-24,Mon,16:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Oakline Insurance,3,Completed,21,1.0
+BK11624,2026-08-24,Mon,10:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,2,Completed,7,1.2
+BK11625,2026-08-24,Mon,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,2,Completed,0,1.2
+BK11626,2026-08-24,Mon,10:00,240,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,86,Completed,14,75.0
+BK11627,2026-08-25,Tue,11:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Sable & Co,4,Completed,7,1.8
+BK11628,2026-08-25,Tue,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,2,Completed,14,1.8
+BK11629,2026-08-25,Tue,14:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,1,Completed,7,2.6
+BK11630,2026-08-25,Tue,08:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,,No-show,2,0.9
+BK11631,2026-08-25,Tue,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,8,Completed,7,1.8
+BK11632,2026-08-25,Tue,09:00,30,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,17,Completed,0,1.2
+BK11633,2026-08-25,Tue,10:00,30,Collins Arch,Level 2 Studio,Meeting,20,Sable & Co,7,Completed,3,1.2
+BK11634,2026-08-25,Tue,09:00,30,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,4,Completed,0,0.5
+BK11635,2026-08-25,Tue,09:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,37,Completed,45,45.0
+BK11636,2026-08-25,Tue,16:00,120,Collins Arch,Rooftop Event Space,Event,120,Bright Path Health,,No-show,45,30.0
+BK11637,2026-08-25,Tue,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Northwind Capital,36,Completed,30,45.0
+BK11638,2026-08-25,Tue,14:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,10,Completed,3,5.0
+BK11639,2026-08-25,Tue,16:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,21,Completed,2,10.0
+BK11640,2026-08-25,Tue,11:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,33,Completed,14,7.5
+BK11641,2026-08-25,Tue,09:00,120,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,8,Completed,21,7.5
+BK11642,2026-08-25,Tue,09:00,60,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,5,Completed,1,3.8
+BK11643,2026-08-25,Tue,14:00,120,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,10,Completed,0,7.5
+BK11644,2026-08-25,Tue,13:00,60,80 Bourke,Level 5 Training Room,Training,30,Pivot Labs,24,Completed,5,3.8
+BK11645,2026-08-25,Tue,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,2,Completed,1,0.5
+BK11646,2026-08-25,Tue,08:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,1,Completed,21,0.5
+BK11647,2026-08-25,Tue,11:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,7,Completed,0,1.8
+BK11648,2026-08-25,Tue,09:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,7,0.9
+BK11649,2026-08-25,Tue,10:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,11,Completed,0,0.9
+BK11650,2026-08-25,Tue,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Arcadia Legal,8,Completed,1,1.8
+BK11651,2026-08-25,Tue,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,5,Completed,5,3.1
+BK11652,2026-08-25,Tue,10:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,7,Completed,2,3.1
+BK11653,2026-08-25,Tue,10:00,120,Southbank Place,Level 3 Meeting Room,Meeting,8,Bright Path Health,3,Completed,0,2.0
+BK11654,2026-08-25,Tue,16:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,1,Completed,21,1.5
+BK11655,2026-08-25,Tue,09:00,90,Southbank Place,Level 3 Wellness Room,Wellness class,10,Oakline Insurance,2,Completed,7,1.9
+BK11656,2026-08-25,Tue,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,112,Completed,14,37.5
+BK11657,2026-08-25,Tue,09:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,57,Completed,45,56.2
+BK11658,2026-08-26,Wed,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,10,Completed,0,1.8
+BK11659,2026-08-26,Wed,14:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,8,Completed,14,0.9
+BK11660,2026-08-26,Wed,13:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,8,Completed,7,1.8
+BK11661,2026-08-26,Wed,09:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,3,Completed,3,1.8
+BK11662,2026-08-26,Wed,11:00,120,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,14,Completed,21,5.0
+BK11663,2026-08-26,Wed,14:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,5,Completed,0,2.5
+BK11664,2026-08-26,Wed,09:00,60,Collins Arch,Level 2 Studio,Meeting,20,Northwind Capital,,No-show,2,2.5
+BK11665,2026-08-26,Wed,14:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,38,Completed,45,30.0
+BK11666,2026-08-26,Wed,08:00,120,Collins Arch,Rooftop Event Space,Event,120,Meridian Engineering,75,Completed,21,30.0
+BK11667,2026-08-26,Wed,16:00,180,Collins Arch,Rooftop Event Space,Event,120,Pivot Labs,30,Completed,45,45.0
+BK11668,2026-08-26,Wed,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,12,Completed,2,5.0
+BK11669,2026-08-26,Wed,10:00,60,80 Bourke,Level 5 Training Room,Training,30,Oakline Insurance,20,Completed,1,3.8
+BK11670,2026-08-26,Wed,14:00,30,80 Bourke,Level 5 Training Room,Training,30,Kite Studio,16,Completed,2,1.9
+BK11671,2026-08-26,Wed,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Pivot Labs,1,Completed,3,0.5
+BK11672,2026-08-26,Wed,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,3,Completed,0,0.5
+BK11673,2026-08-26,Wed,09:00,90,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,5,Completed,1,2.6
+BK11674,2026-08-26,Wed,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Northwind Capital,12,Completed,14,1.8
+BK11675,2026-08-26,Wed,08:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Bright Path Health,8,Completed,5,3.5
+BK11676,2026-08-26,Wed,11:00,120,Southbank Place,Lobby Lounge,Meeting,25,Pivot Labs,,Cancelled,3,6.2
+BK11677,2026-08-26,Wed,11:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,8,Completed,7,3.1
+BK11678,2026-08-26,Wed,08:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,3,Completed,7,0.5
+BK11679,2026-08-26,Wed,14:00,60,Southbank Place,Level 3 Wellness Room,Wellness class,10,Kite Studio,8,Completed,3,1.2
+BK11680,2026-08-26,Wed,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Arcadia Legal,76,Completed,45,56.2
+BK11681,2026-08-26,Wed,15:00,120,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,58,Completed,21,37.5
+BK11682,2026-08-27,Thu,10:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,7,Completed,14,1.8
+BK11683,2026-08-27,Thu,08:00,30,Collins Arch,Level 2 Boardroom,Meeting,14,Kite Studio,9,Completed,14,0.9
+BK11684,2026-08-27,Thu,09:00,120,Collins Arch,Level 2 Boardroom,Meeting,14,Pivot Labs,,Cancelled,1,3.5
+BK11685,2026-08-27,Thu,16:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Meridian Engineering,5,Completed,3,1.8
+BK11686,2026-08-27,Thu,13:00,90,Collins Arch,Level 2 Studio,Meeting,20,Meridian Engineering,6,Completed,1,3.8
+BK11687,2026-08-27,Thu,09:00,30,Collins Arch,Level 2 Studio,Meeting,20,Bright Path Health,17,Completed,7,1.2
+BK11688,2026-08-27,Thu,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,,Cancelled,14,1.0
+BK11689,2026-08-27,Thu,16:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,2,Completed,1,2.0
+BK11690,2026-08-27,Thu,10:00,90,Collins Arch,Level 12 Meeting Room B,Meeting,8,Sable & Co,2,Completed,2,1.5
+BK11691,2026-08-27,Thu,10:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,70,Completed,45,30.0
+BK11692,2026-08-27,Thu,10:00,180,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,50,Completed,30,45.0
+BK11693,2026-08-27,Thu,13:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,15,Completed,5,5.0
+BK11694,2026-08-27,Thu,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,30,Completed,1,5.0
+BK11695,2026-08-27,Thu,09:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,21,Completed,0,5.0
+BK11696,2026-08-27,Thu,13:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Bright Path Health,1,Completed,1,0.2
+BK11697,2026-08-27,Thu,14:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,3,Completed,1,0.5
+BK11698,2026-08-27,Thu,11:00,120,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,3,1.0
+BK11699,2026-08-27,Thu,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,3,Completed,1,1.8
+BK11700,2026-08-27,Thu,08:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,5,Completed,14,1.8
+BK11701,2026-08-27,Thu,14:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,2,Completed,5,1.8
+BK11702,2026-08-27,Thu,11:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,3,Completed,0,0.9
+BK11703,2026-08-27,Thu,16:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,Cancelled,2,3.5
+BK11704,2026-08-27,Thu,14:00,90,Southbank Place,Lobby Lounge,Meeting,25,Northwind Capital,14,Completed,2,4.7
+BK11705,2026-08-27,Thu,16:00,60,Southbank Place,Lobby Lounge,Meeting,25,Sable & Co,6,Completed,5,3.1
+BK11706,2026-08-27,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Meridian Engineering,4,Completed,0,1.0
+BK11707,2026-08-27,Thu,16:00,90,Southbank Place,Level 3 Meeting Room,Meeting,8,Sable & Co,3,Completed,5,1.5
+BK11708,2026-08-27,Thu,09:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Kite Studio,4,Completed,21,1.0
+BK11709,2026-08-27,Thu,08:00,60,Southbank Place,Level 3 Meeting Room,Meeting,8,Northwind Capital,4,Completed,0,1.0
+BK11710,2026-08-27,Thu,09:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Meridian Engineering,4,Completed,21,2.5
+BK11711,2026-08-27,Thu,13:00,30,Southbank Place,Level 3 Wellness Room,Wellness class,10,Pivot Labs,2,Completed,14,0.6
+BK11712,2026-08-27,Thu,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,93,Completed,30,56.2
+BK11713,2026-08-27,Thu,11:00,240,Southbank Place,Level 7 Event Hall,Event,150,Pivot Labs,12,Completed,21,75.0
+BK11714,2026-08-28,Fri,15:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Bright Path Health,7,Completed,1,1.8
+BK11715,2026-08-28,Fri,11:00,90,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,9,Completed,5,3.8
+BK11716,2026-08-28,Fri,15:00,120,Collins Arch,Level 12 Meeting Room A,Meeting,8,Bright Path Health,3,Completed,1,2.0
+BK11717,2026-08-28,Fri,08:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Oakline Insurance,3,Completed,21,1.0
+BK11718,2026-08-28,Fri,10:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,22,Completed,7,7.5
+BK11719,2026-08-28,Fri,10:00,60,80 Bourke,Ground Floor Hub,Meeting,40,Kite Studio,13,Completed,0,5.0
+BK11720,2026-08-28,Fri,11:00,120,80 Bourke,Ground Floor Hub,Meeting,40,Oakline Insurance,8,Completed,0,10.0
+BK11721,2026-08-28,Fri,08:00,60,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,19,Completed,5,3.8
+BK11722,2026-08-28,Fri,14:00,30,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,,No-show,0,0.2
+BK11723,2026-08-28,Fri,14:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,6,Completed,21,3.5
+BK11724,2026-08-28,Fri,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Kite Studio,3,Completed,7,1.8
+BK11725,2026-08-28,Fri,15:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,10,Completed,2,1.8
+BK11726,2026-08-28,Fri,09:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,4,Completed,0,1.8
+BK11727,2026-08-28,Fri,15:00,60,Southbank Place,Lobby Lounge,Meeting,25,Arcadia Legal,8,Completed,21,3.1
+BK11728,2026-08-28,Fri,14:00,60,Southbank Place,Lobby Lounge,Meeting,25,Meridian Engineering,21,Completed,7,3.1
+BK11729,2026-08-28,Fri,10:00,120,Southbank Place,Level 3 Wellness Room,Wellness class,10,Northwind Capital,3,Completed,0,2.5
+BK11730,2026-08-28,Fri,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Kite Studio,50,Completed,14,56.2
+BK11731,2026-08-31,Mon,08:00,90,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,5,2.6
+BK11732,2026-08-31,Mon,08:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,6,Completed,1,1.8
+BK11733,2026-08-31,Mon,14:00,60,Collins Arch,Level 2 Boardroom,Meeting,14,Arcadia Legal,12,Completed,7,1.8
+BK11734,2026-08-31,Mon,13:00,30,Collins Arch,Level 2 Studio,Meeting,20,Kite Studio,5,Completed,14,1.2
+BK11735,2026-08-31,Mon,10:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Pivot Labs,3,Completed,0,1.0
+BK11736,2026-08-31,Mon,14:00,60,Collins Arch,Level 12 Meeting Room A,Meeting,8,Meridian Engineering,4,Completed,21,1.0
+BK11737,2026-08-31,Mon,15:00,180,Collins Arch,Rooftop Event Space,Event,120,Oakline Insurance,41,Completed,21,45.0
+BK11738,2026-08-31,Mon,13:00,120,Collins Arch,Rooftop Event Space,Event,120,Arcadia Legal,,Cancelled,14,30.0
+BK11739,2026-08-31,Mon,10:00,30,80 Bourke,Ground Floor Hub,Meeting,40,Pivot Labs,14,Completed,7,2.5
+BK11740,2026-08-31,Mon,14:00,90,80 Bourke,Ground Floor Hub,Meeting,40,Arcadia Legal,18,Completed,14,7.5
+BK11741,2026-08-31,Mon,16:00,90,80 Bourke,Level 5 Training Room,Training,30,Northwind Capital,,No-show,1,5.6
+BK11742,2026-08-31,Mon,09:00,30,80 Bourke,Level 5 Training Room,Training,30,Arcadia Legal,,Cancelled,5,1.9
+BK11743,2026-08-31,Mon,10:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Arcadia Legal,1,Completed,2,0.8
+BK11744,2026-08-31,Mon,16:00,90,80 Bourke,Level 5 Focus Room,Meeting,4,Meridian Engineering,,No-show,5,0.8
+BK11745,2026-08-31,Mon,11:00,60,80 Bourke,Level 5 Focus Room,Meeting,4,Sable & Co,,No-show,2,0.5
+BK11746,2026-08-31,Mon,16:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Pivot Labs,,No-show,3,1.8
+BK11747,2026-08-31,Mon,16:00,120,80 Bourke,Level 9 Boardroom,Meeting,14,Sable & Co,,No-show,0,3.5
+BK11748,2026-08-31,Mon,10:00,60,80 Bourke,Level 9 Boardroom,Meeting,14,Meridian Engineering,5,Completed,1,1.8
+BK11749,2026-08-31,Mon,09:00,30,80 Bourke,Level 9 Boardroom,Meeting,14,Oakline Insurance,4,Completed,21,0.9
+BK11750,2026-08-31,Mon,09:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,4,Completed,21,0.5
+BK11751,2026-08-31,Mon,15:00,30,Southbank Place,Level 3 Meeting Room,Meeting,8,Arcadia Legal,2,Completed,21,0.5
+BK11752,2026-08-31,Mon,14:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,41,Completed,14,56.2
+BK11753,2026-08-31,Mon,15:00,180,Southbank Place,Level 7 Event Hall,Event,150,Sable & Co,80,Completed,21,56.2
+BK11754,2026-08-31,Mon,10:00,180,Southbank Place,Level 7 Event Hall,Event,150,Northwind Capital,64,Completed,45,56.2
