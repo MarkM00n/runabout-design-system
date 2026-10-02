@@ -1,6 +1,6 @@
 {
   "component": "CardEvent",
-  "lastValidated": "2026-09-30",
+  "lastValidated": "2026-10-02",
   "checks": {
     "tokenCompliance": {
       "pass": true,
