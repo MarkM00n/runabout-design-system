@@ -192,7 +192,8 @@ custom properties every component uses.
   `data-mode` from an ancestor that scopes more broadly than the element
   visually sits within. Load the dashboard (`npm run dev`) and actually
   look at it before calling a token sync done; don't rely on the token
-  merely existing.
+  merely existing. From a cloud session you can't — say so, and ask the
+  person to check the live dashboard after merge.
 - **Real incident (2026-08-05):** the mode-based token architecture sync
   retired `text-inverse` (no successor) and left several dashboard
   elements referencing it directly — missed entirely by `design-sync`,
@@ -247,6 +248,52 @@ all — and without this rule, nothing said so at the moment it mattered.
   sticky PR comment when it skips ("Post or update Slack-skip notice") —
   that catches anyone reading the PR later; this rule catches the person
   watching live, at the moment they'd otherwise be left waiting.
+
+## Visual review happens before merge, from the PR's preview link
+
+`.github/workflows/chromatic.yml` publishes every pushed commit's Storybook
+and posts a sticky "Visual review" comment on the PR with two links: that
+branch's Storybook, and Chromatic's side-by-side review against `main`. See
+`docs/how-work-flows.md` stage 1b.
+
+- **When you open or push to a PR that changes anything visual, say where
+  to look.** Name the stories that changed and point at the PR's Visual
+  review comment. If the comment hasn't appeared yet, say it will, and
+  roughly when (a few minutes after the push).
+- **Never imply you looked at something you couldn't see.** A cloud
+  session has no browser (see below). Report what you checked in code and
+  computed values, and say plainly that the rendered check is the person's,
+  from the link.
+- **Chromatic covers Storybook, not the dashboard.** `src/App.tsx` has no
+  preview; it is still checked by eye on the live site after merge.
+- **Visual changes don't fail the check.** That's deliberate — a changed
+  story is a question for a person. Don't describe a green Chromatic job
+  as "no visual changes"; read the comment's count.
+
+## Working from a cloud session
+
+Work can run in a cloud session (claude.ai/code, or a claude.ai chat with
+this repository attached) as well as locally. design-sync, both builds,
+pushing and opening PRs all work there. Five things behave differently, and
+each cost real time to discover on 2026-10-16:
+
+- **No browser.** The network allowlist blocks Playwright's browser
+  download (`cdn.playwright.dev`). Don't retry or route around it. Visual
+  checks go through the PR's Chromatic link (above).
+- **No GitHub GraphQL.** `gh pr create`, `gh pr view` and other commands
+  built on GraphQL return 403. Use the REST API through `gh api`, e.g.
+  `gh api repos/{owner}/{repo}/pulls --method POST --input body.json`.
+- **Shallow, single-branch clone.** A pushed branch may not get a
+  remote-tracking ref, so `git status` looks unpushed when it isn't.
+  Check with `git ls-remote --heads origin <branch>`; to fix tracking, add
+  a fetch refspec for the branch, fetch, then `git branch
+  --set-upstream-to`. Before pushing, `git fetch origin main` so the push
+  sends a thin pack.
+- **No Figma selection.** The session isn't attached to anyone's Figma app.
+  Ask for the node link once (see `docs/ready-for-ai.md`).
+- **Some GitHub API paths are blocked** (repository settings such as
+  Pages). Changes to repo settings or secrets are the owner's to make;
+  say exactly what to change and where.
 
 ## Verify the deploy actually fired after a merge to main
 

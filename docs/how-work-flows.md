@@ -1,7 +1,10 @@
 # How work flows
 
 What actually happens, in CI, between a PR being opened and a component
-landing on `main` — as implemented today, not as a plan. Each stage below
+landing on `main` — as implemented today, not as a plan. The work itself can
+start from a local Claude Code session or a cloud session (claude.ai/code,
+or a claude.ai chat with the repository attached); everything below runs
+the same either way, because it runs in CI. Each stage below
 maps to a workflow file under `.github/workflows/`; read the workflow for
 exact mechanics, this doc for why the stages exist and how they connect.
 
@@ -18,6 +21,59 @@ This is informational, never a merge gate: a FAIL shows up as a red ❌ in
 the comment, not a blocked check. A PR that intentionally introduces a
 FAIL (e.g. a work-in-progress component) should still get an honest
 comment, not a pipeline that looks broken.
+
+## 1b. Every push → visual review (Chromatic)
+
+**`chromatic.yml`** — runs on every push to every branch (`main`
+included). Chromatic builds that commit's Storybook, publishes it at its
+own URL, and snapshots the stories the change can affect against `main`'s
+last accepted state. The workflow then posts — or edits in place — one
+sticky "Visual review" comment on the branch's open PR, with two links:
+
+- **This branch's Storybook**: the real rendered components at that
+  commit, with the brand and mode toolbar.
+- **The Chromatic review**: each changed story side by side with `main`,
+  to accept or reject.
+
+**Why it exists.** Before this, the only rendered Storybook was the live
+one, which only ever shows `main`. Visual review happened after merge, and
+a cloud session — which has no browser — couldn't look at its own work at
+all. Now every PR has a link to look at before anyone merges it.
+
+**Advisory, like stage 1.** Visual changes never fail the job
+(`exitZeroOnChanges`). A changed story is a question for a person, not an
+error. Pushes to `main` auto-accept, so `main` is always the baseline.
+
+**Runs on `push`, not `pull_request`.** Chromatic's own docs recommend
+it: `pull_request` builds can lose baselines or compare against the wrong
+`main`. The comment step finds the branch's open PR itself; a branch with
+no PR yet still gets a build, and its link is in the job log.
+
+**Budget.** Settings live in `chromatic.config.json`. TurboSnap
+(`onlyChanged`) snapshots only stories a change can affect, so a typical
+PR costs a handful of snapshots against the free tier's 5,000 a month. A
+change under `src/styles/`, `src/tokens/` or `src/index.css` forces a full
+run (`externals`): a token change can restyle every story, and TurboSnap
+can't see that through CSS custom properties. A full run is 78 snapshots
+today.
+
+**What it doesn't cover.**
+
+- Snapshots are taken in the default brand (Runabout) and mode (On Light).
+  Brand and mode correctness is design-sync's Brand coverage check
+  (stage 1), which resolves every token through the cascade. To snapshot a
+  specific story in other brands or modes, add Chromatic `modes` to that
+  story — each mode is another snapshot per run, so do it for full pages,
+  not every component.
+- The dashboard (`src/App.tsx`) isn't a Storybook story, so it gets no
+  preview. It's still checked by eye after merge, on the live site.
+
+**Setup (once).** Sign in at chromatic.com with GitHub, add this
+repository as a project, copy its project token, and add it as a
+repository secret named `CHROMATIC_PROJECT_TOKEN` (Settings → Secrets and
+variables → Actions). Until that secret exists the job skips with a
+warning and stays green. The first run on `main` after setup creates the
+baselines.
 
 ## 2. PR marked ready for review → Slack notification
 

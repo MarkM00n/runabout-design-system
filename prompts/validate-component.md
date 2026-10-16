@@ -104,6 +104,20 @@ rendered output. For each size/state variant:
   "looks correct," list the actual numbers compared.
 - Capture at least one screenshot of a representative variant.
 
+**In a cloud session there is no browser.** The session's network allowlist
+blocks Playwright's browser download, and the session can't reach a local
+dev server. Don't work around it. Instead:
+
+- Push the branch. `.github/workflows/chromatic.yml` publishes that
+  commit's Storybook and posts its link in the PR's "Visual review"
+  comment.
+- Do the value comparison above from code and the Figma read, and list the
+  numbers.
+- Say plainly in the report that the rendered check is not done, and hand
+  the person the Storybook link and the specific stories to open. A
+  parity report that implies a visual check it didn't make is worse than
+  one that says it couldn't.
+
 ## Output
 
 Report findings grouped by the five section headers above (Token

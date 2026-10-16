@@ -1,0 +1,134 @@
+name: Visual review (Chromatic)
+
+# Closes the visual-review gap: until this existed, the only place to see a
+# rendered change was the live Storybook, which only ever shows `main`. So
+# visual review happened after merge — the wrong way round — and a session
+# with no browser (a cloud session) could not look at its own work at all.
+#
+# On every push, Chromatic builds this branch's Storybook, publishes it at
+# its own URL, and snapshots every story against the last accepted baseline.
+# This workflow then posts that URL and the number of visual changes as one
+# sticky comment on the branch's open PR. A person opens the link, looks,
+# and accepts or rejects each change in Chromatic.
+#
+# Runs on `push`, not `pull_request`: Chromatic's own docs recommend it,
+# because pull_request builds can lose baselines or compare against the
+# wrong `main`. Pushes to `main` are what set the baselines PRs compare to.
+#
+# Advisory, like every other check in this repo: visual changes never fail
+# the job (exitZeroOnChanges). A change is a question for a person, not an
+# error. See docs/how-work-flows.md, stage 1b.
+on:
+  push:
+    branches-ignore: [gh-pages]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    # The bot's "regenerate derived data" commits on main change only JSON;
+    # they don't need a visual build.
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    steps:
+      - name: Check Chromatic is set up
+        id: setup
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [ -z "$CHROMATIC_PROJECT_TOKEN" ]; then
+            echo "::warning::CHROMATIC_PROJECT_TOKEN secret is not set — skipping visual review. See docs/how-work-flows.md, stage 1b, for setup."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.setup.outputs.ready == 'true'
+        with:
+          # TurboSnap (onlyChanged) works out which stories a change can
+          # affect from git history, so it needs more than the tip commit.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: steps.setup.outputs.ready == 'true'
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+        if: steps.setup.outputs.ready == 'true'
+
+      - name: Publish Storybook and snapshot stories
+        id: chromatic
+        if: steps.setup.outputs.ready == 'true'
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # Every setting lives in chromatic.config.json, in one place:
+          # - onlyChanged: snapshot only stories a change can affect, which
+          #   keeps a typical PR to a handful of snapshots.
+          # - externals: a token or tokens.css change can restyle every
+          #   story, and TurboSnap can't see that through CSS custom
+          #   properties, so those paths force a full run.
+          # - exitZeroOnChanges: a visual change is a question, not a failure.
+          # - autoAcceptChanges on main: main's state is the baseline.
+          configFile: chromatic.config.json
+
+      - name: Post or update the preview comment
+        if: steps.setup.outputs.ready == 'true' && github.ref != 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+          BRANCH: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+          STORYBOOK_URL: ${{ steps.chromatic.outputs.storybookUrl }}
+          BUILD_URL: ${{ steps.chromatic.outputs.buildUrl }}
+          CHANGES: ${{ steps.chromatic.outputs.changeCount }}
+          CAPTURES: ${{ steps.chromatic.outputs.actualCaptureCount }}
+          ERRORS: ${{ steps.chromatic.outputs.errorCount }}
+        run: |
+          pr=$(gh api "repos/$REPO/pulls?head=$OWNER:$BRANCH&state=open" --jq '.[0].number // empty')
+          if [ -z "$pr" ]; then
+            echo "No open PR for $BRANCH yet — the preview is at $STORYBOOK_URL"
+            exit 0
+          fi
+
+          if [ "${CHANGES:-0}" = "0" ] && [ "${ERRORS:-0}" = "0" ]; then
+            verdict="No visual changes against \`main\` in the ${CAPTURES:-0} stories this change can affect."
+          else
+            verdict="**${CHANGES:-0} visual change(s)** and ${ERRORS:-0} error(s) in ${CAPTURES:-0} snapshotted stories. Open the review, look at each one, and accept or reject it."
+          fi
+
+          # Found by its own marker, never by "last comment": three workflows
+          # post as the same bot, and matching on authorship clobbered one
+          # comment with another on 2026-08-05.
+          marker='<!-- chromatic-visual-review -->'
+          body=$(cat <<EOF
+          $marker
+          ### Visual review
+
+          $verdict
+
+          - **[Open this branch's Storybook]($STORYBOOK_URL)** — the real rendered components at commit \`${SHA:0:7}\`. Use the toolbar to switch brand and mode.
+          - **[Review changes in Chromatic]($BUILD_URL)** — side-by-side with \`main\`, accept or reject per story.
+
+          Advisory: visual changes don't fail this check. Snapshots are taken in the default brand and mode; brand-specific checks are in design-sync's Brand coverage.
+          EOF
+          )
+          existing=$(gh api "repos/$REPO/issues/$pr/comments" --paginate --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -1)
+          if [ -n "$existing" ]; then
+            gh api "repos/$REPO/issues/comments/$existing" --method PATCH -f body="$body" > /dev/null
+            echo "Updated visual review comment on #$pr"
+          else
+            gh api "repos/$REPO/issues/$pr/comments" --method POST -f body="$body" > /dev/null
+            echo "Posted visual review comment on #$pr"
+          fi
