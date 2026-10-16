@@ -36,6 +36,12 @@ user for a Figma URL just to extract a file key that's already fixed.
 Only fall back to asking for a URL if the selection turns out to live in
 a different Figma file than this one.
 
+**In a cloud session there is no "current selection".** The session isn't
+attached to anyone's Figma desktop app, so ask for the node link instead
+(right-click the frame or component set in Figma → Copy link to
+selection). Take the `node-id` from it; the file key above is still the
+default. One link, once — don't ask again for a node you already have.
+
 ## Check speed: build time vs. CI
 
 This check runs live, in conversation, while someone is waiting on it — so
