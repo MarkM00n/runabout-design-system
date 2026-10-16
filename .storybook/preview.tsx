@@ -12,20 +12,35 @@ import { RunaboutTheme } from './RunaboutTheme'
 // tokens.css's [data-mode] override blocks and design-system-rules.md §7.
 const CANVAS_BACKGROUND = 'var(--color-surface-section)';
 
-// Figma's four Semantic modes, in the order its Variables panel lists them.
+// Figma's six Semantic modes, in the order its Variables panel lists them.
+// Named by role, not appearance (2026-10-16): "On Brand" is terracotta for
+// Runabout and teal for Northline, so a colour name would be wrong for one
+// of them.
 const MODES = [
-  { value: 'cream', title: 'On Cream' },
-  { value: 'olive', title: 'On Olive' },
+  { value: 'light', title: 'On Light' },
+  { value: 'ink', title: 'On Ink' },
   { value: 'dark', title: 'On Dark' },
-  { value: 'terracotta', title: 'On Terracotta' },
+  { value: 'brand', title: 'On Brand' },
+  { value: 'accent', title: 'On Accent' },
+  { value: 'soft', title: 'On Soft' },
 ] as const;
+
+// Figma's Primitives brand modes. Runabout is the default and sets no
+// attribute; every other brand sets data-brand to its value.
+const BRANDS = [
+  { value: 'runabout', title: 'Runabout' },
+  { value: 'northline', title: 'Northline' },
+  { value: 'vines-and-vinyl', title: 'Vines & Vinyl' },
+] as const;
+
+const brandAttribute = (brand: string) => (brand === 'runabout' ? undefined : brand);
 
 const preview: Preview = {
   globalTypes: {
     mode: {
       name: 'Mode',
       description: "Surface mode this story's canvas resolves tokens against",
-      defaultValue: 'cream',
+      defaultValue: 'light',
       toolbar: {
         icon: 'mirror',
         items: [...MODES],
@@ -44,15 +59,12 @@ const preview: Preview = {
       defaultValue: 'runabout',
       toolbar: {
         icon: 'paintbrush',
-        items: [
-          { value: 'runabout', title: 'Runabout' },
-          { value: 'northline', title: 'Northline' },
-        ],
+        items: [...BRANDS],
         dynamicTitle: true,
       },
     },
   },
-  // A component that owns a surface (Modal -> cream, Card/Producer -> dark,
+  // A component that owns a surface (Modal -> light, Card/Producer -> dark,
   // Card via its `surface` prop) always wins over this for its own subtree —
   // CSS custom property scoping means the innermost override applies,
   // exactly matching Figma: a frame with its own explicit mode override
@@ -61,12 +73,12 @@ const preview: Preview = {
   // inherits from — which, under the 2026-09-07 rule ("anything with a
   // background owns a mode, everything else inherits"), is most of them:
   // Badge, Button, Checkbox, Input/Select/Textarea, Tab. Their stories can
-  // then be previewed on all four surfaces the way a designer would in
+  // then be previewed on all six surfaces the way a designer would in
   // Figma, rather than against one hardcoded demo context.
   //
   // data-brand is set on this SAME element, not a separate wrapping div —
-  // tokens.css's dark/feature brand overrides are written as a compound
-  // selector, [data-brand='northline'][data-mode='olive'], which only
+  // tokens.css's brand overrides are written as a compound
+  // selector, [data-brand='northline'][data-mode='ink'], which only
   // matches an element carrying both attributes at once. Split across two
   // nested divs, that selector would never match anything: the inner div's
   // own [data-mode='dark'] rule would still directly override every
@@ -122,7 +134,7 @@ const preview: Preview = {
       );
     },
     (Story, context) => {
-      const mode = (context.globals.mode as string) ?? 'cream';
+      const mode = (context.globals.mode as string) ?? 'light';
       const brand = (context.globals.brand as string) ?? 'runabout';
       const title = context.title ?? '';
       // Examples/* and Prototypes/* stories are full pages, not single
@@ -137,7 +149,7 @@ const preview: Preview = {
       // under different ambient modes.
       if (title.startsWith('Examples/') || title.startsWith('Prototypes/')) {
         return (
-          <div data-brand={brand === 'northline' ? 'northline' : undefined}>
+          <div data-brand={brandAttribute(brand)}>
             <Story />
           </div>
         );
@@ -145,7 +157,7 @@ const preview: Preview = {
       return (
         <div
           data-mode={mode}
-          data-brand={brand === 'northline' ? 'northline' : undefined}
+          data-brand={brandAttribute(brand)}
           style={{
             background: CANVAS_BACKGROUND,
             padding: '2rem',

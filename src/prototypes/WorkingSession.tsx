@@ -178,7 +178,7 @@ export function WorkingSession({ csv = sampleCsv }: WorkingSessionProps) {
 
   return (
     <div
-      data-mode="cream"
+      data-mode="light"
       className="min-h-screen bg-surface-section p-07 text-left"
       onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}

@@ -30,8 +30,9 @@ export interface ButtonProps
 // border-focus-on-highlight token existed because an inset ring sat directly
 // on Button accent's amber fill at 1.97:1. Measured 2026-09-07 against the
 // current geometry: the ring's adjacent colour on both sides is the surface,
-// not the fill, giving 4.40:1 on cream, 6.08:1 olive, 8.92:1 dark and
-// 3.67:1 terracotta — all clear of SC 1.4.11's 3:1, accent included. Every
+// not the fill, giving 4.40:1 on light, 6.08:1 ink, 8.92:1 dark, 3.67:1
+// brand, 7.35:1 accent and 9.07:1 soft — all clear of SC 1.4.11's 3:1,
+// accent variant included. Every
 // variant now uses the one state-focus token.
 const baseStyles = clsx(
   'inline-flex items-center justify-center gap-01',
@@ -81,7 +82,7 @@ const ArrowIcon = ({ size }: { size: ButtonSize }) => (
 // the 2026-09-07 architecture its border (border-strong) and label
 // (text-primary) resolve from whatever surface it sits on, which is exactly
 // what the old self-scoping was faking. Pinning it to dark now would render
-// a near-white outline on a cream page.
+// a near-white outline on a light page.
 const variantStyles: Record<ButtonVariant, string> = {
   primary: clsx(
     'bg-action-primary text-text-on-action',

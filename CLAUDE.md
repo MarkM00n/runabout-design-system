@@ -53,10 +53,13 @@ see that file's intro). Apply all of it: token compliance (§1),
 accessibility (§2), Storybook coverage (§3), design parity (§4),
 documentation (§5), and foundations (§6) where relevant to the change.
 
-**Token architecture changed 2026-09-07** — 26 semantic tokens resolving
-across four surface modes (On Cream / On Olive / On Dark / On Terracotta),
-primitive families renamed, and the whole `icon-*` group plus every
-`-inverse`/`-on-feature` partner token deleted. One rule governs all of it:
+**Token architecture changed 2026-09-07, extended 2026-10-16** — 33
+semantic tokens resolving across six surface modes (On Light / On Ink /
+On Dark / On Brand / On Accent / On Soft), and three brands (Runabout, plus
+`data-brand="northline"` and `data-brand="vines-and-vinyl"`). Modes are named
+by role, not colour: on 2026-10-16 cream → `light`, olive → `ink`,
+terracotta → `brand`, and `accent`/`soft` were added. One rule governs all
+of it:
 
 > **Anything with a background owns a mode. Everything else inherits.**
 
@@ -64,8 +67,8 @@ Build rules that follow (full detail in `docs/design-system-rules.md`
 §§1–2, 7):
 
 - **A surface fills with `surface-section` and sets its own `data-mode`**
-  (`cream` / `olive` / `dark` / `terracotta`). One fill token, four
-  resolutions. A component with no background must NOT set a mode —
+  (`light` / `ink` / `dark` / `brand` / `accent` / `soft`). One fill token,
+  six resolutions. A component with no background must NOT set a mode —
   `Button`'s secondary variant used to self-scope to dark and had to be
   unwound.
 - **Disabled = Default appearance at 38% opacity** via the
@@ -78,15 +81,24 @@ Build rules that follow (full detail in `docs/design-system-rules.md`
   ring, which is why one token now works even on `Button`'s accent variant.
 - **Status colours (`state-error`/`success`/`warning`) are now
   mode-invariant** — correct as a `Badge` fill paired with `text-on-state`,
-  and a trap as text: 1.1–2.1:1 on olive, dark and terracotta. Colour error
+  and a trap as text: 1.1–3.8:1 on every surface except light. Colour error
   text with `text-primary` and carry the meaning some other way.
-- **`tokens.css`/`tokens.json` were regenerated from
-  `src/tokens/figma-export-2026-09-07.json`**, itself a live Plugin API
-  read, and all 209 values were verified against it programmatically — not
-  transcribed. Re-export from Figma before trusting the file if it is more
-  than a day old. `checkContrastPairings` in `scripts/design-sync.js`
-  parses §7's table directly at runtime rather than carrying its own copy,
-  so it structurally can't drift from what that section says.
+- **Every colour value in `tokens.css`/`tokens.json` is written by
+  `npm run tokens:generate`** (`scripts/generate-brand-overrides.js`) from
+  the latest `src/tokens/figma-export-*.json`, itself a live Plugin API read
+  whose checksum is recorded in its `meta`. Never edit a colour value by
+  hand: re-export from Figma and regenerate. `npm run tokens:check` fails if
+  either file has drifted. Re-export before trusting the export if it is
+  more than a day old.
+- **Brands are checked through the cascade, not by reading the CSS back.**
+  design-sync's Brand coverage step resolves every token for every brand ×
+  mode through specificity, order and inheritance and compares it with
+  Figma, then measures contrast. Known exceptions live in
+  `KNOWN_BRAND_CONTRAST_EXCEPTIONS` and report as WARN; anything else
+  fails. See `docs/design-system-rules.md` §7.
+- **§7's per-mode table is read at runtime.** `checkContrastPairings` in
+  `scripts/design-sync.js` parses it directly rather than carrying its own
+  copy, so it structurally can't drift from what that section says.
 
 ## Every component request must include
 
@@ -158,7 +170,7 @@ re-check every usage — especially any `data-mode` override wrapping it.**
   fills and `action-secondary` don't change with the mode; every `text-*`
   token does. Pair them and the ink can walk out from under the fill. Where
   that pairing is deliberate — `Modal`, the dashboard's stat tiles — the
-  element pins `data-mode="cream"` alongside the fill, and that pin is
+  element pins `data-mode="light"` alongside the fill, and that pin is
   load-bearing, not decoration.
 
 The dashboard specifically also has this additional wrinkle: it consumes

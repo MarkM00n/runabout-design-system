@@ -95,8 +95,8 @@ const data = dashboardData as DashboardData;
 // screen readers cannot represent nested controls"), so these are real
 // anchors carrying the same classes instead of a wrapped Button.
 // text-primary resolves correctly here because the dashboard's root
-// element carries data-mode="olive" (see the JSX below) — the canvas is
-// Ink/900, which is what On Olive means under the 2026-09-07 architecture.
+// element carries data-mode="ink" (see the JSX below) — the canvas is
+// Ink/900, which is what On Ink means under the 2026-09-07 architecture.
 const SECONDARY_LINK_CLASS =
   'inline-flex items-center justify-center gap-01 font-manrope font-normal select-none ' +
   'transition-colors duration-150 ease-out h-[32px] px-02 rounded-xl text-label ' +
@@ -339,6 +339,7 @@ const GATE_GROUPS: { title: string; note: string; gates: Gate[] }[] = [
     gates: [
       { name: 'Foundations', what: 'every token documented, nothing documented that is missing', rule: `${RULES}#6-foundations`, result: systemPass['Foundation Coverage'] },
       { name: 'Dashboard', what: 'this page uses only tokens and classes that exist', rule: 'CLAUDE.md#component-changes-must-also-sweep-every-consumer-outside-srccomponents', result: systemPass['Dashboard Coverage'] },
+      { name: 'Brands', what: 'every brand on every surface matches Figma and clears contrast', rule: `${RULES}#7-surface-pairings`, result: systemPass['Brand Coverage'] },
       { name: 'Builds', what: 'Storybook and the dashboard build clean', rule: 'prompts/validate-component.md', result: systemPass['Storybook Coverage'] && systemPass['Dashboard Coverage'] },
     ],
   },
@@ -348,8 +349,8 @@ const GATE_COUNT = GATE_GROUPS.reduce((n, g) => n + g.gates.length, 0);
 // Surface modes and brand overrides are declared in src/styles/tokens.css
 // ([data-mode=…] and [data-brand=…] blocks). Counted here by name so the
 // panel says what the CSS actually carries.
-const SURFACE_MODES = ['cream', 'olive', 'dark', 'terracotta'];
-const BRANDS = ['northline'];
+const SURFACE_MODES = ['light', 'ink', 'dark', 'brand', 'accent', 'soft'];
+const BRANDS = ['northline', 'vines-and-vinyl'];
 
 // Figma export date, read from the export file's name so it can't drift.
 const figmaExportName = Object.keys(import.meta.glob('./tokens/figma-export-*.json'))[0] ?? '';
@@ -412,7 +413,7 @@ function Status() {
   return (
     <section className="status-tiles span-12" aria-label="Status">
       {facts.map((f) => (
-        <div className={`card inv-card ${f.tone ? `tile-${f.tone}` : ''}`} data-mode="cream" key={f.label}>
+        <div className={`card inv-card ${f.tone ? `tile-${f.tone}` : ''}`} data-mode="light" key={f.label}>
           <div className="eyebrow tile-eyebrow">
             {f.label}
             {f.tone && <span className="status-dot tile-dot" aria-hidden="true" />}
@@ -495,33 +496,33 @@ function Inventory() {
     <>
       <section className="inv-row span-12" aria-label="Inventory">
         {numbers.map(([v, l, sub]) => (
-          <div className="card inv-card" data-mode="cream" key={l}>
+          <div className="card inv-card" data-mode="light" key={l}>
             <div className="eyebrow">{l}</div>
             <div className="inv-big">{v}</div>
             <div className="inv-sub">{sub}</div>
           </div>
         ))}
       </section>
-      <section className="card panel span-6" data-mode="cream" aria-label="Tokens by category">
+      <section className="card panel span-6" data-mode="light" aria-label="Tokens by category">
         <h2 className="panel-title">Tokens by category</h2>
         <ul className="tok-list">
           {counts.map((c) => (
             <li className="tok-row" key={c.k}>
               <a className="tok-label" href={`${data.links.storybookBaseUrl}?path=/docs/${c.path}`} target="_blank" rel="noreferrer">{c.label}</a>
-              <span className="tok-track"><span className="tok-bar" data-mode="terracotta" style={{ width: `${Math.max((c.n / maxCount) * 100, 2)}%` }} /></span>
+              <span className="tok-track"><span className="tok-bar" data-mode="brand" style={{ width: `${Math.max((c.n / maxCount) * 100, 2)}%` }} /></span>
               <span className="tok-n">{c.n}</span>
             </li>
           ))}
         </ul>
       </section>
-      <section className="card panel span-6" data-mode="cream" aria-label="Surface modes">
+      <section className="card panel span-6" data-mode="light" aria-label="Surface modes">
         <h2 className="panel-title">Surface modes</h2>
         <ul className="mode-list mode-list-4">
           {SURFACE_MODES.map((m) => (
             <li key={m}><span className="mode-swatch" data-mode={m} aria-hidden="true" /><span className="mode-name">{m}</span></li>
           ))}
           {BRANDS.map((b) => (
-            <li key={b}><span className="mode-swatch" data-brand={b} data-mode="terracotta" aria-hidden="true" /><span className="mode-name">{b}<span className="mode-tag">brand</span></span></li>
+            <li key={b}><span className="mode-swatch" data-brand={b} data-mode="brand" aria-hidden="true" /><span className="mode-name">{b}<span className="mode-tag">brand</span></span></li>
           ))}
         </ul>
         <p className="mode-rule">A surface owns a mode; everything else inherits.</p>
@@ -535,7 +536,7 @@ function Gates() {
   return (
     <>
       {GATE_GROUPS.map((g) => (
-        <section className="card panel span-4" data-mode="cream" key={g.title} aria-label={g.title}>
+        <section className="card panel span-4" data-mode="light" key={g.title} aria-label={g.title}>
           <h2 className="panel-title">{g.title}</h2>
           <div className="panel-sub">{g.note}</div>
           <ul className="check-list">
@@ -587,7 +588,7 @@ function Activity() {
           median time to merge <strong>{data.totals.medianCycleTimeLabel}</strong>
         </span>
       </div>
-      <div className="table-scroll card" data-mode="cream">
+      <div className="table-scroll card" data-mode="light">
         <table className="dashboard-table plain-table">
           <thead>
             <tr>
@@ -629,7 +630,7 @@ function Squads() {
         <h2 className="section-title">Squads · {SQUADS.length}</h2>
         <span className="section-stat">not connected yet</span>
       </div>
-      <div className="table-scroll card" data-mode="cream">
+      <div className="table-scroll card" data-mode="light">
         <table className="dashboard-table plain-table squads-table">
           <colgroup>
             <col style={{ width: '18%' }} /><col style={{ width: '12%' }} /><col style={{ width: '16%' }} /><col style={{ width: '10%' }} />
@@ -675,7 +676,7 @@ function Library({ expanded, setExpanded }: { expanded: string | null; setExpand
     <section className="dashboard-section table-card" aria-label="All components">
       <details className="lib-details">
         <summary className="lib-summary"><span className="lib-summary-title">All components</span><span className="lib-summary-count">{data.totals.totalComponents} · click to expand</span></summary>
-        <div className="table-scroll" data-mode="cream">
+        <div className="table-scroll" data-mode="light">
           <table className="dashboard-table">
             <thead>
               <tr>
@@ -732,8 +733,8 @@ function HealthPill() {
 function App() {
   const [expanded, setExpanded] = useState<string | null>(null);
   return (
-    <div className="dashboard dashboard-light" data-mode="cream">
-      <header className="band" data-mode="terracotta">
+    <div className="dashboard dashboard-light" data-mode="light">
+      <header className="band" data-mode="brand">
         <div className="band-inner">
           <div>
             <h1 className="dashboard-title">Runabout System Status</h1>

@@ -32,6 +32,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync, statSync } from '
 import { execSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildModel, latestExportPath } from './generate-brand-overrides.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = join(ROOT, 'src', 'components');
@@ -686,22 +687,22 @@ function extractBlock(cssRaw, selectorRe) {
   return '';
 }
 
-// tokens.css's On Cream base values (the `@theme` block) — the default
+// tokens.css's On Light base values (the `@theme` block) — the default
 // resolution for any component that doesn't declare its own data-mode.
 export function parseColorHexTokens(cssRaw) {
   return parseColorHexTokensFromBlock(extractBlock(cssRaw, /@theme\s*/));
 }
 
-// The four surface modes, in the order §7's table columns run. `cream` is
+// The six surface modes, in the order §7's table columns run. `light` is
 // both a real override block and the @theme base — see tokens.css's own
 // comment for why the block exists despite duplicating the base.
-export const SURFACE_MODES = ['cream', 'olive', 'dark', 'terracotta'];
-export const DEFAULT_SURFACE_MODE = 'cream';
+export const SURFACE_MODES = ['light', 'ink', 'dark', 'brand', 'accent', 'soft'];
+export const DEFAULT_SURFACE_MODE = 'light';
 
 // tokens.css's per-mode override values — what a component's tokens actually
-// resolve to inside a `data-mode="..."` container (Modal -> cream,
+// resolve to inside a `data-mode="..."` container (Modal -> light,
 // Card/Producer -> dark, a Card instance -> whatever the page gives it).
-// Returns { cream: Map, olive: Map, dark: Map, terracotta: Map }.
+// Returns { light: Map, ink: Map, dark: Map, brand: Map, accent: Map, soft: Map }.
 export function parseModeOverrideHexTokens(cssRaw) {
   const out = {};
   for (const mode of SURFACE_MODES) {
@@ -713,8 +714,8 @@ export function parseModeOverrideHexTokens(cssRaw) {
 }
 
 // Parses design-system-rules.md §7's Surface pairings table
-// (`| Token | On Cream | On Olive | On Dark | On Terracotta |`) into
-// Map<tokenKey, { cream, olive, dark, terracotta }>. A row's Token cell can
+// (`| Token | On Light | On Ink | On Dark | On Brand | On Accent | On Soft |`)
+// into Map<tokenKey, { light, ink, dark, brand, accent, soft }>. A row's Token cell can
 // list more than one token sharing the same values (e.g.
 // "`border-default` / `text-secondary`"), and every backticked name in the
 // cell is registered under the same values. Cells look like
@@ -803,9 +804,9 @@ export function checkContrastPairings(
   const issues = [];
   const codeOnly = stripComments(source);
 
-  // A component's own data-mode (Modal -> cream, Card/Producer -> dark) is
+  // A component's own data-mode (Modal -> light, Card/Producer -> dark) is
   // what determines which hex its tokens resolve to. Nothing declared means
-  // the CSS cascade's own default, On Cream — which is also the honest
+  // the CSS cascade's own default, On Light — which is also the honest
   // reading for the majority of components, since under the 2026-09-07
   // architecture only surfaces own a mode and everything else inherits.
   // A literal, non-interpolated attribute is required: a component that
@@ -841,7 +842,7 @@ export function checkContrastPairings(
   const resolve = (token) => hexMap.get(token) ?? colorHex.get(token);
   const textHex = resolve(textToken);
   const modeLabel =
-    mode === DEFAULT_SURFACE_MODE ? 'the default (On Cream)' : `data-mode="${mode}"`;
+    mode === DEFAULT_SURFACE_MODE ? 'the default (On Light)' : `data-mode="${mode}"`;
 
   for (const bgToken of bgTokens) {
     const bgHex = resolve(bgToken);
@@ -874,6 +875,208 @@ export function checkContrastPairings(
   }
 
   return issues;
+}
+
+// ---------------------------------------------------------------------------
+// 1b-ii. Brand coverage (repo-level): every brand x surface mode resolves to
+// the Figma value, through the real cascade, and clears contrast.
+// ---------------------------------------------------------------------------
+//
+// tokens.css's mode and brand regions are generated, but generation can be
+// right while the cascade is wrong: two rules of equal specificity where the
+// later one wins, a token one block forgets to reset. That is not
+// hypothetical — from 2026-09-07 to 2026-10-16 a bare [data-brand='northline']
+// rule beat [data-mode='dark'] on any element carrying both attributes, so
+// Northline's light hover tint and subtle border leaked into its dark
+// surfaces in every Storybook story. Nothing checked it.
+//
+// So this check doesn't read the generated blocks back. It parses tokens.css
+// into rules, builds small element trees the way pages actually use the
+// attributes, resolves every custom property through specificity, source
+// order and inheritance, and compares the result with what the Figma export
+// says the token should be. Only then does it measure contrast.
+
+// Contrast pairs every brand must clear in every surface mode — the
+// relationships a surface makes promises about. design-system-rules.md §7
+// explains each; this is the list the check runs.
+export const BRAND_CONTRAST_PAIRS = [
+  ['text-primary', 'surface-section', 4.5],
+  ['text-secondary', 'surface-section', 4.5],
+  ['text-link', 'surface-section', 4.5],
+  ['text-accent', 'surface-section', 4.5],
+  ['text-on-action', 'action-primary', 4.5],
+  ['text-on-highlight', 'action-highlight', 4.5],
+  ['text-on-highlight', 'illustration-highlight', 4.5],
+  ['action-primary', 'surface-section', 3],
+  ['border-strong', 'surface-section', 3],
+  ['state-focus', 'surface-section', 3],
+];
+
+// Failures that are known, recorded and owned. They report as WARN, not
+// FAIL, so they don't block every unrelated PR — but they stay visible on
+// every run, and anything not on this list fails. Each entry needs a reason
+// and a place it is written down. Remove an entry the moment its cause is
+// fixed; a stale entry would hide a regression.
+export const KNOWN_BRAND_CONTRAST_EXCEPTIONS = [
+  ...['light', 'soft'].flatMap((mode) =>
+    ['action-highlight', 'illustration-highlight'].map((bg) => ({
+      brand: 'northline',
+      mode,
+      fg: 'text-on-highlight',
+      bg,
+      reason:
+        "Northline's Accent/800 (#2b7fd4) is a mid blue that no text colour clears 4.5:1 on (dark 3.5:1, white 4.1:1). A Northline palette decision, open since the brand was added — design-system-rules.md §7.",
+    })),
+  ),
+];
+
+function stripCssComments(css) {
+  return css.replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+// Top-level rules only, which is all tokens.css has. @theme becomes a rule
+// that matches the root; other at-rules are skipped.
+export function parseCascadeRules(cssRaw) {
+  const css = stripCssComments(cssRaw);
+  const rules = [];
+  let i = 0;
+  let order = 0;
+  while (i < css.length) {
+    const open = css.indexOf('{', i);
+    if (open === -1) break;
+    const prelude = css.slice(i, open).trim();
+    let depth = 0;
+    let close = open;
+    for (; close < css.length; close++) {
+      if (css[close] === '{') depth++;
+      else if (css[close] === '}' && --depth === 0) break;
+    }
+    const body = css.slice(open + 1, close);
+    const decls = new Map([...body.matchAll(/(--[a-z0-9-]+)\s*:\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
+    if (prelude.startsWith('@theme')) {
+      rules.push({ root: true, decls, order: order++ });
+    } else if (!prelude.startsWith('@')) {
+      const blockOrder = order++;
+      for (const selector of prelude.split(',').map((s) => s.trim())) {
+        const parts = selector.split(/\s+/).map(parseCompound);
+        if (parts.every(Boolean)) {
+          const specificity = parts.reduce((n, p) => n + p.attrs.length + p.nots.length, 0);
+          rules.push({ selector, parts, specificity, decls, order: blockOrder });
+        }
+      }
+    }
+    i = close + 1;
+  }
+  return rules;
+}
+
+// Supports exactly the selector shapes tokens.css uses: attribute equality
+// and :not([attr]). Anything else returns null and the rule is ignored —
+// it can't be about data-mode or data-brand.
+function parseCompound(compound) {
+  const re = /\[([a-z-]+)='([^']*)'\]|:not\(\[([a-z-]+)\]\)/g;
+  const attrs = [];
+  const nots = [];
+  let consumed = '';
+  let m;
+  while ((m = re.exec(compound))) {
+    consumed += m[0];
+    if (m[1]) attrs.push([m[1], m[2]]);
+    else nots.push(m[3]);
+  }
+  return consumed === compound && consumed.length > 0 ? { attrs, nots } : null;
+}
+
+const compoundMatches = (part, el) =>
+  part.attrs.every(([k, v]) => el[k] === v) && part.nots.every((k) => !(k in el));
+
+// Right-to-left descendant matching against a chain of elements, root first.
+function selectorMatches(parts, chain, index) {
+  if (!compoundMatches(parts[parts.length - 1], chain[index])) return false;
+  let p = parts.length - 2;
+  for (let a = index - 1; a >= 0 && p >= 0; a--) {
+    if (compoundMatches(parts[p], chain[a])) p--;
+  }
+  return p < 0;
+}
+
+// Custom properties inherit, so resolve element by element down the chain.
+export function resolveCustomProperties(rules, chain) {
+  let computed = new Map();
+  for (const rule of rules) if (rule.root) for (const [k, v] of rule.decls) computed.set(k, v);
+  chain.forEach((_, index) => {
+    const own = new Map(computed);
+    rules
+      .filter((r) => !r.root && selectorMatches(r.parts, chain, index))
+      .sort((a, b) => a.specificity - b.specificity || a.order - b.order)
+      .forEach((r) => r.decls.forEach((v, k) => own.set(k, v)));
+    computed = own;
+  });
+  return computed;
+}
+
+export function checkBrandCoverage(cssRaw, exportData) {
+  const issues = [];
+  const model = buildModel(exportData);
+  const rules = parseCascadeRules(cssRaw);
+  const brandAttr = (brand) => (brand === 'runabout' ? {} : { 'data-brand': brand });
+  const modeKeys = model.modes.map((m) => m.key);
+  const summary = {};
+
+  for (const brand of model.brands) {
+    summary[brand] = { pairs: 0, fail: 0, known: 0, wrongValues: 0 };
+    for (const mode of modeKeys) {
+      const expected = model.resolved[brand][mode];
+      // The ways a page can put this brand and mode on an element.
+      const other = mode === 'dark' ? 'light' : 'dark';
+      const scenarios = [
+        ['section inside a brand root', [brandAttr(brand), { 'data-mode': mode }]],
+        ['brand and mode on one element', [{ ...brandAttr(brand), 'data-mode': mode }]],
+        [`section inside a ${other} section`, [{ ...brandAttr(brand), 'data-mode': other }, { 'data-mode': mode }]],
+      ];
+      if (mode === 'light') scenarios.push(['brand root with no mode', [brandAttr(brand)]]);
+
+      for (const [label, chain] of scenarios) {
+        const resolved = resolveCustomProperties(rules, chain);
+        for (const slug of model.slugs) {
+          const got = resolved.get(`--color-${slug}`);
+          if (got !== expected[slug]) {
+            summary[brand].wrongValues++;
+            issues.push({
+              level: 'fail',
+              file: 'src/styles/tokens.css',
+              line: null,
+              code: `brand-cascade:${brand}:${mode}:${slug}`,
+              message: `${brand} · ${mode} · ${label}: --color-${slug} resolves to ${got ?? 'nothing'}, but Figma says ${expected[slug]}.`,
+              fix: 'Regenerate with npm run tokens:generate. If it still fails, the generator writes a selector the cascade resolves differently — fix the generator, not the output.',
+            });
+          }
+        }
+      }
+
+      for (const [fg, bg, min] of BRAND_CONTRAST_PAIRS) {
+        summary[brand].pairs++;
+        const ratio = contrastRatio(expected[fg], expected[bg]);
+        if (ratio >= min) continue;
+        const known = KNOWN_BRAND_CONTRAST_EXCEPTIONS.find(
+          (e) => e.brand === brand && e.mode === mode && e.fg === fg && e.bg === bg,
+        );
+        if (known) summary[brand].known++;
+        else summary[brand].fail++;
+        issues.push({
+          level: known ? 'warn' : 'fail',
+          file: 'src/styles/tokens.css',
+          line: null,
+          code: `brand-contrast:${brand}:${mode}:${fg}:${bg}`,
+          message: `${brand} · ${mode}: ${fg} on ${bg} measures ${ratio.toFixed(2)}:1, below ${min}:1.${known ? ` Known: ${known.reason}` : ''}`,
+          fix: known
+            ? 'Recorded exception — fix the palette in Figma, then remove it from KNOWN_BRAND_CONTRAST_EXCEPTIONS.'
+            : 'Fix in Figma: rebind one of these tokens for this mode, or change the brand primitive. Then re-export and regenerate.',
+        });
+      }
+    }
+  }
+  return { issues, summary, pass: !issues.some((i) => i.level === 'fail') };
 }
 
 // ---------------------------------------------------------------------------
@@ -1307,7 +1510,7 @@ const VALIDATION_REPORT_PATH = join(ROOT, 'src', 'design-docs', 'validation-repo
 // The one consolidated artifact every non-Storybook surface (dashboard, PR
 // comments) reads — same computation as the per-component files above, just
 // aggregated in one place instead of requiring six separate imports.
-function writeConsolidatedReport(componentResults, categoryPass, overallStatus) {
+function writeConsolidatedReport(componentResults, categoryPass, overallStatus, brandCoverage) {
   const totalFail = componentResults.reduce(
     (sum, r) => sum + Object.values(r.checks).reduce((s, c) => s + c.fail, 0),
     0,
@@ -1320,6 +1523,7 @@ function writeConsolidatedReport(componentResults, categoryPass, overallStatus) 
     overallStatus,
     status: statusFor(totalFail, totalWarn),
     categoryPass,
+    brandCoverage,
     components: componentResults,
   };
 
@@ -1826,6 +2030,20 @@ function run() {
     console.log('');
   }
 
+  // Every brand x surface mode, through the real cascade, then contrast.
+  // Repo-level, like token parity: brands live in tokens.css, not in any one
+  // component.
+  console.log(`${BOLD}Brand coverage${RESET} (every brand x surface mode, resolved through the cascade)`);
+  const brandCoverage = checkBrandCoverage(cssRaw, JSON.parse(readFileSync(latestExportPath(), 'utf8')));
+  for (const [brand, s] of Object.entries(brandCoverage.summary)) {
+    const status = s.fail || s.wrongValues ? `${RED}FAIL${RESET}` : s.known ? `${YELLOW}WARN${RESET}` : `${GREEN}PASS${RESET}`;
+    console.log(
+      `  ${status}  ${brand} — ${s.pairs} contrast pairs, ${s.fail} failing, ${s.known} known exception(s), ${s.wrongValues} value(s) not matching Figma`,
+    );
+  }
+  if (brandCoverage.issues.length) printIssues(brandCoverage.issues);
+  console.log('');
+
   // First pass: everything that doesn't depend on Tailwind's actual compiled
   // output — base token-text checks, accessibility, Storybook/doc coverage,
   // stub generation. Finalizing each component's report (which now also
@@ -2072,6 +2290,7 @@ function run() {
     'Documentation Coverage': componentResults.every((r) => r.checks.documentationCoverage.pass),
     'Foundation Coverage': foundationCoveragePass,
     'Dashboard Coverage': dashboardCoveragePass,
+    'Brand Coverage': brandCoverage.pass,
   };
   printDotPaddedGroup(Object.entries(categoryPass));
   console.log('');
@@ -2080,7 +2299,7 @@ function run() {
   printDotPaddedGroup([['Overall Status', overallStatus]]);
   console.log('');
 
-  writeConsolidatedReport(componentResults, categoryPass, overallStatus);
+  writeConsolidatedReport(componentResults, categoryPass, overallStatus, brandCoverage.summary);
 
   console.log(
     `${DIM}Note: this is a static heuristic check. It does not compare rendered output against Figma —${RESET}`,

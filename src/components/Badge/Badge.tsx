@@ -29,7 +29,7 @@ const sizeStyles: Record<BadgeSize, string> = {
 //   it sits on and stays legible on all four without any mode of its own.
 // - The three status variants are solid state-* fills paired with
 //   text-on-state. Those four tokens are mode-INVARIANT in Figma: a "success"
-//   chip is the same green on cream as on terracotta, because a status
+//   chip is the same green on a light surface as on a brand one, because a status
 //   colour that shifted per surface would stop reading as a status colour.
 //   Measured: 6.92:1 success, 6.97:1 warning, 6.28:1 error against
 //   text-on-state.

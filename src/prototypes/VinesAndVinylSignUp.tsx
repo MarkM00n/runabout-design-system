@@ -165,7 +165,7 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   const content = submitted ? (
     <div
       role="status"
-      data-mode="cream"
+      data-mode="light"
       className="flex flex-col items-center gap-03 rounded-2xl bg-surface-section p-06 text-center"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-[48px] w-[48px] text-state-success">
@@ -288,18 +288,18 @@ export const SignUpFormCard = ({ startTouched = false }: VinesAndVinylSignUpProp
   // Hero Input needed once its stale data-mode="cream" override was fixed
   // to sit at the right level: on the card, not hand-tuned per field.
   return (
-    <div data-mode="cream" className="w-full max-w-[480px] rounded-2xl bg-surface-section p-06">
+    <div data-mode="light" className="w-full max-w-[480px] rounded-2xl bg-surface-section p-06">
       {content}
     </div>
   );
 };
 
-// The full standalone page: an outer On Terracotta band (brand emphasis,
+// The full standalone page: an outer On Brand band (brand emphasis,
 // matching src/examples/VinesAndVinylLanding.tsx's Hero) around the card
 // above.
 export const VinesAndVinylSignUp = ({ startTouched = false }: VinesAndVinylSignUpProps) => (
   <div
-    data-mode="terracotta"
+    data-mode="brand"
     className="flex min-h-screen w-full flex-col items-center gap-05 bg-surface-section px-06 py-09"
   >
     <div className="flex flex-col items-center gap-01 text-center">

@@ -14,7 +14,7 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    surface: { control: 'select', options: ['cream', 'olive', 'dark', 'terracotta'] },
+    surface: { control: 'select', options: ['light', 'ink', 'dark', 'brand', 'accent', 'soft'] },
   },
   decorators: [
     (Story) => (
@@ -33,12 +33,14 @@ const base = {
   attribution: '— A cellar master',
 };
 
-export const Terracotta: Story = { args: { ...base, surface: 'terracotta' } };
-export const Cream: Story = { args: { ...base, surface: 'cream' } };
-export const Olive: Story = { args: { ...base, surface: 'olive' } };
+export const Brand: Story = { args: { ...base, surface: 'brand' } };
+export const Light: Story = { args: { ...base, surface: 'light' } };
+export const Ink: Story = { args: { ...base, surface: 'ink' } };
 export const Dark: Story = { args: { ...base, surface: 'dark' } };
+export const Accent: Story = { args: { ...base, surface: 'accent' } };
+export const Soft: Story = { args: { ...base, surface: 'soft' } };
 
 /** Attribution is optional, though a quote reads better with one. */
 export const WithoutAttribution: Story = {
-  args: { quote: base.quote, surface: 'terracotta' },
+  args: { quote: base.quote, surface: 'brand' },
 };

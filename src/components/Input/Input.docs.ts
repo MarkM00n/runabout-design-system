@@ -15,7 +15,7 @@ export const docs: ComponentDocMeta = {
     'Let the field stay transparent. It is a bordered ghost control by design, so it picks up whatever surface it sits on.',
   ],
   donts: [
-    'Do not wrap the field in a data-mode to force a readable pairing. That was load-bearing when the fill was an opaque cream; now the fill is genuinely transparent, and forcing a mode paints the wrong ink over the real backdrop. This shipped as a real bug once — see CLAUDE.md\'s 2026-08-08 incident.',
+    'Do not wrap the field in a data-mode to force a readable pairing. That was load-bearing when the fill was opaque; now the fill is genuinely transparent, and forcing a mode paints the wrong ink over the real backdrop. This shipped as a real bug once — see CLAUDE.md\'s 2026-08-08 incident.',
     'Do not add outline-none alongside the focus styles. Tailwind v4 shares one custom property across every outline utility, so any outline-none stops the focus ring painting at all.',
     'Do not swap the border colour when disabled. Figma binds border-strong in every state including Disabled; the only difference is opacity.',
   ],

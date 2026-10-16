@@ -7,8 +7,8 @@
  * wordmark, overline → headline → one paragraph, then the thing itself,
  * then a compact reference table, then engineering notes folded away.
  *
- * The page sets data-mode="cream" on its own root so every var() inside
- * resolves against the cream surface regardless of the toolbar — docs pages
+ * The page sets data-mode="light" on its own root so every var() inside
+ * resolves against the light surface regardless of the toolbar — docs pages
  * are not stories and shouldn't restyle when the mode switcher moves.
  */
 import { useState } from 'react';
@@ -98,7 +98,7 @@ export function DocPage({
 }) {
   return (
     <div
-      data-mode="cream"
+      data-mode="light"
       className="runabout-doc"
       style={{
         fontFamily: font.sans,
@@ -318,7 +318,7 @@ export function ModeSwatch({
   size = 24,
 }: {
   cssVar: string;
-  mode: 'cream' | 'olive' | 'dark' | 'terracotta';
+  mode: 'light' | 'ink' | 'dark' | 'brand' | 'accent' | 'soft';
   size?: number;
 }) {
   return (
@@ -385,12 +385,12 @@ export function MotionDemo() {
       onMouseLeave={() => setOn(false)}
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: 16,
         cursor: 'pointer',
       }}
     >
-      {(['cream', 'olive', 'dark', 'terracotta'] as const).map((mode) => (
+      {(['light', 'ink', 'dark', 'brand', 'accent', 'soft'] as const).map((mode) => (
         <div
           key={mode}
           data-mode={mode}

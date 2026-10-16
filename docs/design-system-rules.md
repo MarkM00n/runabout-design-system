@@ -37,8 +37,15 @@ below, and `scripts/design-sync.js` for the implementation.
   (the `@theme` declaration Tailwind consumes) and `src/tokens/tokens.json`
   (the structured source-of-truth record). A token that exists in one but
   not the other is a bug.
+- **Colour values are generated, not typed (since 2026-10-16).**
+  `npm run tokens:generate` writes every colour value in both files — the
+  `@theme` values, the mode blocks and the brand blocks — from the latest
+  `src/tokens/figma-export-*.json`. A new colour token needs one
+  hand-written line in `@theme` with a comment saying what it is for; the
+  generator refuses to run until that line exists, then fills in its value.
+  `npm run tokens:check` fails if either file has drifted from the export.
 - **Don't collapse two tokens into one just because their values currently
-  match.** `surface-400` and `surface-section` are the same hex on cream
+  match.** `surface-400` and `surface-section` are the same hex on a light surface
   today but are bound to different Figma variables — aliasing them assumes
   that coincidence is permanent, and `surface-section` alone changes with
   the mode. Keep distinct Figma bindings as distinct tokens, and say so in a
@@ -166,12 +173,12 @@ below, and `scripts/design-sync.js` for the implementation.
   its real backdrop may not share — `Button`'s secondary variant did exactly
   that and had to be unwound. See §7.
 - **Mode-context tokens must be flagged, not silently shipped illegible.**
-  The Figma variables resolve per surface mode (On Cream / On Olive / On
-  Dark / On Terracotta — see §7). A component that owns a surface carries
+  The Figma variables resolve per surface mode (On Light / On Ink / On
+  Dark / On Brand / On Accent / On Soft — see §7). A component that owns a surface carries
   that context in its token *values*; a component that doesn't inherits it
   from whatever it's placed on. Either way the assumption has to be legible
   — supply the matching backdrop in the story rather than rendering
-  near-invisible pale-on-cream by default.
+  near-invisible pale-on-light by default.
 - **Spot-check contrast, don't assume it.** The default state passing
   contrast doesn't mean the hover or disabled state does — check text-on-fill
   contrast for every state that changes color, especially anything using a
@@ -229,16 +236,17 @@ whenever someone actually wants it.
   connected) for at least: background/border/text color, border-radius,
   height, padding, and font-size — across every size and state variant —
   and diff them against the literal values extracted from Figma.
-- **If the component touches a mode-variant token, verify all four modes
-  (On Cream, On Olive, On Dark, On Terracotta) live, not just whichever one
+- **If the component touches a mode-variant token, verify all six modes
+  (On Light, On Ink, On Dark, On Brand, On Accent, On Soft) live, not just whichever one
   Figma's reference happens to show at the time.** Checking token values against
   Figma is necessary but not sufficient — the values can be correct in
   `tokens.css` for every mode and the component can still render wrong at
   runtime for reasons no token diff would catch (the `outline-none`
   footgun above is exactly this: right tokens, wrong computed output).
   Drive Storybook's mode-switcher decorator directly via URL globals
-  (`?globals=mode:olive`, `mode:dark`, `mode:terracotta`) and re-check
-  computed styles, not just the default On Cream. This was once only done
+  (`?globals=mode:ink`, `mode:dark`, `mode:brand`, `mode:accent`,
+  `mode:soft`) and re-check computed styles, not just the default On Light.
+  For a full page, also switch `brand:northline` and `brand:vines-and-vinyl`. This was once only done
   after being asked a second time — it should be routine, not a follow-up
   question.
 - **Don't assume sibling components share a rule.** `Button`'s radius steps
@@ -408,87 +416,125 @@ the pages render that, they don't hand-list token values.
   place the "print only, never registered in `@theme`" rule is recorded
   against the tokens themselves.
 
-## 7. Surface pairings — surface modes (regenerated 2026-09-07)
+## 7. Surface pairings
 
-**The architecture changed again on 2026-09-07.** The three-mode system
-(On Light / On Dark / On Feature, 44 tokens) is replaced by **four surface
-modes and 26 tokens**, under one rule:
+**Regenerated 2026-10-16** from `src/tokens/figma-export-2026-10-16.json`.
+The four modes of 2026-09-07 were renamed by role and two were added:
+On Cream → **On Light**, On Olive → **On Ink**, On Terracotta → **On Brand**,
+plus **On Accent** and **On Soft**. Appearance names stopped being true once
+there was a second brand — "terracotta" is teal under Northline.
+
+The rule is unchanged:
 
 > **Anything with a background owns a mode. Everything else inherits.**
 
 A surface — a section, card, modal or panel — fills with `surface-section`
 and picks its colour by setting its `data-mode`. Buttons, inputs, tabs,
 badges, text and icons never carry a mode; they resolve from whatever they
-sit on. There is no "which partner token do I pick" question and no
-per-surface token family: there is one token per role, and the surface's
-mode answers the rest.
+sit on. There is one token per role, and the surface's mode answers the rest.
 
-The four modes and the surface each one means:
+The six modes and the surface each one means (Runabout values):
 
-| `data-mode` | Figma mode | `surface-section` |
+| `data-mode` | Figma mode | `surface-section` (Runabout) |
 |---|---|---|
-| `cream` | On Cream | `#f8ebda` Surface/400 |
-| `olive` | On Olive | `#3d4a2e` Ink/900 |
+| `light` | On Light | `#f8ebda` Surface/400 |
+| `ink` | On Ink | `#3d4a2e` Ink/900 |
 | `dark` | On Dark | `#2f2c28` Neutral/800 |
-| `terracotta` | On Terracotta | `#a74b24` Brand/800 |
+| `brand` | On Brand | `#a74b24` Brand/800 |
+| `accent` | On Accent | `#e39b2b` Accent/700 |
+| `soft` | On Soft | `#eaadae` Soft/400 |
+
+`light` is both the `@theme` default and an explicit block. `@theme` only
+sets the initial value; a light card inside a dark section needs a rule of
+its own to reset.
 
 `surface-card` (`#fefbf8`, Surface/50) is the one other surface token. It is
-**mode-invariant** — the same near-white in all four columns — which is why
-the only component that uses it, `Modal`, also pins itself to `cream`. See
-the "mode-invariant fill" warning below.
+**mode-invariant**, which is why `Modal`, the only component that uses it,
+pins itself to `light`. See the "mode-invariant fill" warning below.
 
 ### Text and boundary tokens, per mode
 
-Resolved value and its measured ratio against `surface-section` in that
-mode. Every figure below was computed with the WCAG relative-luminance
-formula against the 2026-09-07 export, not carried over.
+Resolved Runabout value and its ratio against `surface-section` in that
+mode, computed from the export with the WCAG relative-luminance formula.
 
-| Token | On Cream | On Olive | On Dark | On Terracotta |
-|---|---|---|---|---|
-| `text-primary` | `#2a2d1e` · 12.0:1 | `#faefe1` · 8.3:1 | `#faefe1` · 12.2:1 | `#faefe1` · 5.0:1 |
-| `text-secondary` / `border-default` | `#4a5435` · 6.9:1 | `#c9cbbf` · 5.8:1 | `#c9cbbf` · 8.5:1 | `#f6e3cb` · 4.6:1 |
-| `text-link` | `#7a4e09` · 6.1:1 | `#edc07a` · 5.6:1 | `#edc07a` · 8.2:1 | `#fbf2e4` · 5.1:1 |
-| `border-strong` | `#2a2d1e` · 12.0:1 | `#fbf3e9` · 8.6:1 | `#fbf3e9` · 12.6:1 | `#fbf3e9` · 5.2:1 |
-| `state-focus` (SC 1.4.11, 3:1) | `#2563eb` · 4.4:1 | `#b3d1ff` · 6.1:1 | `#b3d1ff` · 8.9:1 | `#b3d1ff` · 3.7:1 |
+| Token | On Light | On Ink | On Dark | On Brand | On Accent | On Soft |
+|---|---|---|---|---|---|---|
+| `text-primary` | `#2a2d1e` · 12.0:1 | `#faefe1` · 8.3:1 | `#faefe1` · 12.2:1 | `#faefe1` · 5.0:1 | `#2a2d1e` · 6.0:1 | `#2a2d1e` · 7.4:1 |
+| `text-secondary` | `#4a5435` · 6.9:1 | `#c9cbbf` · 5.8:1 | `#c9cbbf` · 8.5:1 | `#f6e3cb` · 4.6:1 | `#2a2d1e` · 6.0:1 | `#2a2d1e` · 7.4:1 |
+| `text-link` | `#7a4e09` · 6.1:1 | `#edc07a` · 5.6:1 | `#edc07a` · 8.2:1 | `#fbf2e4` · 5.1:1 | `#1d1b19` · 7.4:1 | `#1d1b19` · 9.1:1 |
+| `text-accent` | `#a74b24` · 4.9:1 | `#edc07a` · 5.6:1 | `#edc07a` · 8.2:1 | `#faefe1` · 5.0:1 | `#1d1b19` · 7.4:1 | `#1d1b19` · 9.1:1 |
+| `border-default` | `#4a5435` · 6.9:1 | `#c9cbbf` · 5.8:1 | `#c9cbbf` · 8.5:1 | `#faefe1` · 5.0:1 | `#4a5435` · 3.4:1 | `#4a5435` · 4.2:1 |
+| `border-strong` | `#2a2d1e` · 12.0:1 | `#fbf3e9` · 8.6:1 | `#fbf3e9` · 12.6:1 | `#fbf3e9` · 5.2:1 | `#2a2d1e` · 6.0:1 | `#2a2d1e` · 7.4:1 |
+| `state-focus` (SC 1.4.11, 3:1) | `#2563eb` · 4.4:1 | `#b3d1ff` · 6.1:1 | `#b3d1ff` · 8.9:1 | `#b3d1ff` · 3.7:1 | `#1d1b19` · 7.4:1 | `#1d1b19` · 9.1:1 |
 
 Every text row clears 4.5:1 (SC 1.4.3) in every mode; every boundary row
-clears 3:1 (SC 1.4.11). `text-secondary` on terracotta at 4.6:1 is the
-tightest pairing in the system — it was identical to `text-primary` until
-2026-09-07 and was rebound to Surface/600 to fix that, so treat it as
-having no headroom and re-measure if either token moves.
+clears 3:1 (SC 1.4.11). The tightest pairing is still `text-secondary` on
+brand at 4.6:1 — no headroom, re-measure if either token moves.
+
+`text-secondary` and `border-default` used to share one row. They now
+differ in On Accent and On Soft: on those saturated grounds secondary text
+takes the darkest ink (Ink/950) to clear 4.5:1, while the border stays at
+Ink/850, which clears the 3:1 a boundary needs.
 
 ### Component-internal pairings (a fill and the text on it)
 
 These don't depend on the surrounding surface, because the fill travels with
 the text:
 
-- `action-primary` + `text-on-action` flip together per mode — **11.45:1 in
-  all four**, by construction.
-- `action-highlight` + `text-on-highlight` — 5.3:1 cream, 6.6:1 olive and
-  dark, 8.2:1 terracotta.
+- `action-primary` + `text-on-action` flip together per mode — **11.5:1 in
+  all six**, by construction.
+- `action-highlight` + `text-on-highlight` — 5.3:1 light, 6.6:1 ink and
+  dark, 8.2:1 brand, 12.2:1 accent, 5.3:1 soft.
+- `illustration-highlight` + `text-on-highlight` (the date seal) — 5.3:1
+  light, 6.6:1 ink, dark and brand, 12.2:1 accent, 5.3:1 soft.
 - `state-*` fills + `text-on-state` — 6.28:1 error, 6.92:1 success, 6.97:1
   warning, identical in every mode.
 
+### Illustration tokens are fills, never text
+
+`illustration-primary`, `-secondary`, `-tertiary` and `-feature` colour the
+brand illustrations — sparkles, grapes, vinyl. They resolve per mode so an
+illustration stays visible on any surface, but nothing measures them as
+text and nothing should be. `illustration-highlight` is the exception: it is
+built to carry `text-on-highlight`, and is checked as a pair above.
+
+`surface-media` sits behind photos and media. It is what shows while an
+image loads, or when there is none. It is not a text background.
+
+### Scrims are mode-variant now
+
+`surface-scrim-start` → `surface-scrim-end` is the gradient over a photo
+with text on it. In every mode except brand it fades transparent to 85%
+Neutral/900. In **On Brand** it fades from the brand colour at 0% to solid
+`Brand/800` — the same value as that mode's `surface-section`. So text below
+the fade sits on a surface whose contrast is already in the table above,
+and a brand section's photo fades into that brand's own colour.
+
+Direction and stop positions are layout, not tokens. They live with the
+component. Text over the photo part of the gradient — above the solid
+point — is **not** covered by any automated check: its contrast depends on
+the photo. Check it by eye at every breakpoint, and again whenever the image
+changes.
+
 ### The status colours are fills, not text
 
-`state-error`, `state-success` and `state-warning` became **mode-invariant**
-in this sync — one value on every surface, so a status colour keeps meaning
-the same thing wherever it appears. That is correct for a `Badge` fill, and
-it is a trap for text:
+`state-error`, `state-success` and `state-warning` are **mode-invariant** —
+one value on every surface, so a status colour keeps meaning the same thing
+wherever it appears. Correct for a `Badge` fill; a trap for text:
 
 | Used as text on… | `state-error` | `state-success` | `state-warning` |
 |---|---|---|---|
-| cream | 5.5:1 | 6.1:1 | 6.1:1 |
-| olive | **1.5:1** | **1.3:1** | **1.3:1** |
+| light | 5.5:1 | 6.1:1 | 6.1:1 |
+| ink | **1.5:1** | **1.3:1** | **1.3:1** |
 | dark | **2.1:1** | **1.9:1** | **1.9:1** |
-| terracotta | **1.1:1** | **1.2:1** | **1.3:1** |
+| brand | **1.1:1** | **1.2:1** | **1.3:1** |
+| accent | **2.8:1** | **3.1:1** | **3.1:1** |
+| soft | **3.4:1** | **3.8:1** | **3.8:1** |
 
 **Use a `state-*` token as a fill, paired with `text-on-state`. Only put it
-on text on a cream surface.** Under the previous architecture these were
-mode-variant and coloured text safely on any surface; they no longer do.
-Error text on a dark form is the obvious way to get bitten — put the message
-on `text-primary` and carry the error meaning with an icon, a border, or a
-`Badge`, not with the colour of the words.
+on text on a light surface.** Error text on a dark form is the obvious way to
+get bitten — put the message on `text-primary` and carry the error meaning
+with an icon, a border, or a `Badge`.
 
 ### A mode-invariant fill under mode-resolved ink is the standing hazard
 
@@ -497,39 +543,75 @@ with the mode. Every text token does. Pair one of the first group with the
 second and the ink can walk out from under the fill while the fill stays put
 — which is exactly how the Vines & Vinyl Hero input reached 1.18:1
 (2026-08-08) and why `Modal` and the dashboard's stat tiles both pin
-`data-mode="cream"` alongside their `surface-card` fill. Whenever you set a
+`data-mode="light"` alongside their `surface-card` fill. Whenever you set a
 fill that doesn't vary, ask what the mode is doing for the text on top of
 it, and pin the mode if the answer is "nothing".
+
+### Brands: a separate axis, checked through the cascade
+
+Brand is independent of mode. `data-brand="northline"` or
+`data-brand="vines-and-vinyl"` swaps values, never names; Runabout sets no
+attribute. Every brand uses the same six modes and the same token names.
+`scripts/generate-brand-overrides.js` writes both the mode blocks and the
+brand blocks from the Figma export.
+
+`design-sync`'s **Brand coverage** check (`checkBrandCoverage`) does two
+things for every brand × mode:
+
+1. **Resolves every token through the real cascade** — a section inside a
+   brand root, brand and mode on one element, a section nested inside
+   another mode, and a brand root with no mode — and fails if any token
+   comes out different from the Figma value. This exists because generated
+   CSS can be correct line by line and still lose in the cascade: from
+   2026-09-07 to 2026-10-16 a bare `[data-brand='northline']` rule beat
+   `[data-mode='dark']` on elements carrying both attributes, leaking
+   Northline's light hover tint and subtle border onto its dark surfaces.
+   The brand root is now `[data-brand='x']:not([data-mode])`.
+2. **Measures the contrast pairs** in `BRAND_CONTRAST_PAIRS`: the text and
+   boundary rows above against `surface-section`, plus the three internal
+   pairs.
+
+Worst case per brand across all six modes:
+
+| Brand | `text-primary` | `text-secondary` | `text-accent` | `state-focus` |
+|---|---|---|---|---|
+| Runabout | 5.03 (brand) | 4.56 (brand) | 4.87 (light) | 3.67 (brand) |
+| Northline | 4.86 (accent) | 4.86 (accent) | 5.78 (ink) | 4.57 (brand) |
+| Vines & Vinyl | 4.59 (brand) | 4.74 (brand) | 4.56 (light) | 3.81 (brand) |
+
+### Known exceptions
+
+Failures that are known and owned report as WARN, not FAIL, so they don't
+block unrelated work. Anything not listed here fails. Each lives in
+`KNOWN_BRAND_CONTRAST_EXCEPTIONS` in `scripts/design-sync.js` with its reason.
+Remove the entry the moment the cause is fixed.
+
+| Brand | Mode | Pair | Ratio | Why |
+|---|---|---|---|---|
+| Northline | light, soft | `text-on-highlight` on `action-highlight` | 3.51:1 | Accent/800 `#2b7fd4` is a mid blue: dark text 3.5:1, white 4.1:1. No text colour clears it. A Northline palette decision. |
+| Northline | light, soft | `text-on-highlight` on `illustration-highlight` | 3.51:1 | Same cause. |
 
 ### Rules that fall out of the architecture
 
 - **A surface declares its mode; nothing else does.** If a component has no
-  background, it must not set `data-mode` — doing so pins its text to a
-  context its actual backdrop may not share. `Button`'s secondary variant
+  background, it must not set `data-mode`. `Button`'s secondary variant
   used to self-scope to dark and no longer does; `Badge` never has.
 - **Scope a mode to the narrowest element that owns the background.** Not
-  the nearest convenient wrapper. Setting it on a `<section>` sweeps in
-  descendants that sit visually outside the coloured box — that shipped once
-  and rendered `.section-title` near-black on dark green (2026-08-05).
-- **Focus is covered everywhere.** `state-focus` clears 3:1 against all four
-  surfaces. Because the ring is drawn 2px outside the control with a 2px
-  gap, its adjacent colour is the surface rather than the control's own
-  fill — which is why `Button`'s accent variant no longer needs the darker
-  ring it once did (`border-focus-on-highlight`, retired; `Focus/900`
-  survives in the primitives, unused, for any future case that does need it).
-- **`border-default` is no longer decorative-only.** It was 2.2:1 on light
-  surfaces under the old architecture and restricted to dividers. It is now
-  the same colour as `text-secondary` and clears 3:1 in every mode, so it is
-  a legitimate boundary — which is why the whole Input family rests on it in
-  Figma.
-- **Disabled is exempt and opacity-based** — see §2. Disabled pairings don't
-  appear above because SC 1.4.3 exempts inactive controls, and the treatment
-  is the default appearance at 38% opacity rather than a separate colour.
+  the nearest convenient wrapper — that shipped once and rendered
+  `.section-title` near-black on dark green (2026-08-05).
+- **Focus is covered everywhere.** `state-focus` clears 3:1 against all six
+  surfaces. On accent and soft it is near-black, because the blue ring
+  measures 2.2:1 and 2.7:1 on those grounds. The ring is drawn 2px outside
+  the control with a 2px gap, so its adjacent colour is the surface, not
+  the control's fill.
+- **`border-default` is a legitimate boundary.** It clears 3:1 in every
+  mode, so the Input family rests on it.
+- **Disabled is exempt and opacity-based** — see §2.
 - **This table is read at runtime, not duplicated.** `checkContrastPairings`
-  in `scripts/design-sync.js` parses this section directly
+  in `scripts/design-sync.js` parses the per-mode table above directly
   (`parseSurfacePairingsTable`), so it cannot drift from what is written
-  here. The column count moves in lockstep with the mode architecture; it
-  went from three to four in this sync.
+  here. The column count moves in lockstep with `SURFACE_MODES`; it went
+  from four to six on 2026-10-16.
 
 ## 8. Where fixes belong
 

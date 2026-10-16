@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import type { HTMLAttributes } from 'react';
 import clsx from 'clsx';
 
-export type CardQuoteSurface = 'cream' | 'olive' | 'dark' | 'terracotta';
+export type CardQuoteSurface = 'light' | 'ink' | 'dark' | 'brand' | 'accent' | 'soft';
 
 export interface CardQuoteProps extends HTMLAttributes<HTMLElement> {
   /** The quote itself. Rendered without decorative quote marks — supply them
@@ -12,8 +12,8 @@ export interface CardQuoteProps extends HTMLAttributes<HTMLElement> {
   attribution?: string;
   /**
    * Which surface this card is. Like every card it owns a mode rather than
-   * inheriting one. Figma's guidance: On Terracotta on a cream page, On
-   * Cream on olive/dark/terracotta.
+   * inheriting one. Figma's guidance: On Brand on a light page, On Light on
+   * ink, dark or brand. Values match Figma's Semantic mode names.
    */
   surface?: CardQuoteSurface;
 }
@@ -27,7 +27,7 @@ export interface CardQuoteProps extends HTMLAttributes<HTMLElement> {
  * the one thing the static Figma frame can't express.
  */
 export const CardQuote = forwardRef<HTMLElement, CardQuoteProps>(
-  ({ quote, attribution, surface = 'terracotta', className, ...props }, ref) => (
+  ({ quote, attribution, surface = 'brand', className, ...props }, ref) => (
     <figure
       ref={ref}
       data-mode={surface}

@@ -12,22 +12,22 @@ import foundations from '../foundations-data.generated.json';
 import { Wordmark as WordmarkAt } from './Wordmark';
 import { DoDont, DocPage, HexSwatch, ModeSwatch, Mono, MotionDemo, Note, Overline, RefTable, Section, UsedBy, font } from './Doc';
 
-type Mode = 'cream' | 'olive' | 'dark' | 'terracotta';
-const MODES: Mode[] = ['cream', 'olive', 'dark', 'terracotta'];
-const MODE_LABEL: Record<Mode, string> = { cream: 'Cream', olive: 'Olive', dark: 'Dark', terracotta: 'Terracotta' };
+type Mode = 'light' | 'ink' | 'dark' | 'brand' | 'accent' | 'soft';
+const MODES: Mode[] = ['light', 'ink', 'dark', 'brand', 'accent', 'soft'];
+const MODE_LABEL: Record<Mode, string> = { light: 'Light', ink: 'Ink', dark: 'Dark', brand: 'Brand', accent: 'Accent', soft: 'Soft' };
 
 type SemanticToken = {
   value: string;
-  modes?: Partial<Record<Exclude<Mode, 'cream'>, string>>;
+  modes?: Partial<Record<Exclude<Mode, 'light'>, string>>;
   alias?: Partial<Record<Mode, string>>;
   note?: string;
 };
-type PrimitiveStep = { value: string; northline?: string; note?: string };
+type PrimitiveStep = { value: string; northline?: string; 'vines-and-vinyl'?: string; note?: string };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const color = (tokens as any).color as Record<string, Record<string, SemanticToken | PrimitiveStep>>;
-const SEMANTIC_GROUPS = ['surface', 'text', 'action', 'border', 'state'] as const;
-const PRIMITIVE_FAMILIES = ['surface', 'brand', 'soft', 'deep', 'accent', 'ink', 'neutral', 'paper', 'green', 'red', 'focus', 'alpha', 'event'] as const;
+const SEMANTIC_GROUPS = ['surface', 'text', 'action', 'border', 'state', 'illustration'] as const;
+const PRIMITIVE_FAMILIES = ['surface', 'brand', 'soft', 'deep', 'accent', 'ink', 'neutral', 'paper', 'green', 'red', 'focus', 'alpha'] as const;
 
 const usedBy = (tokenPath: string): string[] | undefined => {
   for (const rows of Object.values(foundations as Record<string, Array<{ tokenPath: string; consumedBy?: string[] }>>)) {
@@ -37,23 +37,25 @@ const usedBy = (tokenPath: string): string[] | undefined => {
   return undefined;
 };
 
-const modeValue = (t: SemanticToken, mode: Mode) => (mode === 'cream' ? t.value : t.modes?.[mode] ?? t.value);
+const modeValue = (t: SemanticToken, mode: Mode) => (mode === 'light' ? t.value : t.modes?.[mode] ?? t.value);
 const aliasOf = (t: SemanticToken, mode: Mode) => t.alias?.[mode];
 const stepOf = (alias?: string) => (alias ? alias.split('/').slice(1).join('/') : '—');
 
 // ---------------------------------------------------------------- Colours
 
 const SURFACE_COPY: Record<Mode, string> = {
-  cream: 'Linen, paper, the room by day.',
-  olive: 'Bottle glass, vine leaves, the label wall.',
+  light: 'Linen, paper, the room by day.',
+  ink: 'Bottle glass, vine leaves, the label wall.',
   dark: 'The bar after dark. Warm, not black.',
-  terracotta: 'Clay, cork, the first pour. The one loud colour.',
+  brand: 'Clay, cork, the first pour. The one loud colour.',
+  accent: 'Late sun on a label. For a moment, not a whole page.',
+  soft: 'Rosé and grape skin. Warm and light.',
 };
 
 function SurfacePanels() {
   const section = color.surface.section as SemanticToken;
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, borderRadius: 12, overflow: 'hidden' }}>
       {MODES.map((mode) => (
         <div
           key={mode}
@@ -114,10 +116,12 @@ function RolesTable() {
     <RefTable
       columns={[
         { key: 'role', label: 'Role', width: 220 },
-        { key: 'cream', label: 'Cream', width: 120 },
-        { key: 'olive', label: 'Olive', width: 120 },
-        { key: 'dark', label: 'Dark', width: 120 },
-        { key: 'terracotta', label: 'Terracotta', width: 120 },
+        { key: 'light', label: 'Light', width: 104 },
+        { key: 'ink', label: 'Ink', width: 104 },
+        { key: 'dark', label: 'Dark', width: 104 },
+        { key: 'brand', label: 'Brand', width: 104 },
+        { key: 'accent', label: 'Accent', width: 104 },
+        { key: 'soft', label: 'Soft', width: 104 },
         { key: 'used', label: 'Used by' },
       ]}
       rows={rows}
@@ -134,7 +138,6 @@ function Ramps() {
         return [
           <div key={family + '-label'} style={{ fontSize: 13, textTransform: 'capitalize' }}>
             {family}
-            {family === 'event' && <div style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>print only</div>}
           </div>,
           <div key={family + '-strip'} style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {steps.map(([step, v]) => (
@@ -156,18 +159,19 @@ export function ColoursPage() {
       title="Colours"
       overline="Palette"
       headline="The colours come from the room, not the screen."
-      lead="Four surfaces — cream, olive, dark, terracotta. Twenty-six colour roles resolve against whichever surface they sit on, so a component never holds a colour of its own."
+      lead="Six surfaces — light, ink, dark, brand, accent and soft. Thirty-two colour roles resolve against whichever surface they sit on, so a component never holds a colour of its own."
       notes={
         <>
           <Note>
             Every role is a CSS custom property, <Mono>--color-&lt;group&gt;-&lt;name&gt;</Mono>, registered in Tailwind’s{' '}
             <Mono>@theme</Mono> so utilities like <Mono>bg-surface-section</Mono> and <Mono>text-text-primary</Mono> exist
-            automatically. The cream values are the defaults; a container with <Mono>data-mode="olive"</Mono>,{' '}
-            <Mono>"dark"</Mono> or <Mono>"terracotta"</Mono> overrides them for its subtree, and the innermost override wins.
+            automatically. The light values are the defaults; a container with <Mono>data-mode="ink"</Mono>,{' '}
+            <Mono>"dark"</Mono>, <Mono>"brand"</Mono>, <Mono>"accent"</Mono> or <Mono>"soft"</Mono> overrides them for its
+            subtree, and the innermost override wins. Modes are named by role, not colour: under Northline, "brand" is teal.
           </Note>
           <Note>
             <Mono>action/secondary</Mono> and the dark-surface <Mono>border/subtle</Mono> are transparent whites, so their
-            cream cells look empty above — that is the token, not a rendering gap.
+            light cells look empty above — that is the token, not a rendering gap.
           </Note>
           <Note>
             Primitives are the raw ramps. No component points at one directly; the semantic roles alias into them. The
@@ -392,12 +396,12 @@ export function RadiusPage() {
         </Note>
       }
     >
-      <Section label="The steps" aside="Tiles on the olive surface, so the corner reads">
+      <Section label="The steps" aside="Tiles on the ink surface, so the corner reads">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 12 }}>
           {steps.map(([k, v]) => (
             <div key={k} style={{ textAlign: 'center' }}>
               <div
-                data-mode="olive"
+                data-mode="ink"
                 style={{ height: 96, borderRadius: `var(--radius-${k})`, background: 'var(--color-surface-section)' }}
               />
               <div style={{ marginTop: 10, fontSize: 13 }}>{k}</div>
@@ -496,7 +500,7 @@ export function BreakpointsPage() {
           {entries.map(([k, v]) => (
             <div
               key={k}
-              data-mode="olive"
+              data-mode="ink"
               style={{
                 position: 'absolute',
                 left: 0,
@@ -547,7 +551,7 @@ export function BrandPage() {
       }
     >
       <Section label="The mark on every surface" aside="One file, no variants">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, borderRadius: 12, overflow: 'hidden' }}>
           {MODES.map((mode) => (
             <div
               key={mode}
@@ -568,9 +572,9 @@ export function BrandPage() {
           Anything with a background owns a mode. Everything else inherits.
         </div>
         <Note>
-          A section, a card, a modal picks one of four surfaces by setting <Mono>data-mode</Mono>. Buttons, inputs, tabs,
+          A section, a card, a modal picks one of six surfaces by setting <Mono>data-mode</Mono>. Buttons, inputs, tabs,
           badges, text and icons never carry a mode — they take their colours from whatever they sit on. Move a button
-          from cream to olive and it recolours itself. No variants, no overrides, no second set to maintain.
+          from light to ink and it recolours itself. No variants, no overrides, no second set to maintain.
         </Note>
       </Section>
       <Section label="Photography" aside="Warm, close and lit by candles">
