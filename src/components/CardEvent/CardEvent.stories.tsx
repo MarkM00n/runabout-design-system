@@ -15,7 +15,7 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    surface: { control: 'select', options: ['cream', 'olive', 'dark', 'terracotta'] },
+    surface: { control: 'select', options: ['light', 'ink', 'dark', 'brand', 'accent', 'soft'] },
     titleLevel: { control: 'select', options: ['h2', 'h3', 'h4', 'h5', 'h6'] },
   },
   decorators: [
@@ -41,32 +41,40 @@ const base = {
   ctaLabel: 'Book now',
 };
 
-/** The default surface — a terracotta card, which is what you want on a
- *  cream page. */
-export const Terracotta: Story = {
-  args: { ...base, surface: 'terracotta' },
+/** The default surface — a brand-coloured card, which is what you want on a
+ *  light page. */
+export const Brand: Story = {
+  args: { ...base, surface: 'brand' },
 };
 
-/** The pairing for a card sitting on a dark or olive section. */
-export const Cream: Story = {
-  args: { ...base, surface: 'cream' },
+/** The pairing for a card sitting on a dark or ink section. */
+export const Light: Story = {
+  args: { ...base, surface: 'light' },
 };
 
-export const Olive: Story = {
-  args: { ...base, surface: 'olive' },
+export const Ink: Story = {
+  args: { ...base, surface: 'ink' },
 };
 
 export const Dark: Story = {
   args: { ...base, surface: 'dark' },
 };
 
+export const Accent: Story = {
+  args: { ...base, surface: 'accent' },
+};
+
+export const Soft: Story = {
+  args: { ...base, surface: 'soft' },
+};
+
 /** With the image/title/metadata region made one clickable, focusable unit.
  *  Tab twice: the card region first, then the CTA. */
 export const Clickable: Story = {
-  args: { ...base, surface: 'terracotta', onCardClick: () => {} },
+  args: { ...base, surface: 'brand', onCardClick: () => {} },
 };
 
 /** Figma's `Show Image` boolean, off. */
 export const WithoutImage: Story = {
-  args: { ...base, surface: 'terracotta', imageSrc: undefined },
+  args: { ...base, surface: 'brand', imageSrc: undefined },
 };

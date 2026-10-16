@@ -1,0 +1,1902 @@
+{
+  "meta": {
+    "source": "Figma: Design System (JpFA7KtVlSOrM9fIYYgOsn)",
+    "exported": "2026-10-16T05:40:00Z",
+    "generatedBy": "Figma Plugin API, live variables — not hand-edited",
+    "checksum": "FNV-1a over canonical JSON of {primitives, semantic}, computed inside Figma at export time: cf0ddd5a. Recompute to verify this file.",
+    "note": "Semantic tokens resolve per surface mode (On Light / On Ink / On Dark / On Brand / On Accent / On Soft). Each semantic entry lists the primitive alias and the resolved Runabout-brand value. Primitives carry all three brand modes (Runabout, Northline, Vines & Vinyl). Alpha values are written as hex@alpha. Spacing and radius were read live in the same session; textStyles and components are carried over unchanged from the 2026-09-07 export, which this sync did not touch."
+  },
+  "modes": {
+    "brand": [
+      "runabout",
+      "northline",
+      "vines-and-vinyl"
+    ],
+    "surface": [
+      "On Light",
+      "On Ink",
+      "On Dark",
+      "On Brand",
+      "On Accent",
+      "On Soft"
+    ],
+    "surfaceDataMode": {
+      "On Light": "light",
+      "On Ink": "ink",
+      "On Dark": "dark",
+      "On Brand": "brand",
+      "On Accent": "accent",
+      "On Soft": "soft"
+    }
+  },
+  "primitives": {
+    "Surface/800": {
+      "runabout": "#f3dbbc",
+      "northline": "#dce5f0",
+      "vines-and-vinyl": "#f3dbbc"
+    },
+    "Surface/700": {
+      "runabout": "#f4dfc3",
+      "northline": "#e0e8f2",
+      "vines-and-vinyl": "#f4dfc3"
+    },
+    "Surface/600": {
+      "runabout": "#f6e3cb",
+      "northline": "#e4ecf4",
+      "vines-and-vinyl": "#f6e3cb"
+    },
+    "Surface/500": {
+      "runabout": "#f7e7d2",
+      "northline": "#e9eff6",
+      "vines-and-vinyl": "#f7e7d2"
+    },
+    "Surface/400": {
+      "runabout": "#f8ebda",
+      "northline": "#edf2f8",
+      "vines-and-vinyl": "#f5dec1"
+    },
+    "Surface/300": {
+      "runabout": "#faefe1",
+      "northline": "#f1f5fa",
+      "vines-and-vinyl": "#f6dfc0"
+    },
+    "Surface/200": {
+      "runabout": "#fbf3e9",
+      "northline": "#f5f8fc",
+      "vines-and-vinyl": "#fbf3e9"
+    },
+    "Surface/100": {
+      "runabout": "#fcf7f0",
+      "northline": "#f9fbfd",
+      "vines-and-vinyl": "#fcf7f0"
+    },
+    "Surface/50": {
+      "runabout": "#fefbf8",
+      "northline": "#fdfeff",
+      "vines-and-vinyl": "#fefbf8"
+    },
+    "Brand/800": {
+      "runabout": "#a74b24",
+      "northline": "#0e5f6b",
+      "vines-and-vinyl": "#a34923"
+    },
+    "Brand/700": {
+      "runabout": "#cb6c43",
+      "northline": "#58b4c3",
+      "vines-and-vinyl": "#cb6c43"
+    },
+    "Brand/600": {
+      "runabout": "#d2805c",
+      "northline": "#6ebecb",
+      "vines-and-vinyl": "#d2805c"
+    },
+    "Brand/500": {
+      "runabout": "#d99375",
+      "northline": "#84c8d3",
+      "vines-and-vinyl": "#d99375"
+    },
+    "Brand/400": {
+      "runabout": "#e0a78f",
+      "northline": "#9ad2db",
+      "vines-and-vinyl": "#e0a78f"
+    },
+    "Brand/300": {
+      "runabout": "#e7bba8",
+      "northline": "#b0dce3",
+      "vines-and-vinyl": "#e7bba8"
+    },
+    "Brand/200": {
+      "runabout": "#eecfc1",
+      "northline": "#c6e6eb",
+      "vines-and-vinyl": "#eecfc1"
+    },
+    "Brand/100": {
+      "runabout": "#f5e2da",
+      "northline": "#dcf0f3",
+      "vines-and-vinyl": "#f5e2da"
+    },
+    "Brand/50": {
+      "runabout": "#fcf6f3",
+      "northline": "#f2fafb",
+      "vines-and-vinyl": "#fcf6f3"
+    },
+    "Soft/800": {
+      "runabout": "#da6c6e",
+      "northline": "#745eda",
+      "vines-and-vinyl": "#da6c6e"
+    },
+    "Soft/700": {
+      "runabout": "#de7c7e",
+      "northline": "#8370de",
+      "vines-and-vinyl": "#de7c7e"
+    },
+    "Soft/600": {
+      "runabout": "#e28d8e",
+      "northline": "#9382e2",
+      "vines-and-vinyl": "#e28d8e"
+    },
+    "Soft/500": {
+      "runabout": "#e69d9e",
+      "northline": "#a294e6",
+      "vines-and-vinyl": "#e69d9e"
+    },
+    "Soft/400": {
+      "runabout": "#eaadae",
+      "northline": "#b2a6ea",
+      "vines-and-vinyl": "#e9a5a9"
+    },
+    "Soft/300": {
+      "runabout": "#efbebf",
+      "northline": "#c1b8ef",
+      "vines-and-vinyl": "#efbebf"
+    },
+    "Soft/200": {
+      "runabout": "#f3cecf",
+      "northline": "#d1caf3",
+      "vines-and-vinyl": "#f3cecf"
+    },
+    "Soft/100": {
+      "runabout": "#f7dedf",
+      "northline": "#e0dcf7",
+      "vines-and-vinyl": "#f7dedf"
+    },
+    "Soft/50": {
+      "runabout": "#fbefef",
+      "northline": "#f0eefb",
+      "vines-and-vinyl": "#fbefef"
+    },
+    "Deep/900": {
+      "runabout": "#341012",
+      "northline": "#101030",
+      "vines-and-vinyl": "#371317"
+    },
+    "Deep/700": {
+      "runabout": "#4b2b2c",
+      "northline": "#2b2b52",
+      "vines-and-vinyl": "#4b2b2c"
+    },
+    "Deep/600": {
+      "runabout": "#614547",
+      "northline": "#454568",
+      "vines-and-vinyl": "#614547"
+    },
+    "Deep/500": {
+      "runabout": "#786061",
+      "northline": "#60607e",
+      "vines-and-vinyl": "#786061"
+    },
+    "Deep/400": {
+      "runabout": "#8e7a7b",
+      "northline": "#7a7a94",
+      "vines-and-vinyl": "#8e7a7b"
+    },
+    "Deep/300": {
+      "runabout": "#a59596",
+      "northline": "#9595aa",
+      "vines-and-vinyl": "#a59596"
+    },
+    "Deep/200": {
+      "runabout": "#bbafb0",
+      "northline": "#afafc0",
+      "vines-and-vinyl": "#bbafb0"
+    },
+    "Deep/100": {
+      "runabout": "#d2caca",
+      "northline": "#cacad6",
+      "vines-and-vinyl": "#d2caca"
+    },
+    "Deep/50": {
+      "runabout": "#e8e4e5",
+      "northline": "#e6e6ec",
+      "vines-and-vinyl": "#e8e4e5"
+    },
+    "Accent/800": {
+      "runabout": "#df8e10",
+      "northline": "#2b7fd4",
+      "vines-and-vinyl": "#e39313"
+    },
+    "Accent/700": {
+      "runabout": "#e39b2b",
+      "northline": "#5797e7",
+      "vines-and-vinyl": "#e39313"
+    },
+    "Accent/600": {
+      "runabout": "#e6a745",
+      "northline": "#6ca4ea",
+      "vines-and-vinyl": "#e39313"
+    },
+    "Accent/500": {
+      "runabout": "#eab460",
+      "northline": "#81b1ed",
+      "vines-and-vinyl": "#eab460"
+    },
+    "Accent/400": {
+      "runabout": "#edc07a",
+      "northline": "#96bef0",
+      "vines-and-vinyl": "#edc07a"
+    },
+    "Accent/300": {
+      "runabout": "#f1cd95",
+      "northline": "#abcbf3",
+      "vines-and-vinyl": "#f1cd95"
+    },
+    "Accent/200": {
+      "runabout": "#f4d9af",
+      "northline": "#c0d8f6",
+      "vines-and-vinyl": "#f4d9af"
+    },
+    "Accent/100": {
+      "runabout": "#f8e6ca",
+      "northline": "#d5e5f9",
+      "vines-and-vinyl": "#f8e6ca"
+    },
+    "Accent/50": {
+      "runabout": "#fbf2e4",
+      "northline": "#eaf2fc",
+      "vines-and-vinyl": "#fbf2e4"
+    },
+    "Ink/800": {
+      "runabout": "#5d6440",
+      "northline": "#4b6381",
+      "vines-and-vinyl": "#5d6440"
+    },
+    "Ink/700": {
+      "runabout": "#6f7555",
+      "northline": "#657b97",
+      "vines-and-vinyl": "#6f7555"
+    },
+    "Ink/600": {
+      "runabout": "#81866a",
+      "northline": "#7f93ad",
+      "vines-and-vinyl": "#81866a"
+    },
+    "Ink/500": {
+      "runabout": "#939880",
+      "northline": "#99abc3",
+      "vines-and-vinyl": "#939880"
+    },
+    "Ink/400": {
+      "runabout": "#a5a995",
+      "northline": "#aab9cd",
+      "vines-and-vinyl": "#a5a995"
+    },
+    "Ink/300": {
+      "runabout": "#b7baaa",
+      "northline": "#bbc7d7",
+      "vines-and-vinyl": "#b7baaa"
+    },
+    "Ink/200": {
+      "runabout": "#c9cbbf",
+      "northline": "#ccd5e1",
+      "vines-and-vinyl": "#c9cbbf"
+    },
+    "Ink/100": {
+      "runabout": "#dbddd5",
+      "northline": "#dde3eb",
+      "vines-and-vinyl": "#dbddd5"
+    },
+    "Ink/50": {
+      "runabout": "#edeeea",
+      "northline": "#eef1f5",
+      "vines-and-vinyl": "#edeeea"
+    },
+    "Neutral/800": {
+      "runabout": "#2f2c28",
+      "northline": "#232a33",
+      "vines-and-vinyl": "#2f2c28"
+    },
+    "Neutral/700": {
+      "runabout": "#464340",
+      "northline": "#3c4551",
+      "vines-and-vinyl": "#464340"
+    },
+    "Neutral/600": {
+      "runabout": "#5d5b58",
+      "northline": "#5a6573",
+      "vines-and-vinyl": "#5d5b58"
+    },
+    "Neutral/500": {
+      "runabout": "#747270",
+      "northline": "#7d8896",
+      "vines-and-vinyl": "#747270"
+    },
+    "Neutral/400": {
+      "runabout": "#8b8a88",
+      "northline": "#a0aab9",
+      "vines-and-vinyl": "#8b8a88"
+    },
+    "Neutral/300": {
+      "runabout": "#a3a19f",
+      "northline": "#b3bbc7",
+      "vines-and-vinyl": "#a3a19f"
+    },
+    "Neutral/200": {
+      "runabout": "#bab9b7",
+      "northline": "#c6ccd5",
+      "vines-and-vinyl": "#bab9b7"
+    },
+    "Neutral/100": {
+      "runabout": "#d1d0cf",
+      "northline": "#d9dde3",
+      "vines-and-vinyl": "#d1d0cf"
+    },
+    "Neutral/50": {
+      "runabout": "#e8e8e7",
+      "northline": "#eceef1",
+      "vines-and-vinyl": "#e8e8e7"
+    },
+    "Neutral/0": {
+      "runabout": "#ffffff",
+      "northline": "#ffffff",
+      "vines-and-vinyl": "#ffffff"
+    },
+    "Neutral/900": {
+      "runabout": "#1d1b19",
+      "northline": "#141a21",
+      "vines-and-vinyl": "#1d1b19"
+    },
+    "Paper/50": {
+      "runabout": "#f9ecd2",
+      "northline": "#e8f0f9",
+      "vines-and-vinyl": "#f9ecd2"
+    },
+    "Paper/100": {
+      "runabout": "#ebe9e3",
+      "northline": "#e3e8ee",
+      "vines-and-vinyl": "#ebe9e3"
+    },
+    "Accent/900": {
+      "runabout": "#c07b0e",
+      "northline": "#1f5fa0",
+      "vines-and-vinyl": "#c07b0e"
+    },
+    "Deep/800": {
+      "runabout": "#4d0707",
+      "northline": "#16163f",
+      "vines-and-vinyl": "#4d0707"
+    },
+    "Ink/900": {
+      "runabout": "#3d4a2e",
+      "northline": "#2b3d51",
+      "vines-and-vinyl": "#2e3516"
+    },
+    "Ink/950": {
+      "runabout": "#2a2d1e",
+      "northline": "#1b2a39",
+      "vines-and-vinyl": "#1d1b19"
+    },
+    "Accent/950": {
+      "runabout": "#7a4e09",
+      "northline": "#123f6b",
+      "vines-and-vinyl": "#7a4e09"
+    },
+    "Green/800": {
+      "runabout": "#166534",
+      "northline": "#166534",
+      "vines-and-vinyl": "#166534"
+    },
+    "Red/700": {
+      "runabout": "#b91c1c",
+      "northline": "#b91c1c",
+      "vines-and-vinyl": "#b91c1c"
+    },
+    "Alpha/Ink-10": {
+      "runabout": "#5d6440@0.1",
+      "northline": "#4b6381@0.1",
+      "vines-and-vinyl": "#5d6440@0.1"
+    },
+    "Alpha/Ink-20": {
+      "runabout": "#5d6440@0.2",
+      "northline": "#4b6381@0.2",
+      "vines-and-vinyl": "#5d6440@0.2"
+    },
+    "Alpha/Ink-40": {
+      "runabout": "#5d6440@0.4",
+      "northline": "#4b6381@0.4",
+      "vines-and-vinyl": "#5d6440@0.4"
+    },
+    "Alpha/Ink-60": {
+      "runabout": "#5d6440@0.6",
+      "northline": "#4b6381@0.6",
+      "vines-and-vinyl": "#5d6440@0.6"
+    },
+    "Alpha/White-0": {
+      "runabout": "#ffffff@0",
+      "northline": "#ffffff@0",
+      "vines-and-vinyl": "#ffffff@0"
+    },
+    "Alpha/White-10": {
+      "runabout": "#ffffff@0.1",
+      "northline": "#ffffff@0.1",
+      "vines-and-vinyl": "#ffffff@0.1"
+    },
+    "Ink/850": {
+      "runabout": "#4a5435",
+      "northline": "#3b5069",
+      "vines-and-vinyl": "#4a5435"
+    },
+    "Focus/500": {
+      "runabout": "#2563eb",
+      "northline": "#6d3fd4",
+      "vines-and-vinyl": "#2563eb"
+    },
+    "Focus/900": {
+      "runabout": "#1e3a8a",
+      "northline": "#3a1f7a",
+      "vines-and-vinyl": "#1e3a8a",
+      "description": "Darker blue step added so a focus ring can clear WCAG 2.2 SC 1.4.11 (3:1 non-text contrast) against mid-luminance fills like action-highlight, which Blue/100 cannot."
+    },
+    "Focus/200": {
+      "runabout": "#b3d1ff",
+      "northline": "#d3c4ff",
+      "vines-and-vinyl": "#b3d1ff"
+    },
+    "Red/300": {
+      "runabout": "#f87171",
+      "northline": "#f87171",
+      "vines-and-vinyl": "#f87171"
+    },
+    "Green/300": {
+      "runabout": "#4ade80",
+      "northline": "#4ade80",
+      "vines-and-vinyl": "#4ade80"
+    },
+    "Red/100": {
+      "runabout": "#fee2e2",
+      "northline": "#fee2e2",
+      "vines-and-vinyl": "#fee2e2"
+    },
+    "Red/200": {
+      "runabout": "#fecaca",
+      "northline": "#fecaca",
+      "vines-and-vinyl": "#fecaca"
+    },
+    "Green/200": {
+      "runabout": "#bbf7d0",
+      "northline": "#bbf7d0",
+      "vines-and-vinyl": "#bbf7d0"
+    },
+    "Alpha/Scrim-0": {
+      "runabout": "#1d1b19@0",
+      "northline": "#1d1b19@0",
+      "vines-and-vinyl": "#1d1b19@0",
+      "description": "Neutral/900 at 0% — for image scrims"
+    },
+    "Alpha/Scrim-85": {
+      "runabout": "#1d1b19@0.85",
+      "northline": "#1d1b19@0.85",
+      "vines-and-vinyl": "#1d1b19@0.85",
+      "description": "Neutral/900 at 85% — for image scrims"
+    },
+    "Alpha/Brand-0": {
+      "runabout": "#a74b24@0",
+      "northline": "#0e5f6b@0",
+      "vines-and-vinyl": "#a34923@0"
+    }
+  },
+  "semantic": {
+    "surface/section": {
+      "description": "The background of anything that is a surface: sections, cards, panels. Set the layer’s mode and this token becomes that surface.",
+      "On Light": [
+        "Surface/400",
+        "#f8ebda"
+      ],
+      "On Ink": [
+        "Ink/900",
+        "#3d4a2e"
+      ],
+      "On Dark": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Brand": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Accent": [
+        "Accent/700",
+        "#e39b2b"
+      ],
+      "On Soft": [
+        "Soft/400",
+        "#eaadae"
+      ]
+    },
+    "surface/card": {
+      "description": "Light cream (Surface/50) for elevated surfaces — the modal. Cards use surface/section and choose their colour by mode.",
+      "On Light": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Ink": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Dark": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Brand": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Accent": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Soft": [
+        "Surface/50",
+        "#fefbf8"
+      ]
+    },
+    "surface/scrim-start": {
+      "description": "Top stop of a text-over-image scrim.",
+      "On Light": [
+        "Alpha/Scrim-0",
+        "#1d1b19@0"
+      ],
+      "On Ink": [
+        "Alpha/Scrim-0",
+        "#1d1b19@0"
+      ],
+      "On Dark": [
+        "Alpha/Scrim-0",
+        "#1d1b19@0"
+      ],
+      "On Brand": [
+        "Alpha/Brand-0",
+        "#a74b24@0"
+      ],
+      "On Accent": [
+        "Alpha/Scrim-0",
+        "#1d1b19@0"
+      ],
+      "On Soft": [
+        "Alpha/Scrim-0",
+        "#1d1b19@0"
+      ]
+    },
+    "surface/scrim-end": {
+      "description": "Bottom stop of a text-over-image scrim.",
+      "On Light": [
+        "Alpha/Scrim-85",
+        "#1d1b19@0.85"
+      ],
+      "On Ink": [
+        "Alpha/Scrim-85",
+        "#1d1b19@0.85"
+      ],
+      "On Dark": [
+        "Alpha/Scrim-85",
+        "#1d1b19@0.85"
+      ],
+      "On Brand": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Accent": [
+        "Alpha/Scrim-85",
+        "#1d1b19@0.85"
+      ],
+      "On Soft": [
+        "Alpha/Scrim-85",
+        "#1d1b19@0.85"
+      ]
+    },
+    "text/primary": {
+      "description": "Headings, body, icons.",
+      "On Light": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Ink": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Dark": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Brand": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Accent": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Soft": [
+        "Ink/950",
+        "#2a2d1e"
+      ]
+    },
+    "text/secondary": {
+      "description": "Supporting text, captions, metadata.",
+      "On Light": [
+        "Ink/850",
+        "#4a5435"
+      ],
+      "On Ink": [
+        "Ink/200",
+        "#c9cbbf"
+      ],
+      "On Dark": [
+        "Ink/200",
+        "#c9cbbf"
+      ],
+      "On Brand": [
+        "Surface/600",
+        "#f6e3cb"
+      ],
+      "On Accent": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Soft": [
+        "Ink/950",
+        "#2a2d1e"
+      ]
+    },
+    "text/link": {
+      "description": "Inline links, link buttons, interactive icons.",
+      "On Light": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Ink": [
+        "Accent/400",
+        "#edc07a"
+      ],
+      "On Dark": [
+        "Accent/400",
+        "#edc07a"
+      ],
+      "On Brand": [
+        "Accent/50",
+        "#fbf2e4"
+      ],
+      "On Accent": [
+        "Neutral/900",
+        "#1d1b19"
+      ],
+      "On Soft": [
+        "Neutral/900",
+        "#1d1b19"
+      ]
+    },
+    "text/on-action": {
+      "description": "Text and icons on action/primary.",
+      "On Light": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Ink": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Dark": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Brand": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Accent": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Soft": [
+        "Surface/500",
+        "#f7e7d2"
+      ]
+    },
+    "text/on-highlight": {
+      "description": "Text on action/highlight.",
+      "On Light": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Ink": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Dark": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Brand": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Accent": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Soft": [
+        "Neutral/800",
+        "#2f2c28"
+      ]
+    },
+    "text/on-state": {
+      "description": "Text on state fills (badges).",
+      "On Light": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Ink": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Dark": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Brand": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Accent": [
+        "Surface/50",
+        "#fefbf8"
+      ],
+      "On Soft": [
+        "Surface/50",
+        "#fefbf8"
+      ]
+    },
+    "action/primary": {
+      "description": "Primary button fill.",
+      "On Light": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Ink": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Dark": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Brand": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Accent": [
+        "Neutral/800",
+        "#2f2c28"
+      ],
+      "On Soft": [
+        "Neutral/800",
+        "#2f2c28"
+      ]
+    },
+    "action/primary-hover": {
+      "description": "Primary button hover.",
+      "On Light": [
+        "Neutral/700",
+        "#464340"
+      ],
+      "On Ink": [
+        "Surface/800",
+        "#f3dbbc"
+      ],
+      "On Dark": [
+        "Surface/800",
+        "#f3dbbc"
+      ],
+      "On Brand": [
+        "Surface/800",
+        "#f3dbbc"
+      ],
+      "On Accent": [
+        "Neutral/700",
+        "#464340"
+      ],
+      "On Soft": [
+        "Neutral/700",
+        "#464340"
+      ]
+    },
+    "action/secondary": {
+      "description": "Secondary (outlined) button fill — transparent.",
+      "On Light": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ],
+      "On Ink": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ],
+      "On Dark": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ],
+      "On Brand": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ],
+      "On Accent": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ],
+      "On Soft": [
+        "Alpha/White-0",
+        "#ffffff@0"
+      ]
+    },
+    "action/secondary-hover": {
+      "description": "Secondary button hover tint.",
+      "On Light": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ],
+      "On Ink": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Dark": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Brand": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Accent": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ],
+      "On Soft": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ]
+    },
+    "action/highlight": {
+      "description": "Accent button fill.",
+      "On Light": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Ink": [
+        "Accent/600",
+        "#e6a745"
+      ],
+      "On Dark": [
+        "Accent/600",
+        "#e6a745"
+      ],
+      "On Brand": [
+        "Accent/400",
+        "#edc07a"
+      ],
+      "On Accent": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Soft": [
+        "Accent/800",
+        "#df8e10"
+      ]
+    },
+    "action/highlight-hover": {
+      "description": "Accent button hover.",
+      "On Light": [
+        "Accent/700",
+        "#e39b2b"
+      ],
+      "On Ink": [
+        "Accent/500",
+        "#eab460"
+      ],
+      "On Dark": [
+        "Accent/500",
+        "#eab460"
+      ],
+      "On Brand": [
+        "Accent/300",
+        "#f1cd95"
+      ],
+      "On Accent": [
+        "Surface/500",
+        "#f7e7d2"
+      ],
+      "On Soft": [
+        "Accent/700",
+        "#e39b2b"
+      ]
+    },
+    "action/disabled": {
+      "description": "Disabled button fill.",
+      "On Light": [
+        "Surface/700",
+        "#f4dfc3"
+      ],
+      "On Ink": [
+        "Neutral/700",
+        "#464340"
+      ],
+      "On Dark": [
+        "Neutral/700",
+        "#464340"
+      ],
+      "On Brand": [
+        "Brand/700",
+        "#cb6c43"
+      ],
+      "On Accent": [
+        "Surface/700",
+        "#f4dfc3"
+      ],
+      "On Soft": [
+        "Surface/700",
+        "#f4dfc3"
+      ]
+    },
+    "border/default": {
+      "description": "Same colour as text/secondary. Inputs at rest, dividers.",
+      "On Light": [
+        "Ink/850",
+        "#4a5435"
+      ],
+      "On Ink": [
+        "Ink/200",
+        "#c9cbbf"
+      ],
+      "On Dark": [
+        "Ink/200",
+        "#c9cbbf"
+      ],
+      "On Brand": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Accent": [
+        "Ink/850",
+        "#4a5435"
+      ],
+      "On Soft": [
+        "Ink/850",
+        "#4a5435"
+      ]
+    },
+    "border/strong": {
+      "description": "Same colour as text/primary. Outlined buttons, active indicators, emphasised rules.",
+      "On Light": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Ink": [
+        "Surface/200",
+        "#fbf3e9"
+      ],
+      "On Dark": [
+        "Surface/200",
+        "#fbf3e9"
+      ],
+      "On Brand": [
+        "Surface/200",
+        "#fbf3e9"
+      ],
+      "On Accent": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Soft": [
+        "Ink/950",
+        "#2a2d1e"
+      ]
+    },
+    "border/subtle": {
+      "description": "10% ink hairline. Card edges, table rows, section rules.",
+      "On Light": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ],
+      "On Ink": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Dark": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Brand": [
+        "Alpha/White-10",
+        "#ffffff@0.1"
+      ],
+      "On Accent": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ],
+      "On Soft": [
+        "Alpha/Ink-10",
+        "#5d6440@0.1"
+      ]
+    },
+    "state/focus": {
+      "description": "Focus ring (2px, offset).",
+      "On Light": [
+        "Focus/500",
+        "#2563eb"
+      ],
+      "On Ink": [
+        "Focus/200",
+        "#b3d1ff"
+      ],
+      "On Dark": [
+        "Focus/200",
+        "#b3d1ff"
+      ],
+      "On Brand": [
+        "Focus/200",
+        "#b3d1ff"
+      ],
+      "On Accent": [
+        "Neutral/900",
+        "#1d1b19"
+      ],
+      "On Soft": [
+        "Neutral/900",
+        "#1d1b19"
+      ]
+    },
+    "state/error": {
+      "description": "Error text, borders, badges.",
+      "On Light": [
+        "Red/700",
+        "#b91c1c"
+      ],
+      "On Ink": [
+        "Red/700",
+        "#b91c1c"
+      ],
+      "On Dark": [
+        "Red/700",
+        "#b91c1c"
+      ],
+      "On Brand": [
+        "Red/700",
+        "#b91c1c"
+      ],
+      "On Accent": [
+        "Red/700",
+        "#b91c1c"
+      ],
+      "On Soft": [
+        "Red/700",
+        "#b91c1c"
+      ]
+    },
+    "state/success": {
+      "description": "Success text, borders, badges.",
+      "On Light": [
+        "Green/800",
+        "#166534"
+      ],
+      "On Ink": [
+        "Green/800",
+        "#166534"
+      ],
+      "On Dark": [
+        "Green/800",
+        "#166534"
+      ],
+      "On Brand": [
+        "Green/800",
+        "#166534"
+      ],
+      "On Accent": [
+        "Green/800",
+        "#166534"
+      ],
+      "On Soft": [
+        "Green/800",
+        "#166534"
+      ]
+    },
+    "state/warning": {
+      "description": "Warning text, borders, badges.",
+      "On Light": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Ink": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Dark": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Brand": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Accent": [
+        "Accent/950",
+        "#7a4e09"
+      ],
+      "On Soft": [
+        "Accent/950",
+        "#7a4e09"
+      ]
+    },
+    "state/disabled": {
+      "description": "Disabled text and icons.",
+      "On Light": [
+        "Neutral/500",
+        "#747270"
+      ],
+      "On Ink": [
+        "Neutral/500",
+        "#747270"
+      ],
+      "On Dark": [
+        "Neutral/500",
+        "#747270"
+      ],
+      "On Brand": [
+        "Neutral/500",
+        "#747270"
+      ],
+      "On Accent": [
+        "Neutral/500",
+        "#747270"
+      ],
+      "On Soft": [
+        "Neutral/500",
+        "#747270"
+      ]
+    },
+    "opacity/disabled": {
+      "description": "Layer opacity for disabled content (%).",
+      "type": "FLOAT",
+      "value": 38
+    },
+    "text/accent": {
+      "description": "Accent text — kickers, eyebrow labels, emphasised headings. Never body copy.",
+      "On Light": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Ink": [
+        "Accent/400",
+        "#edc07a"
+      ],
+      "On Dark": [
+        "Accent/400",
+        "#edc07a"
+      ],
+      "On Brand": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Accent": [
+        "Neutral/900",
+        "#1d1b19"
+      ],
+      "On Soft": [
+        "Neutral/900",
+        "#1d1b19"
+      ]
+    },
+    "illustration/primary": {
+      "description": "Main illustration colour — sparkles, grapes. Decorative fills only, never text.",
+      "On Light": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Ink": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Dark": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Brand": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Accent": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Soft": [
+        "Brand/800",
+        "#a74b24"
+      ]
+    },
+    "illustration/secondary": {
+      "description": "Second illustration colour. Decorative fills only, never text.",
+      "On Light": [
+        "Brand/800",
+        "#a74b24"
+      ],
+      "On Ink": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Dark": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Brand": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Accent": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Soft": [
+        "Surface/300",
+        "#faefe1"
+      ]
+    },
+    "illustration/tertiary": {
+      "description": "Third illustration colour. Decorative fills only, never text.",
+      "On Light": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Ink": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Dark": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Brand": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Accent": [
+        "Neutral/900",
+        "#1d1b19"
+      ],
+      "On Soft": [
+        "Accent/800",
+        "#df8e10"
+      ]
+    },
+    "illustration/highlight": {
+      "description": "Shapes that carry text, such as the date seal. Pair with text/on-highlight.",
+      "On Light": [
+        "Accent/800",
+        "#df8e10"
+      ],
+      "On Ink": [
+        "Accent/600",
+        "#e6a745"
+      ],
+      "On Dark": [
+        "Accent/600",
+        "#e6a745"
+      ],
+      "On Brand": [
+        "Accent/600",
+        "#e6a745"
+      ],
+      "On Accent": [
+        "Surface/300",
+        "#faefe1"
+      ],
+      "On Soft": [
+        "Accent/800",
+        "#df8e10"
+      ]
+    },
+    "illustration/feature": {
+      "description": "Large feature shapes — vinyl, big grape clusters. Decorative fills only, never text.",
+      "On Light": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Ink": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Dark": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Brand": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Accent": [
+        "Soft/400",
+        "#eaadae"
+      ],
+      "On Soft": [
+        "Soft/400",
+        "#eaadae"
+      ]
+    },
+    "surface/media": {
+      "description": "Behind photos and media: shows while an image loads, or when there is none.",
+      "On Light": [
+        "Ink/900",
+        "#3d4a2e"
+      ],
+      "On Ink": [
+        "Ink/950",
+        "#2a2d1e"
+      ],
+      "On Dark": [
+        "Ink/900",
+        "#3d4a2e"
+      ],
+      "On Brand": [
+        "Ink/900",
+        "#3d4a2e"
+      ],
+      "On Accent": [
+        "Ink/900",
+        "#3d4a2e"
+      ],
+      "On Soft": [
+        "Ink/900",
+        "#3d4a2e"
+      ]
+    }
+  },
+  "spacing": {
+    "spacing-none": 0,
+    "spacing-00": 4,
+    "spacing-01": 8,
+    "spacing-02": 16,
+    "spacing-03": 24,
+    "spacing-04": 32,
+    "spacing-05": 40,
+    "spacing-06": 48,
+    "spacing-07": 64,
+    "spacing-08": 80,
+    "spacing-09": 96,
+    "spacing-10": 128
+  },
+  "radius": {
+    "radius-none": 0,
+    "radius-xs": 2,
+    "radius-sm": 4,
+    "radius-md": 8,
+    "radius-lg": 12,
+    "radius-xl": 16,
+    "radius-2xl": 24,
+    "radius-full": 9999
+  },
+  "textStyles": [
+    {
+      "name": "Recoleta/Display",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 80,
+      "lineHeight": "100%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H1",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 64,
+      "lineHeight": "105%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H2",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 48,
+      "lineHeight": "110%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H3",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 36,
+      "lineHeight": "115%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H4",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 28,
+      "lineHeight": "120%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H5",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 22,
+      "lineHeight": "125%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/H6",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "130%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Sub Heading",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 15,
+      "lineHeight": "140%",
+      "letterSpacing": "5%"
+    },
+    {
+      "name": "Recoleta/Quote",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 28,
+      "lineHeight": "135%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Text Link Large",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "150%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Text Link Small",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 15,
+      "lineHeight": "150%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Paragraph Large",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "160%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Paragraph Small",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 15,
+      "lineHeight": "160%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Recoleta/Caption",
+      "family": "Recoleta",
+      "weight": 400,
+      "size": 12,
+      "lineHeight": "150%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Display",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 80,
+      "lineHeight": "105%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H1",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 64,
+      "lineHeight": "110%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H2",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 48,
+      "lineHeight": "115%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H3",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 36,
+      "lineHeight": "120%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H4",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 28,
+      "lineHeight": "125%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H5",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 22,
+      "lineHeight": "130%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/H6",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "135%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Sub Heading",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 11,
+      "lineHeight": "145%",
+      "letterSpacing": "5%"
+    },
+    {
+      "name": "Manrope/Overline",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 11,
+      "lineHeight": "145%",
+      "letterSpacing": "8%"
+    },
+    {
+      "name": "Manrope/Overline Compact",
+      "family": "Manrope",
+      "weight": 600,
+      "size": 10,
+      "lineHeight": "auto",
+      "letterSpacing": "3px"
+    },
+    {
+      "name": "Manrope/Label",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 13,
+      "lineHeight": "145%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Label SemiBold",
+      "family": "Manrope",
+      "weight": 600,
+      "size": 13,
+      "lineHeight": "auto",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Text Link Large",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "155%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Text Link Small",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 15,
+      "lineHeight": "155%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Paragraph Large",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 18,
+      "lineHeight": "165%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Paragraph Small",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 15,
+      "lineHeight": "165%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Caption",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 12,
+      "lineHeight": "155%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Detail Label",
+      "family": "Manrope",
+      "weight": 700,
+      "size": 8.5,
+      "lineHeight": "auto",
+      "letterSpacing": "1.2px"
+    },
+    {
+      "name": "Manrope/Detail Body",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 11,
+      "lineHeight": "145%",
+      "letterSpacing": "0"
+    },
+    {
+      "name": "Manrope/Fine Print",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 8,
+      "lineHeight": "auto",
+      "letterSpacing": "1.2px"
+    },
+    {
+      "name": "Manrope/CTA Caption",
+      "family": "Manrope",
+      "weight": 400,
+      "size": 10.5,
+      "lineHeight": "150%",
+      "letterSpacing": "0"
+    }
+  ],
+  "components": [
+    {
+      "name": "Button/Primary",
+      "figmaId": "70:42",
+      "props": {
+        "Icon": "boolean",
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Button/Secondary",
+      "figmaId": "70:83",
+      "props": {
+        "Icon": "boolean",
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Button/Accent",
+      "figmaId": "59:1985",
+      "props": {
+        "Icon": "boolean",
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Button/Link",
+      "figmaId": "70:124",
+      "props": {
+        "Icon": "boolean",
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Button/Close",
+      "figmaId": "146:475",
+      "props": {
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Card/Event",
+      "figmaId": "376:586",
+      "ownsSurfaceMode": "per instance (On Cream on dark sections, On Terracotta on cream)",
+      "props": {
+        "Title": "text",
+        "Date": "text",
+        "Time": "text",
+        "Description": "text",
+        "Show Image": "boolean",
+        "State": [
+          "Default",
+          "Focus"
+        ]
+      }
+    },
+    {
+      "name": "Card/Quote",
+      "figmaId": "945:1122",
+      "ownsSurfaceMode": "per instance"
+    },
+    {
+      "name": "Card/Producer",
+      "figmaId": "852:1722",
+      "ownsSurfaceMode": "On Dark (text on scrim)"
+    },
+    {
+      "name": "Input/Text",
+      "figmaId": "141:375",
+      "props": {
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Input/Dropdown",
+      "figmaId": "141:358",
+      "props": {
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Input/TextBox",
+      "figmaId": "141:392",
+      "props": {
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ]
+      }
+    },
+    {
+      "name": "Input/Checkbox",
+      "figmaId": "141:449",
+      "props": {
+        "Size": [
+          "Large",
+          "Small"
+        ],
+        "State": [
+          "Default",
+          "Hover",
+          "Focused",
+          "Disabled"
+        ],
+        "Checked": [
+          "False",
+          "True"
+        ]
+      }
+    },
+    {
+      "name": "Modal",
+      "figmaId": "144:459",
+      "ownsSurfaceMode": "On Cream, fill surface/card"
+    },
+    {
+      "name": "Badge",
+      "figmaId": "248:437",
+      "props": {
+        "variant": [
+          "neutral",
+          "success",
+          "warning",
+          "error"
+        ],
+        "size": [
+          "small",
+          "medium"
+        ]
+      }
+    },
+    {
+      "name": "Tab",
+      "figmaId": "288:609",
+      "props": {
+        "Label": "text",
+        "State": [
+          "Default",
+          "Hover",
+          "Active",
+          "Disabled",
+          "Focus"
+        ]
+      }
+    },
+    {
+      "name": "Icon/Social/Instagram",
+      "figmaId": "858:1735"
+    },
+    {
+      "name": "Icon/Social/Facebook",
+      "figmaId": "858:1739"
+    },
+    {
+      "name": "Icon/Social/Twitter",
+      "figmaId": "858:1743"
+    },
+    {
+      "name": "Icon/Calendar",
+      "figmaId": "1101:3386",
+      "note": "new — 16px, strokes on text/primary"
+    }
+  ]
+}

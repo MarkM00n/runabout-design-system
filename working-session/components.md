@@ -34,4 +34,4 @@ Start every build by editing `CONFIG`; only change the layout when the room asks
 
 ## Tokens to use
 
-Surfaces `bg-surface-section` (page, `data-mode="cream"`), `bg-surface-card` (cards). Text `text-text-primary`, `text-text-secondary`, `text-text-link`. Status `text-state-warning`, `bg-state-warning`, `text-state-success`. Bars track `bg-alpha-ink-10`, fill `bg-action-primary`. Spacing `gap-01…gap-07`, `p-05`, radius `rounded-2xl`. Type `font-recoleta text-h3` for the page title, otherwise `font-manrope` with `text-h6`, `text-label`, `text-caption`, `text-overline`.
+Surfaces `bg-surface-section` (page, `data-mode="light"`), `bg-surface-card` (cards). Text `text-text-primary`, `text-text-secondary`, `text-text-link`. Status `text-state-warning`, `bg-state-warning`, `text-state-success`. Bars track `bg-alpha-ink-10`, fill `bg-action-primary`. Spacing `gap-01…gap-07`, `p-05`, radius `rounded-2xl`. Type `font-recoleta text-h3` for the page title, otherwise `font-manrope` with `text-h6`, `text-label`, `text-caption`, `text-overline`.

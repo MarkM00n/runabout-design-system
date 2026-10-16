@@ -21,11 +21,11 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
  * Source: Figma `Modal` (144:459).
  *
  * The one component that fills with `surface-card` rather than
- * `surface-section`, and it pins itself to On Cream. Both facts are the same
+ * `surface-section`, and it pins itself to On Light. Both facts are the same
  * fact: `surface-card` is Surface/50 in every mode — it does not vary — and
- * `text-primary` only clears AA against that near-white fill in the On Cream
- * column (13.65:1 there, 1.10:1 in the other three). So a modal dropped onto
- * an olive or dark page would render pale ink on near-white without the
+ * `text-primary` only clears AA against that near-white fill where text-primary
+ * is dark: 13.65:1 in On Light, On Accent and On Soft, 1.10:1 in On Ink, On
+ * Dark and On Brand. So a modal dropped onto an ink or dark page would render pale ink on near-white without the
  * pinned mode. Figma pins the master identically; this is deliberate, not a
  * mode that was forgotten.
  *
@@ -48,7 +48,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        data-mode="cream"
+        data-mode="light"
         className={clsx(
           'flex flex-col w-[480px] max-w-full p-05 gap-04 rounded-xl bg-surface-card',
           className,

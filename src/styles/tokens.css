@@ -4,21 +4,34 @@
  * Tailwind v4 so utilities are generated automatically (bg-action-primary,
  * rounded-2xl, text-h6, etc.). Raw source values also live in tokens.json.
  *
- * Surface-mode token architecture (2026-09-07). Figma's Semantic collection
- * holds 26 tokens resolving across four surface modes — On Cream, On Olive,
- * On Dark, On Terracotta — under one rule:
+ * Surface-mode token architecture (2026-09-07, extended 2026-10-16). Figma's
+ * Semantic collection holds 33 tokens resolving across six surface modes —
+ * On Light, On Ink, On Dark, On Brand, On Accent, On Soft — under one rule:
  *
  *     Anything with a background owns a mode. Everything else inherits.
  *
  * A surface (section, card, modal, panel) fills with `surface-section` and
  * picks its colour by setting its mode. Buttons, inputs, tabs, badges, text
  * and icons never carry a mode — they resolve from whatever they sit on.
- * The values in `@theme` below are each token's On Cream value: the base
+ * The values in `@theme` below are each token's On Light value: the base
  * used when nothing overrides it, and what generates the Tailwind utility.
- * The 15 tokens whose value actually differs by mode also get an override
- * block further down, scoped to `data-mode="cream|olive|dark|terracotta"`
- * on a container. See design-system-rules.md §7 for the full per-mode table
- * and §1 for the override-block mechanics.
+ * Tokens whose value differs by mode also get an override block further
+ * down, scoped to `data-mode="light|ink|dark|brand|accent|soft"` on a
+ * container. See design-system-rules.md §7 for the full per-mode table and
+ * §1 for the override-block mechanics.
+ *
+ * 2026-10-16: the modes were renamed by role, not appearance — On Cream ->
+ * On Light, On Olive -> On Ink, On Terracotta -> On Brand — and On Accent
+ * and On Soft were added. Appearance names stop being true the moment a
+ * second brand exists ("terracotta" is teal under Northline). Brands are a
+ * separate axis: data-brand="northline|vines-and-vinyl" swaps values, never
+ * names.
+ *
+ * Every colour value in this file — @theme values, the mode region and the
+ * brand region — is written by scripts/generate-brand-overrides.js from the
+ * latest src/tokens/figma-export-*.json. Don't edit a colour value by hand:
+ * re-export from Figma and run `npm run tokens:generate`. Comments are
+ * human-written and the script leaves them alone.
  *
  * This replaced the 2026-08-05 architecture (44 tokens x 3 modes). Retired
  * with no successor, because a surface's mode now resolves what they used to
@@ -46,16 +59,25 @@
   --color-surface-section: #f8ebda;
   /* Light cream for elevated surfaces — Modal fills with this. Mode-invariant
      (Surface/50 in every mode), which is exactly why Modal also sets
-     data-mode="cream" on itself: text/primary only clears AA against this
-     fill in the On Cream column. Cards use surface-section instead and
+     data-mode="light" on itself: text/primary only clears AA against this
+     fill in the On Light column. Cards use surface-section instead and
      choose their colour by mode. */
   --color-surface-card: #fefbf8;
-  /* Top stop of a text-over-image scrim (Card/Producer). Fully transparent
-     Neutral/900 — mode-invariant. */
+  /* Top stop of a text-over-image scrim (Card/Producer, the V&V hero).
+     Fully transparent Neutral/900 in every mode except On Brand, where it is
+     the brand colour at 0% (Alpha/Brand-0) — so a photo in a brand-coloured
+     section fades into that section's own colour, per brand. Mode-variant. */
   --color-surface-scrim-start: rgba(29, 27, 25, 0);
-  /* Bottom stop of a text-over-image scrim (Card/Producer). Neutral/900 at
-     85% — mode-invariant. */
+  /* Bottom stop of a text-over-image scrim. Neutral/900 at 85% in every mode
+     except On Brand, where it is solid Brand/800 — the same value as that
+     mode's surface-section, so text below the fade sits on a surface whose
+     contrast is already verified. Gradient direction and stop positions are
+     layout, not tokens: they live with the component. Mode-variant. */
   --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
+  /* Behind photos and media: what shows while an image loads, or when there
+     is none. Ink/900, or Ink/950 on an ink surface so it stays visible.
+     Never a text background. Mode-variant. */
+  --color-surface-media: #3d4a2e;
 
   /* Headings, body, and icons. Icons bind this too — the old icon-primary
      token is retired, icons use the matching text-* token. Mode-variant. */
@@ -77,6 +99,31 @@
      Mode-invariant, matching those fills, which are themselves the same
      colour on every surface. */
   --color-text-on-state: #fefbf8;
+  /* Accent text — kickers, eyebrow labels, emphasised headings. Brand colour
+     on light; warm light tones on the dark surfaces; near-black on the
+     accent and soft grounds. Clears 4.5:1 on surface-section in every mode
+     and brand, but it is a display colour: never body copy. Mode-variant. */
+  --color-text-accent: #a74b24;
+
+  /* Illustration colours — decorative fills for the brand illustrations
+     (sparkles, grapes, vinyl, the date seal). Never text, never a text
+     background, except illustration-highlight, which is built to carry
+     text-on-highlight (the seal's date). Each resolves per mode so an
+     illustration stays visible on any surface. All mode-variant except
+     illustration-feature. */
+  --color-illustration-primary: #a74b24;
+  /* Second illustration colour. Decorative only. Mode-variant. */
+  --color-illustration-secondary: #a74b24;
+  /* Third illustration colour. Decorative only. Mode-variant. */
+  --color-illustration-tertiary: #df8e10;
+  /* Shapes that carry text, such as the date seal. Pairs with
+     text-on-highlight (≥4.5:1 in every mode for Runabout and Vines & Vinyl;
+     Northline's Accent/800 is a known exception in On Light and On Soft —
+     see design-system-rules.md §7). Mode-variant. */
+  --color-illustration-highlight: #df8e10;
+  /* Large feature shapes — vinyl, big grape clusters. Soft/400 in every
+     mode. Mode-invariant. */
+  --color-illustration-feature: #eaadae;
 
   /* Primary button fill. Mode-variant: dark on cream, light on the three
      dark surfaces. */
@@ -138,10 +185,9 @@
 
   /* Primitive ramps, renamed 2026-09-07 to match Figma's own families
      (50 = lightest). Consumed only via the semantic tokens above — no
-     component binds a primitive directly (rules §1). Figma's Event/* group
-     is deliberately absent: it's print/campaign-only, carries no semantic
-     role, and is recorded in tokens.json rather than registered here, so no
-     Tailwind utility is ever generated for it. */
+     component binds a primitive directly (rules §1). The Event/* group that
+     used to sit beside these was deleted from Figma on 2026-10-16: Vines &
+     Vinyl is now a brand mode on these same ramps, not a separate palette. */
   --color-surface-50: #fefbf8;
   --color-surface-100: #fcf7f0;
   --color-surface-200: #fbf3e9;
@@ -250,6 +296,9 @@
   --color-alpha-white-10: rgba(255, 255, 255, 0.1);
   --color-alpha-scrim-0: rgba(29, 27, 25, 0);
   --color-alpha-scrim-85: rgba(29, 27, 25, 0.85);
+  /* Brand/800 at 0% — the clear end of the On Brand scrim, so a photo fades
+     into the brand colour rather than into black. Resolves per brand. */
+  --color-alpha-brand-0: rgba(167, 75, 36, 0);
 
   /* px, not rem: the host app sets root font-size to 18px (see index.css),
      which would otherwise scale every rem-based Tailwind utility 1.125x off
@@ -387,35 +436,33 @@
   --breakpoint-tablet: 1024px;
 }
 
+/* MODE OVERRIDES — GENERATED, DO NOT EDIT */
+
 /*
- * Mode overrides. An element carrying data-mode="cream|olive|dark|terracotta"
- * gets these values instead of @theme's base for every mode-variant token.
- * Tailwind utilities (text-text-primary, bg-surface-section, etc.) reference
- * these custom properties at use time via var(--color-*), so overriding the
- * property here is enough — no utility class or component code changes for a
- * token whose name is unchanged.
+ * Mode overrides — generated by scripts/generate-brand-overrides.js from
+ * src/tokens/figma-export-2026-10-16.json. Do not hand-edit: regenerate instead.
  *
- * Only the 15 mode-variant tokens appear here. The 10 mode-invariant ones
- * (surface-card, both scrim stops, text-on-highlight, text-on-state,
- * action-secondary, state-error/success/warning/disabled) plus
- * opacity-disabled have no entry — there is nothing to override.
+ * An element carrying data-mode="light|ink|dark|brand|accent|soft" gets
+ * these values instead of @theme's base for every mode-variant token.
+ * Tailwind utilities read these custom properties at use time via
+ * var(--color-*), so overriding the property is enough.
  *
- * [data-mode='cream'] exists even though its values are identical to
- * @theme's base. @theme only sets the *initial* value; it doesn't override
- * an ancestor's darker block for a descendant that needs to go back to cream
- * (a cream card nested inside an olive section, Modal setting its own mode,
- * or Storybook's mode switcher explicitly selecting On Cream). CSS custom
- * properties don't reset themselves just because a new attribute value is
- * present — only an explicit rule for that value does that.
+ * Only the 23 tokens that vary by mode (for any brand) appear here.
+ * Mode-invariant tokens keep their @theme value everywhere.
  *
- * Scope a data-mode override to the narrowest element that actually needs
- * it, never the nearest convenient wrapper: a mode set on a section pulls in
- * every descendant, including ones that visually sit on a different surface.
- * That exact mistake shipped once already (see CLAUDE.md's 2026-08-05
- * incident).
+ * [data-mode='light'] repeats @theme's base on purpose. @theme only sets
+ * the *initial* value; a light card nested inside a dark section needs an
+ * explicit rule to reset, because custom properties don't reset themselves
+ * just because a new attribute value appears.
+ *
+ * Scope a data-mode override to the narrowest element that owns the
+ * background, never the nearest convenient wrapper (CLAUDE.md, 2026-08-05).
  */
-[data-mode='cream'] {
+
+[data-mode='light'] {
   --color-surface-section: #f8ebda;
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
   --color-text-primary: #2a2d1e;
   --color-text-secondary: #4a5435;
   --color-text-link: #7a4e09;
@@ -430,10 +477,18 @@
   --color-border-strong: #2a2d1e;
   --color-border-subtle: rgba(93, 100, 64, 0.1);
   --color-state-focus: #2563eb;
+  --color-text-accent: #a74b24;
+  --color-illustration-primary: #a74b24;
+  --color-illustration-secondary: #a74b24;
+  --color-illustration-tertiary: #df8e10;
+  --color-illustration-highlight: #df8e10;
+  --color-surface-media: #3d4a2e;
 }
 
-[data-mode='olive'] {
+[data-mode='ink'] {
   --color-surface-section: #3d4a2e;
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
   --color-text-primary: #faefe1;
   --color-text-secondary: #c9cbbf;
   --color-text-link: #edc07a;
@@ -448,10 +503,18 @@
   --color-border-strong: #fbf3e9;
   --color-border-subtle: rgba(255, 255, 255, 0.1);
   --color-state-focus: #b3d1ff;
+  --color-text-accent: #edc07a;
+  --color-illustration-primary: #df8e10;
+  --color-illustration-secondary: #eaadae;
+  --color-illustration-tertiary: #faefe1;
+  --color-illustration-highlight: #e6a745;
+  --color-surface-media: #2a2d1e;
 }
 
 [data-mode='dark'] {
   --color-surface-section: #2f2c28;
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
   --color-text-primary: #faefe1;
   --color-text-secondary: #c9cbbf;
   --color-text-link: #edc07a;
@@ -466,10 +529,18 @@
   --color-border-strong: #fbf3e9;
   --color-border-subtle: rgba(255, 255, 255, 0.1);
   --color-state-focus: #b3d1ff;
+  --color-text-accent: #edc07a;
+  --color-illustration-primary: #df8e10;
+  --color-illustration-secondary: #eaadae;
+  --color-illustration-tertiary: #faefe1;
+  --color-illustration-highlight: #e6a745;
+  --color-surface-media: #3d4a2e;
 }
 
-[data-mode='terracotta'] {
+[data-mode='brand'] {
   --color-surface-section: #a74b24;
+  --color-surface-scrim-start: rgba(167, 75, 36, 0);
+  --color-surface-scrim-end: #a74b24;
   --color-text-primary: #faefe1;
   --color-text-secondary: #f6e3cb;
   --color-text-link: #fbf2e4;
@@ -484,25 +555,83 @@
   --color-border-strong: #fbf3e9;
   --color-border-subtle: rgba(255, 255, 255, 0.1);
   --color-state-focus: #b3d1ff;
+  --color-text-accent: #faefe1;
+  --color-illustration-primary: #df8e10;
+  --color-illustration-secondary: #faefe1;
+  --color-illustration-tertiary: #df8e10;
+  --color-illustration-highlight: #e6a745;
+  --color-surface-media: #3d4a2e;
 }
+
+[data-mode='accent'] {
+  --color-surface-section: #e39b2b;
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
+  --color-text-primary: #2a2d1e;
+  --color-text-secondary: #2a2d1e;
+  --color-text-link: #1d1b19;
+  --color-text-on-action: #f7e7d2;
+  --color-action-primary: #2f2c28;
+  --color-action-primary-hover: #464340;
+  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  --color-action-highlight: #faefe1;
+  --color-action-highlight-hover: #f7e7d2;
+  --color-action-disabled: #f4dfc3;
+  --color-border-default: #4a5435;
+  --color-border-strong: #2a2d1e;
+  --color-border-subtle: rgba(93, 100, 64, 0.1);
+  --color-state-focus: #1d1b19;
+  --color-text-accent: #1d1b19;
+  --color-illustration-primary: #a74b24;
+  --color-illustration-secondary: #eaadae;
+  --color-illustration-tertiary: #1d1b19;
+  --color-illustration-highlight: #faefe1;
+  --color-surface-media: #3d4a2e;
+}
+
+[data-mode='soft'] {
+  --color-surface-section: #eaadae;
+  --color-surface-scrim-start: rgba(29, 27, 25, 0);
+  --color-surface-scrim-end: rgba(29, 27, 25, 0.85);
+  --color-text-primary: #2a2d1e;
+  --color-text-secondary: #2a2d1e;
+  --color-text-link: #1d1b19;
+  --color-text-on-action: #f7e7d2;
+  --color-action-primary: #2f2c28;
+  --color-action-primary-hover: #464340;
+  --color-action-secondary-hover: rgba(93, 100, 64, 0.1);
+  --color-action-highlight: #df8e10;
+  --color-action-highlight-hover: #e39b2b;
+  --color-action-disabled: #f4dfc3;
+  --color-border-default: #4a5435;
+  --color-border-strong: #2a2d1e;
+  --color-border-subtle: rgba(93, 100, 64, 0.1);
+  --color-state-focus: #1d1b19;
+  --color-text-accent: #1d1b19;
+  --color-illustration-primary: #a74b24;
+  --color-illustration-secondary: #faefe1;
+  --color-illustration-tertiary: #df8e10;
+  --color-illustration-highlight: #df8e10;
+  --color-surface-media: #3d4a2e;
+}
+
+/* END MODE OVERRIDES */
 
 /* BRAND OVERRIDES — GENERATED, DO NOT EDIT */
 
 /*
- * Northline brand overrides — generated by scripts/generate-brand-overrides.js
- * from scripts/data/northline-brand-tokens.json (resolved from the Figma
- * Primitives/Semantic variable collections, file JpFA7KtVlSOrM9fIYYgOsn,
- * resolved 2026-09-07). Do not hand-edit: regenerate instead.
+ * Brand overrides — generated by scripts/generate-brand-overrides.js from
+ * src/tokens/figma-export-2026-10-16.json. Do not hand-edit: regenerate instead.
  *
- * Brand is a third, independent axis from mode — every semantic token name
- * is identical to the Runabout default; only the value differs. Runabout
- * itself carries no data-brand attribute and is unaffected by this file.
- *
- * Only tokens whose resolved value actually differs from Runabout's for the
- * same surface mode are listed below (onCream: 20, onOlive: 18, onDark: 18, onTerracotta: 18).
+ * Brand is an axis independent of mode. Every semantic token name is the
+ * same for every brand; only the resolved value differs. Runabout carries no
+ * data-brand attribute and is unaffected by this region. Each block lists
+ * only the tokens whose value differs from Runabout's in the same mode.
  */
 
-[data-brand='northline'], [data-brand='northline'][data-mode='cream'], [data-brand='northline'] [data-mode='cream'] {
+/* Northline — data-brand="northline". Tokens differing from Runabout, per mode: light: 27, ink: 25, dark: 25, brand: 27, accent: 27, soft: 27. */
+
+[data-brand='northline']:not([data-mode]), [data-brand='northline'][data-mode='light'], [data-brand='northline'] [data-mode='light'] {
   --color-action-disabled: #e0e8f2;
   --color-action-highlight: #2b7fd4;
   --color-action-highlight-hover: #5797e7;
@@ -512,11 +641,18 @@
   --color-border-default: #3b5069;
   --color-border-strong: #1b2a39;
   --color-border-subtle: rgba(75, 99, 129, 0.1);
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #2b7fd4;
+  --color-illustration-primary: #0e5f6b;
+  --color-illustration-secondary: #0e5f6b;
+  --color-illustration-tertiary: #2b7fd4;
   --color-state-disabled: #7d8896;
   --color-state-focus: #6d3fd4;
   --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
+  --color-surface-media: #2b3d51;
   --color-surface-section: #edf2f8;
+  --color-text-accent: #0e5f6b;
   --color-text-link: #123f6b;
   --color-text-on-action: #e9eff6;
   --color-text-on-highlight: #232a33;
@@ -525,7 +661,7 @@
   --color-text-secondary: #3b5069;
 }
 
-[data-brand='northline'][data-mode='olive'], [data-brand='northline'] [data-mode='olive'] {
+[data-brand='northline'][data-mode='ink'], [data-brand='northline'] [data-mode='ink'] {
   --color-action-disabled: #3c4551;
   --color-action-highlight: #6ca4ea;
   --color-action-highlight-hover: #81b1ed;
@@ -533,11 +669,18 @@
   --color-action-primary-hover: #dce5f0;
   --color-border-default: #ccd5e1;
   --color-border-strong: #f5f8fc;
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #6ca4ea;
+  --color-illustration-primary: #2b7fd4;
+  --color-illustration-secondary: #b2a6ea;
+  --color-illustration-tertiary: #f1f5fa;
   --color-state-disabled: #7d8896;
   --color-state-focus: #d3c4ff;
   --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
+  --color-surface-media: #1b2a39;
   --color-surface-section: #2b3d51;
+  --color-text-accent: #96bef0;
   --color-text-link: #96bef0;
   --color-text-on-action: #232a33;
   --color-text-on-highlight: #232a33;
@@ -554,11 +697,18 @@
   --color-action-primary-hover: #dce5f0;
   --color-border-default: #ccd5e1;
   --color-border-strong: #f5f8fc;
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #6ca4ea;
+  --color-illustration-primary: #2b7fd4;
+  --color-illustration-secondary: #b2a6ea;
+  --color-illustration-tertiary: #f1f5fa;
   --color-state-disabled: #7d8896;
   --color-state-focus: #d3c4ff;
   --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
+  --color-surface-media: #2b3d51;
   --color-surface-section: #232a33;
+  --color-text-accent: #96bef0;
   --color-text-link: #96bef0;
   --color-text-on-action: #232a33;
   --color-text-on-highlight: #232a33;
@@ -567,7 +717,7 @@
   --color-text-secondary: #ccd5e1;
 }
 
-[data-brand='northline'][data-mode='terracotta'], [data-brand='northline'] [data-mode='terracotta'] {
+[data-brand='northline'][data-mode='brand'], [data-brand='northline'] [data-mode='brand'] {
   --color-action-disabled: #58b4c3;
   --color-action-highlight: #96bef0;
   --color-action-highlight-hover: #abcbf3;
@@ -575,17 +725,169 @@
   --color-action-primary-hover: #dce5f0;
   --color-border-default: #f1f5fa;
   --color-border-strong: #f5f8fc;
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #6ca4ea;
+  --color-illustration-primary: #2b7fd4;
+  --color-illustration-secondary: #f1f5fa;
+  --color-illustration-tertiary: #2b7fd4;
   --color-state-disabled: #7d8896;
   --color-state-focus: #d3c4ff;
   --color-state-warning: #123f6b;
   --color-surface-card: #fdfeff;
+  --color-surface-media: #2b3d51;
+  --color-surface-scrim-end: #0e5f6b;
+  --color-surface-scrim-start: rgba(14, 95, 107, 0);
   --color-surface-section: #0e5f6b;
+  --color-text-accent: #f1f5fa;
   --color-text-link: #eaf2fc;
   --color-text-on-action: #232a33;
   --color-text-on-highlight: #232a33;
   --color-text-on-state: #fdfeff;
   --color-text-primary: #f1f5fa;
   --color-text-secondary: #e4ecf4;
+}
+
+[data-brand='northline'][data-mode='accent'], [data-brand='northline'] [data-mode='accent'] {
+  --color-action-disabled: #e0e8f2;
+  --color-action-highlight: #f1f5fa;
+  --color-action-highlight-hover: #e9eff6;
+  --color-action-primary: #232a33;
+  --color-action-primary-hover: #3c4551;
+  --color-action-secondary-hover: rgba(75, 99, 129, 0.1);
+  --color-border-default: #3b5069;
+  --color-border-strong: #1b2a39;
+  --color-border-subtle: rgba(75, 99, 129, 0.1);
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #f1f5fa;
+  --color-illustration-primary: #0e5f6b;
+  --color-illustration-secondary: #b2a6ea;
+  --color-illustration-tertiary: #141a21;
+  --color-state-disabled: #7d8896;
+  --color-state-focus: #141a21;
+  --color-state-warning: #123f6b;
+  --color-surface-card: #fdfeff;
+  --color-surface-media: #2b3d51;
+  --color-surface-section: #5797e7;
+  --color-text-accent: #141a21;
+  --color-text-link: #141a21;
+  --color-text-on-action: #e9eff6;
+  --color-text-on-highlight: #232a33;
+  --color-text-on-state: #fdfeff;
+  --color-text-primary: #1b2a39;
+  --color-text-secondary: #1b2a39;
+}
+
+[data-brand='northline'][data-mode='soft'], [data-brand='northline'] [data-mode='soft'] {
+  --color-action-disabled: #e0e8f2;
+  --color-action-highlight: #2b7fd4;
+  --color-action-highlight-hover: #5797e7;
+  --color-action-primary: #232a33;
+  --color-action-primary-hover: #3c4551;
+  --color-action-secondary-hover: rgba(75, 99, 129, 0.1);
+  --color-border-default: #3b5069;
+  --color-border-strong: #1b2a39;
+  --color-border-subtle: rgba(75, 99, 129, 0.1);
+  --color-illustration-feature: #b2a6ea;
+  --color-illustration-highlight: #2b7fd4;
+  --color-illustration-primary: #0e5f6b;
+  --color-illustration-secondary: #f1f5fa;
+  --color-illustration-tertiary: #2b7fd4;
+  --color-state-disabled: #7d8896;
+  --color-state-focus: #141a21;
+  --color-state-warning: #123f6b;
+  --color-surface-card: #fdfeff;
+  --color-surface-media: #2b3d51;
+  --color-surface-section: #b2a6ea;
+  --color-text-accent: #141a21;
+  --color-text-link: #141a21;
+  --color-text-on-action: #e9eff6;
+  --color-text-on-highlight: #232a33;
+  --color-text-on-state: #fdfeff;
+  --color-text-primary: #1b2a39;
+  --color-text-secondary: #1b2a39;
+}
+
+/* Vines & Vinyl — data-brand="vines-and-vinyl". Tokens differing from Runabout, per mode: light: 12, ink: 9, dark: 8, brand: 12, accent: 10, soft: 12. */
+
+[data-brand='vines-and-vinyl']:not([data-mode]), [data-brand='vines-and-vinyl'][data-mode='light'], [data-brand='vines-and-vinyl'] [data-mode='light'] {
+  --color-action-highlight: #e39313;
+  --color-action-highlight-hover: #e39313;
+  --color-border-strong: #1d1b19;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #e39313;
+  --color-illustration-primary: #a34923;
+  --color-illustration-secondary: #a34923;
+  --color-illustration-tertiary: #e39313;
+  --color-surface-media: #2e3516;
+  --color-surface-section: #f5dec1;
+  --color-text-accent: #a34923;
+  --color-text-primary: #1d1b19;
+}
+
+[data-brand='vines-and-vinyl'][data-mode='ink'], [data-brand='vines-and-vinyl'] [data-mode='ink'] {
+  --color-action-highlight: #e39313;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #e39313;
+  --color-illustration-primary: #e39313;
+  --color-illustration-secondary: #e9a5a9;
+  --color-illustration-tertiary: #f6dfc0;
+  --color-surface-media: #1d1b19;
+  --color-surface-section: #2e3516;
+  --color-text-primary: #f6dfc0;
+}
+
+[data-brand='vines-and-vinyl'][data-mode='dark'], [data-brand='vines-and-vinyl'] [data-mode='dark'] {
+  --color-action-highlight: #e39313;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #e39313;
+  --color-illustration-primary: #e39313;
+  --color-illustration-secondary: #e9a5a9;
+  --color-illustration-tertiary: #f6dfc0;
+  --color-surface-media: #2e3516;
+  --color-text-primary: #f6dfc0;
+}
+
+[data-brand='vines-and-vinyl'][data-mode='brand'], [data-brand='vines-and-vinyl'] [data-mode='brand'] {
+  --color-border-default: #f6dfc0;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #e39313;
+  --color-illustration-primary: #e39313;
+  --color-illustration-secondary: #f6dfc0;
+  --color-illustration-tertiary: #e39313;
+  --color-surface-media: #2e3516;
+  --color-surface-scrim-end: #a34923;
+  --color-surface-scrim-start: rgba(163, 73, 35, 0);
+  --color-surface-section: #a34923;
+  --color-text-accent: #f6dfc0;
+  --color-text-primary: #f6dfc0;
+}
+
+[data-brand='vines-and-vinyl'][data-mode='accent'], [data-brand='vines-and-vinyl'] [data-mode='accent'] {
+  --color-action-highlight: #f6dfc0;
+  --color-border-strong: #1d1b19;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #f6dfc0;
+  --color-illustration-primary: #a34923;
+  --color-illustration-secondary: #e9a5a9;
+  --color-surface-media: #2e3516;
+  --color-surface-section: #e39313;
+  --color-text-primary: #1d1b19;
+  --color-text-secondary: #1d1b19;
+}
+
+[data-brand='vines-and-vinyl'][data-mode='soft'], [data-brand='vines-and-vinyl'] [data-mode='soft'] {
+  --color-action-highlight: #e39313;
+  --color-action-highlight-hover: #e39313;
+  --color-border-strong: #1d1b19;
+  --color-illustration-feature: #e9a5a9;
+  --color-illustration-highlight: #e39313;
+  --color-illustration-primary: #a34923;
+  --color-illustration-secondary: #f6dfc0;
+  --color-illustration-tertiary: #e39313;
+  --color-surface-media: #2e3516;
+  --color-surface-section: #e9a5a9;
+  --color-text-primary: #1d1b19;
+  --color-text-secondary: #1d1b19;
 }
 
 /* END BRAND OVERRIDES */

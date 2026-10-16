@@ -93,7 +93,7 @@ export const VinesAndVinylLandingWithSignUp = () => {
   return (
     <div
       data-brand={demoBrand === 'northline' ? 'northline' : undefined}
-      data-mode="cream"
+      data-mode="light"
       className="flex w-full flex-col items-start bg-surface-section"
     >
       {/* Nav — On Dark */}
@@ -104,10 +104,10 @@ export const VinesAndVinylLandingWithSignUp = () => {
         <NavLogo className="h-[28.0972px] w-[148px] text-text-primary" />
       </header>
 
-      {/* Hero — On Terracotta; relative so the floating
+      {/* Hero — On Brand; relative so the floating
           date card can position against it. */}
       <section
-        data-mode="terracotta"
+        data-mode="brand"
         className="relative flex w-full flex-col items-center gap-04 bg-surface-section px-10 pb-10 pt-09"
       >
         <p className="font-manrope text-label-strong font-semibold text-text-primary">
@@ -152,9 +152,9 @@ export const VinesAndVinylLandingWithSignUp = () => {
         </div>
       </section>
 
-      {/* Info — On Cream */}
+      {/* Info — On Light */}
       <section
-        data-mode="cream"
+        data-mode="light"
         className="flex w-full items-start justify-center gap-07 bg-surface-section px-10 py-09"
       >
         <div className="flex min-w-0 flex-1 flex-col items-start gap-01">

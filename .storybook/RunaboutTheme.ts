@@ -13,10 +13,10 @@ import { create } from 'storybook/theming';
  * obvious second place to land; `npm run design-sync` cannot catch drift here,
  * because this file is chrome, not a component.
  *
- * The manager is deliberately pinned to the On Cream surface. It's the frame
- * around the work, not a fifth surface mode — letting it follow the canvas
+ * The manager is deliberately pinned to the On Light surface. It's the frame
+ * around the work, not a seventh surface mode — letting it follow the canvas
  * mode switcher would mean the chrome restyled itself every time someone
- * previewed a component on olive or dark.
+ * previewed a component on ink or dark.
  */
 export const RunaboutTheme = create({
   base: 'light',
@@ -35,20 +35,20 @@ export const RunaboutTheme = create({
   appBg: '#fbf3e9', //                        Surface/200 — chrome sits one step lighter than the product cream (Surface/400), so panels lift off it
   appContentBg: '#f8ebda', //                 Surface/400 — the docs pages paint the product cream
   appPreviewBg: '#f8ebda', //                 Surface/400
-  appBorderColor: 'rgba(93, 100, 64, 0.1)', // Alpha/Ink-10 — border-subtle on cream
+  appBorderColor: 'rgba(93, 100, 64, 0.1)', // Alpha/Ink-10 — border-subtle On Light
   appBorderRadius: 8, //                      radius-md
 
-  textColor: '#2a2d1e', //        Ink/950 — text-primary on cream
-  textMutedColor: '#4a5435', //   Ink/850 — text-secondary on cream
+  textColor: '#2a2d1e', //        Ink/950 — text-primary On Light
+  textMutedColor: '#4a5435', //   Ink/850 — text-secondary On Light
   textInverseColor: '#faefe1', // Surface/300 — text-primary on the dark surfaces
 
   barTextColor: '#4a5435', //     Ink/850
   barSelectedColor: '#a74b24', // Brand/800
-  barHoverColor: '#7a4e09', //    Accent/950 — text-link on cream
+  barHoverColor: '#7a4e09', //    Accent/950 — text-link On Light
   barBg: '#fefbf8', //            Surface/50
 
   inputBg: '#fefbf8', //          Surface/50
-  inputBorder: '#4a5435', //      Ink/850 — border-default on cream
+  inputBorder: '#4a5435', //      Ink/850 — border-default On Light
   inputTextColor: '#2a2d1e', //   Ink/950
   inputBorderRadius: 9999, //     radius-full, matching Input/Text's pill
 });

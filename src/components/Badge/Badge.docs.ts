@@ -24,7 +24,7 @@ export const docs: ComponentDocMeta = {
   accessibilityNotes: [
     'Renders a <span>: a badge conveys status, not structure or interactivity, so no role or tabIndex is added.',
     'The three status variants pin their fills and pair them with text-on-state, which is mode-invariant by design — measured 6.92:1 (success), 6.97:1 (warning) and 6.28:1 (error), the same on every surface.',
-    'The neutral variant is outlined rather than filled as of 2026-09-07: a transparent fill with a border-strong outline and a text-primary label, all of which resolve per surface, so it stays legible on cream, olive, dark and terracotta alike.',
+    'The neutral variant is outlined rather than filled as of 2026-09-07: a transparent fill with a border-strong outline and a text-primary label, all of which resolve per surface, so it stays legible on every surface mode alike.',
     'Colour never carries meaning alone — the label text is what communicates state, and colour reinforces it.',
   ],
   codeExample: '<Badge variant="success" size="medium">Success</Badge>',

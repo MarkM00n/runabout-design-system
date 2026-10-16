@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Button } from '../Button';
 
 export type CardTitleLevel = 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-export type CardSurface = 'cream' | 'olive' | 'dark' | 'terracotta';
+export type CardSurface = 'light' | 'ink' | 'dark' | 'brand' | 'accent' | 'soft';
 
 export interface CardEventProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   title: string;
@@ -29,10 +29,12 @@ export interface CardEventProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ti
    * Which surface this card is. Cards are surfaces, so under the 2026-09-07
    * rule ("anything with a background owns a mode, everything else
    * inherits") the card must declare one — but which one is the instance's
-   * call, not the component's: Figma's own guidance is On Cream on a dark
-   * section, On Terracotta on a cream page. Defaults to `terracotta`, the
-   * appearance the previous hardcoded `data-mode="feature"` produced, so
-   * existing usages keep rendering as they did.
+   * call, not the component's: Figma's own guidance is On Light on a dark
+   * section, On Brand on a light page. Defaults to `brand`, the appearance
+   * the previous hardcoded `data-mode="feature"` produced, so existing
+   * usages keep rendering as they did. Values match Figma's Semantic mode
+   * names (renamed by role on 2026-10-16: cream -> light, olive -> ink,
+   * terracotta -> brand; accent and soft added).
    */
   surface?: CardSurface;
 }
@@ -44,7 +46,7 @@ export interface CardEventProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ti
  * The card fills with `surface-section`, whose value resolves from the
  * card's own `data-mode`. That replaces the old fixed `surface-feature`
  * fill plus hardcoded `data-mode="feature"`: the fill is no longer one
- * pinned terracotta, it's whichever surface the instance says it is, and
+ * pinned brand colour, it's whichever surface the instance says it is, and
  * every text/border token nested inside resolves to that surface's column
  * automatically.
  */
@@ -61,7 +63,7 @@ export const CardEvent = forwardRef<HTMLDivElement, CardEventProps>(
       imageSrc,
       imageAlt = '',
       titleLevel = 'h3',
-      surface = 'terracotta',
+      surface = 'brand',
       className,
       ...props
     },

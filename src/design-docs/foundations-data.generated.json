@@ -6,7 +6,7 @@
       "name": "--color-surface-50",
       "tokenPath": "color.surface.50",
       "value": "#fefbf8",
-      "usage": "Primitive ramps, renamed 2026-09-07 to match Figma's own families (50 = lightest). Consumed only via the semantic tokens above — no component binds a primitive directly (rules §1). Figma's Event group is deliberately absent: it's print/campaign-only, carries no semantic role, and is recorded in tokens.json rather than registered here, so no Tailwind utility is ever generated for it.",
+      "usage": "Primitive ramps, renamed 2026-09-07 to match Figma's own families (50 = lightest). Consumed only via the semantic tokens above — no component binds a primitive directly (rules §1). The Event group that used to sit beside these was deleted from Figma on 2026-10-16: Vines & Vinyl is now a brand mode on these same ramps, not a separate palette.",
       "documented": true,
       "consumedBy": []
     },
@@ -96,7 +96,7 @@
       "name": "--color-surface-section",
       "tokenPath": "color.surface.section",
       "value": "#f8ebda",
-      "usage": "The background of anything that is a surface: sections, cards, panels. Set the element's data-mode and this token becomes that surface. Single successor to the retired surface-primary/secondary/tertiary/inverse/feature/subtle/emphasis set — one token, four resolutions.",
+      "usage": "The background of anything that is a surface: sections, cards, panels. Set the element's data-mode and this token becomes that surface. Single successor to the retired surface-primary/secondary/tertiary/inverse/feature/subtle/emphasis set — one token, six resolutions.",
       "documented": true,
       "consumedBy": [
         "CardEvent",
@@ -109,7 +109,7 @@
       "name": "--color-surface-card",
       "tokenPath": "color.surface.card",
       "value": "#fefbf8",
-      "usage": "Light cream for elevated surfaces — Modal fills with this. Mode-invariant (Surface/50 in every mode), which is why Modal also sets data-mode=\"cream\" on itself: text-primary only clears AA against this fill in the On Cream column. Cards use surface-section and choose their colour by mode instead.",
+      "usage": "Light cream for elevated surfaces — Modal fills with this. Mode-invariant (Surface/50 in every mode), which is why Modal also sets data-mode=\"light\" on itself: text-primary only clears AA against this fill where text-primary is dark (On Light, On Accent, On Soft). Cards use surface-section and choose their colour by mode instead.",
       "documented": true,
       "consumedBy": [
         "Modal"
@@ -121,7 +121,7 @@
       "name": "--color-surface-scrim-start",
       "tokenPath": "color.surface.scrim-start",
       "value": "rgba(29, 27, 25, 0)",
-      "usage": "Top stop of a text-over-image scrim (Card/Producer). Neutral/900 at 0%. Mode-invariant.",
+      "usage": "Top stop of a text-over-image scrim (Card/Producer, the V&V hero). Neutral/900 at 0% in every mode except On Brand, where it is the brand colour at 0% (Alpha/Brand-0), so a photo in a brand section fades into that brand's colour.",
       "documented": true,
       "consumedBy": [
         "CardProducer"
@@ -133,11 +133,21 @@
       "name": "--color-surface-scrim-end",
       "tokenPath": "color.surface.scrim-end",
       "value": "rgba(29, 27, 25, 0.85)",
-      "usage": "Bottom stop of a text-over-image scrim (Card/Producer). Neutral/900 at 85%. Mode-invariant.",
+      "usage": "Bottom stop of a text-over-image scrim. Neutral/900 at 85% in every mode except On Brand, where it is solid Brand/800 — the same value as that mode's surface-section, so text below the fade sits on an already-verified surface.",
       "documented": true,
       "consumedBy": [
         "CardProducer"
       ]
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-surface-media",
+      "tokenPath": "color.surface.media",
+      "value": "#3d4a2e",
+      "usage": "Behind photos and media: shows while an image loads, or when there is none.",
+      "documented": true,
+      "consumedBy": []
     },
     {
       "type": "Color",
@@ -229,10 +239,20 @@
     {
       "type": "Color",
       "tier": "semantic",
+      "name": "--color-text-accent",
+      "tokenPath": "color.text.accent",
+      "value": "#a74b24",
+      "usage": "Accent text — kickers, eyebrow labels, emphasised headings. Never body copy.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
       "name": "--color-action-primary",
       "tokenPath": "color.action.primary",
       "value": "#2f2c28",
-      "usage": "Primary button fill. Dark on cream, light on the three dark surfaces.",
+      "usage": "Primary button fill. Dark on light, accent and soft; light on ink, dark and brand.",
       "documented": true,
       "consumedBy": [
         "Button"
@@ -274,7 +294,7 @@
       "name": "--color-action-secondary-hover",
       "tokenPath": "color.action.secondary-hover",
       "value": "rgba(93, 100, 64, 0.1)",
-      "usage": "Secondary button and Input-family hover tint — a 10%-alpha wash baked into the token, ink-tinted on cream and white-tinted on the three dark surfaces. Successor to the retired state-hover.",
+      "usage": "Secondary button and Input-family hover tint — a 10%-alpha wash baked into the token, ink-tinted on light, accent and soft, white-tinted on ink, dark and brand. Successor to the retired state-hover.",
       "documented": true,
       "consumedBy": [
         "Button",
@@ -368,7 +388,7 @@
       "name": "--color-state-focus",
       "tokenPath": "color.state.focus",
       "value": "#2563eb",
-      "usage": "Focus ring — 2px, offset 2px outside the control (rules §2). Successor to border-focus and its retired -inverse/-on-feature/-on-highlight partners. Focus/500 on cream, Focus/200 on the three dark surfaces; clears SC 1.4.11's 3:1 on all four (4.40 / 6.08 / 8.92 / 3.67).",
+      "usage": "Focus ring — 2px, offset 2px outside the control (rules §2). Focus/500 on light, Focus/200 on ink, dark and brand, Neutral/900 on accent and soft (the blue ring measures 2.2:1 and 2.7:1 there). Clears SC 1.4.11's 3:1 on all six: 4.40 / 6.08 / 8.92 / 3.67 / 7.35 / 9.07.",
       "documented": true,
       "consumedBy": [
         "Button",
@@ -1163,7 +1183,7 @@
       "name": "--color-focus-900",
       "tokenPath": "color.focus.900",
       "value": "#1e3a8a",
-      "usage": "Kept for a focus ring that has to sit directly on a mid-luminance fill. Nothing binds it today: the ring is drawn 2px outside the control with a 2px gap, so it is measured against the surface, not the control's fill — which clears 3:1 on all four modes, Button accent included. Re-measure before reaching for it.",
+      "usage": "Kept for a focus ring that has to sit directly on a mid-luminance fill. Nothing binds it today: the ring is drawn 2px outside the control with a 2px gap, so it is measured against the surface, not the control's fill — which clears 3:1 on all six modes, Button accent included. Re-measure before reaching for it.",
       "documented": true,
       "consumedBy": []
     },
@@ -1173,7 +1193,7 @@
       "name": "--color-alpha-ink-10",
       "tokenPath": "color.alpha.ink-10",
       "value": "rgba(93, 100, 64, 0.1)",
-      "usage": "Aliased by action.secondary-hover and border.subtle on cream.",
+      "usage": "Aliased by action.secondary-hover and border.subtle on light, accent and soft.",
       "documented": true,
       "consumedBy": []
     },
@@ -1183,7 +1203,7 @@
       "name": "--color-alpha-ink-20",
       "tokenPath": "color.alpha.ink-20",
       "value": "rgba(93, 100, 64, 0.2)",
-      "usage": "Alpha palette — step ink-20 (2 of 8 in the ramp).",
+      "usage": "Alpha palette — step ink-20 (2 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1193,7 +1213,7 @@
       "name": "--color-alpha-ink-40",
       "tokenPath": "color.alpha.ink-40",
       "value": "rgba(93, 100, 64, 0.4)",
-      "usage": "Alpha palette — step ink-40 (3 of 8 in the ramp).",
+      "usage": "Alpha palette — step ink-40 (3 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1203,7 +1223,7 @@
       "name": "--color-alpha-ink-60",
       "tokenPath": "color.alpha.ink-60",
       "value": "rgba(93, 100, 64, 0.6)",
-      "usage": "Alpha palette — step ink-60 (4 of 8 in the ramp).",
+      "usage": "Alpha palette — step ink-60 (4 of 9 in the ramp).",
       "documented": true,
       "consumedBy": []
     },
@@ -1223,7 +1243,7 @@
       "name": "--color-alpha-white-10",
       "tokenPath": "color.alpha.white-10",
       "value": "rgba(255, 255, 255, 0.1)",
-      "usage": "Aliased by action.secondary-hover and border.subtle on olive/dark/terracotta.",
+      "usage": "Aliased by action.secondary-hover and border.subtle on ink, dark and brand.",
       "documented": true,
       "consumedBy": []
     },
@@ -1250,40 +1270,60 @@
     {
       "type": "Color",
       "tier": "primitive",
-      "name": "--color-event-vinyl-pink",
-      "tokenPath": "color.event.vinyl-pink",
-      "value": "#e9a5a9",
-      "usage": "Vines & Vinyl poster pink. Print/campaign only — no semantic role. approx C0 M29 Y27 K9",
+      "name": "--color-alpha-brand-0",
+      "tokenPath": "color.alpha.brand-0",
+      "value": "rgba(167, 75, 36, 0)",
+      "usage": "Brand/800 at 0% — the clear end of the On Brand scrim. Resolves per brand.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
-      "tier": "primitive",
-      "name": "--color-event-vinyl-yellow",
-      "tokenPath": "color.event.vinyl-yellow",
-      "value": "#e7a431",
-      "usage": "Vines & Vinyl poster yellow. Print/campaign only — no semantic role. approx C0 M29 Y79 K9",
+      "tier": "semantic",
+      "name": "--color-illustration-primary",
+      "tokenPath": "color.illustration.primary",
+      "value": "#a74b24",
+      "usage": "Main illustration colour — sparkles, grapes. Decorative fills only, never text.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
-      "tier": "primitive",
-      "name": "--color-event-vinyl-burgundy",
-      "tokenPath": "color.event.vinyl-burgundy",
-      "value": "#331013",
-      "usage": "Vines & Vinyl wordmark burgundy. Print/campaign only — no semantic role. approx C0 M69 Y63 K80",
+      "tier": "semantic",
+      "name": "--color-illustration-secondary",
+      "tokenPath": "color.illustration.secondary",
+      "value": "#a74b24",
+      "usage": "Second illustration colour. Decorative fills only, never text.",
       "documented": true,
       "consumedBy": []
     },
     {
       "type": "Color",
-      "tier": "primitive",
-      "name": "--color-event-vinyl-cream",
-      "tokenPath": "color.event.vinyl-cream",
-      "value": "#f5ddbc",
-      "usage": "Vines & Vinyl poster stock cream. Print/campaign only — no semantic role. approx C0 M10 Y23 K4",
+      "tier": "semantic",
+      "name": "--color-illustration-tertiary",
+      "tokenPath": "color.illustration.tertiary",
+      "value": "#df8e10",
+      "usage": "Third illustration colour. Decorative fills only, never text.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-illustration-highlight",
+      "tokenPath": "color.illustration.highlight",
+      "value": "#df8e10",
+      "usage": "Shapes that carry text, such as the date seal. Pair with text/on-highlight.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Color",
+      "tier": "semantic",
+      "name": "--color-illustration-feature",
+      "tokenPath": "color.illustration.feature",
+      "value": "#eaadae",
+      "usage": "Large feature shapes — vinyl, big grape clusters. Decorative fills only, never text.",
       "documented": true,
       "consumedBy": []
     }

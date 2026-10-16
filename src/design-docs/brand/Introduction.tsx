@@ -19,7 +19,7 @@ const LINKS: Array<{ label: string; to: string; blurb: string; external?: boolea
 export function IntroductionPage() {
   return (
     <div
-      data-mode="cream"
+      data-mode="light"
       style={{
         fontFamily: font.sans,
         color: 'var(--color-text-primary)',
