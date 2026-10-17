@@ -1285,7 +1285,9 @@
       "value": "#a74b24",
       "usage": "Main illustration colour — sparkles, grapes. Decorative fills only, never text.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Illustration"
+      ]
     },
     {
       "type": "Color",
@@ -1295,7 +1297,9 @@
       "value": "#a74b24",
       "usage": "Second illustration colour. Decorative fills only, never text.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Illustration"
+      ]
     },
     {
       "type": "Color",
@@ -1305,7 +1309,9 @@
       "value": "#df8e10",
       "usage": "Third illustration colour. Decorative fills only, never text.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Illustration"
+      ]
     },
     {
       "type": "Color",
@@ -1315,7 +1321,9 @@
       "value": "#df8e10",
       "usage": "Shapes that carry text, such as the date seal. Pair with text/on-highlight.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Illustration"
+      ]
     },
     {
       "type": "Color",
@@ -1325,7 +1333,9 @@
       "value": "#eaadae",
       "usage": "Large feature shapes — vinyl, big grape clusters. Decorative fills only, never text.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "Illustration"
+      ]
     }
   ],
   "typography": [

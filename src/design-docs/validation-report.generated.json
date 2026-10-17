@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-16T05:45:13.630Z",
+  "generatedAt": "2026-10-17T04:39:11.164Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -34,7 +34,7 @@
   "components": [
     {
       "component": "Badge",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -86,7 +86,7 @@
     },
     {
       "component": "Button",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -162,7 +162,7 @@
     },
     {
       "component": "ButtonClose",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -206,7 +206,7 @@
     },
     {
       "component": "CardEvent",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -260,7 +260,7 @@
     },
     {
       "component": "CardProducer",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -311,7 +311,7 @@
     },
     {
       "component": "CardQuote",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -360,7 +360,7 @@
     },
     {
       "component": "Checkbox",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -411,7 +411,7 @@
     },
     {
       "component": "Icon",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -459,8 +459,52 @@
       "tokensUsed": []
     },
     {
+      "component": "Illustration",
+      "lastValidated": "2026-10-17",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "history": [],
+      "overall": true,
+      "status": "pass",
+      "tokensUsed": [
+        "color-illustration-feature",
+        "color-illustration-highlight",
+        "color-illustration-primary",
+        "color-illustration-secondary",
+        "color-illustration-tertiary"
+      ]
+    },
+    {
       "component": "Input",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -511,7 +555,7 @@
     },
     {
       "component": "Modal",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -562,7 +606,7 @@
     },
     {
       "component": "Select",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -612,7 +656,7 @@
     },
     {
       "component": "Tab",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,
@@ -669,7 +713,7 @@
     },
     {
       "component": "Textarea",
-      "lastValidated": "2026-10-16",
+      "lastValidated": "2026-10-17",
       "checks": {
         "tokenCompliance": {
           "pass": true,

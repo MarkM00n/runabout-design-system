@@ -5,7 +5,7 @@ import { VinesAndVinylLanding } from './VinesAndVinylLanding';
 // Source: Figma section "06 · Web — Landing page" (1336:396) — the desktop
 // (1325:1674), tablet (1328:55) and mobile (1328:2697) frames. A composed
 // marketing page, not a reusable design-system component: Input and Button
-// are the real components it uses; the art is VinesAndVinylArt.tsx.
+// are the real components it uses; the art is the Illustration component.
 //
 // The page is fluid, not three fixed layouts (see VinesAndVinylLanding.tsx's
 // header). Mobile, Tablet and Desktop pin the viewport to each frame's exact
