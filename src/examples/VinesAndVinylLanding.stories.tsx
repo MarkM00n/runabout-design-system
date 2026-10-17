@@ -46,3 +46,35 @@ export const Desktop: Story = {
 };
 
 export const Fluid: Story = {};
+
+// Sign-up form states (Figma Sign-up form, 1490:546), pinned with the
+// signupState prop so Chromatic snapshots each one. Shown at the desktop
+// frame; the form itself is the same at every width apart from the
+// field/button stacking. Opening in a state doesn't move focus — only a real
+// submit does — so these snapshot the page from the top like the others.
+
+/** Button disabled, label "Joining…". */
+export const Submitting: Story = {
+  args: { signupState: 'submitting' },
+  globals: { viewport: { value: 'landingDesktop', isRotated: false } },
+};
+
+/** The form replaced in place by the confirmation. */
+export const Success: Story = {
+  args: { signupState: 'success' },
+  globals: { viewport: { value: 'landingDesktop', isRotated: false } },
+};
+
+/** Validation failure — Figma's copy. */
+export const Error: Story = {
+  args: { signupState: 'error', signupError: 'invalid' },
+  globals: { viewport: { value: 'landingDesktop', isRotated: false } },
+};
+
+/** The same Error state after a failed submit (network, 4xx or 5xx), with
+ *  the retry copy. */
+export const ErrorSubmitFailed: Story = {
+  name: 'Error · submit failed',
+  args: { signupState: 'error', signupError: 'failed' },
+  globals: { viewport: { value: 'landingDesktop', isRotated: false } },
+};
