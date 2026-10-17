@@ -1,5 +1,5 @@
-import type { CSSProperties, ReactNode } from 'react';
-import { useId } from 'react';
+import type { CSSProperties, FormEvent, ReactNode } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { Button } from '../components/Button';
@@ -7,6 +7,7 @@ import { Illustration } from '../components/Illustration';
 import { Input } from '../components/Input';
 import tokens from '../tokens/tokens.json';
 import hallPhoto from './assets/vines-and-vinyl-hall.png';
+import { submitSignup } from './submitSignup';
 
 // Source: Figma section "06 · Web — Landing page" (1336:396, file
 // JpFA7KtVlSOrM9fIYYgOsn), signed off as three frames: desktop 1325:1674
@@ -256,12 +257,202 @@ const DateSeal = () => (
   </div>
 );
 
+// --- Sign-up form ------------------------------------------------------------
+
+// Figma: Sign-up form (1490:546, page 02. Components), State = Default /
+// Submitting / Success / Error. Built into this page's existing block, not
+// a src/components component (yet). It has no surface of its own, so it
+// inherits the hero's mode, which is what its Figma description asks for.
+//
+// Behaviour comes from that description plus the page brief:
+//   - Validated here before anything is sent. The form is noValidate so the
+//     browser's own bubble never shows instead of the Error state. type=email
+//     alone lets "a@b" through, so the pattern also wants a dot in the domain.
+//   - Submitting: the button is disabled (Button's own Disabled treatment,
+//     opacity-disabled at its root) and reads "Joining…", per Figma.
+//   - Success replaces the lead-in and form in place. Focus moves to its
+//     heading. Error keeps the field's value and puts focus back in it.
+//   - The whole block is aria-live="polite", so the error message, the
+//     Submitting label and the success copy are announced as they appear.
+//   - Focus moves only after a real submit, never on first render, so a
+//     story that opens in Success or Error doesn't scroll to the form.
+//
+// Error has two messages. Figma draws the validation one. A failed submit
+// (network, 4xx, 5xx) is the same state with the brief's copy.
+//
+// Status dots: state/success and state/error fills under text/on-state, as
+// Figma binds them. The message beside the dot carries the meaning, in
+// text-primary, so the dot is supplementary (status colours as fills only —
+// rules §7). Dot sizes and radii aren't bound in Figma, so they're literal.
+
+export type SignupState = 'default' | 'submitting' | 'success' | 'error';
+export type SignupErrorKind = 'invalid' | 'failed';
+
+export interface SignupStateProps {
+  /** Starting state for the sign-up form. Stories use it to pin a state for
+   *  Chromatic; the page itself always starts at Default. */
+  signupState?: SignupState;
+  /** Which Error message to show when starting in Error. */
+  signupError?: SignupErrorKind;
+}
+
+const SIGNUP_ERROR_COPY: Record<SignupErrorKind, string> = {
+  invalid: "That email doesn't look right — check it and try again.",
+  failed: 'Something went wrong — try again in a moment.',
+};
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+
+// Appearing content fades in over duration-standard; with reduced motion it
+// just appears. @starting-style, so no keyframes are needed.
+const appear =
+  'transition-opacity duration-[var(--duration-standard)] ease-standard starting:opacity-0 motion-reduce:transition-none';
+
+const StatusDot = ({ tone, glyph, size }: { tone: 'success' | 'error'; glyph: string; size: 20 | 28 }) => (
+  <span
+    aria-hidden="true"
+    className={clsx(
+      'flex shrink-0 items-center justify-center rounded-full font-manrope text-label-strong font-semibold text-text-on-state',
+      tone === 'success' ? 'bg-state-success' : 'bg-state-error',
+      size === 28 ? 'h-[28px] w-[28px]' : 'h-[20px] w-[20px]',
+    )}
+  >
+    {glyph}
+  </span>
+);
+
+const SignUp = ({ initialState = 'default', initialError = 'invalid' }: { initialState?: SignupState; initialError?: SignupErrorKind }) => {
+  const promptId = useId();
+  const errorId = useId();
+  const [state, setState] = useState<SignupState>(initialState);
+  const [errorKind, setErrorKind] = useState<SignupErrorKind>(initialError);
+  const [focusRequest, setFocusRequest] = useState<{ target: 'field' | 'heading' } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // After the render that shows the new state, so the field's
+  // aria-describedby already points at the message when focus lands.
+  useEffect(() => {
+    if (!focusRequest) return;
+    (focusRequest.target === 'heading' ? headingRef : inputRef).current?.focus();
+  }, [focusRequest]);
+
+  const fail = (kind: SignupErrorKind) => {
+    setErrorKind(kind);
+    setState('error');
+    setFocusRequest({ target: 'field' });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (state === 'submitting') return;
+    const email = inputRef.current?.value.trim() ?? '';
+    if (!EMAIL_PATTERN.test(email)) {
+      fail('invalid');
+      return;
+    }
+    setState('submitting');
+    try {
+      await submitSignup(email);
+      setState('success');
+      setFocusRequest({ target: 'heading' });
+    } catch {
+      fail('failed');
+    }
+  };
+
+  const isError = state === 'error';
+
+  return (
+    <div aria-live="polite" className="flex w-full flex-col items-center gap-02">
+      {state === 'success' ? (
+        // Figma's Success row: 28px dot beside a text column whose body is
+        // a fixed 480px (unbound, so literal), top-aligned, centred as a
+        // whole in the form's column.
+        <div className={clsx('flex items-start gap-02 text-left', appear)}>
+          <StatusDot tone="success" glyph="✓" size={28} />
+          <div className="flex max-w-[480px] flex-col gap-01">
+            <h2
+              ref={headingRef}
+              tabIndex={-1}
+              className="m-0 font-manrope text-paragraph-large font-bold text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus"
+            >
+              You&apos;re on the list.
+            </h2>
+            <p className="font-manrope text-paragraph-small text-text-secondary">
+              We&apos;ll email you the moment early birds go live. Keep an eye on your inbox — and your spam folder, just
+              in case.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Figma "Manrope/Paragraph Large Bold" = paragraph-large + bold. */}
+          <p id={promptId} className="text-center font-manrope text-paragraph-large font-bold text-text-primary">
+            Join the list and be first to grab an <span className="text-text-accent">early bird</span> — strictly
+            limited.
+          </p>
+          {/* Row at tablet and desktop (400px field + hugging button), a
+              full-width stack on mobile — from content, not a breakpoint. The
+              field's huge grow factor keeps the button at its natural width
+              while they share a row; once the row can't hold the field's 240px
+              basis plus the button, each wraps onto its own line and fills it.
+              The form's max width is Figma's own Email capture row, 591px
+              (400px field + gap + 175px button) — a hugging frame, so a literal
+              rather than a token. */}
+          <form
+            aria-labelledby={promptId}
+            aria-busy={state === 'submitting'}
+            noValidate
+            className="flex w-full max-w-[591px] flex-wrap gap-02"
+            onSubmit={handleSubmit}
+          >
+            <div className="flex-[999_1_240px]">
+              <Input
+                ref={inputRef}
+                type="email"
+                name="email"
+                size="large"
+                placeholder="you@email.com"
+                aria-label="Email address"
+                autoComplete="email"
+                required
+                readOnly={state === 'submitting'}
+                // Invalid only when the address is: a failed submit isn't the
+                // field's fault, so it gets the message but not the flag.
+                aria-invalid={(isError && errorKind === 'invalid') || undefined}
+                aria-describedby={isError ? errorId : undefined}
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="primary"
+              size="large"
+              disabled={state === 'submitting'}
+              className="flex-[1_0_auto]"
+            >
+              {state === 'submitting' ? 'Joining…' : 'Join the list'}
+            </Button>
+          </form>
+          {isError ? (
+            // Figma's Error message row: 20px dot and a Label message,
+            // centred under the field.
+            <p id={errorId} className={clsx('flex items-center gap-01 text-left', appear)}>
+              <StatusDot tone="error" glyph="!" size={20} />
+              <span className="font-manrope text-label text-text-primary">{SIGNUP_ERROR_COPY[errorKind]}</span>
+            </p>
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+};
+
 // --- Sections ----------------------------------------------------------------
 
 const heroPaddingInline = fluid([MOBILE, 'spacing-04'], [DESKTOP, 'spacing-10']);
 
-const Hero = () => {
-  const promptId = useId();
+const Hero = ({ signupState, signupError }: SignupStateProps) => {
   return (
     // Hero — On Brand. `isolate` gives the section its own stacking context so
     // the photo band can sit under the art (-z-10) without escaping below
@@ -321,33 +512,7 @@ const Hero = () => {
           all-vinyl DJs. 150 tickets, every tasting included.
         </p>
 
-        <div className="flex w-full flex-col items-center gap-02">
-          {/* Figma "Manrope/Paragraph Large Bold" = paragraph-large + bold. */}
-          <p id={promptId} className="text-center font-manrope text-paragraph-large font-bold text-text-primary">
-            Join the list and be first to grab an <span className="text-text-accent">early bird</span> — strictly
-            limited.
-          </p>
-          {/* Row at tablet and desktop (400px field + hugging button), a
-              full-width stack on mobile — from content, not a breakpoint. The
-              field's huge grow factor keeps the button at its natural width
-              while they share a row; once the row can't hold the field's 240px
-              basis plus the button, each wraps onto its own line and fills it.
-              The form's max width is Figma's own Email capture row, 591px
-              (400px field + gap + 175px button) — a hugging frame, so a literal
-              rather than a token. */}
-          <form
-            aria-labelledby={promptId}
-            className="flex w-full max-w-[591px] flex-wrap gap-02"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <div className="flex-[999_1_240px]">
-              <Input type="email" name="email" size="large" placeholder="you@email.com" aria-label="Email address" autoComplete="email" required />
-            </div>
-            <Button type="submit" variant="primary" size="large" className="flex-[1_0_auto]">
-              Join the list
-            </Button>
-          </form>
-        </div>
+        <SignUp initialState={signupState} initialError={signupError} />
       </div>
     </section>
   );
@@ -404,6 +569,13 @@ const Info = () => (
 // Figma (a 376px contact line), but the self-hosted Manrope renders the line
 // at 385px, so the threshold is the rendered content's width, 568px —
 // measured, not rounded to a guess. Below it the row would squeeze the line.
+// The footer's contact details are real links in the same text style as the
+// line around them (they inherit it), underlined on hover and on keyboard
+// focus, plus the system's focus ring: 2px state-focus, offset 2px (rules §2).
+// On the footer's accent surface state-focus is near-black, 7.4:1.
+const footerLink =
+  'underline-offset-2 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus';
+
 const Footer = () => (
   // Footer — On Accent.
   <footer
@@ -429,11 +601,20 @@ const Footer = () => (
         </div>
         <div className="flex flex-col items-start gap-01 font-manrope @min-[568px]/footer:items-end @min-[568px]/footer:text-right">
           <p className="text-paragraph-small text-text-primary">
-            <span className="block @min-[568px]/footer:inline">hello@runaboutwine.com.au</span>
+            <span className="block @min-[568px]/footer:inline">
+              <a href="mailto:hello@runaboutwine.com.au" className={footerLink}>
+                hello@runaboutwine.com.au
+              </a>
+            </span>
             <span aria-hidden="true" className="hidden whitespace-pre @min-[568px]/footer:inline">
               {'   ·   '}
             </span>
-            <span className="block @min-[568px]/footer:inline">@runabout.melbourne</span>
+            <span className="block @min-[568px]/footer:inline">
+              <a href="https://instagram.com/runabout.melbourne" target="_blank" rel="noopener" className={footerLink}>
+                @runabout.melbourne
+                <span className="sr-only"> on Instagram (opens in a new tab)</span>
+              </a>
+            </span>
           </p>
           <p className="text-caption text-text-secondary">Wine · Cheese · Music — Melbourne&apos;s north-east</p>
         </div>
@@ -442,12 +623,12 @@ const Footer = () => (
   </footer>
 );
 
-export const VinesAndVinylLanding = () => (
+export const VinesAndVinylLanding = ({ signupState, signupError }: SignupStateProps = {}) => (
   // `@container` makes the page's own width what every fluid() value measures
   // (100cqi), rather than the viewport's.
   <div data-brand="vines-and-vinyl" className="@container flex w-full flex-col">
     <main className="flex w-full flex-col">
-      <Hero />
+      <Hero signupState={signupState} signupError={signupError} />
       <Info />
     </main>
     <Footer />
