@@ -212,7 +212,9 @@ function Specimen({ name, s, sample }: { name: string; s: TypeStyle; sample: str
           fontSize: s.fontSize,
           lineHeight: s.lineHeight,
           fontWeight: s.fontWeight,
-          letterSpacing: s.letterSpacing === '0%' ? 0 : s.letterSpacing,
+          // tokens.json records Figma's percent tracking ("8%"), which CSS
+          // letter-spacing doesn't accept — it's a fraction of the font size.
+          letterSpacing: s.letterSpacing === '0%' ? 0 : s.letterSpacing.endsWith('%') ? `${parseFloat(s.letterSpacing) / 100}em` : s.letterSpacing,
           textTransform: name.includes('overline') ? 'uppercase' : undefined,
           overflow: 'hidden',
           whiteSpace: 'nowrap',
@@ -238,13 +240,32 @@ const SAMPLES: Record<string, string> = {
   'label-strong': 'Thursday 4pm – 11pm',
   caption: '156 Main Road, Eltham · Sat 22 Nov · 12pm – 6pm',
   overline: 'What’s on · Saturday',
+  'overline-wide': 'Presented by',
+  'h6-serif': '24 April 2027',
+  detail: '12–4:30pm · Eltham',
 };
 
+// Figma styles that differ from a token only by weight. Weight is never part
+// of a --text-* token (the same convention as label-strong + font-semibold), so
+// these are a token plus a weight utility in code, not tokens of their own.
+// Listed here so every Figma style a built page uses has a row on this page.
+// "Used by" stays the base token's computed list (rules §6: never asserted).
+const WEIGHT_PAIRINGS: { figmaStyle: string; token: string; weight: number; utility: string; sample: string }[] = [
+  {
+    figmaStyle: 'Manrope/Paragraph Large Bold',
+    token: 'paragraph-large',
+    weight: 700,
+    utility: 'font-bold',
+    sample: 'Join the list and be first to grab an early bird.',
+  },
+];
+
 export function TypographyPage() {
-  const order = ['h3', 'h4', 'h6', 'paragraph-large', 'paragraph-small', 'label', 'label-strong', 'caption', 'overline'].filter((k) => typography[k]);
-  const rows = order.map((k) => {
+  const order = ['h3', 'h4', 'h6-serif', 'h6', 'paragraph-large', 'paragraph-small', 'label', 'label-strong', 'caption', 'detail', 'overline', 'overline-wide'].filter((k) => typography[k]);
+  const pairingsFor = (k: string) => WEIGHT_PAIRINGS.filter((p) => p.token === k);
+  const rows = order.flatMap((k) => {
     const s = typography[k];
-    return {
+    const row = {
       style: <Mono>{s.figmaStyle ?? k}</Mono>,
       token: <Mono>{`--text-${k}`}</Mono>,
       family: s.fontFamily,
@@ -253,6 +274,14 @@ export function TypographyPage() {
       ls: s.letterSpacing,
       used: <UsedBy names={usedBy(`typography.${k}`)} />,
     };
+    return [
+      row,
+      ...pairingsFor(k).map((p) => ({
+        ...row,
+        style: <Mono>{p.figmaStyle}</Mono>,
+        token: <Mono>{`--text-${k} + ${p.utility}`}</Mono>,
+      })),
+    ];
   });
   return (
     <DocPage
@@ -271,7 +300,7 @@ export function TypographyPage() {
             the licence is in place, at which point one <Mono>@font-face</Mono> turns them on.
           </Note>
           <Note>
-            Only the styles a built component uses are in code. Figma carries the full 35-style scale; the rest arrive
+            Only the styles a built component or example page uses are in code. Figma carries the full 35-style scale; the rest arrive
             with the components that need them.
           </Note>
         </>
@@ -279,9 +308,12 @@ export function TypographyPage() {
     >
       <Section label="The scale in use" aside="Each line is set at its own size">
         <div style={{ maxWidth: 880 }}>
-          {order.map((k) => (
-            <Specimen key={k} name={k} s={typography[k]} sample={SAMPLES[k] ?? 'Good wine. Good cheese. Good company.'} />
-          ))}
+          {order.flatMap((k) => [
+            <Specimen key={k} name={k} s={typography[k]} sample={SAMPLES[k] ?? 'Good wine. Good cheese. Good company.'} />,
+            ...pairingsFor(k).map((p) => (
+              <Specimen key={p.figmaStyle} name={`${k} + ${p.utility}`} s={{ ...typography[k], fontWeight: p.weight }} sample={p.sample} />
+            )),
+          ])}
         </div>
       </Section>
       <Section label="Rules">
