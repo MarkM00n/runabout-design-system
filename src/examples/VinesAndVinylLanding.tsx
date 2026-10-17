@@ -6,7 +6,8 @@ import { Button } from '../components/Button';
 import { Illustration } from '../components/Illustration';
 import { Input } from '../components/Input';
 import tokens from '../tokens/tokens.json';
-import hallPhoto from './assets/vines-and-vinyl-hall.png';
+// Figma's 1536×1024 hall photo, re-encoded as JPEG (quality 78): 2.29 MB → 436 KB.
+import hallPhoto from './assets/vines-and-vinyl-hall.jpg';
 import { submitSignup } from './submitSignup';
 
 // Source: Figma section "06 · Web — Landing page" (1336:396, file
@@ -99,7 +100,9 @@ const round = (n: number) => Math.round(n * 1000) / 1000;
 // clamp bounds.
 const segment = ([w0, v0]: Stop, [w1, v1]: Stop) => {
   const slope = (px(v1) - px(v0)) / (w1 - w0);
-  const line = `calc(${css(v0)} + (100cqi - ${w0}px) * ${round(slope)})`;
+  // Slope kept to 6 decimals: at 3, the 672px tablet→desktop span lost up to
+  // 0.16px, so 128px padding landed at 127.84px at 1440.
+  const line = `calc(${css(v0)} + (100cqi - ${w0}px) * ${Math.round(slope * 1e6) / 1e6})`;
   const [lo, hi] = px(v0) <= px(v1) ? [v0, v1] : [v1, v0];
   return `clamp(${css(lo)}, ${line}, ${css(hi)})`;
 };
@@ -147,35 +150,19 @@ const Deco = ({ x: [xEdge, xValue], y: [yEdge, yValue], width, rotate = 0, child
   );
 };
 
-// The Hero's left-hand grape cluster is a Colour=Primary instance with its
-// fill hidden and its stroke weight set to 1 — an instance override in Figma,
-// not a variant: Illustration/Grapes has no Outline option (checked live
-// 2026-10-17). So the outline isn't part of the Illustration component's API;
-// it's this page reproducing that override, the same way Figma does. Reported
-// to design: if the outline look is meant to be reused, it belongs as a
-// variant on the set, and this override then becomes a prop.
-// Non-scaling stroke because the override's 1px stays 1px at every size.
-const OutlineGrapes = () => (
-  <Illustration
-    name="grapes"
-    colour="primary"
-    className="[&_path]:fill-none [&_path]:[vector-effect:non-scaling-stroke]"
-  />
-);
-
 // A decoration present in some frames and absent from another is
 // interpolated to zero size at the frame that doesn't have it, rather than
 // switched off at a width the mocks never specify.
 const heroArt = (
   <>
-    {/* Accent grape cluster, outline only, top left. */}
+    {/* Line-drawn grape cluster, top left — Grapes Colour=Outline. */}
     <Deco
       x={['left', fluid([MOBILE, 32.9], [TABLET, 69.9], [DESKTOP, 50.7])]}
       y={['top', fluid([MOBILE, 238.9], [TABLET, 337.3], [DESKTOP, 422.4])]}
       width={fluid([MOBILE, 219.811], [TABLET, 325.322], [DESKTOP, 546.759])}
       rotate={6}
     >
-      <OutlineGrapes />
+      <Illustration name="grapes" colour="outline" />
     </Deco>
     {/* Large soft grape cluster, bottom right. */}
     <Deco
@@ -235,7 +222,8 @@ const heroArt = (
 // --- Event / Date seal -------------------------------------------------------
 
 // Figma: Event / Date seal (1395:154). Size=Small below the tablet token,
-// Size=Large from it: the 768 frame uses Small, the 1440 frame Large. The
+// Size=Large from it — its description: Large for desktop, Small for tablet
+// and mobile. The
 // seal is drawn centred behind the text and rotated, at each variant's own
 // size; the text is real content (not decorative) and the seal shape is
 // aria-hidden. Positioned against the hero's top-right corner.
@@ -450,7 +438,7 @@ const SignUp = ({ initialState = 'default', initialError = 'invalid' }: { initia
 
 // --- Sections ----------------------------------------------------------------
 
-const heroPaddingInline = fluid([MOBILE, 'spacing-04'], [DESKTOP, 'spacing-10']);
+const heroPaddingInline = fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-07'], [DESKTOP, 'spacing-10']);
 
 const Hero = ({ signupState, signupError }: SignupStateProps) => {
   return (
@@ -468,10 +456,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           construction, not by tuning a gradient stop per breakpoint. (In
           Figma the gradient covers the whole hero with its solid stop at
           59.9% / 56.4% / 44.6%: in all three frames that stop lands exactly
-          on the description's top edge, which is what this reproduces.)
-          The band's horizontal padding interpolates straight from the mobile
-          to the desktop value: the tablet frame's 128px is overflowed by its
-          own 560px copy and 556px email row, so it isn't a real constraint. */}
+          on the description's top edge, which is what this reproduces.) */}
       <div
         className="relative flex flex-col items-center gap-03 pb-03"
         style={{ paddingTop: fluid([MOBILE, 'spacing-10'], [TABLET, 'spacing-09']), paddingInline: heroPaddingInline }}
@@ -583,9 +568,7 @@ const Footer = () => (
     className="relative isolate w-full overflow-hidden bg-surface-section py-05"
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-07'], [DESKTOP, 'spacing-10']) }}
   >
-    {/* Figma's footer record is a Colour=Feature instance with its fill
-        overridden to illustration-primary; what it renders is Colour=Primary,
-        so that's what's used here. Reported to design as a variant swap. */}
+    {/* Illustration/Vinyl Colour=Primary, as in all three footer frames. */}
     <Deco
       x={['right', fluid([MOBILE, 50], [TABLET, 48.4], [DESKTOP, 66])]}
       y={['top', fluid([MOBILE, 46.5], [TABLET, 61.6], [DESKTOP, 84])]}

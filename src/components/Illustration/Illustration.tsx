@@ -20,7 +20,7 @@ import clsx from 'clsx';
  * default, read live from Figma on 2026-10-17:
  *   Sparkle  Secondary | Primary | Tertiary   default Primary
  *   Vinyl    Feature | Primary                default Feature
- *   Grapes   Primary | Feature                default Primary
+ *   Grapes   Primary | Feature | Outline      default Primary
  *   Seal     no variants                      illustration/highlight
  * Every fill (and Grapes' stroke) binds the matching `illustration/*`
  * variable in every variant; Vinyl's label binds `surface/section`, so the
@@ -40,6 +40,7 @@ import clsx from 'clsx';
  *   Sparkle Colour=Primary 1433:2805  c76a7b21
  *   Vinyl   Colour=Feature 1385:9     f65fc683
  *   Grapes  Colour=Primary 1385:4     fd7816be
+ *   Grapes  Colour=Outline 1486:861   d1fa50a3
  *   Seal                   1385:8     d41dc313
  * The viewBox is each master's true frame size, read from the node. Figma's
  * SVG export rounds the root width/height (Grapes' 418.5 x 408.75 exports as
@@ -50,6 +51,12 @@ import clsx from 'clsx';
  * carried exactly as exported and scales with the shape, as an instance's
  * stroke does in Figma.
  *
+ * Grapes Colour=Outline (added in Figma 2026-10-17) is the one variant with
+ * different geometry: no fill, and a 1px *centred* illustration/primary
+ * stroke on the un-inset outline. It is its own exported shape below, not the
+ * filled path with its fill dropped, and its stroke scales with the instance
+ * the same way (1.31px at the landing page's 547px hero cluster).
+ *
  * Sizes: rendered at the master's natural size by default (width/height
  * attributes). Size it with a width class — `w-[64px]`, `w-full` — and the
  * height follows the viewBox (`h-auto`). Arbitrary px, never Tailwind's
@@ -59,7 +66,7 @@ import clsx from 'clsx';
 export type IllustrationName = 'sparkle' | 'vinyl' | 'grapes' | 'seal';
 export type SparkleColour = 'primary' | 'secondary' | 'tertiary';
 export type VinylColour = 'feature' | 'primary';
-export type GrapesColour = 'primary' | 'feature';
+export type GrapesColour = 'primary' | 'feature' | 'outline';
 export type IllustrationColour = SparkleColour | VinylColour | GrapesColour;
 
 type SvgProps = Omit<SVGAttributes<SVGSVGElement>, 'children' | 'color' | 'fill' | 'name'>;
@@ -78,6 +85,8 @@ const COLOUR_CLASS: Record<IllustrationColour | 'highlight', string> = {
   secondary: 'text-illustration-secondary',
   tertiary: 'text-illustration-tertiary',
   feature: 'text-illustration-feature',
+  // Grapes Colour=Outline binds its stroke to illustration/primary.
+  outline: 'text-illustration-primary',
   highlight: 'text-illustration-highlight',
 };
 
@@ -122,11 +131,18 @@ const SHAPES: Record<IllustrationName, Shape> = {
     body: <path d="M145 20L165.972 39.5656L192.835 29.5151L204.724 55.617L233.388 56.6116L234.383 85.2762L260.485 97.1646L250.434 124.028L270 145L250.434 165.972L260.485 192.835L234.383 204.724L233.388 233.388L204.724 234.383L192.835 260.485L165.972 250.434L145 270L124.028 250.434L97.1646 260.485L85.2762 234.383L56.6116 233.388L55.617 204.724L29.5151 192.835L39.5656 165.972L20 145L39.5656 124.028L29.5151 97.1646L55.617 85.2762L56.6116 56.6116L85.2762 55.617L97.1646 29.5151L124.028 39.5656L145 20Z" fill="currentColor" />,
   },
 };
+
+// Grapes Colour=Outline — different geometry from the filled variants.
+const GRAPES_OUTLINE: Shape = {
+  width: 418.5,
+  height: 408.75,
+  body: <path d="M258 20C280.416 20 300.076 31.8011 311.105 49.5293C318.733 46.2133 327.152 44.375 336 44.375C370.518 44.375 398.5 72.3572 398.5 106.875C398.5 129.175 386.82 148.745 369.245 159.807C369.248 160.037 369.25 160.269 369.25 160.5C369.25 191.591 346.548 217.377 316.816 222.191C319.199 228.807 320.5 235.939 320.5 243.375C320.5 274.466 297.798 300.252 268.066 305.066C270.449 311.682 271.75 318.814 271.75 326.25C271.75 360.768 243.768 388.75 209.25 388.75C174.732 388.75 146.75 360.768 146.75 326.25C146.75 318.814 148.05 311.681 150.433 305.066C120.702 300.252 98 274.465 98 243.375C98 235.939 99.2998 228.806 101.683 222.191C71.9516 217.377 49.25 191.59 49.25 160.5C49.25 160.269 49.2514 160.037 49.2539 159.807C31.6794 148.745 20 129.175 20 106.875C20 72.3572 47.9822 44.375 82.5 44.375C91.3477 44.375 99.7659 46.2136 107.394 49.5293C118.423 31.8009 138.084 20 160.5 20C180.213 20 197.795 29.1271 209.25 43.3857C220.705 29.1271 238.287 20 258 20Z" stroke="currentColor" />,
+};
 // --- end generated ---------------------------------------------------------
 
 export const Illustration = forwardRef<SVGSVGElement, IllustrationProps>(
   ({ name, colour, className, ...props }, ref) => {
-    const shape = SHAPES[name];
+    const shape = name === 'grapes' && colour === 'outline' ? GRAPES_OUTLINE : SHAPES[name];
     return (
       <svg
         ref={ref}
