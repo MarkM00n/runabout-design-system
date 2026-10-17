@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T04:51:02.258Z",
+  "generatedAt": "2026-10-17T05:52:46.418Z",
   "validationReportGeneratedAt": "2026-10-17T04:39:11.164Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
@@ -9,12 +9,12 @@
   },
   "totals": {
     "totalComponents": 14,
-    "averageCycleTimeSeconds": 15923,
-    "averageCycleTimeLabel": "4h 25m",
-    "medianCycleTimeSeconds": 2149,
-    "medianCycleTimeLabel": "36m",
-    "cycleTimeSampleSize": 13,
-    "cycleTimeMissingCount": 1,
+    "averageCycleTimeSeconds": 14807,
+    "averageCycleTimeLabel": "4h 7m",
+    "medianCycleTimeSeconds": 1908,
+    "medianCycleTimeLabel": "32m",
+    "cycleTimeSampleSize": 14,
+    "cycleTimeMissingCount": 0,
     "totalOpenIssues": 1,
     "totalCaughtAndFixed": 3,
     "totalDesignTokens": 157
@@ -499,10 +499,13 @@
       "history": [],
       "lastValidated": "2026-10-17",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-illustration--docs",
-      "pr": null,
-      "firstCommitAt": null,
-      "mergedAt": null,
-      "cycleTimeSeconds": null
+      "pr": {
+        "number": 106,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/106"
+      },
+      "firstCommitAt": "2026-10-17T16:47:03+11:00",
+      "mergedAt": "2026-10-17T16:52:08+11:00",
+      "cycleTimeSeconds": 305
     },
     {
       "name": "Input",
