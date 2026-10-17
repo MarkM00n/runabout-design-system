@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T04:39:11.164Z",
+  "generatedAt": "2026-10-17T08:11:18.059Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -651,6 +651,80 @@
         "spacing-02",
         "spacing-03",
         "text-h6",
+        "text-paragraph-small"
+      ]
+    },
+    {
+      "component": "SignupForm",
+      "lastValidated": "2026-10-17",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 1,
+          "status": "pass-with-warnings",
+          "open": [
+            {
+              "level": "warn",
+              "file": "src/components/SignupForm/SignupForm.tsx",
+              "line": 213,
+              "code": "disabled-pointer-events-missing",
+              "message": "This has a disabled state, but hover effects might still show while it's disabled — which can make it look clickable when it isn't.",
+              "fix": "Turn off hover effects specifically for the disabled state, so it doesn't look interactive when it isn't.",
+              "checkType": "accessibility",
+              "openedAt": "2026-10-17"
+            }
+          ]
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "history": [
+        {
+          "checkType": "documentationCoverage",
+          "file": "src/components/SignupForm/SignupForm.docs.ts",
+          "line": null,
+          "message": "The documentation for this component exists but is broken and can't be read.",
+          "fix": "Check the documentation file for a typo, like a missing bracket or quote, and fix it so it can be read again.",
+          "openedAt": "2026-10-17",
+          "resolvedAt": "2026-10-17"
+        }
+      ],
+      "overall": true,
+      "status": "pass-with-warnings",
+      "tokensUsed": [
+        "color-state-error",
+        "color-state-focus",
+        "color-state-success",
+        "color-text-on-state",
+        "color-text-primary",
+        "color-text-secondary",
+        "font-manrope",
+        "radius-full",
+        "spacing-01",
+        "spacing-02",
+        "text-label",
+        "text-label-strong",
+        "text-paragraph-large",
         "text-paragraph-small"
       ]
     },
