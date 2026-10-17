@@ -125,6 +125,23 @@ value ever changes.
   `explicitVariableModes` up the chain before reporting a binding
   problem. The binding check itself is unchanged: bound is bound,
   whatever mode resolves it.
+- **Modes are pinned on surfaces only (2026-10-17).** "Anything with a
+  background owns a mode. Everything else inherits." Walk every node's
+  `explicitVariableModes` for the semantic collection and check each
+  pinned node has a visible fill of its own. A pin on a fill-less layer
+  (a group, an auto-layout wrapper, an icon) recolours only the ink on top
+  of it, never the background behind it, so the pairing it was meant to
+  guarantee is not guaranteed — and code, which sets `data-mode` only on
+  surfaces, can't reproduce it. Fix in Figma: move the pin to the nearest
+  ancestor that actually draws the background, or remove it if that
+  ancestor already sets the same mode.
+- **Fail looks like (stray mode pin):** an `On Dark` pin on a child
+  inside an `On Light` frame, so switching the frame's mode left that
+  child unchanged (found 2026-10-16 on `runabout-logo-social` — one of
+  eight stray pins cleared that day); or a hero frame with no fill repeating the
+  `On Brand` pin its filled wrapper already sets (2026-10-17, Vines &
+  Vinyl landing). The second is harmless today and still fails: the day
+  someone changes the wrapper's mode, the inner pin silently wins.
 - **Structural frames in state variants (2026-08-05 architecture):**
   Focused variants are a transparent wrapper root containing the visual
   control frame plus an absolutely-positioned `focus-ring` overlay child.
