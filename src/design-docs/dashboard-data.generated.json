@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-17T04:20:32.913Z",
-  "validationReportGeneratedAt": "2026-10-17T04:20:11.255Z",
+  "generatedAt": "2026-10-17T04:51:02.258Z",
+  "validationReportGeneratedAt": "2026-10-17T04:39:11.164Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Wall-clock elapsed time, first commit to merge — not working hours, and not an estimate of effort. Per component: from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time. Read from local git history (a first-parent walk over both merge commits and squash commits, with squash-merged branches recovered from their permanent refs/pull/N/head ref), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time. Both figures cover the same sample: components with no recoverable start time are excluded outright, never counted as a zero — see cycleTimeSampleSize for how many of the components are actually in it. Read the two figures together, and read them as a summary of a bimodal sample rather than as a typical PR. The components split cleanly into two clusters — four shipped in well under an hour (PR #2 landed three at once in 36 minutes; Tab took 41), and four sat open overnight (16–19 hours, PR #1 and Badge). With the sample split evenly between them, the median falls in the empty gap between the clusters and lands close to the mean, so it is NOT doing its usual job of resisting the outliers here — no component in the set actually took anywhere near either figure. The per-component cycleTimeSeconds values below are the honest read.",
@@ -8,13 +8,13 @@
     "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
   },
   "totals": {
-    "totalComponents": 13,
+    "totalComponents": 14,
     "averageCycleTimeSeconds": 15923,
     "averageCycleTimeLabel": "4h 25m",
     "medianCycleTimeSeconds": 2149,
     "medianCycleTimeLabel": "36m",
     "cycleTimeSampleSize": 13,
-    "cycleTimeMissingCount": 0,
+    "cycleTimeMissingCount": 1,
     "totalOpenIssues": 1,
     "totalCaughtAndFixed": 3,
     "totalDesignTokens": 157
@@ -457,6 +457,52 @@
       "firstCommitAt": "2026-09-07T19:23:33+10:00",
       "mergedAt": "2026-09-07T19:51:20+10:00",
       "cycleTimeSeconds": 1667
+    },
+    {
+      "name": "Illustration",
+      "overall": true,
+      "status": "pass",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "openCount": 0,
+      "openFailCount": 0,
+      "openWarnCount": 0,
+      "fixedCount": 0,
+      "history": [],
+      "lastValidated": "2026-10-17",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-illustration--docs",
+      "pr": null,
+      "firstCommitAt": null,
+      "mergedAt": null,
+      "cycleTimeSeconds": null
     },
     {
       "name": "Input",
