@@ -168,6 +168,7 @@
         "Input",
         "Modal",
         "Select",
+        "SignupForm",
         "Tab",
         "Textarea"
       ]
@@ -184,6 +185,7 @@
         "CardProducer",
         "CardQuote",
         "Input",
+        "SignupForm",
         "Textarea"
       ]
     },
@@ -233,7 +235,8 @@
       "usage": "Text on a state-* fill (Badge's success/warning/error variants). Mode-invariant, matching those fills, which are the same colour on every surface.",
       "documented": true,
       "consumedBy": [
-        "Badge"
+        "Badge",
+        "SignupForm"
       ]
     },
     {
@@ -397,6 +400,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "SignupForm",
         "Tab",
         "Textarea"
       ]
@@ -410,7 +414,8 @@
       "usage": "Error text, borders and badge fills. Mode-invariant — a status colour means the same thing on every surface, and pairs with text-on-state at 6.28:1.",
       "documented": true,
       "consumedBy": [
-        "Badge"
+        "Badge",
+        "SignupForm"
       ]
     },
     {
@@ -422,7 +427,8 @@
       "usage": "Success text, borders and badge fills. Mode-invariant; pairs with text-on-state at 6.92:1.",
       "documented": true,
       "consumedBy": [
-        "Badge"
+        "Badge",
+        "SignupForm"
       ]
     },
     {
@@ -1353,7 +1359,8 @@
       "documented": true,
       "consumedBy": [
         "Badge",
-        "Button"
+        "Button",
+        "SignupForm"
       ]
     },
     {
@@ -1394,6 +1401,7 @@
         "Checkbox",
         "Input",
         "Select",
+        "SignupForm",
         "Tab",
         "Textarea"
       ]
@@ -1427,7 +1435,9 @@
       "letterSpacing": "0%",
       "usage": "Figma text style \"Manrope/Label SemiBold\". AUTO line-height in Figma, not a fixed ratio — \"normal\" matches Figma's own setting rather than hand-computing a ratio off one rendered sample. Weight (600) isn't encoded here, same convention as every other --text-* token — apply font-semibold alongside. Landing page's Hero eyebrow and the floating date card's time line.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "SignupForm"
+      ]
     },
     {
       "type": "Typography",
@@ -1441,7 +1451,9 @@
       "letterSpacing": "0%",
       "usage": "Figma text style \"Manrope/Paragraph Large\" — landing page's Hero description paragraph. Also carries \"Manrope/Paragraph Large Bold\" (the landing page's sign-up prompt): same size and leading at weight 700, so it's this token plus font-bold rather than a token of its own — the same convention every --text-* token here follows for weight.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "SignupForm"
+      ]
     },
     {
       "type": "Typography",
@@ -1572,6 +1584,7 @@
         "CardProducer",
         "CardQuote",
         "Checkbox",
+        "SignupForm",
         "Tab"
       ]
     },
@@ -1589,6 +1602,7 @@
         "Input",
         "Modal",
         "Select",
+        "SignupForm",
         "Tab",
         "Textarea"
       ]
@@ -1764,7 +1778,9 @@
       "value": "9999px",
       "usage": "Overrides Tailwind's default radius scale — see radius-none's comment above for why.",
       "documented": true,
-      "consumedBy": []
+      "consumedBy": [
+        "SignupForm"
+      ]
     }
   ],
   "motion": [
