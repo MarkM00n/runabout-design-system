@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-18T03:02:43.731Z",
+  "generatedAt": "2026-10-18T03:04:15.774Z",
   "overallStatus": true,
   "status": "pass-with-warnings",
   "categoryPass": {
@@ -674,7 +674,7 @@
             {
               "level": "warn",
               "file": "src/components/SignupForm/SignupForm.tsx",
-              "line": 224,
+              "line": 242,
               "code": "disabled-pointer-events-missing",
               "message": "This has a disabled state, but hover effects might still show while it's disabled — which can make it look clickable when it isn't.",
               "fix": "Turn off hover effects specifically for the disabled state, so it doesn't look interactive when it isn't.",

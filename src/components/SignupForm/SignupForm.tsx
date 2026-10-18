@@ -30,6 +30,8 @@ import { isPlausibleEmail } from './email';
 //     confirm by email should pass successHeading/successBody telling them
 //     to. Focus moves to its heading. Error keeps the field's
 //     value and puts focus back in it.
+//   - A hidden honeypot field catches form-filling bots without a CAPTCHA:
+//     if it's filled, the form shows Success and sends nothing.
 //   - The whole block is aria-live="polite", so the error message, the
 //     Submitting label and the success copy are announced as they appear.
 //   - Focus moves only after a real submit, never on first render, so an
@@ -127,6 +129,7 @@ export const SignupForm = ({
   const [focusRequest, setFocusRequest] = useState<{ target: 'field' | 'heading' } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const trapRef = useRef<HTMLInputElement>(null);
 
   // After the render that shows the new state, so the field's
   // aria-describedby already points at the message when focus lands. A new
@@ -152,7 +155,10 @@ export const SignupForm = ({
     }
     setState('submitting');
     try {
-      await onSubmit(email);
+      // Honeypot: people never see or reach this field, form-filling bots
+      // tend to fill it. A filled trap gets the normal Success state but
+      // nothing is sent, so a bot learns nothing.
+      if (!trapRef.current?.value) await onSubmit(email);
       setState('success');
       setFocusRequest({ target: 'heading' });
     } catch {
@@ -173,7 +179,7 @@ export const SignupForm = ({
         // column that fills the rest, top-aligned.
         <div
           data-mode="light"
-          className={clsx('flex w-full items-start gap-02 rounded-2xl bg-surface-section px-04 py-03 text-left', appear)}
+          className={clsx('flex w-full max-w-[591px] items-start gap-02 rounded-2xl bg-surface-section px-04 py-03 text-left', appear)}
         >
           <StatusDot tone="success" glyph="✓" size={28} />
           <div className="flex min-w-0 flex-1 flex-col gap-01">
@@ -217,6 +223,18 @@ export const SignupForm = ({
                 aria-describedby={isError ? errorId : undefined}
               />
             </div>
+            {/* Honeypot (see handleSubmit). Off-screen rather than display:none
+                so bots still see it; hidden from assistive tech and the tab
+                order, and autofill is off so password managers skip it. */}
+            <input
+              ref={trapRef}
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0"
+            />
             <Button
               type="submit"
               variant="primary"

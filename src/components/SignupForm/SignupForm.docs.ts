@@ -16,6 +16,7 @@ export const docs: ComponentDocMeta = {
     'Keep the success copy specific about what happens next — what will arrive, and where to look for it.',
     'Success shows as a light notice card (its own `data-mode="light"`, `surface-section`, `radius-2xl`), so it reads the same on any surface the form sits on. Don\'t add a mode or fill around it.',
     'Throw from `onSubmit` on any non-2xx response, so a failed request never reads as success.',
+    'Spam protection is a hidden honeypot field rather than a CAPTCHA: if a bot fills it, the form shows Success and never calls `onSubmit`. Add server-side checks (rate limits, Turnstile) only if spam gets through.',
   ],
   donts: [
     'Do not set `data-mode` on the form or on a wrapper with no background of its own. Put it on the section it sits in.',
