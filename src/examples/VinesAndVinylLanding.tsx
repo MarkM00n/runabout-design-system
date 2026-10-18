@@ -403,9 +403,10 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           className="w-full text-center font-manrope text-paragraph-large text-text-primary"
           style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
         >
-          Fourteen local winemakers, cheesemakers and food makers pouring and plating all afternoon, while some
-          of Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi.
-          Join us at the Dorian LeGallienne Room in Eltham. Just 150 tickets, every tasting included.
+          Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while some of
+          Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi.
+          Join us at the Dorian LeGallienne Room in Eltham. Arrive any time from noon, stay till the last record —
+          every tasting included.
         </p>
 
         <SignupForm onSubmit={submitSignup} leadIn={signupLeadIn} initialState={signupState} initialError={signupError} />
@@ -447,12 +448,11 @@ const Info = () => (
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-10']) }}
   >
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
-      Fourteen local winemakers, cheesemakers and good-food makers — every table staffed by the person who
-      made it.
+      Winemakers, cheesemakers and good-food makers — every table staffed by the person who made it.
     </InfoItem>
-    <InfoItem art={<Illustration name="seal" />} title="150 tickets">
-      Capped small on purpose — every tasting included, a keepsake glass in your hand, and kids come free with an
-      adult.
+    <InfoItem art={<Illustration name="seal" />} title="Room to move">
+      Numbers are capped so every table’s within reach: a glass in your hand, every tasting included, and kids
+      free with an adult.
     </InfoItem>
     <InfoItem art={<Illustration name="vinyl" colour="primary" />} title="All vinyl">
       Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come
