@@ -5,7 +5,7 @@ Branded template for every Vines & Vinyl email sent from Kit. Design source:
 
 | File | What it is |
 |---|---|
-| `template.html` | The Kit HTML template: header art (one image), the content slot, gold footer with the required unsubscribe link and address. |
+| `template.html` | The Kit HTML template: header art (one image), the content slot, dark footer with the required unsubscribe link and address. |
 | `snippets/hero-copy.html` | Headline, paragraph and cream button on the ink hero surface. Goes first. |
 | `snippets/info-section.html` | Cream section: illustration, heading, paragraph, optional dark button. Repeat as needed. |
 | `snippets/full-width-image.html` | Edge-to-edge 600px photo. |
@@ -49,3 +49,11 @@ The header, wordmark and icons are exported from the Figma frame above at
 2×. Re-export the changed piece, replace the file in `landing/public/email/` with the same
 name, merge to `main`. jsDelivr caches `@main` for up to a day; purge at
 `https://purge.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/<file>`.
+
+## Why the footer is dark (On Dark), not gold
+
+The template's page background is white so the Gmail app's dark theme frames the
+email in dark, not white. The cost: Gmail then recolours the email, turning dark
+text light. On the old gold footer that left light text on gold, unreadable.
+On Dark already pairs light text with a dark surface, so Gmail's recolouring
+leaves it alone. Don't move dark text onto a light or mid-tone fixed band here.

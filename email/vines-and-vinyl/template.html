@@ -4,7 +4,7 @@
   Figma source: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=1535-167
 
   Paste this whole file into Kit → Email Templates → New → Create HTML Template.
-  Fixed parts: the header art (one image) and the gold footer.
+  Fixed parts: the header art (one image) and the dark footer.
   The content slot is whatever you write in Kit's editor; build it from
   the snippets in ./snippets (hero copy, info section, full-width image).
 
@@ -16,7 +16,7 @@
   (email clients can't read CSS variables):
     Hero / content  On Ink     surface #2e3516  text #f6dfc0  button #f7e7d2 / #2f2c28
     Info section    On Light   surface #f5dec1  heading #1d1b19  body #4a5435  button #2f2c28 / #f7e7d2
-    Footer          On Accent  surface #e39313  text #1d1b19  hairline #4a5435
+    Footer          On Dark    surface #2f2c28  text #f6dfc0  hairline #c9cbbf
   Fonts: Recoleta can't be web-loaded in email, so headings fall back to
   Georgia; Manrope loads in Apple Mail and falls back to Helvetica/Arial.
   Images are served from the repo via jsDelivr (landing/public/email/).
@@ -46,14 +46,6 @@
     .vv-content a { color: #f6dfc0; text-decoration: underline; }
     .vv-content img { max-width: 100%; height: auto; }
 
-    /* Gmail only (u + .body matches nothing elsewhere). Gmail's app dark theme
-       turns the footer's dark ink light, unreadable on gold. Footer text is set
-       to the gold itself and blended with difference against the gold band:
-       gold minus gold = near-black, whatever theme Gmail applies.
-       Desktop Gmail gets the same result. Other clients keep the inline ink. */
-    u + .body .vv-ink { color: #e39313 !important; mix-blend-mode: difference; }
-    u + .body .vv-ink a { color: #e39313 !important; }
-
     @media (max-width: 620px) {
       .vv-pad { padding-left: 24px !important; padding-right: 24px !important; }
       .vv-content h1, .vv-content h2, .vv-content h3, .vv-content p, .vv-content ul, .vv-content ol { margin-left: 24px !important; margin-right: 24px !important; }
@@ -64,7 +56,7 @@
     }
   </style>
 </head>
-<body class="body" style="margin:0; padding:0; background-color:#FFFFFF;">
+<body style="margin:0; padding:0; background-color:#FFFFFF;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2e3516" style="background:#2e3516;">
     <tr>
       <td align="center" style="padding:0;">
@@ -92,8 +84,8 @@
     </tr>
   </table>
 
-  <!-- FOOTER (On Accent): its own full-width band, so the gold runs edge to edge on wide screens; content stays 600px and centred. -->
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#e39313" style="background:#e39313;">
+  <!-- FOOTER (On Dark): its own full-width band, so the dark band runs edge to edge on wide screens; content stays 600px and centred. -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2f2c28" style="background:#2f2c28;">
     <tr>
       <td align="center" style="padding:0;">
         <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
@@ -101,22 +93,22 @@
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td class="vv-pad" align="center" style="padding:40px 40px 0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:center;">
-                    <p class="vv-ink" style="margin:0 0 16px; font-size:11px; line-height:16px; letter-spacing:1.3px; text-transform:uppercase; color:#1d1b19;">Presented by</p>
-                    <a href="https://instagram.com/runabout.melbourne" style="text-decoration:none;"><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/runabout-wordmark-ink.png" width="151" height="29" alt="runabout" style="width:151px; height:29px; margin:0 auto; color:#1d1b19; font-family:Georgia, serif; font-size:24px;"></a>
-                    <p class="vv-foot-p vv-ink" style="margin:24px 0 8px; font-size:14px; line-height:22px; color:#1d1b19;">
-                      <a href="mailto:hello@runaboutwine.com.au" style="color:#1d1b19; text-decoration:none;">hello@runaboutwine.com.au</a> &nbsp;·&nbsp; <a href="https://instagram.com/runabout.melbourne" style="color:#1d1b19; text-decoration:none;">@runabout.melbourne</a>
+                    <p style="margin:0 0 16px; font-size:11px; line-height:16px; letter-spacing:1.3px; text-transform:uppercase; color:#f6dfc0;">Presented by</p>
+                    <a href="https://instagram.com/runabout.melbourne" style="text-decoration:none;"><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/runabout-wordmark-cream.png" width="151" height="29" alt="runabout" style="width:151px; height:29px; margin:0 auto; color:#f6dfc0; font-family:Georgia, serif; font-size:24px;"></a>
+                    <p class="vv-foot-p" style="margin:24px 0 8px; font-size:14px; line-height:22px; color:#f6dfc0;">
+                      <a href="mailto:hello@runaboutwine.com.au" style="color:#f6dfc0; text-decoration:none;">hello@runaboutwine.com.au</a> &nbsp;·&nbsp; <a href="https://instagram.com/runabout.melbourne" style="color:#f6dfc0; text-decoration:none;">@runabout.melbourne</a>
                     </p>
-                    <p class="vv-ink" style="margin:0; font-size:12px; line-height:18px; color:#1d1b19;">Wine · Cheese · Music — Melbourne’s north-east</p>
+                    <p style="margin:0; font-size:12px; line-height:18px; color:#f6dfc0;">Wine · Cheese · Music — Melbourne’s north-east</p>
                   </td>
                 </tr>
                 <tr>
                   <td class="vv-pad" style="padding:24px 40px 40px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
-                        <td align="center" style="border-top:1px solid #4a5435; padding-top:24px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:12px; line-height:18px; color:#1d1b19; text-align:center;">
-                          <div class="vv-ink" style="color:#1d1b19;">You’re getting this because you joined the Vines &amp; Vinyl list.<br>
-                          <a href="{{ unsubscribe_url }}" style="color:#1d1b19; text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp; <a href="{{ subscriber_preferences_url }}" style="color:#1d1b19; text-decoration:underline;">Update your preferences</a><br>
-                          {{ address }}</div>
+                        <td align="center" style="border-top:1px solid #c9cbbf; padding-top:24px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:12px; line-height:18px; color:#f6dfc0; text-align:center;">
+                          You’re getting this because you joined the Vines &amp; Vinyl list.<br>
+                          <a href="{{ unsubscribe_url }}" style="color:#f6dfc0; text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp; <a href="{{ subscriber_preferences_url }}" style="color:#f6dfc0; text-decoration:underline;">Update your preferences</a><br>
+                          {{ address }}
                         </td>
                       </tr>
                     </table>
