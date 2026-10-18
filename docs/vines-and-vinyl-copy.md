@@ -27,6 +27,16 @@ The maker mix is still settling (seven winemakers, Eltham locals, cheese
 and possibly olive oil), so public copy names the categories, not the
 count per category.
 
+## What makers get
+
+| | Wording |
+|---|---|
+| We supply | A table with a black cloth, a power point, access to the kitchen, an A5 table card with the maker’s name, and the keepsake glass every guest tastes from. |
+| Makers bring | Their own signage and whatever else is in their kit for pouring, serving and selling. |
+| Maker form | https://tally.so/r/X5lyrL (Tally, free plan: 10 MB per upload) |
+
+Table size is still to confirm; state it once known.
+
 ## Lines
 
 | Idea | Long form (landing info, email info sections) | Short form (inline, confirmation email) |
