@@ -18,7 +18,7 @@
         {
           "level": "warn",
           "file": "src/components/SignupForm/SignupForm.tsx",
-          "line": 217,
+          "line": 218,
           "code": "disabled-pointer-events-missing",
           "message": "This has a disabled state, but hover effects might still show while it's disabled — which can make it look clickable when it isn't.",
           "fix": "Turn off hover effects specifically for the disabled state, so it doesn't look interactive when it isn't.",

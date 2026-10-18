@@ -312,8 +312,8 @@ const DateSeal = () => (
 // what's its own: the submit function (Kit via /api/subscribe on Netlify, the
 // mock elsewhere — see submitSignup.ts) and a lead-in that colours its "early
 // bird" phrase, which the library component's plain lead-in doesn't. The
-// component's default Success copy is the double opt-in text ("Almost
-// there."), matching Figma.
+// component's default Success copy ("You’re on the list.") is right for this
+// page: the Kit form auto-confirms, so nobody has to click a link.
 
 export interface SignupStateProps {
   /** Starting state for the sign-up form. Stories use it to pin a state for

@@ -24,9 +24,10 @@ import { isPlausibleEmail } from './email';
 //     and reads "Joining…". The field goes read-only rather than disabled, so
 //     it keeps its full-strength appearance, as Figma's Submitting draws it.
 //   - Success replaces the lead-in and form in place. Its default copy is
-//     for double opt-in ("Almost there." / check your inbox and confirm), as
-//     Figma's State=Success now reads; pass successHeading/successBody for a
-//     list without it. Focus moves to its heading. Error keeps the field's
+//     for a single opt-in list ("You’re on the list." / a welcome email is on
+//     its way), as Figma's State=Success reads; a list that makes people
+//     confirm by email should pass successHeading/successBody telling them
+//     to. Focus moves to its heading. Error keeps the field's
 //     value and puts focus back in it.
 //   - The whole block is aria-live="polite", so the error message, the
 //     Submitting label and the success copy are announced as they appear.
@@ -111,8 +112,8 @@ export const SignupForm = ({
   placeholder = 'you@email.com',
   submitLabel = 'Join the list',
   submittingLabel = 'Joining…',
-  successHeading = 'Almost there.',
-  successBody = 'Check your inbox and tap the link to confirm — then you’re on the list. (Peek in spam if it’s not there in a minute.)',
+  successHeading = 'You’re on the list.',
+  successBody = 'A welcome email is on its way. We’ll be in touch the moment early birds go live.',
   errorMessages,
   initialState = 'default',
   initialError = 'invalid',

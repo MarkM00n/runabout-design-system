@@ -3,9 +3,9 @@
 // The page (src/examples/submitSignup.ts) POSTs JSON `{ "email": "…" }` here
 // when VITE_SIGNUP_ENDPOINT=/api/subscribe (set for the Netlify build only;
 // Storybook, Chromatic and local checkouts keep the built-in mock). This
-// forwards it server-side to Kit form 10061069, which has double opt-in on:
-// Kit emails a confirmation link, and the visitor is on the list once they
-// click it. The page's Success copy says exactly that.
+// forwards it server-side to Kit form 10061069, which auto-confirms: the
+// visitor is on the list straight away and Kit sends its (branded) welcome
+// email. The page's Success copy says exactly that.
 //
 // Kit endpoint: its public form-subscription URL — the one Kit's own HTML
 // form embeds post to — https://app.kit.com/forms/<form id>/subscriptions,

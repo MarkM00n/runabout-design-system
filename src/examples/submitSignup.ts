@@ -6,8 +6,8 @@
 // auth, double opt-in — belongs behind that URL, never hardcoded here.
 //
 // Live, that URL is /api/subscribe: the Netlify Function in
-// netlify/functions/subscribe.ts, which forwards to Kit form 10061069 (double
-// opt-in). VITE_SIGNUP_ENDPOINT is set to it in the Netlify UI only.
+// netlify/functions/subscribe.ts, which forwards to Kit form 10061069
+// (auto-confirm: subscribers are on the list straight away). VITE_SIGNUP_ENDPOINT is set to it in the Netlify UI only.
 //
 // With the variable unset — Storybook, Chromatic, a local checkout — it
 // resolves after 800ms instead, so every state can be exercised without a
