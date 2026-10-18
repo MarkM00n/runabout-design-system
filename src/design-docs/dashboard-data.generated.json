@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-18T01:18:25.941Z",
-  "validationReportGeneratedAt": "2026-10-18T01:06:09.263Z",
+  "generatedAt": "2026-10-18T01:21:43.602Z",
+  "validationReportGeneratedAt": "2026-10-18T01:21:14.696Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
     "cycleTime": "Wall-clock elapsed time, first commit to merge — not working hours, and not an estimate of effort. Per component: from the first commit on the PR branch that introduced the component's .tsx file, to that PR's merge time. Read from local git history (a first-parent walk over both merge commits and squash commits, with squash-merged branches recovered from their permanent refs/pull/N/head ref), not GitHub API timestamps. Follow-on PRs that later touched an already-shipped component (fixes, doc generation) are not counted a second time. Both figures cover the same sample: components with no recoverable start time are excluded outright, never counted as a zero — see cycleTimeSampleSize for how many of the components are actually in it. Read the two figures together, and read them as a summary of a bimodal sample rather than as a typical PR. The components split cleanly into two clusters — four shipped in well under an hour (PR #2 landed three at once in 36 minutes; Tab took 41), and four sat open overnight (16–19 hours, PR #1 and Badge). With the sample split evenly between them, the median falls in the empty gap between the clusters and lands close to the mean, so it is NOT doing its usual job of resisting the outliers here — no component in the set actually took anywhere near either figure. The per-component cycleTimeSeconds values below are the honest read.",
@@ -8,15 +8,15 @@
     "caughtAndFixed": "A component's \"Caught & fixed\" count only grows when a design-sync run finds an issue gone that was open in the previous run — never asserted, always a real before/after diff. It starts at 0 for all 6 original components, since no prior run recorded issue-level detail to diff against."
   },
   "totals": {
-    "totalComponents": 14,
+    "totalComponents": 15,
     "averageCycleTimeSeconds": 14807,
     "averageCycleTimeLabel": "4h 7m",
     "medianCycleTimeSeconds": 1908,
     "medianCycleTimeLabel": "32m",
     "cycleTimeSampleSize": 14,
-    "cycleTimeMissingCount": 0,
-    "totalOpenIssues": 1,
-    "totalCaughtAndFixed": 3,
+    "cycleTimeMissingCount": 1,
+    "totalOpenIssues": 2,
+    "totalCaughtAndFixed": 4,
     "totalDesignTokens": 159
   },
   "validationSummary": {
@@ -26,7 +26,7 @@
     },
     "accessibility": {
       "fail": 0,
-      "warn": 0
+      "warn": 1
     },
     "storybookCoverage": {
       "fail": 0,
@@ -653,6 +653,73 @@
       "firstCommitAt": "2026-07-16T12:24:51+10:00",
       "mergedAt": "2026-07-16T13:00:40+10:00",
       "cycleTimeSeconds": 2149
+    },
+    {
+      "name": "SignupForm",
+      "overall": true,
+      "status": "pass-with-warnings",
+      "checks": {
+        "tokenCompliance": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "accessibility": {
+          "pass": true,
+          "fail": 0,
+          "warn": 1,
+          "status": "pass-with-warnings",
+          "open": [
+            {
+              "level": "warn",
+              "file": "src/components/SignupForm/SignupForm.tsx",
+              "line": 217,
+              "code": "disabled-pointer-events-missing",
+              "message": "This has a disabled state, but hover effects might still show while it's disabled — which can make it look clickable when it isn't.",
+              "fix": "Turn off hover effects specifically for the disabled state, so it doesn't look interactive when it isn't.",
+              "checkType": "accessibility",
+              "openedAt": "2026-10-17"
+            }
+          ]
+        },
+        "storybookCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        },
+        "documentationCoverage": {
+          "pass": true,
+          "fail": 0,
+          "warn": 0,
+          "status": "pass",
+          "open": []
+        }
+      },
+      "openCount": 1,
+      "openFailCount": 0,
+      "openWarnCount": 1,
+      "fixedCount": 1,
+      "history": [
+        {
+          "checkType": "documentationCoverage",
+          "file": "src/components/SignupForm/SignupForm.docs.ts",
+          "line": null,
+          "message": "The documentation for this component exists but is broken and can't be read.",
+          "fix": "Check the documentation file for a typo, like a missing bracket or quote, and fix it so it can be read again.",
+          "openedAt": "2026-10-17",
+          "resolvedAt": "2026-10-17"
+        }
+      ],
+      "lastValidated": "2026-10-18",
+      "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-signupform--docs",
+      "pr": null,
+      "firstCommitAt": null,
+      "mergedAt": null,
+      "cycleTimeSeconds": null
     },
     {
       "name": "Tab",

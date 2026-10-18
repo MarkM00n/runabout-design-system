@@ -18,12 +18,12 @@
 // JSON `status` field ("success" / "failed"), which is what's checked here.
 //
 // Responses the page sees: 200 on success; 400 for a missing or implausible
-// email (validated here with the page's own rule, and again if Kit rejects
+// email (validated here with SignupForm's own rule, and again if Kit rejects
 // the address); 405 for anything but POST; 502 if Kit is unreachable or
 // fails for any other reason. The page shows its retry message for any
 // non-2xx, so it never needs to tell these apart.
 
-import { isPlausibleEmail } from '../../src/examples/signupEmail.ts';
+import { isPlausibleEmail } from '../../src/components/SignupForm/email.ts';
 
 const KIT_FORM_ID = '10061069';
 const KIT_ENDPOINT = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`;
