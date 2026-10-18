@@ -416,6 +416,27 @@ the pages render that, they don't hand-list token values.
   place the "print only, never registered in `@theme`" rule is recorded
   against the tokens themselves.
 
+- **No single word on a paragraph's last line — ever (2026-10-18).** A
+  paragraph, list item, caption or heading never ends with one word alone
+  on its last line, at any width. This is a standing typographic rule, not
+  a per-component nicety.
+  - **Web:** handled once, in `src/index.css`'s base layer —
+    `text-wrap: pretty` on `p`, `li`, `dd`, `figcaption`, `blockquote`;
+    `text-wrap: balance` on `h1`–`h6`. Don't override it with `text-wrap`
+    utilities unless the element genuinely isn't prose (a code block, a
+    one-line label that must not reflow). Supported in Chromium and current
+    Safari; older browsers fall back to normal wrapping, which is accepted.
+  - **Email:** clients ignore `text-wrap` (Gmail strips it), so join the
+    last two words of every paragraph with `&nbsp;`. Kit's rich-text editor
+    silently converts `&nbsp;` back to a normal space, so copy that must
+    hold it goes in an **HTML block** (see `email/vines-and-vinyl/README.md`).
+  - **Figma:** check the mobile frame, the narrowest — that's where a lone
+    last word shows up first. Fix it with copy or width there, not with a
+    manual line break, which breaks at every other width.
+  - **Real incident:** the sign-up success message ("…early birds go
+    live.") and the confirmation email both shipped ending on one word on
+    mobile; caught only by eye on a phone.
+
 ## 7. Surface pairings
 
 **Regenerated 2026-10-16** from `src/tokens/figma-export-2026-10-16.json`.
