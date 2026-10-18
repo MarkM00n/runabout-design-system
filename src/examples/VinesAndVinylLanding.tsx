@@ -241,11 +241,11 @@ const heroArt = (
     {/* Pink record (Vinyl Colour=Feature): bottom centre on mobile and
         tablet, travelling to bottom right on desktop. Anchored to the centre
         line and the hero's bottom edge; it runs off the bottom in every frame.
-        Moved 40px down on mobile and tablet in Figma (2026-10-18) to clear
+        Moved 32px down on mobile and tablet in Figma (2026-10-18) to clear
         the sign-up form and its taller success card. */}
     <Deco
       x={['left', `calc(50% + ${fluid([TABLET, 0.5], [DESKTOP, 611.5])})`]}
-      y={['bottom', fluid([MOBILE, -16.31], [TABLET, -31.91], [DESKTOP, 59.08])]}
+      y={['bottom', fluid([MOBILE, -8.31], [TABLET, -23.91], [DESKTOP, 59.08])]}
       width={fluid([TABLET, 213], [DESKTOP, 383])}
     >
       <Illustration name="vinyl" colour="feature" />
