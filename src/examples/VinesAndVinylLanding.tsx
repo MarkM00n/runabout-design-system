@@ -327,7 +327,7 @@ export interface SignupStateProps {
 
 const signupLeadIn = (
   <>
-    Join the list and be first to grab an <span className="text-text-accent">early bird</span> — strictly limited.
+    Join the list and be first to grab an <span className="text-text-accent">early bird ticket</span> — strictly limited.
   </>
 );
 
@@ -403,8 +403,9 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           className="w-full text-center font-manrope text-paragraph-large text-text-primary"
           style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
         >
-          One Saturday in the Dorian LeGallienne Room at Eltham Community and Reception Centre — independent
-          winemakers, local makers and all-vinyl DJs. 150 tickets, every tasting included.
+          Fourteen local winemakers, cheesemakers and food makers pouring and plating all afternoon, while some
+          of Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi.
+          Join us at the Dorian LeGallienne Room in Eltham. Just 150 tickets, every tasting included.
         </p>
 
         <SignupForm onSubmit={submitSignup} leadIn={signupLeadIn} initialState={signupState} initialError={signupError} />

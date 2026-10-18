@@ -45,9 +45,9 @@ Table size is still to confirm; state it once known.
 | Makers | Fourteen local winemakers, cheesemakers and good-food makers — every table staffed by the person who made it. | Fourteen local winemakers, cheesemakers and good-food makers, every tasting included. |
 | Music | Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come for a boogie. | Crates of jazz, funk, soul and disco all afternoon from some of Melbourne’s best DJs. Come thirsty, come for a boogie. |
 | Tickets | Capped small on purpose — every tasting included, a keepsake glass in your hand, and kids come free with an adult. | Only 150 tickets. |
-| Early birds | Join the list and be first to grab an early bird — strictly limited. | You’ll hear the moment early birds go live, before anyone else does. |
-| Hero intro | One Saturday in the Dorian LeGallienne Room at Eltham Community and Reception Centre — independent winemakers, local makers and all-vinyl DJs. 150 tickets, every tasting included. | — |
-| Sign-up success | You’re on the list. / A welcome email is on its way. We’ll be in touch the moment early birds go live. | — |
+| Early bird tickets | Join the list and be first to grab an early bird ticket — strictly limited. | You’ll hear the moment early bird tickets go live, before anyone else does. |
+| Hero intro | Fourteen local winemakers, cheesemakers and food makers pouring and plating all afternoon, while some of Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi. Join us at the Dorian LeGallienne Room in Eltham. Just 150 tickets, every tasting included. | — |
+| Sign-up success | You’re on the list. / A welcome email is on its way. We’ll be in touch the moment early bird tickets go live. | — |
 | Instagram | Until then, follow along on Instagram for maker reveals, guest selectors and competition info. | — |
 
 ## Vocabulary
@@ -56,7 +56,8 @@ Table size is still to confirm; state it once known.
   for rhythm; don't introduce a third word (no "deejays", "spinners").
 - **Winemakers**, not "wineries": we're selling the people pouring.
 - **Good-food makers** for the non-wine, non-cheese makers.
-- **Early bird** (noun), **early-bird** (adjective: "early-bird pricing").
+- **Early bird ticket(s)**, never "early bird" on its own: not everyone knows the jargon. **Early-bird** as an adjective is fine ("early-bird pricing").
+- **Sound:** "on a proper vintage hi-fi". Don't name speaker brands in public copy until the rig is confirmed.
 - **All vinyl** as a heading, **all-vinyl** before a noun ("all-vinyl DJs").
 - Apostrophes and quotes are curly (’ “ ”), dashes are em dashes with
   spaces ( — ) in prose, en dash in ranges (12–4:30pm).

@@ -77,12 +77,12 @@ export const ErrorSubmitFailed: Story = {
 };
 
 /** Lead-in as rich content — how the Vines & Vinyl page colours its
- *  "early bird" phrase. */
+ *  "early bird ticket" phrase. */
 export const CustomLeadIn: Story = {
   args: {
     leadIn: (
       <>
-        Join the list and be first to grab an <span className="text-text-accent">early bird</span> — strictly limited.
+        Join the list and be first to grab an <span className="text-text-accent">early bird ticket</span> — strictly limited.
       </>
     ),
   },
