@@ -23,7 +23,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     name: { control: 'select', options: ['sparkle', 'vinyl', 'grapes', 'seal'] },
-    colour: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'feature', 'outline'] },
+    colour: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'feature', 'outline', 'highlight'] },
   },
 } satisfies Meta<typeof Illustration>;
 
@@ -42,6 +42,9 @@ export const SparkleTertiary: Story = { args: { name: 'sparkle', colour: 'tertia
 export const VinylFeature: Story = { args: { name: 'vinyl', colour: 'feature', className: 'w-[240px]' } };
 /** Illustration/Vinyl, Colour=Primary — for light grounds. */
 export const VinylPrimary: Story = { args: { name: 'vinyl', colour: 'primary', className: 'w-[240px]' } };
+/** Illustration/Vinyl, Colour=Highlight — cream (illustration-highlight), for
+ *  accent (gold) grounds where terracotta reads heavy. */
+export const VinylHighlight: Story = { args: { name: 'vinyl', colour: 'highlight', className: 'w-[240px]' } };
 
 /** Illustration/Grapes, Colour=Primary — the set's default; the accent cluster. */
 export const GrapesPrimary: Story = { args: { name: 'grapes', colour: 'primary', className: 'w-[240px]' } };
@@ -73,6 +76,7 @@ export const AcrossSurfaces: Story = {
           <Illustration name="sparkle" colour="tertiary" className="w-[64px]" />
           <Illustration name="vinyl" colour="feature" className="w-[64px]" />
           <Illustration name="vinyl" colour="primary" className="w-[64px]" />
+          <Illustration name="vinyl" colour="highlight" className="w-[64px]" />
           <Illustration name="grapes" colour="primary" className="w-[64px]" />
           <Illustration name="grapes" colour="feature" className="w-[64px]" />
           <Illustration name="grapes" colour="outline" className="w-[64px]" />

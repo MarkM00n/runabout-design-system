@@ -45,7 +45,7 @@ Send yourself a test every time: Gmail (web + app), Apple Mail and Outlook all r
 
 ## Updating the art
 
-The header, wordmark, footer vinyl and icons are exported from the Figma frame above at
+The header, wordmark and icons are exported from the Figma frame above at
 2×. Re-export the changed piece, replace the file in `landing/public/email/` with the same
 name, merge to `main`. jsDelivr caches `@main` for up to a day; purge at
 `https://purge.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/<file>`.

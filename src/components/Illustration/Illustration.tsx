@@ -19,7 +19,7 @@ import clsx from 'clsx';
  * The `colour` prop mirrors each set's Colour variant property and its
  * default, read live from Figma on 2026-10-17:
  *   Sparkle  Secondary | Primary | Tertiary   default Primary
- *   Vinyl    Feature | Primary                default Feature
+ *   Vinyl    Feature | Primary | Highlight    default Feature
  *   Grapes   Primary | Feature | Outline      default Primary
  *   Seal     no variants                      illustration/highlight
  * Every fill (and Grapes' stroke) binds the matching `illustration/*`
@@ -65,7 +65,7 @@ import clsx from 'clsx';
 
 export type IllustrationName = 'sparkle' | 'vinyl' | 'grapes' | 'seal';
 export type SparkleColour = 'primary' | 'secondary' | 'tertiary';
-export type VinylColour = 'feature' | 'primary';
+export type VinylColour = 'feature' | 'primary' | 'highlight';
 export type GrapesColour = 'primary' | 'feature' | 'outline';
 export type IllustrationColour = SparkleColour | VinylColour | GrapesColour;
 
@@ -80,6 +80,9 @@ export type IllustrationProps = SvgProps &
   );
 
 // Literal class names, so Tailwind compiles every one.
+// 'highlight' is both Vinyl's Colour=Highlight (added in Figma 2026-10-18,
+// 1542:1073) and the Seal's one fixed colour — the same illustration/highlight
+// variable either way.
 const COLOUR_CLASS: Record<IllustrationColour | 'highlight', string> = {
   primary: 'text-illustration-primary',
   secondary: 'text-illustration-secondary',

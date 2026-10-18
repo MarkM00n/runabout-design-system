@@ -15,7 +15,7 @@
   Colours are the Vines & Vinyl token values, resolved per section mode
   (email clients can't read CSS variables):
     Hero / content  On Ink     surface #2e3516  text #f6dfc0  button #f7e7d2 / #2f2c28
-    Info section    On Light   surface #f5dec1  heading #a34923  body #4a5435  button #2f2c28 / #f7e7d2
+    Info section    On Light   surface #f5dec1  heading #1d1b19  body #4a5435  button #2f2c28 / #f7e7d2
     Footer          On Accent  surface #e39313  text #1d1b19  hairline #4a5435
   Fonts: Recoleta can't be web-loaded in email, so headings fall back to
   Georgia; Manrope loads in Apple Mail and falls back to Helvetica/Arial.
@@ -54,7 +54,6 @@
       .vv-content h1, .vv-h1 { font-size: 28px !important; line-height: 34px !important; }
       .vv-content h2 { font-size: 24px !important; line-height: 30px !important; }
       .vv-content p, .vv-content li, .vv-p { font-size: 16px !important; line-height: 25px !important; }
-      .vv-foot-top { padding-top: 104px !important; }
       .vv-foot-p { font-size: 14px !important; line-height: 22px !important; }
     }
   </style>
@@ -80,12 +79,12 @@
             </td>
           </tr>
 
-          <!-- FOOTER (On Accent): centred; cream vinyl bleeds off the top-right as a background image -->
+          <!-- FOOTER (On Accent): centred stack, no illustration (removed from the Figma frame, 2026-10-18). -->
           <tr>
-            <td bgcolor="#e39313" background="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-footer-vinyl-cream.png" style="background:#e39313 url('https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-footer-vinyl-cream.png') no-repeat right top / 148px 114px;">
+            <td bgcolor="#e39313" style="background:#e39313;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td class="vv-pad vv-foot-top" align="center" style="padding:48px 40px 0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:center;">
+                  <td class="vv-pad" align="center" style="padding:40px 40px 0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:center;">
                     <p style="margin:0 0 16px; font-size:11px; line-height:16px; letter-spacing:1.3px; text-transform:uppercase; color:#1d1b19;">Presented by</p>
                     <a href="https://instagram.com/runabout.melbourne" style="text-decoration:none;"><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/runabout-wordmark-ink.png" width="151" height="29" alt="runabout" style="width:151px; height:29px; margin:0 auto; color:#1d1b19; font-family:Georgia, serif; font-size:24px;"></a>
                     <p class="vv-foot-p" style="margin:24px 0 8px; font-size:15px; line-height:24px; color:#1d1b19;">
