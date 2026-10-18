@@ -14,6 +14,7 @@ export const docs: ComponentDocMeta = {
   dos: [
     'Write a lead-in that says what the visitor gets for signing up. It is also the form\'s accessible name.',
     'Keep the success copy specific about what happens next — what will arrive, and where to look for it.',
+    'Success shows as a light notice card (its own `data-mode="light"`, `surface-section`, `radius-2xl`), so it reads the same on any surface the form sits on. Don\'t add a mode or fill around it.',
     'Throw from `onSubmit` on any non-2xx response, so a failed request never reads as success.',
   ],
   donts: [

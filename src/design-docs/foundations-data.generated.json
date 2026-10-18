@@ -100,7 +100,8 @@
       "documented": true,
       "consumedBy": [
         "CardEvent",
-        "CardQuote"
+        "CardQuote",
+        "SignupForm"
       ]
     },
     {
@@ -1649,6 +1650,7 @@
         "Input",
         "Modal",
         "Select",
+        "SignupForm",
         "Textarea"
       ]
     },
@@ -1661,7 +1663,8 @@
       "documented": true,
       "consumedBy": [
         "CardEvent",
-        "Modal"
+        "Modal",
+        "SignupForm"
       ]
     },
     {
@@ -1796,6 +1799,7 @@
         "ButtonClose",
         "Input",
         "Select",
+        "SignupForm",
         "Textarea"
       ]
     },
