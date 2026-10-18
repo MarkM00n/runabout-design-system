@@ -42,6 +42,14 @@ import { submitSignup } from './submitSignup';
 // Nothing inside a section sets a mode of its own. The art resolves from
 // those modes too (src/components/Illustration).
 //
+// TYPE: no Recoleta on this page (decided 2026-10-18). Recoleta is only a local
+// demo cut — not a licensed webfont — so live visitors would get Georgia. The
+// three Recoleta styles Figma uses here are swapped for the Manrope style of
+// the same size: Recoleta/H3 → Manrope/H3 (text-h3-sans) for the info
+// headings, Recoleta/H4 → Manrope/H4 (text-h4-sans) and Recoleta/H6 →
+// Manrope/H6 (text-h6) for the date seal's date. The logo is an SVG, so it
+// keeps its lettering. Figma still sets those layers in Recoleta.
+//
 // COPY is taken from the Figma text layers. None of it contained U+200C (the
 // demo-font workaround), checked live on 2026-10-17, so there was nothing to
 // strip.
@@ -288,7 +296,7 @@ const DateSeal = () => (
     <Illustration name="seal" className="pointer-events-none absolute left-1/2 top-1/2 w-[198.506px] -translate-x-1/2 -translate-y-1/2 -rotate-8 tablet:w-[305.242px]" />
     <p className="relative flex w-full flex-col items-center gap-00 text-center text-text-on-highlight">
       <span className="w-full font-manrope text-overline font-semibold">SATURDAY</span>
-      <time dateTime="2027-04-24" className="w-full font-recoleta text-h6-serif tablet:text-h4">
+      <time dateTime="2027-04-24" className="w-full font-manrope text-h6 tablet:text-h4-sans">
         24 April 2027
       </time>
       <span className="w-full whitespace-pre-wrap font-manrope text-detail tablet:text-label-strong tablet:font-semibold">
@@ -321,13 +329,10 @@ const DateSeal = () => (
 // Error has two messages. Figma draws the validation one. A failed submit
 // (network, 4xx, 5xx) is the same state with the brief's copy.
 //
-// FIGMA PARITY — Success copy diverges on purpose (2026-10-18). The list is
-// Kit form 10061069 with double opt-in, so a submit doesn't put anyone on the
-// list until they confirm by email. The copy says so: "Almost there." / "Check
-// your inbox and tap the link to confirm…". Figma's State=Success variant
-// (1490:544) still reads "You're on the list." with the pre-opt-in body; the
-// layout, styles and tokens are unchanged. Update that variant's text to close
-// the gap.
+// Success copy is for double opt-in (2026-10-18): the list is Kit form
+// 10061069, so a submit doesn't put anyone on the list until they confirm by
+// email — "Almost there." / "Check your inbox and tap the link to confirm…".
+// Figma's State=Success variant (1490:544) was updated to the same words.
 //
 // Status dots: state/success and state/error fills under text/on-state, as
 // Figma binds them. The message beside the dot carries the meaning, in
@@ -428,8 +433,8 @@ const SignUp = ({ initialState = 'default', initialError = 'invalid' }: { initia
               Almost there.
             </h2>
             <p className="font-manrope text-paragraph-small text-text-secondary">
-              Check your inbox and tap the link to confirm — then you&apos;re on the list. (Peek in spam if it&apos;s
-              not there in a minute.)
+              Check your inbox and tap the link to confirm — then you’re on the list. (Peek in spam if it’s not
+              there in a minute.)
             </p>
           </div>
         </div>
@@ -595,7 +600,7 @@ const InfoItem = ({ art, title, children }: InfoItemProps) => (
       {art}
     </div>
     <div className="flex w-full flex-col items-center gap-01">
-      <h2 className="m-0 font-recoleta text-h3 font-normal text-text-accent">{title}</h2>
+      <h2 className="m-0 font-manrope text-h3-sans font-normal text-text-accent">{title}</h2>
       <p className="w-full font-manrope text-paragraph-small text-text-secondary">{children}</p>
     </div>
   </div>

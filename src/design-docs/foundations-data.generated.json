@@ -1534,6 +1534,34 @@
       "usage": "Figma text style \"Manrope/Overline\" — the landing page footer's \"Presented by\" label. 8% tracking is a real style property, captured as a letter-spacing companion like --text-overline's; the style's upper case is Figma's text case, applied with the uppercase utility alongside. Named overline-wide because --text-overline is already Manrope/Overline Compact. Read live, 2026-10-17.",
       "documented": true,
       "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-h3-sans",
+      "tokenPath": "typography.h3-sans",
+      "value": "36px / 1.2 / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "36px",
+      "lineHeight": 1.2,
+      "fontWeight": 400,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Manrope/H3\" — the Vines & Vinyl landing page's info headings, set in Manrope rather than Recoleta (Recoleta is a local demo cut, not a licensed webfont — see --font-recoleta). Named h3-sans because --text-h3 is Recoleta/H3, whose leading differs (1.15). Read live, 2026-10-18.",
+      "documented": true,
+      "consumedBy": []
+    },
+    {
+      "type": "Typography",
+      "name": "--text-h4-sans",
+      "tokenPath": "typography.h4-sans",
+      "value": "28px / 1.25 / Manrope",
+      "fontFamily": "Manrope",
+      "fontSize": "28px",
+      "lineHeight": 1.25,
+      "fontWeight": 400,
+      "letterSpacing": "0%",
+      "usage": "Figma text style \"Manrope/H4\" — the landing page's Event / Date seal date at its Large size, for the same reason. Named h4-sans because --text-h4 is Recoleta/H4 (leading 1.2). Read live, 2026-10-18.",
+      "documented": true,
+      "consumedBy": []
     }
   ],
   "spacing": [
