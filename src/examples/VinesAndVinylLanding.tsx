@@ -243,7 +243,7 @@ const heroArt = (
         line and the hero's bottom edge; it runs off the bottom in every frame. */}
     <Deco
       x={['left', `calc(50% + ${fluid([TABLET, 0.5], [DESKTOP, 611.5])})`]}
-      y={['bottom', fluid([MOBILE, -6.31], [TABLET, 10.09], [DESKTOP, 59.08])]}
+      y={['bottom', fluid([MOBILE, 23.69], [TABLET, 8.09], [DESKTOP, 59.08])]}
       width={fluid([TABLET, 213], [DESKTOP, 383])}
     >
       <Illustration name="vinyl" colour="feature" />
@@ -350,9 +350,11 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           and the scrim is solid surface-scrim-end before the band ends. So the
           description sits on solid terracotta at every width by construction.
           In Figma the gradient spans the whole hero with its solid stop at
-          59.9% / 56.4% / 44.6%; since the Lock-up redesign that lands 37.2 /
-          9.6 / 46.0px above the description's top edge (desktop / tablet /
-          mobile), which is the offset the solid stop keeps here. */}
+          59.9% / 56.4% / 44.6%. With the longer venue line (2026-10-18) that
+          lands 37.2 / 32.6px above the description's top edge on desktop /
+          mobile — the offset the solid stop keeps here — and 7.4px *below* it
+          on tablet, which would put the description's first line on the fade.
+          Tablet holds 0 instead, so the description stays on solid ground. */}
       <div
         className="relative flex flex-col items-center gap-03 pb-03"
         style={{ paddingTop: fluid([MOBILE, 'spacing-10'], [TABLET, 'spacing-09']), paddingInline: heroPaddingInline }}
@@ -373,7 +375,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `linear-gradient(to bottom, var(--color-surface-scrim-start) 0, var(--color-surface-scrim-end) calc(100% - ${fluid([MOBILE, 45.97], [TABLET, 9.55], [DESKTOP, 37.22])}))`,
+              backgroundImage: `linear-gradient(to bottom, var(--color-surface-scrim-start) 0, var(--color-surface-scrim-end) calc(100% - ${fluid([MOBILE, 32.59], [TABLET, 0], [DESKTOP, 37.22])}))`,
             }}
           />
         </div>
@@ -399,8 +401,8 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           className="w-full text-center font-manrope text-paragraph-large text-text-primary"
           style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
         >
-          One Saturday, one beautiful 1960s hall in Eltham — independent winemakers, local makers and
-          all-vinyl DJs. 150 tickets, every tasting included.
+          One Saturday in the Dorian LeGallienne Room at Eltham Community and Reception Centre — independent
+          winemakers, local makers and all-vinyl DJs. 150 tickets, every tasting included.
         </p>
 
         <SignupForm onSubmit={submitSignup} leadIn={signupLeadIn} initialState={signupState} initialError={signupError} />
@@ -428,7 +430,7 @@ const InfoItem = ({ art, title, children }: InfoItemProps) => (
       {art}
     </div>
     <div className="flex w-full flex-col items-center gap-01">
-      <h2 className="m-0 font-manrope text-h3-sans font-normal text-text-accent">{title}</h2>
+      <h2 className="m-0 font-manrope text-h3-sans font-normal text-text-primary">{title}</h2>
       <p className="w-full font-manrope text-paragraph-small text-text-secondary">{children}</p>
     </div>
   </div>
@@ -446,20 +448,28 @@ const Info = () => (
       person who made it.
     </InfoItem>
     <InfoItem art={<Illustration name="seal" />} title="150 tickets">
-      Capped small on purpose — every tasting and masterclass included, a keepsake glass in your hand, and kids
-      come free with an adult.
+      Capped small on purpose — every tasting included, a keepsake glass in your hand, and kids come free with an
+      adult.
     </InfoItem>
     <InfoItem art={<Illustration name="vinyl" colour="primary" />} title="All vinyl">
-      Crates of jazz, funk, soul and disco spinning all afternoon — come for a boogie.
+      Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come
+      for a boogie.
     </InfoItem>
   </section>
 );
 
-// Row once the footer is wide enough to hold the credit (151px logo), the
-// spacing-04 gap and the one-line contact row side by side. That's 559px in
-// Figma (a 376px contact line), but the self-hosted Manrope renders the line
-// at 385px, so the threshold is the rendered content's width, 568px —
-// measured, not rounded to a guess. Below it the row would squeeze the line.
+// Footer (redesigned in Figma 2026-10-18): one centred stack at every width —
+// "Presented by", the Runabout logo, the contact line, the tagline — with no
+// illustration. Spacing from Figma: spacing-07 above, spacing-06 below,
+// spacing-03 between the credit and the links, spacing-02 inside the credit,
+// spacing-01 inside the links.
+//
+// The only width-dependent thing left is the contact line: one line
+// ("email · Instagram") when it fits, the two addresses stacked without the
+// separator when it doesn't (the mobile frame). That's a container query on
+// the footer's own width at the line's rendered width, 385px (Figma measures
+// 376px; self-hosted Manrope renders it a little wider) — content-driven, the
+// same mechanism the earlier row/stack footer used.
 // The footer's contact details are real links in the same text style as the
 // line around them (they inherit it), underlined on hover and on keyboard
 // focus, plus the system's focus ring: 2px state-focus, offset 2px (rules §2).
@@ -468,45 +478,36 @@ const footerLink =
   'underline-offset-2 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus';
 
 const Footer = () => (
-  // Footer — On Accent.
+  // Footer — On Accent. overflow-hidden/isolate kept so anything decorative
+  // added later is clipped by the footer, as Figma's frame clips.
   <footer
     data-mode="accent"
-    className="relative isolate w-full overflow-hidden bg-surface-section py-05"
+    className="relative isolate w-full overflow-hidden bg-surface-section pb-06 pt-07"
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-07'], [DESKTOP, 'spacing-10']) }}
   >
-    {/* Illustration/Vinyl Colour=Primary, as in all three footer frames. */}
-    <Deco
-      x={['right', fluid([MOBILE, 50], [TABLET, 48.4], [DESKTOP, 66])]}
-      y={['top', fluid([MOBILE, 46.5], [TABLET, 61.6], [DESKTOP, 84])]}
-      width={fluid([MOBILE, 150], [TABLET, 220], [DESKTOP, 300])}
-    >
-      <Illustration name="vinyl" colour="primary" />
-    </Deco>
-    <div className="relative @container/footer">
-      <div className="flex flex-col items-start gap-04 @min-[568px]/footer:flex-row @min-[568px]/footer:items-center @min-[568px]/footer:justify-between">
-        <div className="flex flex-col items-start gap-02">
-          <p className="font-manrope text-overline-wide uppercase text-text-secondary">Presented by</p>
-          <RunaboutLogotype label="Runabout" />
-        </div>
-        <div className="flex flex-col items-start gap-01 font-manrope @min-[568px]/footer:items-end @min-[568px]/footer:text-right">
-          <p className="text-paragraph-small text-text-primary">
-            <span className="block @min-[568px]/footer:inline">
-              <a href="mailto:hello@runaboutwine.com.au" className={footerLink}>
-                hello@runaboutwine.com.au
-              </a>
-            </span>
-            <span aria-hidden="true" className="hidden whitespace-pre @min-[568px]/footer:inline">
-              {'   ·   '}
-            </span>
-            <span className="block @min-[568px]/footer:inline">
-              <a href="https://instagram.com/runabout.melbourne" target="_blank" rel="noopener" className={footerLink}>
-                @runabout.melbourne
-                <span className="sr-only"> on Instagram (opens in a new tab)</span>
-              </a>
-            </span>
-          </p>
-          <p className="text-caption text-text-secondary">Wine · Cheese · Music — Melbourne&apos;s north-east</p>
-        </div>
+    <div className="flex flex-col items-center gap-03 text-center @container/footer">
+      <div className="flex flex-col items-center gap-02">
+        <p className="font-manrope text-overline-wide uppercase text-text-secondary">Presented by</p>
+        <RunaboutLogotype label="Runabout" />
+      </div>
+      <div className="flex w-full flex-col items-center gap-01 font-manrope">
+        <p className="text-paragraph-small text-text-primary">
+          <span className="block @min-[385px]/footer:inline">
+            <a href="mailto:hello@runaboutwine.com.au" className={footerLink}>
+              hello@runaboutwine.com.au
+            </a>
+          </span>
+          <span aria-hidden="true" className="hidden whitespace-pre @min-[385px]/footer:inline">
+            {'   ·   '}
+          </span>
+          <span className="block @min-[385px]/footer:inline">
+            <a href="https://instagram.com/runabout.melbourne" target="_blank" rel="noopener" className={footerLink}>
+              @runabout.melbourne
+              <span className="sr-only"> on Instagram (opens in a new tab)</span>
+            </a>
+          </span>
+        </p>
+        <p className="text-caption text-text-secondary">Wine · Cheese · Music — Melbourne&apos;s north-east</p>
       </div>
     </div>
   </footer>
