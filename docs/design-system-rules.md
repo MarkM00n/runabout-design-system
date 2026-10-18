@@ -331,6 +331,18 @@ per component.
   shared template with a conditional section, not to fork a bespoke MDX
   file for that one component.
 
+- **Event copy comes from one sheet (2026-10-18).** Anything that names
+  the event, its makers, music, tickets, venue or date takes its wording
+  from that event's copy sheet — for Vines & Vinyl,
+  `docs/vines-and-vinyl-copy.md` — on every surface: Figma frames, landing
+  code, email templates and snippets, and emails set up in Kit. Change the
+  sheet first, then carry the change to each surface in the same piece of
+  work; never write an event line fresh for one surface. **Real incident:**
+  by 2026-10-18 the music line read "all afternoon … selectors" on the
+  landing page and "all day … DJs" in the confirmation email, for a
+  12–4:30pm event, and the makers were "a hand-picked lineup" in one place
+  and "fourteen" in another.
+
 ## 6. Foundations
 
 Foundation pages (`src/design-docs/foundations/*.mdx`, one per category:
