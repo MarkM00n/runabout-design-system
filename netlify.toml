@@ -1,0 +1,19 @@
+# Netlify deploys the public Vines & Vinyl landing page from this repo.
+# The page is src/examples/VinesAndVinylLanding.tsx, built standalone by
+# vite.landing.config.ts. Storybook and the dashboard keep deploying to GitHub
+# Pages from .github/workflows/deploy-storybook.yml; nothing here touches that.
+#
+# VITE_SIGNUP_ENDPOINT=/api/subscribe is set in the Netlify UI (Site
+# configuration → Environment variables), not here, so it applies to the
+# Netlify build only; Storybook and Chromatic keep the sign-up mock.
+
+[build]
+  command = "npm run build:landing"
+  publish = "dist-landing"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# /api/subscribe is routed by the function's own `config.path`
+# (netlify/functions/subscribe.ts), so no redirect is needed for it.
