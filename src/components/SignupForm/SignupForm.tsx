@@ -23,11 +23,15 @@ import { isPlausibleEmail } from './email';
 //     opacity-disabled at its root — Figma swaps in Button State=Disabled)
 //     and reads "Joining…". The field goes read-only rather than disabled, so
 //     it keeps its full-strength appearance, as Figma's Submitting draws it.
-//   - Success replaces the lead-in and form in place. Its default copy is
-//     for double opt-in ("Almost there." / check your inbox and confirm), as
-//     Figma's State=Success now reads; pass successHeading/successBody for a
-//     list without it. Focus moves to its heading. Error keeps the field's
+//   - Success replaces the lead-in and form in place with a light notice
+//     card (its own data-mode="light"). Its default copy is
+//     for a single opt-in list ("You’re on the list." / a welcome email is on
+//     its way), as Figma's State=Success reads; a list that makes people
+//     confirm by email should pass successHeading/successBody telling them
+//     to. Focus moves to its heading. Error keeps the field's
 //     value and puts focus back in it.
+//   - A hidden honeypot field catches form-filling bots without a CAPTCHA:
+//     if it's filled, the form shows Success and sends nothing.
 //   - The whole block is aria-live="polite", so the error message, the
 //     Submitting label and the success copy are announced as they appear.
 //   - Focus moves only after a real submit, never on first render, so an
@@ -111,8 +115,8 @@ export const SignupForm = ({
   placeholder = 'you@email.com',
   submitLabel = 'Join the list',
   submittingLabel = 'Joining…',
-  successHeading = 'Almost there.',
-  successBody = 'Check your inbox and tap the link to confirm — then you’re on the list. (Peek in spam if it’s not there in a minute.)',
+  successHeading = 'You’re on the list.',
+  successBody = 'A welcome email is on its way. We’ll be in touch the moment early birds go live.',
   errorMessages,
   initialState = 'default',
   initialError = 'invalid',
@@ -125,6 +129,7 @@ export const SignupForm = ({
   const [focusRequest, setFocusRequest] = useState<{ target: 'field' | 'heading' } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const trapRef = useRef<HTMLInputElement>(null);
 
   // After the render that shows the new state, so the field's
   // aria-describedby already points at the message when focus lands. A new
@@ -150,7 +155,10 @@ export const SignupForm = ({
     }
     setState('submitting');
     try {
-      await onSubmit(email);
+      // Honeypot: people never see or reach this field, form-filling bots
+      // tend to fill it. A filled trap gets the normal Success state but
+      // nothing is sent, so a bot learns nothing.
+      if (!trapRef.current?.value) await onSubmit(email);
       setState('success');
       setFocusRequest({ target: 'heading' });
     } catch {
@@ -164,12 +172,17 @@ export const SignupForm = ({
   return (
     <div aria-live="polite" className={clsx('flex w-full flex-col items-center gap-02', className)}>
       {state === 'success' ? (
-        // Figma's Success row: 28px dot beside a text column whose body is
-        // a fixed 480px (unbound, so literal), top-aligned, centred as a
-        // whole in the form's column.
-        <div className={clsx('flex items-start gap-02 text-left', appear)}>
+        // Figma's Success "Notice": a light card the full width of the form —
+        // it has a background, so it owns its mode (data-mode="light") and
+        // reads the same on any surface the form sits on. surface-section
+        // fill, radius-2xl, spacing-03/04 padding; 28px dot beside a text
+        // column that fills the rest, top-aligned.
+        <div
+          data-mode="light"
+          className={clsx('flex w-full max-w-[591px] items-start gap-02 rounded-2xl bg-surface-section px-04 py-03 text-left', appear)}
+        >
           <StatusDot tone="success" glyph="✓" size={28} />
-          <div className="flex max-w-[480px] flex-col gap-01">
+          <div className="flex min-w-0 flex-1 flex-col gap-01">
             {/* Figma "Manrope/Paragraph Large Bold" = paragraph-large + bold. */}
             <h2
               ref={headingRef}
@@ -210,6 +223,18 @@ export const SignupForm = ({
                 aria-describedby={isError ? errorId : undefined}
               />
             </div>
+            {/* Honeypot (see handleSubmit). Off-screen rather than display:none
+                so bots still see it; hidden from assistive tech and the tab
+                order, and autofill is off so password managers skip it. */}
+            <input
+              ref={trapRef}
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0"
+            />
             <Button
               type="submit"
               variant="primary"
