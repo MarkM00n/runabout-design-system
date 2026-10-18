@@ -448,7 +448,7 @@ const Info = () => (
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-10']) }}
   >
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
-      Winemakers, cheesemakers and good-food makers — every table staffed by the person who made it.
+      Winemakers, cheesemakers and local food makers — every table staffed by the person who made it.
     </InfoItem>
     <InfoItem art={<Illustration name="seal" />} title="Room to move">
       Numbers are capped so every table’s within reach: a glass in your hand, every tasting included, and kids
