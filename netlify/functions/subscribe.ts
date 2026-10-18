@@ -7,35 +7,42 @@
 // visitor is on the list straight away and Kit sends its (branded) welcome
 // email. The page's Success copy says exactly that.
 //
-// Kit endpoint: its public form-subscription URL — the one Kit's own HTML
-// form embeds post to — https://app.kit.com/forms/<form id>/subscriptions,
-// form-encoded, email in `email_address`. No API key: it's the same request a
-// visitor's browser makes from an embedded Kit form. Kit's API reference
-// documents only the keyed v4 API, not this endpoint, so it was confirmed
-// against the live form on 2026-10-18 (an empty email_address returned
-// {"status":"failed","errors":{"fields":[…,"email_address"],…}}). Note Kit
-// answers HTTP 200 even when it rejects a submission; the outcome is in the
-// JSON `status` field ("success" / "failed"), which is what's checked here.
+// Kit API: v4, authenticated with KIT_API_KEY (a v4 key from Kit → Settings
+// → Developer, set as a secret environment variable in Netlify; never in the
+// repo). Two calls, as v4 requires: create (or match) the subscriber, then add
+// them to the form — the form add is what applies the form's settings
+// (auto-confirm, welcome email). Docs:
+// https://developers.kit.com/api-reference/forms/add-subscriber-to-form-by-email-address
+//
+// Why not Kit's public form URL (app.kit.com/forms/<id>/subscriptions), which
+// this used to post to: that endpoint is built for browsers, and Kit's bot
+// guard quarantines server-side submissions to it — live on 2026-10-18 every
+// sign-up came back {"status":"quarantined", url: …/forms/guards/…} and was
+// never added. The keyed API has no such guard.
 //
 // Responses the page sees: 200 on success; 400 for a missing or implausible
 // email (validated here with SignupForm's own rule, and again if Kit rejects
-// the address); 405 for anything but POST; 502 if Kit is unreachable or
-// fails for any other reason. The page shows its retry message for any
-// non-2xx, so it never needs to tell these apart.
+// the address with 422); 405 for anything but POST; 502 if the key is
+// missing, Kit is unreachable, or it fails for any other reason. The page
+// shows its retry message for any non-2xx, so it never needs to tell these
+// apart. Failures log Kit's actual reply (Netlify → Logs → Functions).
 
 import { isPlausibleEmail } from '../../src/components/SignupForm/email.ts';
 
 const KIT_FORM_ID = '10061069';
-const KIT_ENDPOINT = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`;
+const KIT_API = 'https://api.kit.com/v4';
 const KIT_TIMEOUT_MS = 8000;
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
-interface KitResponse {
-  status?: string;
-  errors?: { fields?: string[]; messages?: string[] };
-}
+const kitPost = (path: string, apiKey: string, body: Record<string, unknown>) =>
+  fetch(`${KIT_API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Kit-Api-Key': apiKey },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(KIT_TIMEOUT_MS),
+  });
 
 export default async (request: Request): Promise<Response> => {
   if (request.method !== 'POST') {
@@ -53,32 +60,34 @@ export default async (request: Request): Promise<Response> => {
     return json(400, { error: 'invalid_email' });
   }
 
-  let kit: KitResponse;
+  const apiKey = process.env.KIT_API_KEY;
+  if (!apiKey) {
+    console.error('KIT_API_KEY is not set in Netlify environment variables');
+    return json(502, { error: 'not_configured' });
+  }
+
   try {
-    const response = await fetch(KIT_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
-      body: new URLSearchParams({ email_address: email }),
-      signal: AbortSignal.timeout(KIT_TIMEOUT_MS),
-    });
-    if (!response.ok) {
-      console.error(`Kit responded HTTP ${response.status}`);
+    const created = await kitPost('/subscribers', apiKey, { email_address: email });
+    if (created.status === 422) return json(400, { error: 'invalid_email' });
+    if (!created.ok) {
+      console.error(`Kit create subscriber: HTTP ${created.status}`, await created.text());
       return json(502, { error: 'upstream' });
     }
-    kit = (await response.json()) as KitResponse;
+    const added = await kitPost(`/forms/${KIT_FORM_ID}/subscribers`, apiKey, {
+      email_address: email,
+      referrer: request.headers.get('referer') ?? undefined,
+    });
+    if (added.status === 422) return json(400, { error: 'invalid_email' });
+    if (!added.ok) {
+      console.error(`Kit add to form: HTTP ${added.status}`, await added.text());
+      return json(502, { error: 'upstream' });
+    }
   } catch (error) {
     console.error('Kit request failed', error);
     return json(502, { error: 'upstream' });
   }
 
-  if (kit.status === 'success') {
-    return json(200, { ok: true });
-  }
-  if (kit.errors?.fields?.includes('email_address')) {
-    return json(400, { error: 'invalid_email' });
-  }
-  console.error('Kit rejected the submission', JSON.stringify(kit.errors ?? kit));
-  return json(502, { error: 'upstream' });
+  return json(200, { ok: true });
 };
 
 // Netlify Functions v2 routing: serves this at /api/subscribe directly, so
