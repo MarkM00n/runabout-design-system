@@ -235,7 +235,7 @@ const heroArt = (
         line and the hero's bottom edge; it runs off the bottom in every frame. */}
     <Deco
       x={['left', `calc(50% + ${fluid([TABLET, 0.5], [DESKTOP, 611.5])})`]}
-      y={['bottom', fluid([MOBILE, -6.31], [TABLET, -4.91], [DESKTOP, 59.08])]}
+      y={['bottom', fluid([MOBILE, -6.31], [TABLET, 10.09], [DESKTOP, 59.08])]}
       width={fluid([TABLET, 213], [DESKTOP, 383])}
     >
       <Illustration name="vinyl" colour="feature" />
@@ -510,7 +510,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           description sits on solid terracotta at every width by construction.
           In Figma the gradient spans the whole hero with its solid stop at
           59.9% / 56.4% / 44.6%; since the Lock-up redesign that lands 37.2 /
-          18.0 / 46.0px above the description's top edge (desktop / tablet /
+          9.6 / 46.0px above the description's top edge (desktop / tablet /
           mobile), which is the offset the solid stop keeps here. */}
       <div
         className="relative flex flex-col items-center gap-03 pb-03"
@@ -520,9 +520,8 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           {/* 3:2 photo, top-anchored and centred. 665px wide on mobile (the
               frame's 170.52% crop), the full 768 on tablet, and on desktop
               Figma's cover fill over the now 990.58px-tall hero: 1485.87px,
-              height-led. Figma's mobile and tablet crops stretch the photo
-              vertically by 10% and 1% since the hero grew; the photo keeps its
-              own 3:2 here. */}
+              height-led. Mobile and tablet crops are true 3:2, top-anchored
+              (corrected in Figma 2026-10-18 after the hero grew). */}
           <img
             src={hallPhoto}
             alt=""
@@ -533,7 +532,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `linear-gradient(to bottom, var(--color-surface-scrim-start) 0, var(--color-surface-scrim-end) calc(100% - ${fluid([MOBILE, 45.99], [TABLET, 18.01], [DESKTOP, 37.22])}))`,
+              backgroundImage: `linear-gradient(to bottom, var(--color-surface-scrim-start) 0, var(--color-surface-scrim-end) calc(100% - ${fluid([MOBILE, 45.97], [TABLET, 9.55], [DESKTOP, 37.22])}))`,
             }}
           />
         </div>
