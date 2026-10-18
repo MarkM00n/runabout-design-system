@@ -331,6 +331,18 @@ per component.
   shared template with a conditional section, not to fork a bespoke MDX
   file for that one component.
 
+- **Event copy comes from one sheet (2026-10-18).** Anything that names
+  the event, its makers, music, tickets, venue or date takes its wording
+  from that event's copy sheet — for Vines & Vinyl,
+  `docs/vines-and-vinyl-copy.md` — on every surface: Figma frames, landing
+  code, email templates and snippets, and emails set up in Kit. Change the
+  sheet first, then carry the change to each surface in the same piece of
+  work; never write an event line fresh for one surface. **Real incident:**
+  by 2026-10-18 the music line read "all afternoon … selectors" on the
+  landing page and "all day … DJs" in the confirmation email, for a
+  12–4:30pm event, and the makers were "a hand-picked lineup" in one place
+  and "fourteen" in another.
+
 ## 6. Foundations
 
 Foundation pages (`src/design-docs/foundations/*.mdx`, one per category:
@@ -415,6 +427,27 @@ the pages render that, they don't hand-list token values.
   aliases into, `Focus/900`, and the `Event/*` group, whose note is the one
   place the "print only, never registered in `@theme`" rule is recorded
   against the tokens themselves.
+
+- **No single word on a paragraph's last line — ever (2026-10-18).** A
+  paragraph, list item, caption or heading never ends with one word alone
+  on its last line, at any width. This is a standing typographic rule, not
+  a per-component nicety.
+  - **Web:** handled once, in `src/index.css`'s base layer —
+    `text-wrap: pretty` on `p`, `li`, `dd`, `figcaption`, `blockquote`;
+    `text-wrap: balance` on `h1`–`h6`. Don't override it with `text-wrap`
+    utilities unless the element genuinely isn't prose (a code block, a
+    one-line label that must not reflow). Supported in Chromium and current
+    Safari; older browsers fall back to normal wrapping, which is accepted.
+  - **Email:** clients ignore `text-wrap` (Gmail strips it), so join the
+    last two words of every paragraph with `&nbsp;`. Kit's rich-text editor
+    silently converts `&nbsp;` back to a normal space, so copy that must
+    hold it goes in an **HTML block** (see `email/vines-and-vinyl/README.md`).
+  - **Figma:** check the mobile frame, the narrowest — that's where a lone
+    last word shows up first. Fix it with copy or width there, not with a
+    manual line break, which breaks at every other width.
+  - **Real incident:** the sign-up success message ("…early birds go
+    live.") and the confirmation email both shipped ending on one word on
+    mobile; caught only by eye on a phone.
 
 ## 7. Surface pairings
 

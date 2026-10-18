@@ -240,10 +240,12 @@ const heroArt = (
     </Deco>
     {/* Pink record (Vinyl Colour=Feature): bottom centre on mobile and
         tablet, travelling to bottom right on desktop. Anchored to the centre
-        line and the hero's bottom edge; it runs off the bottom in every frame. */}
+        line and the hero's bottom edge; it runs off the bottom in every frame.
+        Moved 40px down on mobile and tablet in Figma (2026-10-18) to clear
+        the sign-up form and its taller success card. */}
     <Deco
       x={['left', `calc(50% + ${fluid([TABLET, 0.5], [DESKTOP, 611.5])})`]}
-      y={['bottom', fluid([MOBILE, 23.69], [TABLET, 8.09], [DESKTOP, 59.08])]}
+      y={['bottom', fluid([MOBILE, -16.31], [TABLET, -31.91], [DESKTOP, 59.08])]}
       width={fluid([TABLET, 213], [DESKTOP, 383])}
     >
       <Illustration name="vinyl" colour="feature" />
@@ -444,8 +446,8 @@ const Info = () => (
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-10']) }}
   >
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
-      A hand-picked lineup of local wineries, cheesemakers and good-food makers — every table staffed by the
-      person who made it.
+      Fourteen local winemakers, cheesemakers and good-food makers — every table staffed by the person who
+      made it.
     </InfoItem>
     <InfoItem art={<Illustration name="seal" />} title="150 tickets">
       Capped small on purpose — every tasting included, a keepsake glass in your hand, and kids come free with an
