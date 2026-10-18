@@ -3,8 +3,11 @@
 // Provider-agnostic on purpose: the page POSTs `{ "email": "…" }` as JSON to
 // whatever URL VITE_SIGNUP_ENDPOINT holds (see .env.example), and treats any
 // 2xx as success. Adapting to a particular list provider — its field names,
-// auth, double opt-in — belongs behind that URL (a serverless function or the
-// provider's own form endpoint), never hardcoded here.
+// auth, double opt-in — belongs behind that URL, never hardcoded here.
+//
+// Live, that URL is /api/subscribe: the Netlify Function in
+// netlify/functions/subscribe.ts, which forwards to Kit form 10061069 (double
+// opt-in). VITE_SIGNUP_ENDPOINT is set to it in the Netlify UI only.
 //
 // With the variable unset — Storybook, Chromatic, a local checkout — it
 // resolves after 800ms instead, so every state can be exercised without a
