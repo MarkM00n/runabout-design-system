@@ -1,0 +1,7 @@
+/* Stylesheet for the standalone Vines & Vinyl build (src/landing.tsx).
+   index.css is the shared one — Tailwind, tokens, self-hosted Manrope — that
+   Storybook also loads. The only addition: vite.landing.config.ts roots Vite
+   at landing/, and Tailwind v4 detects class names from that root, so without
+   this it never scans src/ and emits no utilities at all. */
+@import './index.css';
+@source './';

@@ -23,7 +23,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     name: { control: 'select', options: ['sparkle', 'vinyl', 'grapes', 'seal'] },
-    colour: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'feature'] },
+    colour: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'feature', 'outline'] },
   },
 } satisfies Meta<typeof Illustration>;
 
@@ -47,6 +47,10 @@ export const VinylPrimary: Story = { args: { name: 'vinyl', colour: 'primary', c
 export const GrapesPrimary: Story = { args: { name: 'grapes', colour: 'primary', className: 'w-[240px]' } };
 /** Illustration/Grapes, Colour=Feature — the large soft cluster. */
 export const GrapesFeature: Story = { args: { name: 'grapes', colour: 'feature', className: 'w-[240px]' } };
+/** Illustration/Grapes, Colour=Outline — no fill, a 1px illustration-primary
+ *  line, for a line-drawn bunch over busy or dark grounds (the landing page's
+ *  hero photo). */
+export const GrapesOutline: Story = { args: { name: 'grapes', colour: 'outline', className: 'w-[240px]' } };
 
 /** Illustration/Seal — no variants; always illustration-highlight. */
 export const Seal: Story = { args: { name: 'seal', className: 'w-[200px]' } };
@@ -62,7 +66,7 @@ export const AcrossSurfaces: Story = {
   render: () => (
     <div className="flex flex-col gap-02">
       {MODES.map((mode) => (
-        <div key={mode} data-mode={mode} className="flex items-center gap-03 rounded-2xl bg-surface-section p-03">
+        <div key={mode} data-mode={mode} className="flex w-max items-center gap-03 rounded-2xl bg-surface-section p-03">
           <span className="w-[56px] font-manrope text-caption text-text-secondary">{mode}</span>
           <Illustration name="sparkle" colour="primary" className="w-[64px]" />
           <Illustration name="sparkle" colour="secondary" className="w-[64px]" />
@@ -71,6 +75,7 @@ export const AcrossSurfaces: Story = {
           <Illustration name="vinyl" colour="primary" className="w-[64px]" />
           <Illustration name="grapes" colour="primary" className="w-[64px]" />
           <Illustration name="grapes" colour="feature" className="w-[64px]" />
+          <Illustration name="grapes" colour="outline" className="w-[64px]" />
           <Illustration name="seal" className="w-[64px]" />
         </div>
       ))}

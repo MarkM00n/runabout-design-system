@@ -432,6 +432,18 @@
   --text-overline-wide: 11px;
   --text-overline-wide--line-height: 1.45;
   --text-overline-wide--letter-spacing: 0.08em;
+  /* Figma text style "Manrope/H3" — the Vines & Vinyl landing page's info
+     headings, set in Manrope rather than Recoleta (Recoleta is a local demo
+     cut, not a licensed webfont — see --font-recoleta). Named h3-sans because
+     --text-h3 is Recoleta/H3, whose leading differs (1.15). Read live,
+     2026-10-18. */
+  --text-h3-sans: 36px;
+  --text-h3-sans--line-height: 1.2;
+  /* Figma text style "Manrope/H4" — the landing page's Event / Date seal date
+     at its Large size, for the same reason. Named h4-sans because --text-h4
+     is Recoleta/H4 (leading 1.2). Read live, 2026-10-18. */
+  --text-h4-sans: 28px;
+  --text-h4-sans--line-height: 1.25;
 
   /* Not Figma-sourced — the Figma file has no motion/duration/easing
      variables at all (confirmed via getLocalVariablesAsync, re-confirmed

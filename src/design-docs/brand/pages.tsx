@@ -243,6 +243,8 @@ const SAMPLES: Record<string, string> = {
   'overline-wide': 'Presented by',
   'h6-serif': '24 April 2027',
   detail: '12–4:30pm · Eltham',
+  'h3-sans': 'The makers',
+  'h4-sans': '24 April 2027',
 };
 
 // Figma styles that differ from a token only by weight. Weight is never part
@@ -261,7 +263,7 @@ const WEIGHT_PAIRINGS: { figmaStyle: string; token: string; weight: number; util
 ];
 
 export function TypographyPage() {
-  const order = ['h3', 'h4', 'h6-serif', 'h6', 'paragraph-large', 'paragraph-small', 'label', 'label-strong', 'caption', 'detail', 'overline', 'overline-wide'].filter((k) => typography[k]);
+  const order = ['h3', 'h3-sans', 'h4', 'h4-sans', 'h6-serif', 'h6', 'paragraph-large', 'paragraph-small', 'label', 'label-strong', 'caption', 'detail', 'overline', 'overline-wide'].filter((k) => typography[k]);
   const pairingsFor = (k: string) => WEIGHT_PAIRINGS.filter((p) => p.token === k);
   const rows = order.flatMap((k) => {
     const s = typography[k];

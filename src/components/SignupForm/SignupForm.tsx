@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { Button } from '../Button';
 import { Input } from '../Input';
+import { isPlausibleEmail } from './email';
 
 // Source: Figma Sign-up form (1490:546, page 02. Components), State =
 // Default / Submitting / Success / Error. Promoted from the Vines & Vinyl
@@ -14,15 +15,19 @@ import { Input } from '../Input';
 // resolved token except the status dots, below.
 //
 // Behaviour, from the Figma description:
-//   - Validated here before anything is sent. The form is noValidate so the
-//     browser's own bubble never shows instead of the Error state. type=email
-//     alone lets "a@b" through, so the pattern also wants a dot in the domain.
+//   - Validated here before anything is sent, with isPlausibleEmail
+//     (./email.ts) — the same rule the Vines & Vinyl /api/subscribe function
+//     applies server-side. The form is noValidate so the browser's own bubble
+//     never shows instead of the Error state.
 //   - Submitting: the button is disabled (Button's own Disabled treatment,
 //     opacity-disabled at its root — Figma swaps in Button State=Disabled)
 //     and reads "Joining…". The field goes read-only rather than disabled, so
 //     it keeps its full-strength appearance, as Figma's Submitting draws it.
-//   - Success replaces the lead-in and form in place. Focus moves to its
-//     heading. Error keeps the field's value and puts focus back in it.
+//   - Success replaces the lead-in and form in place. Its default copy is
+//     for double opt-in ("Almost there." / check your inbox and confirm), as
+//     Figma's State=Success now reads; pass successHeading/successBody for a
+//     list without it. Focus moves to its heading. Error keeps the field's
+//     value and puts focus back in it.
 //   - The whole block is aria-live="polite", so the error message, the
 //     Submitting label and the success copy are announced as they appear.
 //   - Focus moves only after a real submit, never on first render, so an
@@ -80,7 +85,6 @@ const DEFAULT_ERROR_MESSAGES: Record<SignupFormErrorKind, ReactNode> = {
   failed: 'Something went wrong — try again in a moment.',
 };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 // Appearing content fades in over duration-standard; with reduced motion it
 // just appears. @starting-style, so no keyframes are needed.
@@ -107,8 +111,8 @@ export const SignupForm = ({
   placeholder = 'you@email.com',
   submitLabel = 'Join the list',
   submittingLabel = 'Joining…',
-  successHeading = "You're on the list.",
-  successBody = "We'll email you the moment early birds go live. Keep an eye on your inbox — and your spam folder, just in case.",
+  successHeading = 'Almost there.',
+  successBody = 'Check your inbox and tap the link to confirm — then you’re on the list. (Peek in spam if it’s not there in a minute.)',
   errorMessages,
   initialState = 'default',
   initialError = 'invalid',
@@ -140,7 +144,7 @@ export const SignupForm = ({
     event.preventDefault();
     if (state === 'submitting') return;
     const email = inputRef.current?.value.trim() ?? '';
-    if (!EMAIL_PATTERN.test(email)) {
+    if (!isPlausibleEmail(email)) {
       fail('invalid');
       return;
     }
