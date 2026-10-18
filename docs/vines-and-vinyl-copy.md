@@ -22,6 +22,7 @@ event line fresh for one surface. Rule: `docs/design-system-rules.md` §5,
 | Tickets | 150 tickets, every tasting included |
 | Makers | **Fourteen** local makers (confirmed 2026-10-18) |
 | Presented by | Runabout |
+| Website | vinesandvinyl.runaboutwine.com.au (always https; share this, not the netlify.app address) |
 
 The maker mix is still settling (seven winemakers, Eltham locals, cheese
 and possibly olive oil), so public copy names the categories, not the

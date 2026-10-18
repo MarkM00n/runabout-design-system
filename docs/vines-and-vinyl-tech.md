@@ -50,8 +50,9 @@ nothing is sent.
 
 - **Project:** `vinesandvinyl` — app.netlify.com/projects/vinesandvinyl
 - **Addresses:**
-  - `vinesandvinyl.runaboutwine.com.au` — primary (HTTPS certificate
-    issued automatically by Netlify / Let's Encrypt once DNS verifies)
+  - `vinesandvinyl.runaboutwine.com.au` — primary. HTTPS via Let's Encrypt,
+    issued 18 Oct 2026, auto-renews (next before 16 Jan 2027). Plain http
+    redirects to https.
   - `vinesandvinyl.netlify.app` — Netlify's own address, always works
 - **Deploys:** automatically on every merge to `main` in GitHub.
 - **Build:** `npm run build:landing` → `dist-landing/` (see `netlify.toml`).
@@ -156,8 +157,6 @@ Figma is the source of truth: change it there first, then in code.
 
 ## Open items
 
-- HTTPS on `vinesandvinyl.runaboutwine.com.au` — waiting on Netlify's DNS
-  check (18 Oct 2026, evening).
 - Short link `runaboutwine.com.au/vinesandvinyl` — not set up yet.
 - Kit trial ends ~1 Nov 2026 — decide plan.
 - Table size for makers — to confirm.
