@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+  Vines & Vinyl — Kit HTML email template.
+  Figma source: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=1535-167
+
+  Paste this whole file into Kit → Email Templates → New → Create HTML Template.
+  Fixed parts: the header art (one image) and the gold footer.
+  The content slot is whatever you write in Kit's editor; build it from
+  the snippets in ./snippets (hero copy, info section, full-width image).
+
+  Kit's required tags (content slot, unsubscribe URL in an href, address)
+  are all below. They're deliberately not spelled out in this comment:
+  Kit renders Liquid tags even inside HTML comments.
+
+  Colours are the Vines & Vinyl token values, resolved per section mode
+  (email clients can't read CSS variables):
+    Hero / content  On Ink     surface #2e3516  text #f6dfc0  button #f7e7d2 / #2f2c28
+    Info section    On Light   surface #f5dec1  heading #a34923  body #4a5435  button #2f2c28 / #f7e7d2
+    Footer          On Accent  surface #e39313  text #1d1b19  hairline #4a5435
+  Fonts: Recoleta can't be web-loaded in email, so headings fall back to
+  Georgia; Manrope loads in Apple Mail and falls back to Helvetica/Arial.
+  Images are served from the repo via jsDelivr (landing/public/email/).
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
+  <title>Vines &amp; Vinyl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <!--[if mso]><style>* { font-family: Arial, sans-serif !important; } h1, h2, h3 { font-family: Georgia, serif !important; }</style><![endif]-->
+  <style>
+    body { margin: 0; padding: 0; background: #f5dec1; -webkit-text-size-adjust: 100%; }
+    table { border-collapse: collapse; }
+    img { border: 0; display: block; outline: none; text-decoration: none; }
+    a { color: inherit; }
+
+    /* Anything typed straight into Kit's editor (not a snippet) lands here,
+       on the ink hero surface. Snippets set their own inline styles, which win. */
+    .vv-content { font-family: Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #f6dfc0; text-align: center; }
+    .vv-content h1, .vv-content h2, .vv-content h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #f6dfc0; margin: 24px 40px; }
+    .vv-content h1 { font-size: 36px; line-height: 44px; }
+    .vv-content h2 { font-size: 28px; line-height: 34px; }
+    .vv-content h3 { font-size: 22px; line-height: 28px; }
+    .vv-content p, .vv-content ul, .vv-content ol { font-size: 18px; line-height: 28px; margin: 0 40px 24px; }
+    .vv-content a { color: #f6dfc0; text-decoration: underline; }
+    .vv-content img { max-width: 100%; height: auto; }
+
+    @media (max-width: 620px) {
+      .vv-pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .vv-content h1, .vv-content h2, .vv-content h3, .vv-content p, .vv-content ul, .vv-content ol { margin-left: 24px !important; margin-right: 24px !important; }
+      .vv-content h1, .vv-h1 { font-size: 30px !important; line-height: 38px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background:#f5dec1;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5dec1" style="background:#f5dec1;">
+    <tr>
+      <td align="center" style="padding:0;">
+        <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:600px;">
+
+          <!-- HEADER: Lock-up, date seal and illustrations, exported from Figma as one image -->
+          <tr>
+            <td bgcolor="#2e3516" style="background:#2e3516;">
+              <img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-header.png" width="600" alt="Vines &amp; Vinyl — Saturday 24 April 2027, 12–4:30pm, Eltham" style="width:100%; max-width:600px; height:auto; background:#2e3516; color:#f6dfc0; font-family:Georgia, serif; font-size:28px; line-height:36px; text-align:center;">
+            </td>
+          </tr>
+
+          <!-- CONTENT: written in Kit's editor -->
+          <tr>
+            <td class="vv-content" bgcolor="#2e3516" style="background:#2e3516; padding:0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; color:#f6dfc0; text-align:center;">
+              {{ message_content }}
+            </td>
+          </tr>
+
+          <!-- FOOTER (On Accent) -->
+          <tr>
+            <td bgcolor="#e39313" style="background:#e39313;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="vv-pad" valign="top" style="padding:40px 0 0 40px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:left;">
+                    <p style="margin:0 0 16px; font-size:11px; line-height:16px; letter-spacing:1.3px; text-transform:uppercase; color:#1d1b19;">Presented by</p>
+                    <a href="https://instagram.com/runabout.melbourne" style="text-decoration:none;"><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/runabout-wordmark.png" width="151" height="29" alt="runabout" style="width:151px; height:29px; color:#1d1b19; font-family:Georgia, serif; font-size:24px;"></a>
+                  </td>
+                  <td valign="top" align="right" width="148" style="padding:0; width:148px;">
+                    <img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-footer-vinyl.png" width="148" height="114" alt="" style="width:148px; height:114px;">
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="vv-pad" style="padding:8px 40px 0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:left;">
+                    <p style="margin:0 0 8px; font-size:15px; line-height:24px; color:#1d1b19;">
+                      <a href="mailto:hello@runaboutwine.com.au" style="color:#1d1b19; text-decoration:none;">hello@runaboutwine.com.au</a> &nbsp;·&nbsp; <a href="https://instagram.com/runabout.melbourne" style="color:#1d1b19; text-decoration:none;">@runabout.melbourne</a>
+                    </p>
+                    <p style="margin:0; font-size:12px; line-height:18px; color:#1d1b19;">Wine · Cheese · Music — Melbourne’s north-east</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="vv-pad" style="padding:24px 40px 40px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="border-top:1px solid #4a5435; padding-top:24px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:12px; line-height:18px; color:#1d1b19; text-align:left;">
+                          You’re getting this because you joined the Vines &amp; Vinyl list.<br>
+                          <a href="{{ unsubscribe_url }}" style="color:#1d1b19; text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp; <a href="{{ subscriber_preferences_url }}" style="color:#1d1b19; text-decoration:underline;">Update your preferences</a> &nbsp;·&nbsp; {{ address }}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
