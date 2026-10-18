@@ -132,6 +132,29 @@ body {
     margin: 0;
   }
 
+  /* No single word alone on a paragraph's last line, anywhere. `pretty`
+     reflows the last few lines so a paragraph never ends on one word;
+     headings and labels use `balance`, which evens their lines out. Both
+     sit in `base`, so a component can still opt out with a utility.
+     Supported in Chromium and current Safari; elsewhere text just wraps
+     normally. Email can't use this (Gmail strips it) — see
+     email/vines-and-vinyl/README.md for the non-breaking-space rule. */
+  p,
+  li,
+  dd,
+  figcaption,
+  blockquote {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
   code,
   .counter {
     font-family: var(--mono);
