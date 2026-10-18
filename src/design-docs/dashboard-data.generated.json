@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-18T01:21:43.602Z",
+  "generatedAt": "2026-10-18T01:26:06.384Z",
   "validationReportGeneratedAt": "2026-10-18T01:21:14.696Z",
   "status": "pass-with-warnings",
   "methodologyNotes": {
@@ -9,12 +9,12 @@
   },
   "totals": {
     "totalComponents": 15,
-    "averageCycleTimeSeconds": 14807,
-    "averageCycleTimeLabel": "4h 7m",
-    "medianCycleTimeSeconds": 1908,
-    "medianCycleTimeLabel": "32m",
-    "cycleTimeSampleSize": 14,
-    "cycleTimeMissingCount": 1,
+    "averageCycleTimeSeconds": 17949,
+    "averageCycleTimeLabel": "4h 59m",
+    "medianCycleTimeSeconds": 2149,
+    "medianCycleTimeLabel": "36m",
+    "cycleTimeSampleSize": 15,
+    "cycleTimeMissingCount": 0,
     "totalOpenIssues": 2,
     "totalCaughtAndFixed": 4,
     "totalDesignTokens": 159
@@ -716,10 +716,13 @@
       ],
       "lastValidated": "2026-10-18",
       "storybookUrl": "https://markm00n.github.io/runabout-design-system/?path=/docs/components-signupform--docs",
-      "pr": null,
-      "firstCommitAt": null,
-      "mergedAt": null,
-      "cycleTimeSeconds": null
+      "pr": {
+        "number": 107,
+        "url": "https://github.com/MarkM00n/runabout-design-system/pull/107"
+      },
+      "firstCommitAt": "2026-10-17T19:13:24+11:00",
+      "mergedAt": "2026-10-18T12:25:30+11:00",
+      "cycleTimeSeconds": 61926
     },
     {
       "name": "Tab",
