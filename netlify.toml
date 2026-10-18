@@ -6,6 +6,9 @@
 # VITE_SIGNUP_ENDPOINT=/api/subscribe is set in the Netlify UI (Site
 # configuration → Environment variables), not here, so it applies to the
 # Netlify build only; Storybook and Chromatic keep the sign-up mock.
+#
+# KIT_API_KEY (a Kit v4 API key) is also set in the Netlify UI, marked secret,
+# and read only by netlify/functions/subscribe.ts at runtime. Never commit it.
 
 [build]
   command = "npm run build:landing"
