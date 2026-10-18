@@ -258,7 +258,7 @@ const WEIGHT_PAIRINGS: { figmaStyle: string; token: string; weight: number; util
     token: 'paragraph-large',
     weight: 700,
     utility: 'font-bold',
-    sample: 'Join the list and be first to grab an early bird.',
+    sample: 'Join the list and be first to grab an early bird ticket.',
   },
 ];
 

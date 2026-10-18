@@ -110,13 +110,13 @@ const StatusDot = ({ tone, glyph, size }: { tone: 'success' | 'error'; glyph: st
 
 export const SignupForm = ({
   onSubmit,
-  leadIn = 'Join the list and be first to grab an early bird — strictly limited.',
+  leadIn = 'Join the list and be first to grab an early bird ticket — strictly limited.',
   inputLabel = 'Email address',
   placeholder = 'you@email.com',
   submitLabel = 'Join the list',
   submittingLabel = 'Joining…',
   successHeading = 'You’re on the list.',
-  successBody = 'A welcome email is on its way. We’ll be in touch the moment early birds go live.',
+  successBody = 'A welcome email is on its way. We’ll be in touch the moment early bird tickets go live.',
   errorMessages,
   initialState = 'default',
   initialError = 'invalid',
