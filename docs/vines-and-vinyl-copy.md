@@ -47,7 +47,7 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 |---|---|---|---|
 | What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Bakery · Dessert · Toasties · Coffee · Other) | Multiple choice | always | yes |
 | Does your producer’s licence have a promotional event authorisation? (Yes / No / Not sure; links the licence guide, LCV 1300 182 457) | Multiple choice | Winery | yes |
-| A copy of your licence | File | licence = Yes | yes |
+| A copy of your producer’s licence | File | licence = Yes | yes |
 | You’ll need to apply by mid-December. Have you started? (Applied / Not yet) | Multiple choice | licence = No or Not sure | yes |
 | When did you apply? | Date | started = Applied | yes |
 | RSA certificates | File (multiple) | Winery | no |
