@@ -58,7 +58,6 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
 | Will you be selling on the day? (take home / orders for delivery / tasting only) | Multiple choice | always | yes |
 | FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Bakery, Dessert, Toasties, Coffee | yes |
-| What are you bringing for your table? (we-supply line in the description) | Long answer | always | no |
 | If we ran 15-minute masterclasses, would you want a slot? (interest only) | Yes / No | always | yes |
 | What would you do with it? | Short answer | masterclass = Yes | no |
 | Could you donate something for the prize draw? | Yes / Not this time | always | no |
@@ -69,7 +68,8 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Anything else we should know? | Long answer | always | no |
 
 Deliberately **not** in the form (they go in the makers email / info
-sheet): bump-in time, the two-Instagram-posts ask, table size, parking.
+sheet): bump-in time, the two-Instagram-posts ask, what to bring for your
+table (the we-supply list), table size, parking.
 
 ## Lines
 
