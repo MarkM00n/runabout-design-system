@@ -56,7 +56,6 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Tell us about your business (50–80 words) | Long answer | always | yes |
 | What will you be pouring or serving? | Long answer | always | yes |
 | How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
-| Will you be selling on the day? (take home / orders for delivery / tasting only) | Multiple choice | always | yes |
 | FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Food maker, Coffee | yes |
 | If we ran 15-minute masterclasses, would you want a slot? (interest only) | Yes / No | always | yes |
 | What would you do with it? | Short answer | masterclass = Yes | no |
