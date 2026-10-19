@@ -136,6 +136,7 @@ Repo `MarkM00n/runabout-design-system`. Mark merges PRs.
 | `netlify/functions/subscribe.ts` | Sign-up → Kit |
 | `email/vines-and-vinyl/` | Kit template, snippets, README |
 | `landing/public/email/` | Email images (served via jsDelivr) |
+| `landing/public/winery-licence-guide.pdf` | Served at `/winery-licence-guide.pdf` on the event site; linked from the maker form |
 | `docs/vines-and-vinyl-copy.md` | Agreed wording for every surface |
 | `docs/vines-and-vinyl-tech.md` | This file |
 

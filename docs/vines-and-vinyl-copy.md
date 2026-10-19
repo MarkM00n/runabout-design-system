@@ -34,8 +34,41 @@ and possibly olive oil), so public copy names the categories only.
 | We supply | A table with a black cloth, a power point, access to the kitchen, an A5 table card with the maker’s name, and the keepsake glass every guest tastes from. |
 | Makers bring | Their own signage and whatever else is in their kit for pouring, serving and selling. |
 | Maker form | https://tally.so/r/X5lyrL (Tally, free plan: 10 MB per upload) |
+| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page, both paths: producer's licence → promotional event authorisation, apply by mid-December; any other licence → temporary limited licence, by end of February) |
 
 Table size is still to confirm; state it once known.
+
+### Maker form — structure (Tally X5lyrL, v2, 19 Oct 2026)
+
+Branching keeps it short: a winery sees about 22 questions, a food maker
+about 18. Everything marked *conditional* is hidden until its trigger.
+
+| Question | Type | Shown when | Required |
+|---|---|---|---|
+| What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
+| Is your licence covered to pour and sell at Vines & Vinyl? (Yes / No; covers producer's and general licences; “Not sure?” in the description points at the guide and LCV 1300 182 457) | Multiple choice | Winery | yes |
+| A copy of your licence or permit | File | licence = Yes | yes |
+| You’ll need to apply (Applied / Not yet; producers option 8 by mid-December, other licences temporary limited licence by end of February; “keep going with the rest of the form — email a copy to hello@ once approved”) | Multiple choice | licence = No | yes |
+| When did you apply? | Date | started = Applied | yes |
+| RSA certificates | File (multiple) | Winery | no |
+| Business name · Your name · Email · Main contact number | Short / email / phone | always | yes |
+| Who will be attending? | Long answer | always | yes |
+| Tell us about your business (50–80 words) | Long answer | always | yes |
+| What will you be pouring or serving? | Long answer | always | yes |
+| How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
+| FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Food maker, Coffee | yes |
+| If we ran 15-minute masterclasses, would you want a slot? (interest only) | Yes / No | always | yes |
+| What would you do with it? | Short answer | masterclass = Yes | no |
+| Could you donate something for the prize draw? | Yes / Not this time | always | no |
+| What would you donate? | Short answer | prize = Yes | no |
+| Website · Instagram handle | Link / short | always | no |
+| Your logo · Photos (3–6, up to 10 each) | File | always | yes |
+| Using your photos and details (consent) | Checkbox | always | yes |
+| Anything else we should know? | Long answer | always | no |
+
+Deliberately **not** in the form (they go in the makers email / info
+sheet): bump-in time, the two-Instagram-posts ask, what to bring for your
+table (the we-supply list), table size, parking.
 
 ## Lines
 
