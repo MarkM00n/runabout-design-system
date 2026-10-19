@@ -45,7 +45,7 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 
 | Question | Type | Shown when | Required |
 |---|---|---|---|
-| What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Bakery · Dessert · Toasties · Coffee · Other) | Multiple choice | always | yes |
+| What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
 | Does your producer’s licence have a promotional event authorisation? (Yes / No / Not sure; links the licence guide, LCV 1300 182 457) | Multiple choice | Winery | yes |
 | A copy of your producer’s licence | File | licence = Yes | yes |
 | You’ll need to apply by mid-December. Have you started? (Applied / Not yet) | Multiple choice | licence = No or Not sure | yes |
@@ -57,7 +57,7 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | What will you be pouring or serving? | Long answer | always | yes |
 | How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
 | Will you be selling on the day? (take home / orders for delivery / tasting only) | Multiple choice | always | yes |
-| FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Bakery, Dessert, Toasties, Coffee | yes |
+| FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Food maker, Coffee | yes |
 | If we ran 15-minute masterclasses, would you want a slot? (interest only) | Yes / No | always | yes |
 | What would you do with it? | Short answer | masterclass = Yes | no |
 | Could you donate something for the prize draw? | Yes / Not this time | always | no |
