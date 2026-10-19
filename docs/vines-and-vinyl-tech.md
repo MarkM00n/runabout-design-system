@@ -4,7 +4,7 @@ Everything the Vines & Vinyl event runs on, where it lives and how the pieces
 connect. Copy and wording live in `docs/vines-and-vinyl-copy.md`; this file is
 the plumbing. No passwords or keys belong here — only where they're kept.
 
-Last updated: 18 October 2026.
+Last updated: 19 October 2026.
 
 ## At a glance
 
@@ -41,8 +41,8 @@ nothing is sent.
 2. They answer the questions and upload a logo and up to 10 photos
    (10 MB each).
 3. Tally stores the answers and files, and emails a notification to
-   `markgmcmanus@gmail.com` (free plan: notifications can only go to the
-   Tally account email).
+   `hello@runaboutwine.com.au` (free plan: notifications go to the Tally
+   account email — see below).
 4. Files are reviewed in Tally → Submissions, then copied to Google Drive
    (`Vines & Vinyl / Makers / <business name>`) by hand.
 
@@ -120,6 +120,9 @@ for email forwarding and the Vines & Vinyl subdomain only.
 
 - **Public link:** https://tally.so/r/X5lyrL
 - **Edit:** https://tally.so/forms/X5lyrL/edit (Mark's Tally account)
+- **Account email / login:** `hello@runaboutwine.com.au` (changed 19 Oct
+  2026 so everything for the event lands at one address; it forwards to
+  `runaboutwine.events@gmail.com`). Submission notifications follow it.
 - **Free plan limits:** 10 MB per upload, "Made with Tally" badge, no
   confirmation email to makers, notifications only to the account email.
 - **Look:** custom theme — background `#F5DEC1`, text `#1D1B19`, buttons
