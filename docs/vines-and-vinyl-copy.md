@@ -16,7 +16,7 @@ event line fresh for one surface. Rule: `docs/design-system-rules.md` §5,
 |---|---|
 | Date | Saturday 24 April 2027 |
 | Time | 12–4:30pm (en dash, no spaces). It's an **afternoon**: never "all day". |
-| Venue | The Dorian LeGallienne Room, Eltham Community and Reception Centre |
+| Venue | The Dorian LeGallienne Room, Eltham Community & Reception Centre (ampersand — the venue’s own styling) |
 | Address | 801 Main Road, Eltham |
 | Short venue | Eltham |
 | Tickets | Capped at 150 (internal: public copy says "numbers are capped", never the number). Every tasting included. Tickets drop in the new year; the list hears a day before everyone else. |
@@ -34,7 +34,7 @@ and possibly olive oil), so public copy names the categories only.
 | We supply | A table with a black cloth, a power point, access to the kitchen, an A5 table card with the maker’s name, and the keepsake glass every guest tastes from. |
 | Makers bring | Their own signage and whatever else is in their kit for pouring, serving and selling. |
 | Maker form | https://tally.so/r/X5lyrL (Tally, free plan: 10 MB per upload) |
-| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page, both paths: producer's licence → promotional event authorisation, apply by mid-December; any other licence → temporary limited licence, by end of February) |
+| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page, both paths: producer's licence → promotional event authorisation, apply before Christmas; any other licence → temporary limited licence, by end of February) |
 
 Table size is still to confirm; state it once known.
 
@@ -46,29 +46,40 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Question | Type | Shown when | Required |
 |---|---|---|---|
 | What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
-| Is your licence covered to pour and sell at Vines & Vinyl? (Yes / No; covers producer's and general licences; “Not sure?” in the description points at the guide and LCV 1300 182 457) | Multiple choice | Winery | yes |
-| A copy of your licence or permit | File | licence = Yes | yes |
-| You’ll need to apply (Applied / Not yet; producers option 8 by mid-December, other licences temporary limited licence by end of February; “keep going with the rest of the form — email a copy to hello@ once approved”) | Multiple choice | licence = No | yes |
+| Which licence does your business hold? (Producer’s licence / General or other licence) | Multiple choice | Winery | yes |
+| Does it have a promotional event authorisation? (Yes / No; “Not sure?” in the description points at the guide and LCV 1300 182 457) | Multiple choice | licence type = Producer’s | yes |
+| A copy of your licence or permit | File | authorisation = Yes | yes |
+| You’ll need to apply (Applied / Not yet; producer’s option 8 $172.70 before Christmas, other licences temporary limited licence $259.10 by end of February; “keep going with the rest of the form — email a copy to hello@ once approved”) | Multiple choice | authorisation = No, or licence type = General/other | yes |
 | When did you apply? | Date | started = Applied | yes |
-| RSA certificates | File (multiple) | Winery | no |
+| RSA certificates (one per person pouring; check each is current — three-year refresher) | File (multiple) | Winery | no |
 | Business name · Your name · Email · Main contact number | Short / email / phone | always | yes |
 | Who will be attending? | Long answer | always | yes |
 | Tell us about your business (50–80 words) | Long answer | always | yes |
 | What will you be pouring or serving? | Long answer | always | yes |
+| Do you need anything at your table? (Power / Water / Neither) | Checkboxes | Cheesemaker, Olive oil, Food maker, Coffee | yes |
 | How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
 | FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Food maker, Coffee | yes |
-| If we ran 15-minute masterclasses, would you want a slot? (interest only) | Yes / No | always | yes |
+| Want a 15-minute masterclass slot? (an offer — slots confirmed with makers directly; nothing public until they’re taken) | Yes / No | always | yes |
 | What would you do with it? | Short answer | masterclass = Yes | no |
-| Could you donate something for the prize draw? | Yes / Not this time | always | no |
-| What would you donate? | Short answer | prize = Yes | no |
+| Could you donate something for the prize draw? | Yes / No | always | no |
+| What would you put in? | Short answer | prize = Yes | no |
 | Website · Instagram handle | Link / short | always | no |
 | Your logo · Photos (3–6, up to 10 each) | File | always | yes |
 | Using your photos and details (consent) | Checkbox | always | yes |
 | Anything else we should know? | Long answer | always | no |
 
+Thank-you screen after submit: “Thanks — you’re in. I’ll be in touch with
+the floor plan and next steps.”
+
+Still to add: the tasting-rule checkbox (one flight then punch) — waiting
+on the agreed wording. A custom share preview (OG image) is Tally
+Pro-only; revisit with the trial decision.
+
 Deliberately **not** in the form (they go in the makers email / info
 sheet): bump-in time, the two-Instagram-posts ask, what to bring for your
-table (the we-supply list), table size, parking.
+table (the we-supply list), table size, parking. Headcount and the wines
+sweet-spot line were dropped as duplicates (names give the count; the
+wines question already asks 3–4).
 
 ## Lines
 
