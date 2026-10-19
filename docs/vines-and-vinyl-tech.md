@@ -43,8 +43,16 @@ nothing is sent.
 3. Tally stores the answers and files, and emails a notification to
    `hello@runaboutwine.com.au` (free plan: notifications go to the Tally
    account email — see below).
-4. Files are reviewed in Tally → Submissions, then copied to Google Drive
-   (`Vines & Vinyl / Makers / <business name>`) by hand.
+4. A scheduled Claude task ("V&V maker form → Sheet + Drive sync", every
+   4 hours) appends a row per submission to the Maker Tracker sheet and
+   files uploads under `Vines & Vinyl / Makers / <business name>` in
+   Google Drive, flagging each maker Complete or CHASING with what's
+   missing.
+   - Tracker: https://docs.google.com/spreadsheets/d/1upXIs7jYdBWVXevl15BlGINWh-nhbHVAefJwj44OD5M
+   - Drive Makers folder: https://drive.google.com/drive/folders/1aYbUXgUhia1dbwIdRvIoVwA3iv0y1jjP
+   - File bytes copy across only once `storage.tally.so` is allowed in
+     Claude's network access; until then each maker folder holds a
+     "Files from Tally" doc with direct links.
 
 ## Landing page — Netlify
 
