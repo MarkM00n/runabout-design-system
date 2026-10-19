@@ -46,9 +46,9 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Question | Type | Shown when | Required |
 |---|---|---|---|
 | What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
-| Is your licence covered to pour and sell at Vines & Vinyl? (Yes / No / Not sure; covers producer's and general licences; links the licence guide, LCV 1300 182 457) | Multiple choice | Winery | yes |
+| Is your licence covered to pour and sell at Vines & Vinyl? (Yes / No; covers producer's and general licences; “Not sure?” in the description points at the guide and LCV 1300 182 457) | Multiple choice | Winery | yes |
 | A copy of your licence or permit | File | licence = Yes | yes |
-| You’ll need to apply (Applied / Not yet; producers option 8 by mid-December, other licences temporary limited licence by end of February; “keep going with the rest of the form”) | Multiple choice | licence = No or Not sure | yes |
+| You’ll need to apply (Applied / Not yet; producers option 8 by mid-December, other licences temporary limited licence by end of February; “keep going with the rest of the form”) | Multiple choice | licence = No | yes |
 | When did you apply? | Date | started = Applied | yes |
 | RSA certificates | File (multiple) | Winery | no |
 | Business name · Your name · Email · Main contact number | Short / email / phone | always | yes |
