@@ -34,6 +34,7 @@ and possibly olive oil), so public copy names the categories only.
 | We supply | A table with a black cloth, a power point, access to the kitchen, an A5 table card with the maker’s name, and the keepsake glass every guest tastes from. |
 | Makers bring | Their own signage and whatever else is in their kit for pouring, serving and selling. |
 | Maker form | https://tally.so/r/X5lyrL (Tally, free plan: 10 MB per upload) |
+| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page; wineries need a promotional event authorisation on their producer's licence; apply by mid-December) |
 
 Table size is still to confirm; state it once known.
 
