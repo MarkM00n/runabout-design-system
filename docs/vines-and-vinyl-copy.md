@@ -34,7 +34,7 @@ and possibly olive oil), so public copy names the categories only.
 | We supply | A table with a black cloth, a power point, access to the kitchen, an A5 table card with the maker’s name, and the keepsake glass every guest tastes from. |
 | Makers bring | Their own signage and whatever else is in their kit for pouring, serving and selling. |
 | Maker form | https://tally.so/r/X5lyrL (Tally, free plan: 10 MB per upload) |
-| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page; wineries need a promotional event authorisation on their producer's licence; apply by mid-December) |
+| Winery licence guide | https://vinesandvinyl.runaboutwine.com.au/winery-licence-guide.pdf (one page, both paths: producer's licence → promotional event authorisation, apply by mid-December; any other licence → temporary limited licence, by end of February) |
 
 Table size is still to confirm; state it once known.
 
@@ -46,9 +46,9 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Question | Type | Shown when | Required |
 |---|---|---|---|
 | What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
-| Does your producer’s licence have a promotional event authorisation? (Yes / No / Not sure; links the licence guide, LCV 1300 182 457) | Multiple choice | Winery | yes |
-| A copy of your producer’s licence | File | licence = Yes | yes |
-| You’ll need to apply by mid-December. Have you started? (Applied / Not yet) | Multiple choice | licence = No or Not sure | yes |
+| Is your licence covered to pour and sell at Vines & Vinyl? (Yes / No / Not sure; covers producer's and general licences; links the licence guide, LCV 1300 182 457) | Multiple choice | Winery | yes |
+| A copy of your licence or permit | File | licence = Yes | yes |
+| You’ll need to apply — have you started? (Applied / Not yet; producers option 8 by mid-December, other licences temporary limited licence by end of February) | Multiple choice | licence = No or Not sure | yes |
 | When did you apply? | Date | started = Applied | yes |
 | RSA certificates | File (multiple) | Winery | no |
 | Business name · Your name · Email · Main contact number | Short / email / phone | always | yes |
