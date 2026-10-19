@@ -46,16 +46,15 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | Question | Type | Shown when | Required |
 |---|---|---|---|
 | What kind of maker are you? (Winery · Cheesemaker · Olive oil · Non-alc drinks · Food maker · Coffee · Other) | Multiple choice | always | yes |
-| Which licence does your business hold? (Producer’s licence / General or other licence) | Multiple choice | Winery | yes |
-| Does it have a promotional event authorisation? (Yes / No; “Not sure?” in the description points at the guide and LCV 1300 182 457) | Multiple choice | licence type = Producer’s | yes |
-| A copy of your licence or permit | File | authorisation = Yes | yes |
-| You’ll need to apply (Applied / Not yet; producer’s option 8 $172.70 before Christmas, other licences temporary limited licence $259.10 by end of February; “keep going with the rest of the form — email a copy to hello@ once approved”) | Multiple choice | authorisation = No, or licence type = General/other | yes |
+| Your liquor licence (“we pass a copy to the venue the week before”) | File | Winery | yes |
+| Can you pour at off-site events? (Yes / Not yet / Not sure) | Multiple choice | Winery | yes |
+| “No stress” text block (links the licence guide; email a copy to hello@ once approved) | Text | pour = Not yet or Not sure | — |
 | When did you apply? | Date | started = Applied | yes |
 | RSA certificates (one per person pouring; check each is current — three-year refresher) | File (multiple) | Winery | no |
 | Business name · Your name · Email · Main contact number | Short / email / phone | always | yes |
 | Who will be attending? | Long answer | always | yes |
 | Tell us about your business (50–80 words) | Long answer | always | yes |
-| What will you be pouring or serving? | Long answer | always | yes |
+| What will you be pouring or serving? (“What you’re planning to bring. A rough list is fine for now.”) | Long answer | always | yes |
 | Do you need anything at your table? (Power / Water / Neither) | Checkboxes | Cheesemaker, Olive oil, Food maker, Coffee | yes |
 | How many wines will you pour? (asking for 3–4; one flight each, then by the glass) | Number | Winery | yes |
 | FoodTrader registration number | Short answer | Cheesemaker, Olive oil, Food maker, Coffee | yes |
@@ -63,6 +62,8 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 | What would you do with it? | Short answer | masterclass = Yes | no |
 | Could you donate something for the prize draw? | Yes / No | always | no |
 | What would you put in? | Short answer | prize = Yes | no |
+| Certificate of currency (public liability) (“the venue needs a current certificate from every maker”) | File | always | no |
+| Renewing? When will you send it? | Short answer | always | no |
 | Website · Instagram handle | Link / short | always | no |
 | Your logo · Photos (3–6, up to 10 each) | File | always | yes |
 | Using your photos and details (consent) | Checkbox | always | yes |
@@ -71,9 +72,9 @@ about 18. Everything marked *conditional* is hidden until its trigger.
 Thank-you screen after submit: “Thanks — you’re in. I’ll be in touch with
 the floor plan and next steps.”
 
-Still to add: the tasting-rule checkbox (one flight then punch) — waiting
-on the agreed wording. A custom share preview (OG image) is Tally
-Pro-only; revisit with the trial decision.
+The tasting rule, the Instagram-posts ask and bump-in time go in the
+thank-you screen and confirmation email, not the form. A custom share
+preview (OG image) is Tally Pro-only; revisit with the trial decision.
 
 Deliberately **not** in the form (they go in the makers email / info
 sheet): bump-in time, the two-Instagram-posts ask, what to bring for your
