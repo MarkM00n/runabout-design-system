@@ -1,0 +1,44 @@
+# Example GitHub Actions workflow: run the code audit on every PR and post
+# the summary to the job page. Report-only — it never fails the build.
+#
+# To use: copy to .github/workflows/ in the audited repo, copy audit-kit/
+# alongside it (or check it out from wherever it lives), and commit an
+# audit.config.json. Move to blocking (--fail-on fail) only once the team
+# trusts the findings: a check that blocks before it's trusted gets removed.
+
+name: Design system audit
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run audit
+        run: |
+          node audit-kit/scripts/audit-code.mjs \
+            --root . \
+            --config audit.config.json \
+            --out audit-output \
+            --fail-on never
+
+      - name: Summary
+        if: always()
+        run: cat audit-output/audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: design-system-audit
+          path: audit-output/

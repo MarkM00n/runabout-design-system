@@ -1,0 +1,72 @@
+{
+  "$description": "Example token structure: three layers, two axes. Values are placeholders. Format follows the W3C Design Tokens draft ($value, $type); aliases use {group.token}.",
+  "$extensions": {
+    "brands": ["<default-brand>", "<second-brand>"],
+    "modes": ["on-light", "on-inverse", "on-brand"]
+  },
+
+  "primitive": {
+    "$description": "Raw values. Hidden from designers' pickers. Never used in product code. One value per brand.",
+    "color": {
+      "neutral": {
+        "50":  { "$type": "color", "$value": "<#hex>", "$extensions": { "<second-brand>": "<#hex>" } },
+        "900": { "$type": "color", "$value": "<#hex>", "$extensions": { "<second-brand>": "<#hex>" } }
+      },
+      "brand": {
+        "500": { "$type": "color", "$value": "<#hex>", "$extensions": { "<second-brand>": "<#hex>" } },
+        "700": { "$type": "color", "$value": "<#hex>", "$extensions": { "<second-brand>": "<#hex>" } }
+      },
+      "status": {
+        "$description": "Status never themes: same value for every brand.",
+        "error":   { "$type": "color", "$value": "<#hex>" },
+        "success": { "$type": "color", "$value": "<#hex>" }
+      }
+    },
+    "space": {
+      "100": { "$type": "dimension", "$value": "<4px>" },
+      "200": { "$type": "dimension", "$value": "<8px>" },
+      "400": { "$type": "dimension", "$value": "<16px>" }
+    },
+    "radius": {
+      "sm":   { "$type": "dimension", "$value": "<4px>" },
+      "full": { "$type": "dimension", "$value": "<9999px>" }
+    }
+  },
+
+  "semantic": {
+    "$description": "Roles. Named by purpose, never ending in a number. One value per mode.",
+    "color": {
+      "surface": {
+        "page": { "$type": "color", "$value": "{primitive.color.neutral.50}",
+          "$extensions": { "modes": { "on-inverse": "{primitive.color.neutral.900}", "on-brand": "{primitive.color.brand.700}" } } }
+      },
+      "text": {
+        "primary": { "$type": "color", "$value": "{primitive.color.neutral.900}",
+          "$extensions": { "modes": { "on-inverse": "{primitive.color.neutral.50}", "on-brand": "{primitive.color.neutral.50}" } } }
+      },
+      "action": {
+        "primary": { "$type": "color", "$value": "{primitive.color.brand.500}" }
+      },
+      "border": {
+        "default": { "$type": "color", "$value": "{primitive.color.neutral.900}" }
+      },
+      "state": {
+        "error": { "$type": "color", "$value": "{primitive.color.status.error}" }
+      }
+    },
+    "space": {
+      "inset-sm": { "$type": "dimension", "$value": "{primitive.space.200}" },
+      "stack-md": { "$type": "dimension", "$value": "{primitive.space.400}" }
+    }
+  },
+
+  "component": {
+    "$description": "Optional. Only where one component needs to diverge from the shared role.",
+    "button": {
+      "primary": {
+        "fill":  { "$type": "color", "$value": "{semantic.color.action.primary}" },
+        "label": { "$type": "color", "$value": "{semantic.color.text.primary}" }
+      }
+    }
+  }
+}
