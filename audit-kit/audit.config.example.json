@@ -1,0 +1,34 @@
+{
+  "$comment": "Copy to audit.config.json and replace every <placeholder>. Paths are relative to --root. Remove keys you don't need; defaults live in scripts/audit-code.mjs.",
+
+  "roots": ["<src>", "<apps>", "<packages>"],
+  "exclude": ["node_modules", "dist", "build", ".next", "coverage", "storybook-static", ".git", "vendor"],
+
+  "tokenFiles": {
+    "css": ["<path/to/tokens.css>"],
+    "json": ["<path/to/tokens.json>"]
+  },
+
+  "tokenVarPrefixes": ["--color-", "--spacing-", "--radius-", "--font-", "--text-"],
+  "primitivePattern": "^--color-[a-z]+-\\d+$",
+
+  "componentDirs": ["<path/to/design-system/components>"],
+  "designSystemPackages": ["<@org/design-system>", "<@/components/ui>"],
+
+  "surfaces": {
+    "<product-a>": "<apps/product-a>",
+    "<product-b>": "<apps/product-b>",
+    "design-system": "<path/to/design-system>"
+  },
+
+  "rootFontSize": 16,
+  "nearMissDistance": 10,
+  "justificationPattern": "unbound|not tokeni[sz]ed|literal|exception|one-off|intentional",
+
+  "tailwind": {
+    "flagArbitraryValues": true,
+    "flagDefaultScale": false
+  },
+
+  "topN": 15
+}

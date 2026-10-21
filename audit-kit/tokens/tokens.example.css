@@ -1,0 +1,48 @@
+/*
+ * Example of what code consumes: semantic tokens with resolved values, mode
+ * blocks, brand blocks. Placeholders throughout. Generated from the design
+ * export, never typed — see token-architecture.md.
+ *
+ * Selectors: <mode-attribute> picks the surface, <brand-attribute> picks the
+ * brand. The default mode and default brand set no attribute.
+ */
+
+:root {
+  /* Primitives — referenced only by this file */
+  --color-neutral-50: <#hex>;
+  --color-neutral-900: <#hex>;
+  --color-brand-500: <#hex>;
+  --color-brand-700: <#hex>;
+
+  /* Semantic — what product code uses. Default mode, default brand. */
+  --color-surface-page: <#hex>;   /* page and section background */
+  --color-text-primary: <#hex>;   /* body text */
+  --color-action-primary: <#hex>; /* primary button fill */
+  --color-border-default: <#hex>; /* input and card boundaries; clears 3:1 */
+
+  --spacing-inset-sm: 8px;
+  --radius-sm: 4px;
+}
+
+/* Modes. The default mode repeats as an explicit block so a light card
+   inside an inverse section can reset. */
+[data-mode='light'] {
+  --color-surface-page: <#hex>;
+  --color-text-primary: <#hex>;
+}
+[data-mode='inverse'] {
+  --color-surface-page: <#hex>;
+  --color-text-primary: <#hex>;
+}
+
+/* Brands. Only values that differ from the default brand.
+   :not([data-mode]) stops a bare brand rule beating a mode rule on an
+   element that carries both attributes — a real cascade bug. */
+[data-brand='<second-brand>']:not([data-mode]) {
+  --color-surface-page: <#hex>;
+  --color-action-primary: <#hex>;
+}
+[data-brand='<second-brand>'] [data-mode='inverse'],
+[data-brand='<second-brand>'][data-mode='inverse'] {
+  --color-surface-page: <#hex>;
+}
