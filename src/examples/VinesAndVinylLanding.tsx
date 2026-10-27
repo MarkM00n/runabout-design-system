@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { useId } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { Button } from '../components/Button';
 import { Illustration } from '../components/Illustration';
 import { SignupForm } from '../components/SignupForm';
 import type { SignupFormErrorKind, SignupFormState } from '../components/SignupForm';
@@ -312,10 +313,11 @@ const DateSeal = () => (
 // The SignupForm component (Figma Sign-up form, 1490:546) — states, focus,
 // validation, Success and Error copy all live there. The page supplies only
 // what's its own: the submit function (Kit via /api/subscribe on Netlify, the
-// mock elsewhere — see submitSignup.ts) and a lead-in that colours its "early
-// bird" phrase, which the library component's plain lead-in doesn't. The
-// component's default Success copy ("You’re on the list.") is right for this
-// page: the Kit form auto-confirms, so nobody has to click a link.
+// mock elsewhere — see submitSignup.ts), a lead-in that colours its
+// "early-bird" phrase, which the library component's plain lead-in doesn't,
+// and this page's own button, Success copy and share prompt (copy sheet,
+// 2026-10-27). The Kit form auto-confirms, so nobody has to click a link and
+// the Success copy says so plainly. Public copy never says "the list".
 
 export interface SignupStateProps {
   /** Starting state for the sign-up form. Stories use it to pin a state for
@@ -327,9 +329,97 @@ export interface SignupStateProps {
 
 const signupLeadIn = (
   <>
-    Join the list and be first to grab an <span className="text-text-accent">early bird ticket</span> — strictly limited.
+    Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January.
   </>
 );
+
+// --- Share prompt (Success) --------------------------------------------------
+
+// Shown under the Success card via SignupForm's successActions, so it sits on
+// the hero's own terracotta surface (On Brand) and its buttons are the exact
+// CTA styles of the form above it: primary = the cream pill the sign-up
+// button uses, secondary = the outline. Inside the light Success card the
+// same Button variants would resolve On Light (a dark pill), which is why the
+// prompt lives outside the card.
+//
+// Share uses the Web Share API where the browser has it (phones, Safari);
+// elsewhere only Copy link shows. Copy link flips to "Copied" for 2s; the
+// form's aria-live region announces the change.
+const SHARE_URL = 'https://vinesandvinyl.runaboutwine.com.au/';
+const SHARE_DATA = {
+  title: 'Vines & Vinyl · Eltham · Sat 24 April 2027',
+  text: 'A tasting afternoon with independent makers and guest DJs in Eltham. Early-bird tickets in January.',
+  url: SHARE_URL,
+};
+
+const copyText = async (text: string) => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  // Older browsers and non-secure contexts: a hidden textarea + execCommand.
+  const area = document.createElement('textarea');
+  area.value = text;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.opacity = '0';
+  document.body.appendChild(area);
+  area.select();
+  const ok = document.execCommand('copy');
+  area.remove();
+  if (!ok) throw new Error('copy failed');
+};
+
+const SharePrompt = () => {
+  // Read once, when the prompt first appears (only ever after a sign-up, in a
+  // browser): a desktop browser without the API never shows a dead button.
+  const [canShare] = useState(() => typeof navigator !== 'undefined' && typeof navigator.share === 'function');
+  const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(resetTimer.current), []);
+
+  const share = async () => {
+    try {
+      await navigator.share(SHARE_DATA);
+    } catch {
+      // The person closed the share sheet (AbortError) or the browser refused;
+      // either way there's nothing to tell them.
+    }
+  };
+
+  const copy = async () => {
+    try {
+      await copyText(SHARE_URL);
+      setCopied(true);
+      window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard blocked: leave the label alone rather than claim a copy.
+    }
+  };
+
+  return (
+    <>
+      <p className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
+        Who’s coming with you?
+      </p>
+      <p className="m-0 text-center font-manrope text-paragraph-small text-text-primary">
+        Send them the link before the early birds go.
+      </p>
+      <div className="flex flex-wrap justify-center gap-02 pt-01">
+        {canShare ? (
+          <Button type="button" variant="primary" size="large" onClick={share}>
+            Share
+          </Button>
+        ) : null}
+        <Button type="button" variant="secondary" size="large" onClick={copy}>
+          {copied ? 'Copied' : 'Copy link'}
+        </Button>
+      </div>
+    </>
+  );
+};
 
 // --- Sections ----------------------------------------------------------------
 
@@ -399,17 +489,33 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         className="relative z-10 flex flex-col items-center"
         style={{ gap: fluid([MOBILE, 'spacing-05'], [TABLET, 'spacing-06']), paddingInline: heroPaddingInline }}
       >
-        <p
-          className="w-full text-center font-manrope text-paragraph-large text-text-primary"
-          style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
-        >
-          Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while some of
-          Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi.
-          Join us at the Dorian LeGallienne Room in Eltham. Arrive any time from noon, stay till the last record —
-          every tasting included.
-        </p>
+        {/* Intro, then the kids line in the "Presented by Runabout" style
+            (label-strong semibold) — copy sheet, 2026-10-27. */}
+        <div className="flex w-full flex-col items-center gap-02">
+          <p
+            className="w-full text-center font-manrope text-paragraph-large text-text-primary"
+            style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
+          >
+            Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play
+            jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium,
+            Eltham. Arrive any time from noon and stay till the last record, with a taste at every table.
+          </p>
+          <p className="m-0 text-center font-manrope text-label-strong font-semibold text-text-primary">
+            Made for grown-ups, but kids come free with an adult.
+          </p>
+        </div>
 
-        <SignupForm onSubmit={submitSignup} leadIn={signupLeadIn} initialState={signupState} initialError={signupError} />
+        <SignupForm
+          onSubmit={submitSignup}
+          leadIn={signupLeadIn}
+          submitLabel="Sign up"
+          submittingLabel="Signing up…"
+          successHeading="You’re in."
+          successBody="We’ll email you before tickets go on sale to everyone else."
+          successActions={<SharePrompt />}
+          initialState={signupState}
+          initialError={signupError}
+        />
       </div>
     </section>
   );

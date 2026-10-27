@@ -16,7 +16,7 @@ event line fresh for one surface. Rule: `docs/design-system-rules.md` §5,
 |---|---|
 | Date | Saturday 24 April 2027 |
 | Time | 12–4:30pm (en dash, no spaces). It's an **afternoon**: never "all day". |
-| Venue | The Dorian LeGallienne Room, Eltham Community & Reception Centre (ampersand — the venue’s own styling) |
+| Venue | The Dorian LeGallienne Room and Atrium, Eltham Community & Reception Centre (ampersand — the venue’s own styling) |
 | Address | 801 Main Road, Eltham |
 | Short venue | Eltham |
 | Tickets | Capped at 150 (internal: public copy says "numbers are capped", never the number). Every tasting included. Tickets drop in the new year; the list hears a day before everyone else. |
@@ -88,9 +88,15 @@ wines question already asks 3–4).
 | Makers | Winemakers, cheesemakers and local food makers — every table staffed by the person who made it. | Winemakers, cheesemakers and local food makers, every tasting included. |
 | Music | Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come for a boogie. | Crates of jazz, funk, soul and disco all afternoon from some of Melbourne’s best DJs. Come thirsty, come for a boogie. |
 | Room to move | Numbers are capped so every table’s within reach: a glass in your hand, every tasting included. Made for grown-ups, but kids come free with an adult. | Numbers are capped so every table’s within reach. |
-| Early bird tickets | Join the list and be first to grab an early bird ticket — strictly limited. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
-| Hero intro | Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while some of Melbourne’s best DJs play jazz, funk, soul and disco records from every era on a proper vintage hi-fi. Join us at the Dorian LeGallienne Room in Eltham. Arrive any time from noon, stay till the last record — every tasting included. | — |
-| Sign-up success | You’re on the list. / A welcome email is on its way. We’ll be in touch the moment early bird tickets go live. | — |
+| Early bird tickets | Sign up for first access to early-bird tickets in January. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
+| Hero intro | Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium, Eltham. Arrive any time from noon and stay till the last record, with a taste at every table. | — |
+| Kids | Made for grown-ups, but kids come free with an adult. | — |
+| Sign-up button | Sign up (submitting: Signing up…) | — |
+| Sign-up success | You’re in. / We’ll email you before tickets go on sale to everyone else. | — |
+| Share invite (after sign-up) | Who’s coming with you? / Send them the link before the early birds go. / [Share] [Copy link → Copied] | — |
+| Share sheet / link preview title | Vines & Vinyl · Eltham · Sat 24 April 2027 | — |
+| Share sheet text | A tasting afternoon with independent makers and guest DJs in Eltham. Early-bird tickets in January. | — |
+| Link preview description (og:description) | A tasting afternoon with independent makers and guest DJs. Sign up for first access to early-bird tickets in January. | — |
 | Instagram | Until then, follow along on Instagram for maker reveals, guest selectors and competition info. | — |
 
 ## Vocabulary

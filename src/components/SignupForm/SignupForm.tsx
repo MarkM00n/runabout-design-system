@@ -36,6 +36,11 @@ import { isPlausibleEmail } from './email';
 //     Submitting label and the success copy are announced as they appear.
 //   - Focus moves only after a real submit, never on first render, so an
 //     instance that opens in Success or Error doesn't scroll to the form.
+//   - successActions (optional) renders under the Success card, outside it,
+//     on whatever surface the form sits on — so anything placed there (share
+//     buttons, a follow-up link) inherits the page's mode exactly as the
+//     Default state's lead-in and button do. Not in Figma's State=Success
+//     yet; added 2026-10-27 for the Vines & Vinyl share prompt.
 //
 // Error has two messages. Figma draws the validation one. A failed submit
 // (onSubmit rejected: network, 4xx, 5xx) is the same state with retry copy,
@@ -74,6 +79,11 @@ export interface SignupFormProps {
   submittingLabel?: ReactNode;
   successHeading?: ReactNode;
   successBody?: ReactNode;
+  /** Optional content shown under the Success card, on the form's own
+   *  surface (it inherits the surrounding mode, like the lead-in). Use it for
+   *  a follow-up action such as sharing the page. Nothing renders when
+   *  omitted. */
+  successActions?: ReactNode;
   /** Message per error kind. Overrides merge with the defaults. */
   errorMessages?: Partial<Record<SignupFormErrorKind, ReactNode>>;
   /** State to open in. For stories and snapshots; real use starts at
@@ -88,7 +98,6 @@ const DEFAULT_ERROR_MESSAGES: Record<SignupFormErrorKind, ReactNode> = {
   invalid: "That email doesn't look right — check it and try again.",
   failed: 'Something went wrong — try again in a moment.',
 };
-
 
 // Appearing content fades in over duration-standard; with reduced motion it
 // just appears. @starting-style, so no keyframes are needed.
@@ -117,6 +126,7 @@ export const SignupForm = ({
   submittingLabel = 'Joining…',
   successHeading = 'You’re on the list.',
   successBody = 'A welcome email is on its way. We’ll be in touch the moment early bird tickets go live.',
+  successActions,
   errorMessages,
   initialState = 'default',
   initialError = 'invalid',
@@ -172,28 +182,38 @@ export const SignupForm = ({
   return (
     <div aria-live="polite" className={clsx('flex w-full flex-col items-center gap-02', className)}>
       {state === 'success' ? (
-        // Figma's Success "Notice": a light card the full width of the form —
-        // it has a background, so it owns its mode (data-mode="light") and
-        // reads the same on any surface the form sits on. surface-section
-        // fill, radius-2xl, spacing-03/04 padding; 28px dot beside a text
-        // column that fills the rest, top-aligned.
-        <div
-          data-mode="light"
-          className={clsx('flex w-full max-w-[591px] items-start gap-02 rounded-2xl bg-surface-section px-04 py-03 text-left', appear)}
-        >
-          <StatusDot tone="success" glyph="✓" size={28} />
-          <div className="flex min-w-0 flex-1 flex-col gap-01">
-            {/* Figma "Manrope/Paragraph Large Bold" = paragraph-large + bold. */}
-            <h2
-              ref={headingRef}
-              tabIndex={-1}
-              className="m-0 font-manrope text-paragraph-large font-bold text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus"
-            >
-              {successHeading}
-            </h2>
-            <p className="m-0 font-manrope text-paragraph-small text-text-secondary">{successBody}</p>
+        <>
+          {/* Figma's Success "Notice": a light card the full width of the form —
+            it has a background, so it owns its mode (data-mode="light") and
+            reads the same on any surface the form sits on. surface-section
+            fill, radius-2xl, spacing-03/04 padding; 28px dot beside a text
+            column that fills the rest, top-aligned. */}
+          <div
+            data-mode="light"
+            className={clsx(
+              'flex w-full max-w-[591px] items-start gap-02 rounded-2xl bg-surface-section px-04 py-03 text-left',
+              appear,
+            )}
+          >
+            <StatusDot tone="success" glyph="✓" size={28} />
+            <div className="flex min-w-0 flex-1 flex-col gap-01">
+              {/* Figma "Manrope/Paragraph Large Bold" = paragraph-large + bold. */}
+              <h2
+                ref={headingRef}
+                tabIndex={-1}
+                className="m-0 font-manrope text-paragraph-large font-bold text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-state-focus"
+              >
+                {successHeading}
+              </h2>
+              <p className="m-0 font-manrope text-paragraph-small text-text-secondary">{successBody}</p>
+            </div>
           </div>
-        </div>
+          {successActions ? (
+            <div className={clsx('flex w-full max-w-[591px] flex-col items-center gap-02 pt-03', appear)}>
+              {successActions}
+            </div>
+          ) : null}
+        </>
       ) : (
         <>
           <p id={promptId} className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
