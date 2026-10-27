@@ -86,6 +86,7 @@ export const CustomLeadIn: Story = {
         Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January.
       </>
     ),
+    leadInSize: 'small',
   },
 };
 

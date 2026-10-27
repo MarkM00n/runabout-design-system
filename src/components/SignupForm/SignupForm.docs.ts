@@ -10,6 +10,7 @@ export const docs: ComponentDocMeta = {
     'Change the words with props: `leadIn`, `submitLabel`, `submittingLabel`, `successHeading`, `successBody` and `errorMessages`. `leadIn` takes any inline content, so a page can colour a phrase with `text-text-accent`.',
     'Use `successActions` for one follow-up after sign-up (for example “Share with a friend”). It renders inside the Success card under the body, in the card’s light mode, so use a secondary small Button — not a primary, and not a second prompt or card.',
     'Give it the width of its column. The field and button share a row up to Figma\'s 591px and stack, each full width, once the row is too narrow for both — from the content, not a breakpoint.',
+    'Set `leadInSize="small"` when the form sits straight under body copy (a hero intro) so the lead-in reads with it rather than as a second headline. Default is `large`, as in Figma.',
     'Use `initialState` and `initialError` only to pin a state for stories and snapshots. A real page starts at Default.',
   ],
   dos: [

@@ -71,6 +71,10 @@ export interface SignupFormProps {
   onSubmit: (email: string) => Promise<unknown>;
   /** Line above the field. Also the form's accessible name. */
   leadIn?: ReactNode;
+  /** Lead-in type size: `large` (paragraph-large bold, Figma's default) or
+   *  `small` (paragraph-small bold) where the form follows other body copy
+   *  and should read as part of it. */
+  leadInSize?: 'large' | 'small';
   /** Accessible name of the email field (there's no visible label; the
    *  lead-in names the form). */
   inputLabel?: string;
@@ -118,6 +122,7 @@ const StatusDot = ({ tone, glyph, size }: { tone: 'success' | 'error'; glyph: st
 
 export const SignupForm = ({
   onSubmit,
+  leadInSize = 'large',
   leadIn = 'Join the list and be first to grab an early bird ticket — strictly limited.',
   inputLabel = 'Email address',
   placeholder = 'you@email.com',
@@ -211,7 +216,13 @@ export const SignupForm = ({
         </>
       ) : (
         <>
-          <p id={promptId} className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
+          <p
+            id={promptId}
+            className={clsx(
+              'm-0 text-center font-manrope font-bold text-text-primary',
+              leadInSize === 'small' ? 'text-paragraph-small' : 'text-paragraph-large',
+            )}
+          >
             {leadIn}
           </p>
           <form

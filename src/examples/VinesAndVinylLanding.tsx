@@ -463,9 +463,6 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         >
           <EventLockup label="Vines & Vinyl" />
         </h1>
-        <p className="relative z-10 text-center font-manrope text-label-strong font-semibold text-text-primary">
-          Presented by Runabout
-        </p>
       </div>
 
       <div
@@ -473,7 +470,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         style={{ gap: fluid([MOBILE, 'spacing-05'], [TABLET, 'spacing-06']), paddingInline: heroPaddingInline }}
       >
         <p
-          className="w-full text-center font-manrope text-paragraph-large text-text-primary"
+          className="w-full text-center font-manrope text-paragraph-small text-text-primary"
           style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
         >
             Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play
@@ -484,6 +481,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         <SignupForm
           onSubmit={submitSignup}
           leadIn={signupLeadIn}
+          leadInSize="small"
           submitLabel="Sign up"
           submittingLabel="Signing up…"
           successHeading="You’re in."
