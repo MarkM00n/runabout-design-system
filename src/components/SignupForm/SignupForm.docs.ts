@@ -8,6 +8,7 @@ export const docs: ComponentDocMeta = {
     'Pass `onSubmit` as a function that takes the email and returns a promise. Resolve it when the address is stored; reject it (throw) on any failure — network, 4xx or 5xx — and the form shows its retry message. Keep provider details (field names, auth, double opt-in) behind that function or the endpoint it calls.',
     'Place it on a surface. It has no background and never sets a mode, so it resolves its text, field and button from the nearest `data-mode` and `data-brand`, like the hero it was designed for (On Brand).',
     'Change the words with props: `leadIn`, `submitLabel`, `submittingLabel`, `successHeading`, `successBody` and `errorMessages`. `leadIn` takes any inline content, so a page can colour a phrase with `text-text-accent`.',
+    'Use `successActions` for a follow-up after sign-up (for example Share / Copy link). It renders under the Success card, on the form’s own surface, so buttons placed there match the Default state’s button in every mode. Keep it to one short prompt and at most two actions.',
     'Give it the width of its column. The field and button share a row up to Figma\'s 591px and stack, each full width, once the row is too narrow for both — from the content, not a breakpoint.',
     'Use `initialState` and `initialError` only to pin a state for stories and snapshots. A real page starts at Default.',
   ],

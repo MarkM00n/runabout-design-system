@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Button } from '../Button';
 import { SignupForm } from './SignupForm';
 import { docs } from './SignupForm.docs';
 import validation from './SignupForm.validation.json';
@@ -82,7 +83,34 @@ export const CustomLeadIn: Story = {
   args: {
     leadIn: (
       <>
-        Join the list and be first to grab an <span className="text-text-accent">early bird ticket</span> — strictly limited.
+        Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January.
+      </>
+    ),
+  },
+};
+
+/** Success with a follow-up under the card, via `successActions` — the
+ *  Vines & Vinyl share prompt. It sits on the form's own surface, so its
+ *  buttons resolve in the surrounding mode like the Default state's do. */
+export const SuccessWithActions: Story = {
+  name: 'Success · with actions',
+  args: {
+    initialState: 'success',
+    successHeading: 'You’re in.',
+    successBody: 'We’ll email you before tickets go on sale to everyone else.',
+    successActions: (
+      <>
+        <p className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
+          Who’s coming with you?
+        </p>
+        <div className="flex flex-wrap justify-center gap-02">
+          <Button type="button" variant="primary" size="large">
+            Share
+          </Button>
+          <Button type="button" variant="secondary" size="large">
+            Copy link
+          </Button>
+        </div>
       </>
     ),
   },
