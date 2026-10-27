@@ -36,11 +36,11 @@ import { isPlausibleEmail } from './email';
 //     Submitting label and the success copy are announced as they appear.
 //   - Focus moves only after a real submit, never on first render, so an
 //     instance that opens in Success or Error doesn't scroll to the form.
-//   - successActions (optional) renders under the Success card, outside it,
-//     on whatever surface the form sits on — so anything placed there (share
-//     buttons, a follow-up link) inherits the page's mode exactly as the
-//     Default state's lead-in and button do. Not in Figma's State=Success
-//     yet; added 2026-10-27 for the Vines & Vinyl share prompt.
+//   - successActions (optional) renders inside the Success card, under the
+//     body, as the last line of the message itself — so it resolves in the
+//     card's light mode. One quiet action (a secondary small button), not a
+//     second prompt. Not in Figma's State=Success yet; added 2026-10-27 for
+//     the Vines & Vinyl share action, moved into the card the same day.
 //
 // Error has two messages. Figma draws the validation one. A failed submit
 // (onSubmit rejected: network, 4xx, 5xx) is the same state with retry copy,
@@ -71,6 +71,10 @@ export interface SignupFormProps {
   onSubmit: (email: string) => Promise<unknown>;
   /** Line above the field. Also the form's accessible name. */
   leadIn?: ReactNode;
+  /** Lead-in type size: `large` (paragraph-large bold, Figma's default) or
+   *  `small` (paragraph-small bold) where the form follows other body copy
+   *  and should read as part of it. */
+  leadInSize?: 'large' | 'small';
   /** Accessible name of the email field (there's no visible label; the
    *  lead-in names the form). */
   inputLabel?: string;
@@ -79,10 +83,9 @@ export interface SignupFormProps {
   submittingLabel?: ReactNode;
   successHeading?: ReactNode;
   successBody?: ReactNode;
-  /** Optional content shown under the Success card, on the form's own
-   *  surface (it inherits the surrounding mode, like the lead-in). Use it for
-   *  a follow-up action such as sharing the page. Nothing renders when
-   *  omitted. */
+  /** Optional action shown inside the Success card, under the body (it
+   *  resolves in the card's light mode). Use it for one follow-up action such
+   *  as sharing the page. Nothing renders when omitted. */
   successActions?: ReactNode;
   /** Message per error kind. Overrides merge with the defaults. */
   errorMessages?: Partial<Record<SignupFormErrorKind, ReactNode>>;
@@ -119,6 +122,7 @@ const StatusDot = ({ tone, glyph, size }: { tone: 'success' | 'error'; glyph: st
 
 export const SignupForm = ({
   onSubmit,
+  leadInSize = 'large',
   leadIn = 'Join the list and be first to grab an early bird ticket — strictly limited.',
   inputLabel = 'Email address',
   placeholder = 'you@email.com',
@@ -206,17 +210,19 @@ export const SignupForm = ({
                 {successHeading}
               </h2>
               <p className="m-0 font-manrope text-paragraph-small text-text-secondary">{successBody}</p>
+              {successActions ? <div className="flex flex-wrap gap-02 pt-01">{successActions}</div> : null}
             </div>
           </div>
-          {successActions ? (
-            <div className={clsx('flex w-full max-w-[591px] flex-col items-center gap-02 pt-03', appear)}>
-              {successActions}
-            </div>
-          ) : null}
         </>
       ) : (
         <>
-          <p id={promptId} className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
+          <p
+            id={promptId}
+            className={clsx(
+              'm-0 text-center font-manrope font-bold text-text-primary',
+              leadInSize === 'small' ? 'text-paragraph-small' : 'text-paragraph-large',
+            )}
+          >
             {leadIn}
           </p>
           <form

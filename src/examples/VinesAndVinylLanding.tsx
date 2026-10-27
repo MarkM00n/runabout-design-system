@@ -370,25 +370,23 @@ const copyText = async (text: string) => {
   if (!ok) throw new Error('copy failed');
 };
 
-const SharePrompt = () => {
-  // Read once, when the prompt first appears (only ever after a sign-up, in a
-  // browser): a desktop browser without the API never shows a dead button.
-  const [canShare] = useState(() => typeof navigator !== 'undefined' && typeof navigator.share === 'function');
+// One action, inside the success card: the share sheet where the browser has
+// one (phones), otherwise copy the link and say so for 2s.
+const ShareAction = () => {
   const [copied, setCopied] = useState(false);
   const resetTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
   const share = async () => {
-    try {
-      await navigator.share(SHARE_DATA);
-    } catch {
-      // The person closed the share sheet (AbortError) or the browser refused;
-      // either way there's nothing to tell them.
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share(SHARE_DATA);
+      } catch {
+        // Closed the sheet (AbortError) or the browser refused: nothing to say.
+      }
+      return;
     }
-  };
-
-  const copy = async () => {
     try {
       await copyText(SHARE_URL);
       setCopied(true);
@@ -400,24 +398,9 @@ const SharePrompt = () => {
   };
 
   return (
-    <>
-      <p className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
-        Who’s coming with you?
-      </p>
-      <p className="m-0 text-center font-manrope text-paragraph-small text-text-primary">
-        Send them the link before the early birds go.
-      </p>
-      <div className="flex flex-wrap justify-center gap-02 pt-01">
-        {canShare ? (
-          <Button type="button" variant="primary" size="large" onClick={share}>
-            Share
-          </Button>
-        ) : null}
-        <Button type="button" variant="secondary" size="large" onClick={copy}>
-          {copied ? 'Copied' : 'Copy link'}
-        </Button>
-      </div>
-    </>
+    <Button type="button" variant="secondary" size="small" onClick={share}>
+      {copied ? 'Link copied' : 'Share with a friend'}
+    </Button>
   );
 };
 
@@ -480,39 +463,30 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         >
           <EventLockup label="Vines & Vinyl" />
         </h1>
-        <p className="relative z-10 text-center font-manrope text-label-strong font-semibold text-text-primary">
-          Presented by Runabout
-        </p>
       </div>
 
       <div
         className="relative z-10 flex flex-col items-center"
         style={{ gap: fluid([MOBILE, 'spacing-05'], [TABLET, 'spacing-06']), paddingInline: heroPaddingInline }}
       >
-        {/* Intro, then the kids line in the "Presented by Runabout" style
-            (label-strong semibold) — copy sheet, 2026-10-27. */}
-        <div className="flex w-full flex-col items-center gap-02">
-          <p
-            className="w-full text-center font-manrope text-paragraph-large text-text-primary"
-            style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
-          >
+        <p
+          className="w-full text-center font-manrope text-paragraph-small text-text-primary"
+          style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
+        >
             Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play
             jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium,
             Eltham. Arrive any time from noon and stay till the last record, with a taste at every table.
-          </p>
-          <p className="m-0 text-center font-manrope text-label-strong font-semibold text-text-primary">
-            Made for grown-ups, but kids come free with an adult.
-          </p>
-        </div>
+        </p>
 
         <SignupForm
           onSubmit={submitSignup}
           leadIn={signupLeadIn}
+          leadInSize="small"
           submitLabel="Sign up"
           submittingLabel="Signing up…"
           successHeading="You’re in."
           successBody="We’ll email you before tickets go on sale to everyone else."
-          successActions={<SharePrompt />}
+          successActions={<ShareAction />}
           initialState={signupState}
           initialError={signupError}
         />

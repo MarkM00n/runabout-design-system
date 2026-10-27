@@ -86,32 +86,22 @@ export const CustomLeadIn: Story = {
         Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January.
       </>
     ),
+    leadInSize: 'small',
   },
 };
 
-/** Success with a follow-up under the card, via `successActions` — the
- *  Vines & Vinyl share prompt. It sits on the form's own surface, so its
- *  buttons resolve in the surrounding mode like the Default state's do. */
+/** Success with one follow-up action inside the card, via `successActions` —
+ *  the Vines & Vinyl share action. It resolves in the card's light mode. */
 export const SuccessWithActions: Story = {
-  name: 'Success · with actions',
+  name: 'Success · with action',
   args: {
     initialState: 'success',
     successHeading: 'You’re in.',
     successBody: 'We’ll email you before tickets go on sale to everyone else.',
     successActions: (
-      <>
-        <p className="m-0 text-center font-manrope text-paragraph-large font-bold text-text-primary">
-          Who’s coming with you?
-        </p>
-        <div className="flex flex-wrap justify-center gap-02">
-          <Button type="button" variant="primary" size="large">
-            Share
-          </Button>
-          <Button type="button" variant="secondary" size="large">
-            Copy link
-          </Button>
-        </div>
-      </>
+      <Button type="button" variant="secondary" size="small">
+        Share with a friend
+      </Button>
     ),
   },
 };
