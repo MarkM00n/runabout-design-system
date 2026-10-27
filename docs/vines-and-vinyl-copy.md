@@ -90,10 +90,9 @@ wines question already asks 3–4).
 | Room to move | Numbers are capped so every table’s within reach: a glass in your hand, every tasting included. Made for grown-ups, but kids come free with an adult. | Numbers are capped so every table’s within reach. |
 | Early bird tickets | Sign up for first access to early-bird tickets in January. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
 | Hero intro | Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium, Eltham. Arrive any time from noon and stay till the last record, with a taste at every table. | — |
-| Kids | Made for grown-ups, but kids come free with an adult. | — |
 | Sign-up button | Sign up (submitting: Signing up…) | — |
 | Sign-up success | You’re in. / We’ll email you before tickets go on sale to everyone else. | — |
-| Share invite (after sign-up) | Who’s coming with you? / Send them the link before the early birds go. / [Share] [Copy link → Copied] | — |
+| Share action (inside the success card) | Share with a friend (no share sheet: copies the link, then “Link copied” for 2s) | — |
 | Share sheet / link preview title | Vines & Vinyl · Eltham · Sat 24 April 2027 | — |
 | Share sheet text | A tasting afternoon with independent makers and guest DJs in Eltham. Early-bird tickets in January. | — |
 | Link preview description (og:description) | A tasting afternoon with independent makers and guest DJs. Sign up for first access to early-bird tickets in January. | — |
