@@ -1,6 +1,6 @@
 {
   "component": "ButtonClose",
-  "lastValidated": "2026-10-21",
+  "lastValidated": "2026-10-27",
   "checks": {
     "tokenCompliance": {
       "pass": true,
