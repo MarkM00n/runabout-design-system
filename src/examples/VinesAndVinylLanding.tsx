@@ -531,8 +531,8 @@ const Info = () => (
       Winemakers, cheesemakers and local food makers — every table staffed by the person who made it.
     </InfoItem>
     <InfoItem art={<Illustration name="seal" />} title="Room to move">
-      Numbers are capped so every table’s within reach: a glass in your hand, every tasting included. Made for
-      grown-ups, but kids come free with an adult.
+      Numbers are capped so every table’s within reach, with a glass to keep in your hand. Made for grown-ups, but
+      kids come free with an adult.
     </InfoItem>
     <InfoItem art={<Illustration name="vinyl" colour="primary" />} title="All vinyl">
       Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come
