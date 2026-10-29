@@ -87,7 +87,7 @@ wines question already asks 3–4).
 |---|---|---|
 | Makers | Winemakers, cheesemakers and local food makers — every table staffed by the person who made it. | Winemakers, cheesemakers and local food makers, every tasting included. |
 | Music | Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come for a boogie. | Crates of jazz, funk, soul and disco all afternoon from some of Melbourne’s best DJs. Come thirsty, come for a boogie. |
-| Room to move | Numbers are capped so every table’s within reach: a glass in your hand, every tasting included. Made for grown-ups, but kids come free with an adult. | Numbers are capped so every table’s within reach. |
+| Room to move | Numbers are capped so every table’s within reach, with a glass to keep in your hand. Made for grown-ups, but kids come free with an adult. | Numbers are capped so every table’s within reach. |
 | Early bird tickets | Sign up for first access to early-bird tickets in January. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
 | Hero intro | Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium, Eltham. Arrive any time from noon and stay till the last record, with a taste at every table. | — |
 | Sign-up button | Sign up (submitting: Signing up…) | — |
