@@ -1,6 +1,6 @@
 {
   "component": "Textarea",
-  "lastValidated": "2026-10-27",
+  "lastValidated": "2026-10-29",
   "checks": {
     "tokenCompliance": {
       "pass": true,
