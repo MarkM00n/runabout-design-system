@@ -289,11 +289,14 @@ const heroArt = (
 // and mobile. The
 // seal is drawn centred behind the text and rotated, at each variant's own
 // size; the text is real content (not decorative) and the seal shape is
-// aria-hidden. Positioned against the hero's top-right corner.
+// aria-hidden. Positioned against the hero's top-right corner. Mobile top is
+// 70px, not Figma's 18px (2026-10-29): at 18 the seal's top points were cut
+// off by the viewport edge; 70 keeps the whole seal in view and clear of the
+// lock-up. Tablet and desktop still match Figma.
 const DateSeal = () => (
   <div
     className="absolute flex w-[124px] flex-col items-center tablet:w-[191px]"
-    style={{ right: fluid([MOBILE, 32], [TABLET, 37], [DESKTOP, 56]), top: fluid([MOBILE, 18], [TABLET, 74], [DESKTOP, 112]) }}
+    style={{ right: fluid([MOBILE, 32], [TABLET, 37], [DESKTOP, 56]), top: fluid([MOBILE, 70], [TABLET, 74], [DESKTOP, 112]) }}
   >
     <Illustration name="seal" className="pointer-events-none absolute left-1/2 top-1/2 w-[198.506px] -translate-x-1/2 -translate-y-1/2 -rotate-8 tablet:w-[305.242px]" />
     <p className="relative flex w-full flex-col items-center gap-00 text-center text-text-on-highlight">
