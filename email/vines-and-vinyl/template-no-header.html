@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+  Vines & Vinyl — Kit HTML email template, no-header variant (event panel at the foot).
+  Figma source: https://www.figma.com/design/JpFA7KtVlSOrM9fIYYgOsn/Design-System?node-id=1535-167
+
+  Paste this whole file into Kit → Email Templates → New → Create HTML Template.
+  Fixed parts: the event panel (wordmark art + date, time, address) above the dark footer. No header: emails open on their own headline.
+  The content slot is whatever you write in Kit's editor; build it from
+  the snippets in ./snippets (hero copy, info section, full-width image).
+
+  Kit's required tags (content slot, unsubscribe URL in an href, address)
+  are all below. They're deliberately not spelled out in this comment:
+  Kit renders Liquid tags even inside HTML comments.
+
+  Colours are the Vines & Vinyl token values, resolved per section mode
+  (email clients can't read CSS variables):
+    Hero / content  On Ink     surface #2e3516  text #f6dfc0  button #f7e7d2 / #2f2c28
+    Info section    On Light   surface #f5dec1  heading #1d1b19  body #4a5435  button #2f2c28 / #f7e7d2
+    Footer          On Dark    surface #2f2c28  text #f6dfc0  hairline #c9cbbf
+  Fonts: Recoleta can't be web-loaded in email, so headings fall back to
+  Georgia; Manrope loads in Apple Mail and falls back to Helvetica/Arial.
+  Images are served from the repo via jsDelivr (landing/public/email/).
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Vines &amp; Vinyl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <!--[if mso]><style>* { font-family: Arial, sans-serif !important; } h1, h2, h3 { font-family: Georgia, serif !important; }</style><![endif]-->
+  <style>
+    html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; background: #ffffff; -webkit-text-size-adjust: 100%; }
+    table { border-collapse: collapse; }
+    img { border: 0; display: block; outline: none; text-decoration: none; }
+    a { color: inherit; }
+
+    /* Anything typed straight into Kit's editor (not a snippet) lands here,
+       on the ink hero surface. Snippets set their own inline styles, which win. */
+    .vv-content { font-family: Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #f6dfc0; text-align: center; }
+    .vv-content h1, .vv-content h2, .vv-content h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #f6dfc0; margin: 24px 40px; }
+    .vv-content h1 { font-size: 30px; line-height: 36px; }
+    .vv-content h2 { font-size: 24px; line-height: 30px; }
+    .vv-content h3 { font-size: 20px; line-height: 26px; }
+    .vv-content p, .vv-content ul, .vv-content ol { font-size: 16px; line-height: 26px; margin: 0 40px 20px; }
+    .vv-content a { color: #f6dfc0; text-decoration: underline; }
+    .vv-content img { max-width: 100%; height: auto; }
+
+    @media (max-width: 620px) {
+      .vv-pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .vv-content h1, .vv-content h2, .vv-content h3, .vv-content p, .vv-content ul, .vv-content ol { margin-left: 24px !important; margin-right: 24px !important; }
+      .vv-content h1, .vv-h1 { font-size: 28px !important; line-height: 34px !important; }
+      .vv-content h2 { font-size: 24px !important; line-height: 30px !important; }
+      .vv-content p, .vv-content li, .vv-p { font-size: 16px !important; line-height: 25px !important; }
+      .vv-foot-p { font-size: 14px !important; line-height: 22px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#FFFFFF;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2e3516" style="background:#2e3516;">
+    <tr>
+      <td align="center" style="padding:0;">
+        <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:600px;">
+
+          <!-- CONTENT: written in Kit's editor -->
+          <tr>
+            <td class="vv-content" bgcolor="#2e3516" style="background:#2e3516; padding:0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; color:#f6dfc0; text-align:center;">
+              {{ message_content }}
+            </td>
+          </tr>
+
+          <!-- EVENT PANEL: wordmark art + date, time and address, closing the email above the footer -->
+          <tr>
+            <td bgcolor="#2e3516" style="background:#2e3516;">
+              <!--[if mso]><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-event-panel.jpg" width="600" alt="Vines &amp; Vinyl — Saturday 24 April 2027, ECRC, Eltham" style="display:block; width:600px;"><![endif]-->
+              <!--[if !mso]><!--><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/vv-email-event-panel.jpg" alt="Vines &amp; Vinyl — Saturday 24 April 2027, ECRC, Eltham" style="display:block; width:100%; max-width:600px; height:auto; background:#2e3516; color:#f6dfc0; font-family:Georgia, serif; font-size:28px; line-height:36px; text-align:center;"><!--<![endif]-->
+            </td>
+          </tr>
+          <tr>
+            <td class="vv-pad" align="center" bgcolor="#2e3516" style="background:#2e3516; padding:0 40px 40px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:16px; line-height:24px; color:#f6dfc0; text-align:center;">
+              <strong>Sat 24 April 2027 &middot; 12&ndash;4:30pm</strong><br>
+              Dorian LeGallienne Room, Eltham Community &amp; Reception Centre<br>
+              801 Main Rd, Eltham &middot; <a href="https://vinesandvinyl.runaboutwine.com.au/" style="color:#f6dfc0; text-decoration:underline;">vinesandvinyl.runaboutwine.com.au</a>
+            </td>
+          </tr>
+
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER (On Dark): its own full-width band, so the dark band runs edge to edge on wide screens; content stays 600px and centred. -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2f2c28" style="background:#2f2c28;">
+    <tr>
+      <td align="center" style="padding:0;">
+        <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+        <div style="max-width:600px; margin:0 auto;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="vv-pad" align="center" style="padding:40px 40px 0; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align:center;">
+                    <p style="margin:0 0 16px; font-size:11px; line-height:16px; letter-spacing:1.3px; text-transform:uppercase; color:#f6dfc0;">Presented by</p>
+                    <a href="https://instagram.com/runabout.melbourne" style="text-decoration:none;"><img src="https://cdn.jsdelivr.net/gh/MarkM00n/runabout-design-system@main/landing/public/email/runabout-wordmark-cream.png" width="151" height="29" alt="runabout" style="width:151px; height:29px; margin:0 auto; color:#f6dfc0; font-family:Georgia, serif; font-size:24px;"></a>
+                    <p class="vv-foot-p" style="margin:24px 0 8px; font-size:14px; line-height:22px; color:#f6dfc0;">
+                      <a href="mailto:hello@runaboutwine.com.au" style="color:#f6dfc0; text-decoration:none;">hello@runaboutwine.com.au</a><br>
+                      <a href="https://instagram.com/runabout.melbourne" style="color:#f6dfc0; text-decoration:none;">@runabout.melbourne</a>
+                    </p>
+                    <p style="margin:0; font-size:12px; line-height:18px; color:#f6dfc0;">Wine · Cheese · Music — Melbourne’s north-east</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="vv-pad" style="padding:24px 40px 40px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="center" style="border-top:1px solid #c9cbbf; padding-top:24px; font-family:Manrope, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:12px; line-height:18px; color:#f6dfc0; text-align:center;">
+                          You’re getting this because you signed up for Vines &amp; Vinyl updates.<br>
+                          <a href="{{ unsubscribe_url }}" style="color:#f6dfc0; text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp; <a href="{{ subscriber_preferences_url }}" style="color:#f6dfc0; text-decoration:underline;">Update your preferences</a><br>
+                          {{ address }}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+        </div>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
