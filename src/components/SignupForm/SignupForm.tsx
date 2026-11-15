@@ -58,8 +58,18 @@ import { isPlausibleEmail } from './email';
 // field + gap + 175px button; a hugging frame, so a literal). Here the row
 // wraps from content, not a breakpoint: the field's huge grow factor keeps
 // the button at its natural width while they share a row; once the row can't
-// hold the field's 240px basis plus the button, each takes its own line and
+// hold the field's 280px basis plus the button, each takes its own line and
 // fills it — the stacked layout the description mentions for mobile.
+//
+// Two things keep that wrap point steady (2026-11-16). The button is always as
+// wide as its longer label (both are laid in one grid cell, the inactive one
+// hidden), so tapping it can't change its width; before, "Joining…"/
+// "Signing up…" was wider than the resting label and a side-by-side row could
+// jump to stacked mid-submit. And the basis is 280px, not 240px, so the row
+// only goes side by side once the form is about 446px wide (a ~510px page):
+// above any phone's width, including Android's smaller display sizes, which
+// report 440–480px. At 240px a text-only button let 440px phones go side by
+// side.
 
 export type SignupFormState = 'default' | 'submitting' | 'success' | 'error';
 export type SignupFormErrorKind = 'invalid' | 'failed';
@@ -236,7 +246,7 @@ export const SignupForm = ({
             className="flex w-full max-w-[591px] flex-wrap gap-02"
             onSubmit={handleSubmit}
           >
-            <div className="flex-[999_1_240px]">
+            <div className="flex-[999_1_280px]">
               <Input
                 ref={inputRef}
                 type="email"
@@ -273,7 +283,17 @@ export const SignupForm = ({
               disabled={state === 'submitting'}
               className="flex-[1_0_auto]"
             >
-              {state === 'submitting' ? submittingLabel : submitLabel}
+              {/* Both labels share one grid cell so the button keeps the
+                  wider one's width; visibility (not display) hides the other,
+                  which also drops it from the accessibility tree. */}
+              <span className="grid">
+                <span className={clsx('col-start-1 row-start-1', state === 'submitting' && 'invisible')}>
+                  {submitLabel}
+                </span>
+                <span className={clsx('col-start-1 row-start-1', state !== 'submitting' && 'invisible')}>
+                  {submittingLabel}
+                </span>
+              </span>
             </Button>
           </form>
           {isError ? (
