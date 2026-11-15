@@ -96,6 +96,7 @@ wines question already asks 3–4).
 | Share sheet / link preview title | Vines & Vinyl · Eltham · Sat 24 April 2027 | — |
 | Share sheet text | A tasting afternoon with independent makers and guest DJs in Eltham. Early-bird tickets in January. | — |
 | Link preview description (og:description) | A tasting afternoon with independent makers and guest DJs. Sign up for first access to early-bird tickets in January. | — |
+| Privacy (footer, under the tagline) | We use the Meta pixel to measure sign-ups from our ads. | — |
 | Instagram | Until then, follow along on Instagram for maker reveals, guest selectors and competition info. | — |
 
 ## Vocabulary

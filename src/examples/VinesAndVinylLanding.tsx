@@ -594,6 +594,7 @@ const Footer = () => (
           </span>
         </p>
         <p className="text-caption text-text-secondary">Wine · Cheese · Music — Melbourne&apos;s north-east</p>
+        <p className="text-caption text-text-secondary">We use the Meta pixel to measure sign-ups from our ads.</p>
       </div>
     </div>
   </footer>
