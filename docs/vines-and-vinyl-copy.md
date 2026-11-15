@@ -19,7 +19,7 @@ event line fresh for one surface. Rule: `docs/design-system-rules.md` §5,
 | Venue | The Dorian LeGallienne Room and Atrium, Eltham Community & Reception Centre (ampersand — the venue’s own styling) |
 | Address | 801 Main Road, Eltham |
 | Short venue | Eltham |
-| Tickets | Capped at 150 (internal: public copy says "numbers are capped", never the number). Every tasting included. Tickets drop in the new year; the list hears a day before everyone else. |
+| Tickets | Capped at 150 (internal only: public copy never mentions the cap or the number). Every tasting included. Tickets drop in the new year; the list hears a day before everyone else. |
 | Makers | Fourteen confirmed (internal: public copy names the categories, not the count). |
 | Presented by | Runabout |
 | Website | vinesandvinyl.runaboutwine.com.au (always https; share this, not the netlify.app address) |
@@ -87,9 +87,9 @@ wines question already asks 3–4).
 |---|---|---|
 | Makers | Winemakers, cheesemakers and local food makers — every table staffed by the person who made it. | Winemakers, cheesemakers and local food makers, every tasting included. |
 | Music | Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come for a boogie. | Crates of jazz, funk, soul and disco all afternoon from some of Melbourne’s best DJs. Come thirsty, come for a boogie. |
-| Room to move | Numbers are capped so every table’s within reach, with a glass to keep in your hand. Made for grown-ups, but kids come free with an adult. | Numbers are capped so every table’s within reach. |
-| Early bird tickets | Sign up for first access to early-bird tickets in January. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
-| Hero intro | Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium, Eltham. Arrive any time from noon and stay till the last record, with a taste at every table. | — |
+| Wander all afternoon | The gallery hall, Atrium, deck and gardens are all yours — find a spot by the speakers or out in the sun. Made for grown-ups, but kids come free with an adult. | — |
+| Early bird tickets | Sign up for first access to early-bird tickets in January — a day before everyone else. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
+| Hero intro (sits under the sign-up form) | Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage hi-fi. Eltham, arrive from noon, a taste at every table. | — |
 | Sign-up button | Sign up (submitting: Signing up…) | — |
 | Sign-up success | You’re in. / We’ll email you before tickets go on sale to everyone else. | — |
 | Share action (inside the success card) | Share with a friend (no share sheet: copies the link, then “Link copied” for 2s) | — |
@@ -105,7 +105,7 @@ wines question already asks 3–4).
   for rhythm; don't introduce a third word (no "deejays", "spinners").
 - **Winemakers**, not "wineries": we're selling the people pouring.
 - **Local food makers** for the non-wine, non-cheese makers (not "good-food makers").
-- **No numbers in public copy** (no "fourteen", no "150"): frame the cap as a courtesy, "numbers are capped so every table’s within reach", never defensively.
+- **No numbers in public copy** (no "fourteen", no "150"), and don’t mention the cap at all: never "numbers are capped" (2026-11-16).
 - **Early bird ticket(s)**, never "early bird" on its own: not everyone knows the jargon. **Early-bird** as an adjective is fine ("early-bird pricing").
 - **Sound:** "on a proper vintage hi-fi". Don't name speaker brands in public copy until the rig is confirmed.
 - **All vinyl** as a heading, **all-vinyl** before a noun ("all-vinyl DJs").
