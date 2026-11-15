@@ -81,6 +81,9 @@ export interface SignupFormProps {
   placeholder?: string;
   submitLabel?: ReactNode;
   submittingLabel?: ReactNode;
+  /** Show the button's trailing arrow (Button's `icon`). On by default, as in
+   *  Figma; set false for a text-only button. */
+  submitIcon?: boolean;
   successHeading?: ReactNode;
   successBody?: ReactNode;
   /** Optional action shown inside the Success card, under the body (it
@@ -128,6 +131,7 @@ export const SignupForm = ({
   placeholder = 'you@email.com',
   submitLabel = 'Join the list',
   submittingLabel = 'Joining…',
+  submitIcon = true,
   successHeading = 'You’re on the list.',
   successBody = 'A welcome email is on its way. We’ll be in touch the moment early bird tickets go live.',
   successActions,
@@ -265,6 +269,7 @@ export const SignupForm = ({
               type="submit"
               variant="primary"
               size="large"
+              icon={submitIcon}
               disabled={state === 'submitting'}
               className="flex-[1_0_auto]"
             >
