@@ -525,10 +525,12 @@ const Info = () => (
     {/* Event description (moved here from the hero 2026-11-16, so the hero is
         just the lock-up and sign-up). The wrapper takes the whole row (a
         max-width on the flex item itself would let the columns share its
-        line); the paragraph is capped and centred inside it. */}
+        line); the paragraph is capped and centred inside it. 18px on phones,
+        28px from the 768px tablet frame up (container query on the page; the
+        scale has nothing in between). */}
     <div className="flex w-full basis-full justify-center pb-03">
       <p
-        className="m-0 w-full text-center font-manrope text-h4-sans font-normal text-text-primary"
+        className="m-0 w-full text-center font-manrope text-paragraph-large text-text-primary @min-[768px]:text-h4-sans @min-[768px]:font-normal"
         style={{ maxWidth: fluid([TABLET, 600], [DESKTOP, 880]) }}
       >
         Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
