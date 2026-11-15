@@ -497,6 +497,7 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           leadIn={signupLeadIn}
           leadInSize="small"
           submitLabel="Sign up"
+          submitIcon={false}
           submittingLabel="Signing up…"
           successHeading="You’re in."
           successBody="We’ll email you before tickets go on sale to everyone else."

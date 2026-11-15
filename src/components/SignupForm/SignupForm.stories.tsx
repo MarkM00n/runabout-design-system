@@ -87,6 +87,8 @@ export const CustomLeadIn: Story = {
       </>
     ),
     leadInSize: 'small',
+    submitLabel: 'Sign up',
+    submitIcon: false,
   },
 };
 
