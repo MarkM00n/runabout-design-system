@@ -528,8 +528,8 @@ const Info = () => (
         line); the paragraph is capped and centred inside it. */}
     <div className="flex w-full basis-full justify-center pb-03">
       <p
-        className="m-0 w-full text-center font-manrope text-paragraph-large text-text-primary"
-        style={{ maxWidth: fluid([TABLET, 560], [DESKTOP, 680]) }}
+        className="m-0 w-full text-center font-manrope text-h4-sans font-normal text-text-primary"
+        style={{ maxWidth: fluid([TABLET, 600], [DESKTOP, 880]) }}
       >
         Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
         hi-fi. Eltham, arrive from noon, a taste at every table.
