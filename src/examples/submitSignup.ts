@@ -42,4 +42,14 @@ export async function submitSignup(email: string): Promise<void> {
     // 4xx and 5xx alike: the visitor sees the same retry message either way.
     throw new SignupError(`Sign-up endpoint responded ${response.status}`);
   }
+  // Meta pixel Lead: only here, after the endpoint returned OK — never on
+  // click, never from the mock above. No parameters: the email stays out of
+  // it. fbq exists only on the live domain (landing/index.html).
+  window.fbq?.('track', 'Lead');
+}
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
 }
