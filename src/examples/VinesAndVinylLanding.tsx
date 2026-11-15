@@ -9,6 +9,9 @@ import type { SignupFormErrorKind, SignupFormState } from '../components/SignupF
 import tokens from '../tokens/tokens.json';
 // Figma's 1536×1024 hall photo, re-encoded as JPEG (quality 78): 2.29 MB → 436 KB.
 import hallPhoto from './assets/vines-and-vinyl-hall.jpg';
+import atriumPhoto from './assets/vines-and-vinyl-atrium.jpg';
+import deckPhoto from './assets/vines-and-vinyl-deck.jpg';
+import gardensPhoto from './assets/vines-and-vinyl-gardens.jpg';
 import { submitSignup } from './submitSignup';
 
 // Source: Figma section "06 · Web — Landing page" (1336:396, file
@@ -275,8 +278,17 @@ const heroArt = (
     <Deco x={['left', 'calc(50% - 381.55px)']} y={['top', '347.93px']} width={fluid([TABLET, 0], [DESKTOP, 60])} rotate={-20}>
       <Illustration name="sparkle" colour="primary" />
     </Deco>
-    {/* Secondary sparkle right of the description — desktop only. */}
-    <Deco x={['left', 'calc(50% + 352.63px)']} y={['top', '629.19px']} width={fluid([TABLET, 0], [DESKTOP, 64])} rotate={15}>
+    {/* Secondary sparkle right of the sign-up button — desktop only. Was
+        top-anchored at 629px beside the old description; with the hero
+        shorter it landed on the pink record below 1440. Now anchored to the
+        hero's bottom edge like the record, so the two keep their spacing at
+        every width (2026-11-16). */}
+    <Deco
+      x={['left', 'calc(50% + 352.63px)']}
+      y={['bottom', '260px']}
+      width={fluid([TABLET, 0], [DESKTOP, 64])}
+      rotate={15}
+    >
       <Illustration name="sparkle" colour="secondary" />
     </Deco>
   </>
@@ -420,7 +432,14 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
     // nothing below sets a mode (rules §7, "a surface declares its mode;
     // nothing else does"). `isolate` gives it its own stacking context so the
     // photo band can sit under the art (-z-10) without escaping below its fill.
-    <section data-mode="brand" className="relative isolate w-full overflow-hidden bg-surface-section pb-10">
+    <section
+      data-mode="brand"
+      className="relative isolate w-full overflow-hidden bg-surface-section"
+      // 192px under the form (spacing-10 + spacing-07; the scale stops at
+      // 128), 2026-11-16. The record is bottom-anchored, so it moves down with
+      // the hero's bottom edge and keeps clear of the form.
+      style={{ paddingBottom: 'calc(var(--spacing-10) + var(--spacing-07))' }}
+    >
       {heroArt}
       <DateSeal />
 
@@ -533,8 +552,9 @@ const Info = () => (
         className="m-0 w-full text-center font-manrope text-paragraph-large text-text-primary @min-[768px]:text-h4-sans @min-[768px]:font-normal"
         style={{ maxWidth: fluid([TABLET, 600], [DESKTOP, 880]) }}
       >
-        Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
-        hi-fi. Eltham, arrive from noon, a taste at every table.
+        Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play jazz,
+        funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium, Eltham.
+        Arrive any time from noon and stay till the last record, with a taste at every table.
       </p>
     </div>
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
@@ -548,6 +568,51 @@ const Info = () => (
       Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come
       for a boogie.
     </InfoItem>
+  </section>
+);
+
+// Venue arches (2026-11-16): the Atrium, deck and gardens, straight on the
+// cream (no frame, border or caption box), each name in caps underneath. Three
+// across from 1024px; below that a swipeable row with the next arch peeking
+// in. The arch is CSS (rounded top), so the photos are plain
+// rectangles. Interim photos: cropped from the November email strip
+// (landing/public/email/vv-email-rooms.jpg) at 330x400 — swap in the
+// originals when we have them, same filenames.
+const VENUES = [
+  { name: 'Atrium', src: atriumPhoto, alt: 'The Atrium: a timber-framed glass walkway in afternoon sun' },
+  { name: 'Deck', src: deckPhoto, alt: 'The deck: a timber deck looking out over gum trees' },
+  { name: 'Gardens', src: gardensPhoto, alt: 'The gardens: lawn and native planting in front of the centre' },
+] as const;
+
+const Venues = () => (
+  // Venues — On Light, same cream as Info; it reads as Info's second half.
+  <section data-mode="light" aria-label="The venue" className="w-full bg-surface-section pb-09 @min-[1024px]:px-10">
+    {/* Below 1024px the row runs to the screen edges so the next arch peeks
+        in past the margin; the page margin becomes the row's own padding
+        (and scroll padding, so a snapped arch lines up with the copy). */}
+    <ul
+      className="m-0 flex list-none snap-x snap-mandatory gap-03 overflow-x-auto px-[var(--venue-pad)] py-0 [scroll-padding-inline:var(--venue-pad)] [scrollbar-width:none] @min-[1024px]:mx-auto @min-[1024px]:max-w-[1088px] @min-[1024px]:gap-07 @min-[1024px]:overflow-visible @min-[1024px]:px-0"
+      style={{ '--venue-pad': fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-10']) } as CSSProperties}
+    >
+      {VENUES.map(({ name, src, alt }) => (
+        <li
+          key={name}
+          className="flex w-[78%] max-w-[330px] shrink-0 snap-start flex-col items-center gap-03 @min-[1024px]:w-auto @min-[1024px]:flex-1"
+        >
+          <img
+            src={src}
+            alt={alt}
+            width={330}
+            height={400}
+            loading="lazy"
+            className="block aspect-[33/40] h-auto w-full rounded-t-full object-cover"
+          />
+          <p className="m-0 text-center font-manrope text-h6 font-semibold uppercase tracking-[var(--text-overline-wide--letter-spacing)] text-text-primary">
+            {name}
+          </p>
+        </li>
+      ))}
+    </ul>
   </section>
 );
 
@@ -614,6 +679,7 @@ export const VinesAndVinylLanding = ({ signupState, signupError }: SignupStatePr
     <main className="flex w-full flex-col">
       <Hero signupState={signupState} signupError={signupError} />
       <Info />
+      <Venues />
     </main>
     <Footer />
   </div>
