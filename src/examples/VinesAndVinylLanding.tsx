@@ -434,11 +434,11 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
     // photo band can sit under the art (-z-10) without escaping below its fill.
     <section
       data-mode="brand"
-      className="relative isolate w-full overflow-hidden bg-surface-section"
-      // 192px under the form (spacing-10 + spacing-07; the scale stops at
-      // 128), 2026-11-16. The record is bottom-anchored, so it moves down with
-      // the hero's bottom edge and keeps clear of the form.
-      style={{ paddingBottom: 'calc(var(--spacing-10) + var(--spacing-07))' }}
+      // Space under the form (2026-11-16): 160px on phones (spacing-10 +
+      // spacing-04), 192px from the 768px tablet frame up (spacing-10 +
+      // spacing-07); the scale stops at 128. The record is bottom-anchored, so
+      // it moves with the hero's bottom edge and keeps clear of the form.
+      className="relative isolate w-full overflow-hidden bg-surface-section pb-[calc(var(--spacing-10)+var(--spacing-04))] @min-[768px]:pb-[calc(var(--spacing-10)+var(--spacing-07))]"
     >
       {heroArt}
       <DateSeal />
