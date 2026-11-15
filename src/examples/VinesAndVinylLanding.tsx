@@ -332,7 +332,8 @@ export interface SignupStateProps {
 
 const signupLeadIn = (
   <>
-    Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January.
+    Sign up for first access to <span className="text-text-accent">early-bird tickets</span> in January — a day
+    before everyone else.
   </>
 );
 
@@ -472,14 +473,6 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         className="relative z-10 flex flex-col items-center"
         style={{ gap: fluid([MOBILE, 'spacing-05'], [TABLET, 'spacing-06']), paddingInline: heroPaddingInline }}
       >
-        <p
-          className="w-full text-center font-manrope text-paragraph-small text-text-primary"
-          style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
-        >
-            Winemakers, cheesemakers and local food makers pouring and plating all afternoon, while guest DJs play
-            jazz, funk, soul and disco records on a proper vintage hi-fi. In the Dorian LeGallienne Room and Atrium,
-            Eltham. Arrive any time from noon and stay till the last record, with a taste at every table.
-        </p>
 
         <SignupForm
           onSubmit={submitSignup}
@@ -493,6 +486,15 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           initialState={signupState}
           initialError={signupError}
         />
+        {/* Description sits under the form (2026-11-16): sign-up comes
+            straight after the lock-up so it's on screen without scrolling. */}
+        <p
+          className="w-full text-center font-manrope text-paragraph-small text-text-primary"
+          style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
+        >
+          Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
+          hi-fi. Eltham, arrive from noon, a taste at every table.
+        </p>
       </div>
     </section>
   );
@@ -533,9 +535,9 @@ const Info = () => (
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
       Winemakers, cheesemakers and local food makers — every table staffed by the person who made it.
     </InfoItem>
-    <InfoItem art={<Illustration name="seal" />} title="Room to move">
-      Numbers are capped so every table’s within reach, with a glass to keep in your hand. Made for grown-ups, but
-      kids come free with an adult.
+    <InfoItem art={<Illustration name="seal" />} title="Wander all afternoon">
+      The gallery hall, Atrium, deck and gardens are all yours — find a spot by the speakers or out in the sun. Made
+      for grown-ups, but kids come free with an adult.
     </InfoItem>
     <InfoItem art={<Illustration name="vinyl" colour="primary" />} title="All vinyl">
       Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come
