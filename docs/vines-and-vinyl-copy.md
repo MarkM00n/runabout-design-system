@@ -89,7 +89,7 @@ wines question already asks 3–4).
 | Music | Crates of jazz, funk, soul and disco spinning all afternoon from some of Melbourne’s best selectors — come for a boogie. | Crates of jazz, funk, soul and disco all afternoon from some of Melbourne’s best DJs. Come thirsty, come for a boogie. |
 | Wander all afternoon | The gallery hall, Atrium, deck and gardens are all yours — find a spot by the speakers or out in the sun. Made for grown-ups, but kids come free with an adult. | — |
 | Early bird tickets | Sign up for first access to early-bird tickets in January — a day before everyone else. | Tickets drop in the new year, and you’ll hear a day before everyone else. |
-| Hero intro (sits under the sign-up form) | Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage hi-fi. Eltham, arrive from noon, a taste at every table. | — |
+| Event description (top of the info section, under the hero) | Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage hi-fi. Eltham, arrive from noon, a taste at every table. | — |
 | Sign-up button | Sign up (submitting: Signing up…) | — |
 | Sign-up success | You’re in. / We’ll email you before tickets go on sale to everyone else. | — |
 | Share action (inside the success card) | Share with a friend (no share sheet: copies the link, then “Link copied” for 2s) | — |
