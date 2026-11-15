@@ -473,7 +473,6 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
         className="relative z-10 flex flex-col items-center"
         style={{ gap: fluid([MOBILE, 'spacing-05'], [TABLET, 'spacing-06']), paddingInline: heroPaddingInline }}
       >
-
         <SignupForm
           onSubmit={submitSignup}
           leadIn={signupLeadIn}
@@ -486,15 +485,6 @@ const Hero = ({ signupState, signupError }: SignupStateProps) => {
           initialState={signupState}
           initialError={signupError}
         />
-        {/* Description sits under the form (2026-11-16): sign-up comes
-            straight after the lock-up so it's on screen without scrolling. */}
-        <p
-          className="w-full text-center font-manrope text-paragraph-small text-text-primary"
-          style={{ maxWidth: fluid([TABLET, 464], [DESKTOP, 544]) }}
-        >
-          Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
-          hi-fi. Eltham, arrive from noon, a taste at every table.
-        </p>
       </div>
     </section>
   );
@@ -532,6 +522,19 @@ const Info = () => (
     className="flex w-full flex-wrap justify-center gap-x-07 gap-y-05 bg-surface-section py-09"
     style={{ paddingInline: fluid([MOBILE, 'spacing-04'], [TABLET, 'spacing-10']) }}
   >
+    {/* Event description (moved here from the hero 2026-11-16, so the hero is
+        just the lock-up and sign-up). The wrapper takes the whole row (a
+        max-width on the flex item itself would let the columns share its
+        line); the paragraph is capped and centred inside it. */}
+    <div className="flex w-full basis-full justify-center pb-03">
+      <p
+        className="m-0 w-full text-center font-manrope text-paragraph-large text-text-primary"
+        style={{ maxWidth: fluid([TABLET, 560], [DESKTOP, 680]) }}
+      >
+        Winemakers, cheesemakers and local food makers pouring all afternoon, while guest selectors play on a vintage
+        hi-fi. Eltham, arrive from noon, a taste at every table.
+      </p>
+    </div>
     <InfoItem art={<Illustration name="grapes" colour="feature" />} title="The makers">
       Winemakers, cheesemakers and local food makers — every table staffed by the person who made it.
     </InfoItem>
